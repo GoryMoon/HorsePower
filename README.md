@@ -1,4 +1,4 @@
-ViesCraft Tweaker
+Horse Power
 ===============
 
 A mod that adds a horse powered mill to the game
