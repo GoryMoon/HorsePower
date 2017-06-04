@@ -154,23 +154,26 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
         int y = pos.getY();
         int z = pos.getZ();
 
-        if (stack.getItem() instanceof ItemLead) {
-            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-            for (Class<? extends Entity> clazz: clazzes) {
-                for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                    if (entity instanceof EntityCreature) {
-                        EntityCreature creature = (EntityCreature) entity;
-                        if (creature.getLeashed() && creature.getLeashedToEntity() == playerIn) {
-                            if (!tileEntityGrindstone.hasWorker()) {
-                                creature.clearLeashed(true, false);
-                                tileEntityGrindstone.setWorker(creature);
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
+        EntityCreature creature = null;
+        ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+        search: for (Class<? extends Entity> clazz: clazzes) {
+            for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
+                if (entity instanceof EntityCreature) {
+                    EntityCreature tmp = (EntityCreature) entity;
+                    if ((tmp.getLeashed() && tmp.getLeashedToEntity() == playerIn)) {
+                        creature = tmp;
+                        break search;
                     }
                 }
+            }
+        }
+        if (stack.getItem() instanceof ItemLead && creature != null || creature != null) {
+            if (!tileEntityGrindstone.hasWorker()) {
+                creature.clearLeashed(true, false);
+                tileEntityGrindstone.setWorker(creature);
+                return true;
+            } else {
+                return false;
             }
         } else if (!stack.isEmpty() && tileEntityGrindstone.isItemValidForSlot(0, stack)) {
             ItemStack itemStack = tileEntityGrindstone.getStackInSlot(0);
@@ -198,8 +201,12 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
             BlockGrindstone.setState(false, worldIn, pos);
         }
 
-        if (result.isEmpty())
-            return false;
+        if (result.isEmpty()) {
+            if (!stack.isEmpty())
+                return false;
+
+            tileEntityGrindstone.setWorkerToPlayer(playerIn);
+        }
 
         if (stack.isEmpty()) {
             playerIn.setHeldItem(hand, result);

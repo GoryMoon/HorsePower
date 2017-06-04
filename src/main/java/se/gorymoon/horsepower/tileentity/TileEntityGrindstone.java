@@ -69,6 +69,15 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
         target = getClosestTarget();
     }
 
+    public void setWorkerToPlayer(EntityPlayer player) {
+        if (hasWorker() && worker.canBeLeashedTo(player)) {
+            hasWorker = false;
+            worker.detachHome();
+            worker.setLeashedToEntity(player, true);
+            worker = null;
+        }
+    }
+
     public boolean hasWorker() {
         if (worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
             return true;

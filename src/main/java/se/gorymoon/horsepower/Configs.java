@@ -26,7 +26,7 @@ public class Configs {
 
     @Comment({"Add mobs that can use the grindstone", "Only mobs that can be leashed can use the grindstone", "Add the full path to the mob class, can be found with CraftTweaker /mt entities",
             "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
-    @Name("Grindstone Mod List")
+    @Name("Grindstone Mob List")
     public static String[] grindstoneModList = {};
 
     @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta-modid:output:meta@amount-time",
