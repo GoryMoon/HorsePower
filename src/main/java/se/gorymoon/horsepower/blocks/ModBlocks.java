@@ -11,14 +11,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import se.gorymoon.horsepower.lib.Constants;
 import se.gorymoon.horsepower.lib.Reference;
-import se.gorymoon.horsepower.tileentity.TileEntityMill;
+import se.gorymoon.horsepower.tileentity.TileEntityGrindstone;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ModBlocks {
 
-    public static final BlockMill BLOCK_MILL = new BlockMill();
+    public static final BlockGrindstone BLOCK_GRINDSTONE = new BlockGrindstone();
 
     @Mod.EventBusSubscriber(modid = Reference.MODID)
     public static class RegistrationHandler {
@@ -33,7 +33,7 @@ public class ModBlocks {
         public static void registerBlocks(RegistryEvent.Register<Block> event) {
             final IForgeRegistry<Block> registry = event.getRegistry();
 
-            final Block[] blocks = {BLOCK_MILL};
+            final Block[] blocks = {BLOCK_GRINDSTONE};
 
             registry.registerAll(blocks);
         }
@@ -46,7 +46,7 @@ public class ModBlocks {
         @SubscribeEvent
         public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
             final ItemBlock[] items = {
-                new ItemBlock(BLOCK_MILL)
+                new ItemBlock(BLOCK_GRINDSTONE)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
@@ -59,7 +59,7 @@ public class ModBlocks {
     }
 
     public static void registerTileEntities() {
-        registerTileEntityNoPrefix(TileEntityMill.class, TileEntityMill.class.getSimpleName().replaceFirst("TileEntity", ""), Constants.MILL_TE_ID);
+        registerTileEntityNoPrefix(TileEntityGrindstone.class, TileEntityGrindstone.class.getSimpleName().replaceFirst("TileEntity", ""), Constants.GRINDSTONE_TE);
     }
 
     private static void registerTileEntity(Class<? extends TileEntity> tileEntityClass) {

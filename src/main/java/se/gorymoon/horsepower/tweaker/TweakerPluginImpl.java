@@ -9,7 +9,7 @@ import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import se.gorymoon.horsepower.recipes.MillRecipes;
+import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-//TODO test recipe adding and removing mre thoroughly
 @ZenClass("mods.horsepower")
 public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
 
@@ -33,28 +32,33 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
             action.apply();
     }
 
+    @Override
+    public void register() {
+        MineTweakerAPI.registerClass(TweakerPluginImpl.class);
+    }
+
     @ZenMethod
-    public static void addMillRecipe(IIngredient output, IIngredient input, int time) {
-        AddMillRecipe recipe = new AddMillRecipe(output, input, time);
+    public static void addGrindstoneRecipe(IIngredient input, IIngredient output, int time) {
+        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, output, time);
         MineTweakerAPI.apply(recipe);
         actions.add(recipe);
     }
 
     @ZenMethod
-    public static void removeMillReicpe(IIngredient output) {
+    public static void removeGrindstoneReicpe(IIngredient output) {
 
         List<ItemStack> toRemove = new ArrayList();
         List<ItemStack> toRemoveValues = new ArrayList();
         List<Integer> timeToRemove = new ArrayList();
 
-        for (Map.Entry<ItemStack, ItemStack> entry: MillRecipes.instance().getMillList().entrySet()) {
+        for (Map.Entry<ItemStack, ItemStack> entry: GrindstoneRecipes.instance().getGrindstoneList().entrySet()) {
             if (OreDictionary.itemMatches(MineTweakerMC.getItemStack(output), entry.getKey(), false)) {
                 toRemove.add(entry.getKey());
                 toRemoveValues.add(entry.getValue());
-                timeToRemove.add(MillRecipes.instance().getMillTime(entry.getKey()));
+                timeToRemove.add(GrindstoneRecipes.instance().getGrindstoneTime(entry.getKey()));
             }
         }
-        RemoveMillRecipe recipe = new RemoveMillRecipe(toRemove, toRemoveValues, timeToRemove);
+        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(toRemove, toRemoveValues, timeToRemove);
         MineTweakerAPI.apply(recipe);
         actions.add(recipe);
     }
@@ -64,13 +68,13 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         actions.clear();
     }
 
-    private static class AddMillRecipe implements IUndoableAction {
+    private static class AddGrindstoneRecipe implements IUndoableAction {
 
         private final IIngredient output;
         private final IIngredient input;
         private final int time;
 
-        private AddMillRecipe(IIngredient output, IIngredient input, int time) {
+        private AddGrindstoneRecipe(IIngredient input, IIngredient output, int time) {
             this.output = output;
             this.input = input;
             this.time = time;
@@ -78,7 +82,7 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
 
         @Override
         public void apply() {
-            MillRecipes.instance().addMillRecipe(MineTweakerMC.getItemStack(input), MineTweakerMC.getItemStack(output), time);
+            GrindstoneRecipes.instance().addGrindstoneRecipe(MineTweakerMC.getItemStack(input), MineTweakerMC.getItemStack(output), time);
         }
 
         @Override
@@ -88,17 +92,17 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
 
         @Override
         public void undo() {
-            MillRecipes.instance().removeMillRecipe(MineTweakerMC.getItemStack(output));
+            GrindstoneRecipes.instance().removeGrindstoneRecipe(MineTweakerMC.getItemStack(input));
         }
 
         @Override
         public String describe() {
-            return "Adding mill recipe for " + output;
+            return "Adding grindstone recipe for " + output;
         }
 
         @Override
         public String describeUndo() {
-            return "Removing mill recipe for " + output;
+            return "Removing grindstone recipe for " + output;
         }
 
         @Override
@@ -107,13 +111,13 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         }
     }
 
-    private static class RemoveMillRecipe implements IUndoableAction {
+    private static class RemoveGrindstoneRecipe implements IUndoableAction {
 
         private final List<ItemStack> output;
         private final List<ItemStack> input;
         private final List<Integer> time;
 
-        private RemoveMillRecipe(List<ItemStack> output, List<ItemStack> input, List<Integer> time) {
+        private RemoveGrindstoneRecipe(List<ItemStack> output, List<ItemStack> input, List<Integer> time) {
             this.output = output;
             this.input = input;
             this.time = time;
@@ -122,7 +126,7 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         @Override
         public void apply() {
             for (ItemStack in: input)
-                MillRecipes.instance().removeMillRecipe(in);
+                GrindstoneRecipes.instance().removeGrindstoneRecipe(in);
         }
 
         @Override
@@ -133,17 +137,17 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         @Override
         public void undo() {
             for (int i = 0; i < input.size(); i++)
-                MillRecipes.instance().addMillRecipe(input.get(i), output.get(i), time.get(i));
+                GrindstoneRecipes.instance().addGrindstoneRecipe(input.get(i), output.get(i), time.get(i));
         }
 
         @Override
         public String describe() {
-            return "Removing mill recipe for " + output;
+            return "Removing grindstone recipe for " + output;
         }
 
         @Override
         public String describeUndo() {
-            return "Adding mill recipe for " + output;
+            return "Adding grindstone recipe for " + output;
         }
 
         @Override

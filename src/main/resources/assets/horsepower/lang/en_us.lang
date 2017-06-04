@@ -2,6 +2,17 @@
 item.flour.name=Flour
 item.dough.name=Dough
 
+# Item description
+item.horsepower:grindstone.description.size=For the grindstone to work an [%1]7x7[%2] area is needed and [%1]2 blocks[%2] high
+item.horsepower:grindstone.description.location=The grindstone needs to be placed [%1]one block[%2] up in the middle
+item.horsepower:grindstone.description.use=To use the grindstone attach a horse with a lead
+
 
 # Blocks
-tile.mill.name=Horse Mill
+tile.grindstone.name=Horse Grindstone
+
+# Info
+info.horsepower:grindstone.invalid=INVALID 7x7x2 AREA
+
+# Command
+horsemod.commands.reload=HorsePower configs reloaded

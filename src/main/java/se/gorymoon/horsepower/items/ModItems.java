@@ -4,26 +4,25 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import se.gorymoon.horsepower.HorsePowerMod;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import se.gorymoon.horsepower.Configs;
+import se.gorymoon.horsepower.blocks.ModBlocks;
+import se.gorymoon.horsepower.lib.Constants;
 import se.gorymoon.horsepower.lib.Reference;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 @GameRegistry.ObjectHolder(Reference.MODID)
 public class ModItems {
 
-    //TODO add textures
-    public static final Item FLOUR = new Item().setRegistryName("flour").setUnlocalizedName("flour").setCreativeTab(CreativeTabs.FOOD);
-    public static final Item DOUGH = new Item().setRegistryName("dough").setUnlocalizedName("dough").setCreativeTab(CreativeTabs.FOOD);
+    public static final Item FLOUR = new Item().setRegistryName(Constants.FLOUR_ITEM).setUnlocalizedName(Constants.FLOUR_ITEM).setCreativeTab(CreativeTabs.FOOD);
+    public static final Item DOUGH = new Item().setRegistryName(Constants.DOUGH_ITEM).setUnlocalizedName(Constants.DOUGH_ITEM).setCreativeTab(CreativeTabs.FOOD);
 
     @Mod.EventBusSubscriber(modid = Reference.MODID)
     public static class RegistrationHandler {
@@ -42,28 +41,24 @@ public class ModItems {
             final IForgeRegistry<Item> registry = event.getRegistry();
 
             for (final Item item : items) {
+                if (!Configs.enableFlour && item == FLOUR)
+                    continue;
+                if (!Configs.enableDough && item == DOUGH)
+                    continue;
+
                 registry.register(item);
                 ITEMS.add(item);
             }
         }
     }
 
+    //TODO add recipe for the mill
     public static void registerRecipes() {
-        removeRecipesWithResult(new ItemStack(Items.BREAD));
-        GameRegistry.addShapelessRecipe(new ItemStack(DOUGH), FLOUR, Items.WATER_BUCKET);
-        GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
-    }
-
-    private static void removeRecipesWithResult(ItemStack resultItem) {
-        ArrayList recipes = (ArrayList) CraftingManager.getInstance().getRecipeList();
-
-        for (int scan = 0; scan < recipes.size(); scan++) {
-            IRecipe tmpRecipe = (IRecipe) recipes.get(scan);
-            ItemStack recipeResult = tmpRecipe.getRecipeOutput();
-            if (ItemStack.areItemStacksEqual(resultItem, recipeResult)) {
-                HorsePowerMod.logger.debug("Removing Recipe: " + recipes.get(scan) + " -> " + recipeResult);
-                recipes.remove(scan);
-            }
+        if (Configs.enableDough) {
+            if (Configs.enableFlour)
+                GameRegistry.addShapelessRecipe(new ItemStack(DOUGH), FLOUR, Items.WATER_BUCKET);
+            GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
         }
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
     }
 }

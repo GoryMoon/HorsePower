@@ -6,4 +6,9 @@ public class DummyTweakPluginImpl implements ITweakerPlugin {
     public void applyTweaker() {
 
     }
+
+    @Override
+    public void register() {
+
+    }
 }

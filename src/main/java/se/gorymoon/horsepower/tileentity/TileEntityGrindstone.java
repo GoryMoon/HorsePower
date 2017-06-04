@@ -1,5 +1,6 @@
 package se.gorymoon.horsepower.tileentity;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -8,18 +9,29 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import se.gorymoon.horsepower.recipes.MillRecipes;
+import se.gorymoon.horsepower.blocks.BlockGrindstone;
+import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
+import se.gorymoon.horsepower.util.Localization;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class TileEntityMill extends TileEntity implements ITickable, ISidedInventory {
+public class TileEntityGrindstone extends TileEntity implements ITickable, ISidedInventory {
 
     private static final int[] SLOTS_TOP = new int[] {0};
     private static final int[] SLOTS_BOTTOM = new int[] {1};
@@ -40,6 +52,9 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
     private boolean running = true;
     private boolean wasRunning = false;
 
+    private boolean valid = false;
+    private int validationTimer = 0;
+
     public void setWorker(AbstractHorse newWorker) {
         hasWorker = true;
         worker = newWorker;
@@ -48,7 +63,20 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
     }
 
     public boolean hasWorker() {
-        return worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 35;
+        return worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 45;
+    }
+
+    public AbstractHorse getWorker() {
+        return worker;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getDisplayName() {
+        if (valid)
+            return super.getDisplayName();
+        else
+            return new TextComponentTranslation(Localization.INFO.GRINDSTONE_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 
     @Override
@@ -88,33 +116,89 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
         if (hasWorker && compound.hasKey("leash", 10)) {
             nbtWorker = compound.getCompoundTag("leash");
         }
+    }
 
+    public void notifyUpdate() {
+        getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), 3);
+    }
 
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), -999, writeToNBT(new NBTTagCompound()));
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        readFromNBT(pkt.getNbtCompound());
+        markDirty();
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        notifyUpdate();
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+       readFromNBT(tag);
+    }
+
+    private boolean validateArea() {
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
+                if (x == 0 && z == 0)
+                    continue;
+
+                if (!getWorld().isAirBlock(getPos().add(x, 0, z)) || !getWorld().isAirBlock(getPos().add(x, -1, z)))
+                    return false;
+            }
+        }
+        return true;
     }
 
     @Override
     public void update() {
         boolean flag = false;
 
-        if (!world.isRemote) {
+        validationTimer--;
+        if (validationTimer <= 0) {
+            valid = validateArea();
+            if (valid)
+                validationTimer = 1200;
+            else
+                validationTimer = 60;
+        }
 
-            if (nbtWorker != null) {
-                if (hasWorker) {
-                    UUID uuid = nbtWorker.getUniqueId("UUID");
-                    int x = pos.getX();
-                    int y = pos.getY();
-                    int z = pos.getZ();
+        if (nbtWorker != null) {
+            if (hasWorker) {
+                UUID uuid = nbtWorker.getUniqueId("UUID");
+                int x = pos.getX();
+                int y = pos.getY();
+                int z = pos.getZ();
 
-                    for (AbstractHorse abstractHorse : world.getEntitiesWithinAABB(AbstractHorse.class, new AxisAlignedBB((double)x - 4.0D, (double)y - 4.0D, (double)z - 4.0D, (double)x + 4.0D, (double)y + 4.0D, (double)z + 4.0D))) {
-                        if (abstractHorse.getUniqueID().equals(uuid)) {
-                            setWorker(abstractHorse);
-                            break;
-                        }
+                for (AbstractHorse abstractHorse : world.getEntitiesWithinAABB(AbstractHorse.class, new AxisAlignedBB((double)x - 4.0D, (double)y - 4.0D, (double)z - 4.0D, (double)x + 4.0D, (double)y + 4.0D, (double)z + 4.0D))) {
+                    if (abstractHorse.getUniqueID().equals(uuid)) {
+                        setWorker(abstractHorse);
+                        break;
                     }
                 }
-                nbtWorker = null;
             }
+            nbtWorker = null;
+        }
 
+        if (!world.isRemote && valid) {
             if (!running && canMill()) {
                 running = true;
             } else if (running && !canMill()){
@@ -130,7 +214,7 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
                 if (running) {
 
                     double x = pos.getX() + path[target][0] * 2;
-                    double y = pos.getY();
+                    double y = pos.getY() - 1;
                     double z = pos.getZ() + path[target][1] * 2;
 
                     if (searchAreas[target] == null)
@@ -147,17 +231,13 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
                         if (origin != target && target != previous) {
                             origin = target;
                             currentItemMillTime++;
-                            //TODO remove debug message
-                            System.out.println("Mill progress: " + currentItemMillTime);
 
                             if (currentItemMillTime == totalItemMillTime) {
                                 currentItemMillTime = 0;
 
-                                totalItemMillTime = MillRecipes.instance().getMillTime(millItemStacks.get(0));
+                                totalItemMillTime = GrindstoneRecipes.instance().getGrindstoneTime(millItemStacks.get(0));
                                 millItem();
                                 flag = true;
-                                //TODO remove debug message
-                                System.out.println("Milled!");
                             }
                         }
                         target = next;
@@ -168,10 +248,10 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
 
                     if (target != -1 && worker.getNavigator().noPath()) {
                         x = pos.getX() + path[target][0] * 2;
-                        y = pos.getY();
+                        y = pos.getY() - 1;
                         z = pos.getZ() + path[target][1] * 2;
 
-                        worker.getNavigator().tryMoveToXYZ(x, y, z, 1.2D);
+                        worker.getNavigator().tryMoveToXYZ(x, y, z, 1D);
                     }
 
                 }
@@ -194,7 +274,7 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
 
             for (int i = 0; i < path.length; i++) {
                 double x = pos.getX() + path[i][0] * 2;
-                double y = pos.getY();
+                double y = pos.getY() - 1;
                 double z = pos.getZ() + path[i][1] * 2;
 
                 double tmp = worker.getDistance(x, y, z);
@@ -212,7 +292,7 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
     private void millItem() {
         if (canMill()) {
             ItemStack input = millItemStacks.get(0);
-            ItemStack result = MillRecipes.instance().getMillResult(millItemStacks.get(0));
+            ItemStack result = GrindstoneRecipes.instance().getGrindstoneResult(millItemStacks.get(0));
             ItemStack output = millItemStacks.get(1);
 
             if (output.isEmpty())
@@ -225,6 +305,7 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
             }
 
             input.shrink(1);
+            BlockGrindstone.setState(true, world, pos);
         }
     }
 
@@ -232,7 +313,7 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
         if (millItemStacks.get(0).isEmpty()) {
             return false;
         } else {
-            ItemStack itemstack = MillRecipes.instance().getMillResult(millItemStacks.get(0));
+            ItemStack itemstack = GrindstoneRecipes.instance().getGrindstoneResult(millItemStacks.get(0));
 
             if (itemstack.isEmpty())
             {
@@ -275,10 +356,8 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
 
     @Override
     public boolean isEmpty() {
-        for (ItemStack itemstack : millItemStacks)
-        {
-            if (!itemstack.isEmpty())
-            {
+        for (ItemStack itemstack : millItemStacks) {
+            if (!itemstack.isEmpty()) {
                 return false;
             }
         }
@@ -293,12 +372,18 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        return ItemStackHelper.getAndSplit(millItemStacks, index, count);
+        ItemStack stack = ItemStackHelper.getAndSplit(millItemStacks, index, count);
+        if (index == 1 && millItemStacks.get(1).isEmpty())
+            BlockGrindstone.setState(false, world, pos);
+        return stack;
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return ItemStackHelper.getAndRemove(millItemStacks, index);
+        ItemStack stack = ItemStackHelper.getAndRemove(millItemStacks, index);
+        if (index == 1 && millItemStacks.get(1).isEmpty())
+            BlockGrindstone.setState(false, world, pos);
+        return stack;
     }
 
     @Override
@@ -311,8 +396,13 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
             stack.setCount(this.getInventoryStackLimit());
         }
 
+        if (index == 1 && millItemStacks.get(1).isEmpty()) {
+            BlockGrindstone.setState(false, world, pos);
+            markDirty();
+        }
+
         if (index == 0 && !flag) {
-            totalItemMillTime = MillRecipes.instance().getMillTime(stack);
+            totalItemMillTime = GrindstoneRecipes.instance().getGrindstoneTime(stack);
             currentItemMillTime = 0;
             markDirty();
         }
@@ -340,7 +430,7 @@ public class TileEntityMill extends TileEntity implements ITickable, ISidedInven
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && MillRecipes.instance().hasRecipe(stack);
+        return index != 1 && index == 0 && GrindstoneRecipes.instance().hasRecipe(stack);
     }
 
     @Override

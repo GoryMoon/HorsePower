@@ -81,7 +81,7 @@ public class ModModelManager {
      * Uses the registry name as the domain/path and the {@link IBlockState} as the variant.
      *
      * @param state    The state to use as the variant
-     * @param metadata The item metadata to register the model for
+     * @param metadata The items metadata to register the model for
      */
     private void registerBlockItemModelForMeta(IBlockState state, int metadata) {
         final Item item = Item.getItemFromBlock(state.getBlock());

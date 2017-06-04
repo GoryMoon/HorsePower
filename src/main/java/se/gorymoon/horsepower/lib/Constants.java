@@ -2,5 +2,10 @@ package se.gorymoon.horsepower.lib;
 
 
 public class Constants {
-    public static final String MILL_TE_ID = "horsepower_mill_tilentity";
+
+    public static final String GRINDSTONE_BLOCK = "grindstone";
+    public static final String FLOUR_ITEM = "flour";
+    public static final String DOUGH_ITEM = "dough";
+
+    public static final String GRINDSTONE_TE = "horsepower_grindstone_tilentity";
 }

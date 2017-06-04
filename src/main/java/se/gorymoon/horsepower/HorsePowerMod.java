@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.Loader;
@@ -26,7 +26,7 @@ import se.gorymoon.horsepower.blocks.ModBlocks;
 import se.gorymoon.horsepower.items.ModItems;
 import se.gorymoon.horsepower.lib.Reference;
 import se.gorymoon.horsepower.proxy.CommonProxy;
-import se.gorymoon.horsepower.recipes.MillRecipes;
+import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
 import se.gorymoon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gorymoon.horsepower.tweaker.ITweakerPlugin;
 import se.gorymoon.horsepower.tweaker.TweakerPluginImpl;
@@ -34,7 +34,7 @@ import se.gorymoon.horsepower.tweaker.TweakerPluginImpl;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.11.2]")
+@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.11.2]", dependencies = "after:crafttweaker;after:jei;")
 @EventBusSubscriber
 public class HorsePowerMod {
 
@@ -62,6 +62,7 @@ public class HorsePowerMod {
     public void loaded(FMLLoadCompleteEvent event) {
         if (Loader.isModLoaded("crafttweaker")) {
             tweakerPlugin = new TweakerPluginImpl();
+            tweakerPlugin.register();
         } else {
             tweakerPlugin = new DummyTweakPluginImpl();
         }
@@ -69,7 +70,7 @@ public class HorsePowerMod {
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
-        MillRecipes.instance().reloadRecipes();
+        GrindstoneRecipes.instance().reloadRecipes();
         event.registerServerCommand(new CommandBase() {
             @Override
             public String getName() {
@@ -91,8 +92,8 @@ public class HorsePowerMod {
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 if (args.length == 1 && "reload".equals(args[0])) {
                     ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-                    MillRecipes.instance().reloadRecipes();
-                    sender.sendMessage(new TextComponentString("HorsePower configs reloaded"));
+                    GrindstoneRecipes.instance().reloadRecipes();
+                    sender.sendMessage(new TextComponentTranslation("horsemod.commands.reload"));
                 } else {
                     throw new WrongUsageException("/horsepower reload");
                 }
