@@ -63,7 +63,17 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
     }
 
     public boolean hasWorker() {
-        return worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 45;
+        if (worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
+            return true;
+        } else {
+            if (worker != null) {
+                worker = null;
+                if (!getWorld().isRemote)
+                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
+            }
+            hasWorker = false;
+            return false;
+        }
     }
 
     public AbstractHorse getWorker() {
@@ -130,13 +140,12 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
     @Nullable
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), -999, writeToNBT(new NBTTagCompound()));
+        return new SPacketUpdateTileEntity(getPos(), -999, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        readFromNBT(pkt.getNbtCompound());
-        markDirty();
+        handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override
@@ -153,6 +162,7 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
     @Override
     public void handleUpdateTag(NBTTagCompound tag) {
        readFromNBT(tag);
+       markDirty();
     }
 
     private boolean validateArea() {
@@ -255,10 +265,6 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
                     }
 
                 }
-            } else if (worker != null) {
-                hasWorker = false;
-                worker = null;
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
             }
         }
 
