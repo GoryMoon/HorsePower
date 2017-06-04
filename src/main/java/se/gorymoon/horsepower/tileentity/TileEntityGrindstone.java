@@ -2,6 +2,8 @@ package se.gorymoon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -28,8 +30,10 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import se.gorymoon.horsepower.blocks.BlockGrindstone;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
 import se.gorymoon.horsepower.util.Localization;
+import se.gorymoon.horsepower.util.Utils;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +51,7 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
     private int target = origin;
 
     private boolean hasWorker = false;
-    private AbstractHorse worker;
+    private EntityCreature worker;
     private NBTTagCompound nbtWorker;
 
     private int currentItemMillTime;
@@ -58,7 +62,7 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
     private boolean valid = false;
     private int validationTimer = 0;
 
-    public void setWorker(AbstractHorse newWorker) {
+    public void setWorker(EntityCreature newWorker) {
         hasWorker = true;
         worker = newWorker;
         worker.setHomePosAndDistance(pos, 3);
@@ -79,7 +83,7 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
         }
     }
 
-    public AbstractHorse getWorker() {
+    public EntityCreature getWorker() {
         return worker;
     }
 
@@ -209,10 +213,16 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
                 int y = pos.getY();
                 int z = pos.getZ();
 
-                for (AbstractHorse abstractHorse : world.getEntitiesWithinAABB(AbstractHorse.class, new AxisAlignedBB((double)x - 4.0D, (double)y - 4.0D, (double)z - 4.0D, (double)x + 4.0D, (double)y + 4.0D, (double)z + 4.0D))) {
-                    if (abstractHorse.getUniqueID().equals(uuid)) {
-                        setWorker(abstractHorse);
-                        break;
+                ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+                search: for (Class<? extends Entity> clazz: clazzes) {
+                    for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
+                        if (entity instanceof EntityCreature) {
+                            EntityCreature creature = (EntityCreature) entity;
+                            if (creature.getUniqueID().equals(uuid)) {
+                                setWorker(creature);
+                                break search;
+                            }
+                        }
                     }
                 }
             }
@@ -264,8 +274,9 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
                         target = next;
                     }
 
-                    if (worker.isEatingHaystack())
-                        worker.setEatingHaystack(false);
+                    if (worker instanceof AbstractHorse && ((AbstractHorse)worker).isEatingHaystack()) {
+                        ((AbstractHorse)worker).setEatingHaystack(false);
+                    }
 
                     if (target != -1 && worker.getNavigator().noPath()) {
                         x = pos.getX() + path[target][0] * 2;

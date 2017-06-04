@@ -13,7 +13,8 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.passive.AbstractHorse;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemLead;
@@ -31,8 +32,10 @@ import se.gorymoon.horsepower.lib.Constants;
 import se.gorymoon.horsepower.tileentity.TileEntityGrindstone;
 import se.gorymoon.horsepower.util.Colors;
 import se.gorymoon.horsepower.util.Localization;
+import se.gorymoon.horsepower.util.Utils;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
@@ -152,14 +155,20 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
         int z = pos.getZ();
 
         if (stack.getItem() instanceof ItemLead) {
-            for (AbstractHorse abstractHorse : worldIn.getEntitiesWithinAABB(AbstractHorse.class, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                if (abstractHorse.getLeashed() && abstractHorse.getLeashedToEntity() == playerIn) {
-                    if (!tileEntityGrindstone.hasWorker()) {
-                        abstractHorse.clearLeashed(true, false);
-                        tileEntityGrindstone.setWorker(abstractHorse);
-                        return true;
-                    } else {
-                        return false;
+            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            for (Class<? extends Entity> clazz: clazzes) {
+                for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
+                    if (entity instanceof EntityCreature) {
+                        EntityCreature creature = (EntityCreature) entity;
+                        if (creature.getLeashed() && creature.getLeashedToEntity() == playerIn) {
+                            if (!tileEntityGrindstone.hasWorker()) {
+                                creature.clearLeashed(true, false);
+                                tileEntityGrindstone.setWorker(creature);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
                     }
                 }
             }

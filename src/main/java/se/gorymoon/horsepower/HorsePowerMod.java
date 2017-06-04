@@ -36,7 +36,7 @@ import se.gorymoon.horsepower.tweaker.TweakerPluginImpl;
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.11.2]", dependencies = "after:crafttweaker;after:jei;")
+@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.11.2]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;")
 @EventBusSubscriber
 public class HorsePowerMod {
 

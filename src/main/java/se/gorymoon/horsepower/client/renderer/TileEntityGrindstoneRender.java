@@ -5,8 +5,8 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -61,7 +61,7 @@ public class TileEntityGrindstoneRender extends TileEntitySpecialRenderer<TileEn
         return start + (end - start) * pct;
     }
 
-    protected void renderLeash(AbstractHorse entity, double x, double y, double z, float entityYaw, float partialTicks, BlockPos pos) {
+    protected void renderLeash(EntityCreature entity, double x, double y, double z, float entityYaw, float partialTicks, BlockPos pos) {
         if (entity != null)
         {
             y = y - (1.6D - 0.2D) * 0.5D;
