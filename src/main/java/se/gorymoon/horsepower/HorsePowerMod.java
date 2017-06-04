@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,11 @@ public class HorsePowerMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit();
+
+        if (FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER)) {
+            logger.info("Loaded Waila Integration");
+        }
+
         ModBlocks.registerTileEntities();
     }
 

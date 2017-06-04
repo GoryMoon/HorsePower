@@ -7,7 +7,6 @@ item.horsepower:grindstone.description.size=For the grindstone to work an [%1]7x
 item.horsepower:grindstone.description.location=The grindstone needs to be placed [%1]one block[%2] up in the middle
 item.horsepower:grindstone.description.use=To use the grindstone attach a horse with a lead
 
-
 # Blocks
 tile.grindstone.name=Horse Grindstone
 
@@ -22,3 +21,6 @@ commands.horsepower.reload=HorsePower configs reloaded
 
 # Gui
 gui.horsepower.jei.category.grinding=Grindstone
+
+# Waila
+gui.horsepower.waila.progress=Grinding: [%1]

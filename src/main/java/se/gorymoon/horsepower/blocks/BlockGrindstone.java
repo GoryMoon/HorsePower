@@ -1,5 +1,10 @@
 package se.gorymoon.horsepower.blocks;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -21,6 +26,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import se.gorymoon.horsepower.lib.Constants;
 import se.gorymoon.horsepower.tileentity.TileEntityGrindstone;
 import se.gorymoon.horsepower.util.Colors;
@@ -29,7 +35,8 @@ import se.gorymoon.horsepower.util.Localization;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockGrindstone extends Block {
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockGrindstone extends Block implements IProbeInfoAccessor {
 
     private static boolean keepInventory = false;
     public static final PropertyBool FILLED = PropertyBool.create("filled");
@@ -200,5 +207,16 @@ public class BlockGrindstone extends Block {
         tooltip.add(Localization.ITEM.MILL.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
         tooltip.add(Localization.ITEM.MILL.LOCATION.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
         tooltip.add(Localization.ITEM.MILL.USE.translate());
+    }
+
+    // The One Probe Integration
+    @Optional.Method(modid = "theoneprobe")
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity tileEntity = world.getTileEntity(data.getPos());
+        if (tileEntity instanceof TileEntityGrindstone) {
+            TileEntityGrindstone te = (TileEntityGrindstone) tileEntity;
+            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().suffix("%"));
+        }
     }
 }

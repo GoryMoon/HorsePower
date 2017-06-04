@@ -75,7 +75,18 @@ public final class Localization {
             return "gui.horsepower.jei." + toString().toLowerCase().replaceAll("_", ".");
         }
 
+    }
 
+    public enum WAILA {
+        PROGRESS;
+
+        public String translate(String... vars) {
+            return Localization.translateString(key(), vars);
+        }
+
+        public String key() {
+            return "gui.horsepower.waila." + toString().toLowerCase().replaceAll("_", ".");
+        }
     }
 
 }

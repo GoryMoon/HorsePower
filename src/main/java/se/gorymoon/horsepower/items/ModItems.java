@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import se.gorymoon.horsepower.Configs;
 import se.gorymoon.horsepower.blocks.ModBlocks;
@@ -54,9 +55,12 @@ public class ModItems {
 
     public static void registerRecipes() {
         if (Configs.enableDough) {
-            if (Configs.enableFlour)
+            if (Configs.enableFlour) {
                 GameRegistry.addShapelessRecipe(new ItemStack(DOUGH), FLOUR, Items.WATER_BUCKET);
+                OreDictionary.registerOre("foodFlour", FLOUR);
+            }
             GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
+            OreDictionary.registerOre("foodDough", DOUGH);
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
     }

@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreDictionary;
 import se.gorymoon.horsepower.jei.HorsePowerPlugin;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipe;
 import se.gorymoon.horsepower.util.Colors;
@@ -68,8 +69,15 @@ public class GrindstoneRecipeWrapper extends BlankRecipeWrapper {
         if (!(o instanceof GrindstoneRecipeWrapper)) return false;
 
         GrindstoneRecipeWrapper that = (GrindstoneRecipeWrapper) o;
+        boolean flag = true;
+        for (ItemStack stack: inputs.get(0)) {
+            for (ItemStack stack1: that.inputs.get(0)) {
+                if (stack1.getMetadata() == OreDictionary.WILDCARD_VALUE && !OreDictionary.itemMatches(stack, stack1, false))
+                    flag = false;
+            }
+        }
 
-        return time == that.time && inputs.equals(that.inputs) && output.equals(that.output);
+        return time == that.time && flag && output.equals(that.output);
     }
 
     @Override

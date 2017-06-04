@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gorymoon.horsepower.Configs;
 import se.gorymoon.horsepower.HorsePowerMod;
@@ -29,7 +30,7 @@ public class GrindstoneRecipes {
 
         for (int i = 0; i < Configs.grindstoneRecipes.length; i++) {
             String[] comp = Configs.grindstoneRecipes[i].split("-");
-            List<ItemStack> stacks = Lists.newArrayList();
+            List<Object> stacks = Lists.newArrayList();
             int time = -1;
             for (String item: comp) {
                 if (item.contains(":")) {
@@ -41,7 +42,8 @@ public class GrindstoneRecipes {
                     data = item.split(":");
                     int meta = data.length == 2 ? 0 : "*".equals(data[2]) ?  OreDictionary.WILDCARD_VALUE: Integer.parseInt(data[2]);
                     if (item.startsWith("ore:")) {
-                        //TODO support ore dict
+                        NonNullList<ItemStack> items = OreDictionary.getOres(item.substring(4));
+                        stacks.add(items);
                     } else {
                         Item item1 = Item.getByNameOrId(data[0] + ":" + data[1]);
                         if (item1 == null)
@@ -59,7 +61,13 @@ public class GrindstoneRecipes {
                 }
             }
             if (stacks.size() == 2 && time > -1) {
-                addGrindstoneRecipe(stacks.get(0), stacks.get(1), time);
+                if (stacks.get(0) instanceof List) {
+                    for (Object stack: (List)stacks.get(0)) {
+                        addGrindstoneRecipe((ItemStack) stack, (ItemStack) stacks.get(1), time);
+                    }
+                } else {
+                    addGrindstoneRecipe((ItemStack) stacks.get(0), (ItemStack) stacks.get(1), time);
+                }
             }
         }
         HorsePowerMod.jeiPlugin.addRecipes();

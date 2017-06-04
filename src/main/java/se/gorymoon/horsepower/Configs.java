@@ -21,6 +21,7 @@ public class Configs {
 
     @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta-modid:output:meta@amount-time",
             "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
+            "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
             "The time for the horse increases for each point that it reaches, one lap is 8 points.",
             "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
     @Name("Grindstone Recipes")

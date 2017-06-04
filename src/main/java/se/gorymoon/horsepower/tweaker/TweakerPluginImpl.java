@@ -5,8 +5,10 @@ import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.item.IIngredient;
+import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.util.IEventHandler;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipe;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
@@ -14,6 +16,9 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.List;
+
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
+import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 
 @ZenClass("mods.horsepower")
 public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
@@ -40,10 +45,17 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         MineTweakerAPI.registerClass(TweakerPluginImpl.class);
     }
 
-    //TODO support ore dict
     @ZenMethod
-    public static void addGrindstoneRecipe(IIngredient input, IIngredient output, int time) {
-        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(new GrindstoneRecipe(MineTweakerMC.getItemStack(input), MineTweakerMC.getItemStack(output), time));
+    public static void addGrindstoneRecipe(IIngredient input, IItemStack output, int time) {
+        List<IItemStack> items = input.getItems();
+        if(items == null) {
+            MineTweakerAPI.logError("Cannot turn " + input.toString() + " into a furnace recipe");
+        }
+
+        ItemStack[] items2 = getItemStacks(items);
+        ItemStack output2 = getItemStack(output);
+
+        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, items2, output2, time);
         MineTweakerAPI.apply(recipe);
         actions.add(recipe);
     }
@@ -68,16 +80,25 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
 
     private static class AddGrindstoneRecipe implements IUndoableAction {
 
-        private final GrindstoneRecipe recipe;
+        private final IIngredient ingredient;
+        private final ItemStack[] input;
+        private final ItemStack output;
+        private final int time;
 
-        private AddGrindstoneRecipe(GrindstoneRecipe recipe) {
-            this.recipe = recipe;
+        public AddGrindstoneRecipe(IIngredient ingredient, ItemStack[] inputs, ItemStack output2, int time) {
+            this.ingredient = ingredient;
+            this.input = inputs;
+            this.output = output2;
+            this.time = time;
         }
 
         @Override
         public void apply() {
-            GrindstoneRecipes.instance().addGrindstoneRecipe(recipe);
-            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.grinding");
+            for (ItemStack stack: input) {
+                GrindstoneRecipe recipe = new GrindstoneRecipe(stack, output, time);
+                GrindstoneRecipes.instance().addGrindstoneRecipe(recipe);
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.grinding");
+            }
         }
 
         @Override
@@ -87,18 +108,21 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
 
         @Override
         public void undo() {
-            GrindstoneRecipes.instance().removeGrindstoneRecipe(recipe);
-            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.grinding");
+            for (ItemStack stack: input) {
+                GrindstoneRecipe recipe = new GrindstoneRecipe(stack, output, time);
+                GrindstoneRecipes.instance().removeGrindstoneRecipe(recipe);
+                MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.grinding");
+            }
         }
 
         @Override
         public String describe() {
-            return "Adding grindstone recipe for " + recipe.getOutput().getDisplayName();
+            return "Adding grindstone recipe for " + ingredient;
         }
 
         @Override
         public String describeUndo() {
-            return "Removing grindstone recipe for " + recipe.getOutput().getDisplayName();
+            return "Removing grindstone recipe for " + ingredient;
         }
 
         @Override

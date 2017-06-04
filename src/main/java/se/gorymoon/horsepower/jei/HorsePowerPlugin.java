@@ -9,7 +9,6 @@ import se.gorymoon.horsepower.jei.grinding.GrindingRecipeMaker;
 import se.gorymoon.horsepower.jei.grinding.GrindstoneRecipeWrapper;
 import se.gorymoon.horsepower.jei.grinding.HorsePowerGrindingCategory;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipe;
-import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
 
 @JEIPlugin
 public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
@@ -33,7 +32,6 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
 
         registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
 
-        //TODO add description the the mill
         registry.addDescription(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
 
@@ -54,15 +52,15 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
 
     @Override
     public void removeRecipe() {
-        for (GrindstoneRecipe recipe: GrindstoneRecipes.instance().getGrindstoneRecipes()) {
-            jeiRuntime.getRecipeRegistry().removeRecipe(jeiRuntime.getRecipeRegistry().getRecipeWrapper(recipe, GRINDING), GRINDING);
+        for (GrindstoneRecipeWrapper recipe: GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers)) {
+            jeiRuntime.getRecipeRegistry().removeRecipe(recipe, GRINDING);
         }
     }
 
     @Override
     public void addRecipes() {
-        for (GrindstoneRecipe recipe: GrindstoneRecipes.instance().getGrindstoneRecipes()) {
-            jeiRuntime.getRecipeRegistry().addRecipe(jeiRuntime.getRecipeRegistry().getRecipeWrapper(recipe, GRINDING), GRINDING);
+        for (GrindstoneRecipeWrapper recipe: GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers)) {
+            jeiRuntime.getRecipeRegistry().addRecipe(recipe, GRINDING);
         }
     }
 }

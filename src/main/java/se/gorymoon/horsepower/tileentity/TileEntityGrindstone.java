@@ -1,5 +1,6 @@
 package se.gorymoon.horsepower.tileentity;
 
+import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +30,7 @@ import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
 import se.gorymoon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 public class TileEntityGrindstone extends TileEntity implements ITickable, ISidedInventory {
@@ -40,6 +42,7 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
 
     private static double[][] path = {{-1.5, -1.5}, {0, -1.5}, {1, -1.5}, {1, 0}, {1, 1}, {0, 1}, {-1.5, 1}, {-1.5, 0}};
     private AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
+    private List<BlockPos> searchPos = null;
     private int origin = -1;
     private int target = origin;
 
@@ -166,14 +169,22 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
     }
 
     private boolean validateArea() {
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -3; z <= 3; z++) {
-                if (x == 0 && z == 0)
-                    continue;
+        if (searchPos == null) {
+            searchPos = Lists.newArrayList();
 
-                if (!getWorld().isAirBlock(getPos().add(x, 0, z)) || !getWorld().isAirBlock(getPos().add(x, -1, z)))
-                    return false;
+            for (int x = -3; x <= 3; x++) {
+                for (int z = -3; z <= 3; z++) {
+                    if (x == 0 && z == 0)
+                        continue;
+                    searchPos.add(getPos().add(x, 0, z));
+                    searchPos.add(getPos().add(x, -1, z));
+                }
             }
+        }
+
+        for (BlockPos pos: searchPos) {
+            if (!getWorld().isAirBlock(pos))
+                return false;
         }
         return true;
     }
