@@ -1,36 +1,31 @@
 package se.gorymoon.horsepower.recipes;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gorymoon.horsepower.Configs;
 import se.gorymoon.horsepower.HorsePowerMod;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class GrindstoneRecipes {
 
     private static GrindstoneRecipes INSTANCE = new GrindstoneRecipes();
 
-    private final Map<ItemStack, ItemStack> grindstoneList = Maps.newHashMap();
-    private final Map<ItemStack, Integer> grindstoneTimeList = Maps.newHashMap();
+    private final ArrayList<GrindstoneRecipe> grindstoneRecipes = Lists.newArrayList();
 
     public static GrindstoneRecipes instance() {
         return INSTANCE;
     }
 
-    private GrindstoneRecipes() {
-        addGrindstoneRecipe(Items.WHEAT, new ItemStack(Items.BREAD), 16);
-    }
+    private GrindstoneRecipes() {}
 
     public void reloadRecipes() {
-        grindstoneList.clear();
-        grindstoneTimeList.clear();
+        HorsePowerMod.jeiPlugin.removeRecipe();
+        grindstoneRecipes.clear();
 
         for (int i = 0; i < Configs.grindstoneRecipes.length; i++) {
             String[] comp = Configs.grindstoneRecipes[i].split("-");
@@ -38,16 +33,25 @@ public class GrindstoneRecipes {
             int time = -1;
             for (String item: comp) {
                 if (item.contains(":")) {
-                    String[] data = item.split(":");
-                    int meta = data.length == 2 ? 0 : "*".equals(data[2]) ?  OreDictionary.WILDCARD_VALUE: Integer.getInteger(data[2]);
-                    Item item1 = Item.getByNameOrId(data[0] + ":" + data[1]);
-                    if (item1 == null)
-                        continue;
-                    ItemStack stack = new ItemStack(item1, 1, meta);
-                    stacks.add(stack);
+                    String[] data = item.split("@");
+                    int amount = data.length == 1 ? 1: Integer.parseInt(data[1]);
+                    if (data.length == 2) {
+                        item = item.substring(0, item.indexOf("@"));
+                    }
+                    data = item.split(":");
+                    int meta = data.length == 2 ? 0 : "*".equals(data[2]) ?  OreDictionary.WILDCARD_VALUE: Integer.parseInt(data[2]);
+                    if (item.startsWith("ore:")) {
+                        //TODO support ore dict
+                    } else {
+                        Item item1 = Item.getByNameOrId(data[0] + ":" + data[1]);
+                        if (item1 == null)
+                            continue;
+                        ItemStack stack = new ItemStack(item1, amount, meta);
+                        stacks.add(stack);
+                    }
                 } else {
                     try {
-                        time = Integer.valueOf(item);
+                        time = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
                         System.out.println("[HorsePower] Parse error with grindstone time '" + item + "' in config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
                         time = -1;
@@ -58,7 +62,7 @@ public class GrindstoneRecipes {
                 addGrindstoneRecipe(stacks.get(0), stacks.get(1), time);
             }
         }
-
+        HorsePowerMod.jeiPlugin.addRecipes();
         HorsePowerMod.tweakerPlugin.applyTweaker();
     }
 
@@ -72,25 +76,33 @@ public class GrindstoneRecipes {
 
     public void addGrindstoneRecipe(ItemStack input, ItemStack output, int time) {
         if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
-        grindstoneList.put(input, output);
-        grindstoneTimeList.put(input, time);
+        grindstoneRecipes.add(new GrindstoneRecipe(input, output, time));
+    }
+
+    public void addGrindstoneRecipe(GrindstoneRecipe recipe) {
+        if (getGrindstoneResult(recipe.getInput()) != ItemStack.EMPTY) return;
+        grindstoneRecipes.add(recipe);
+    }
+
+    public void removeGrindstoneRecipe(GrindstoneRecipe recipe) {
+        if (hasRecipe(recipe.getInput()))
+            grindstoneRecipes.remove(recipe);
     }
 
     public void removeGrindstoneRecipe(ItemStack input) {
         if (hasRecipe(input)) {
-            for (ItemStack itemStack: grindstoneList.keySet()) {
-                if (OreDictionary.itemMatches(itemStack, input, false)) {
-                    grindstoneList.remove(input);
-                    grindstoneTimeList.remove(input);
+            for (GrindstoneRecipe recipe: grindstoneRecipes) {
+                if (OreDictionary.itemMatches(recipe.getInput(), input, false)) {
+                    grindstoneRecipes.remove(recipe);
                 }
             }
         }
     }
 
     public ItemStack getGrindstoneResult(ItemStack stack) {
-        for (Map.Entry<ItemStack, ItemStack> entry : grindstoneList.entrySet()) {
-            if (OreDictionary.itemMatches(entry.getKey(), stack, false)) {
-                return entry.getValue();
+        for (GrindstoneRecipe recipe : grindstoneRecipes) {
+            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
+                return recipe.getOutput();
             }
         }
 
@@ -98,29 +110,22 @@ public class GrindstoneRecipes {
     }
 
     public boolean hasRecipe(ItemStack stack) {
-        for (ItemStack itemStack: grindstoneList.keySet()) {
-            if (OreDictionary.itemMatches(itemStack, stack, false)) {
+        for (GrindstoneRecipe recipe: grindstoneRecipes) {
+            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
                 return true;
             }
         }
         return false;
     }
 
-    public Map<ItemStack, ItemStack> getGrindstoneList()
-    {
-        return grindstoneList;
-    }
-
-    public Map<ItemStack, Integer> getGrindstoneTimeList() {
-        return grindstoneTimeList;
+    public ArrayList<GrindstoneRecipe> getGrindstoneRecipes() {
+        return grindstoneRecipes;
     }
 
     public int getGrindstoneTime(ItemStack stack) {
-        for (Map.Entry<ItemStack, Integer> entry : grindstoneTimeList.entrySet())
-        {
-            if (OreDictionary.itemMatches(entry.getKey(), stack, false))
-            {
-                return entry.getValue();
+        for (GrindstoneRecipe recipe : grindstoneRecipes) {
+            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
+                return recipe.getTime();
             }
         }
 

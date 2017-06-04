@@ -19,7 +19,10 @@ public class Configs {
     @Name("Enable Dough")
     public static boolean enableDough = true;
 
-    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is:", "modid:input:meta-modid:output:meta-time", "The meta can be a '*' to be a wildcard", "The time for the horse increases for each point that it reaches, one lap is 8 points.", "The speed of the horse can make it go slower or faster to grind."})
+    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta-modid:output:meta@amount-time",
+            "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
+            "The time for the horse increases for each point that it reaches, one lap is 8 points.",
+            "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
     @Name("Grindstone Recipes")
     public static String[] grindstoneRecipes = {"minecraft:wheat-horsepower:flour-12"};
 

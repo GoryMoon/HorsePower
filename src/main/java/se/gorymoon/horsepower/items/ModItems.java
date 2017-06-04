@@ -52,7 +52,6 @@ public class ModItems {
         }
     }
 
-    //TODO add recipe for the mill
     public static void registerRecipes() {
         if (Configs.enableDough) {
             if (Configs.enableFlour)

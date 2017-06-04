@@ -5,7 +5,7 @@ import net.minecraft.util.text.translation.I18n;
 public final class Localization {
 
     private static String translateString(String key, String... vars) {
-        String result = I18n.translateToLocal(key);
+        String result = translateToLocal(key);
 
         for (int i = 0; i < vars.length; i++) {
             String optionCheck = "[%" + (i + 1) + "->";
@@ -31,6 +31,14 @@ public final class Localization {
         return result;
     }
 
+    private static String translateToLocal(String key) {
+        if (I18n.canTranslate(key)) {
+            return I18n.translateToLocal(key);
+        } else {
+            return I18n.translateToFallback(key);
+        }
+    }
+
     public static class ITEM {
 
         public enum MILL {
@@ -43,7 +51,7 @@ public final class Localization {
 
     }
 
-    public static enum  INFO {
+    public enum  INFO {
 
         GRINDSTONE_INVALID;
 
@@ -54,6 +62,20 @@ public final class Localization {
         public String key() {
             return "info.horsepower:" + toString().toLowerCase().replaceAll("_", ".");
         }
+    }
+
+    public enum GUI {
+        CATEGORY_GRINDING;
+
+        public String translate(String... vars) {
+            return Localization.translateString(key(), vars);
+        }
+
+        public String key() {
+            return "gui.horsepower.jei." + toString().toLowerCase().replaceAll("_", ".");
+        }
+
+
     }
 
 }

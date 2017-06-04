@@ -17,13 +17,14 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gorymoon.horsepower.blocks.ModBlocks;
 import se.gorymoon.horsepower.items.ModItems;
+import se.gorymoon.horsepower.jei.DummyJeiPlugin;
+import se.gorymoon.horsepower.jei.IJeiPlugin;
 import se.gorymoon.horsepower.lib.Reference;
 import se.gorymoon.horsepower.proxy.CommonProxy;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
@@ -45,6 +46,7 @@ public class HorsePowerMod {
     public static CommonProxy proxy;
 
     public static ITweakerPlugin tweakerPlugin;
+    public static IJeiPlugin jeiPlugin = new DummyJeiPlugin();
     public static Logger logger = LogManager.getLogger("HorsePower");
 
     @EventHandler
@@ -56,21 +58,18 @@ public class HorsePowerMod {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         ModItems.registerRecipes();
-    }
 
-    @EventHandler
-    public void loaded(FMLLoadCompleteEvent event) {
         if (Loader.isModLoaded("crafttweaker")) {
             tweakerPlugin = new TweakerPluginImpl();
             tweakerPlugin.register();
         } else {
             tweakerPlugin = new DummyTweakPluginImpl();
         }
+        GrindstoneRecipes.instance().reloadRecipes();
     }
 
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent event) {
-        GrindstoneRecipes.instance().reloadRecipes();
         event.registerServerCommand(new CommandBase() {
             @Override
             public String getName() {
@@ -93,7 +92,7 @@ public class HorsePowerMod {
                 if (args.length == 1 && "reload".equals(args[0])) {
                     ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
                     GrindstoneRecipes.instance().reloadRecipes();
-                    sender.sendMessage(new TextComponentTranslation("horsemod.commands.reload"));
+                    sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload"));
                 } else {
                     throw new WrongUsageException("/horsepower reload");
                 }

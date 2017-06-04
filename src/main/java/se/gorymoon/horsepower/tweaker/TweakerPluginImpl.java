@@ -7,15 +7,13 @@ import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.api.item.IIngredient;
 import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.util.IEventHandler;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import se.gorymoon.horsepower.recipes.GrindstoneRecipe;
 import se.gorymoon.horsepower.recipes.GrindstoneRecipes;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @ZenClass("mods.horsepower")
 public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTweakerImplementationAPI.ReloadEvent> {
@@ -33,13 +31,19 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
     }
 
     @Override
+    public void handle(MineTweakerImplementationAPI.ReloadEvent reloadEvent) {
+        actions.clear();
+    }
+
+    @Override
     public void register() {
         MineTweakerAPI.registerClass(TweakerPluginImpl.class);
     }
 
+    //TODO support ore dict
     @ZenMethod
     public static void addGrindstoneRecipe(IIngredient input, IIngredient output, int time) {
-        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, output, time);
+        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(new GrindstoneRecipe(MineTweakerMC.getItemStack(input), MineTweakerMC.getItemStack(output), time));
         MineTweakerAPI.apply(recipe);
         actions.add(recipe);
     }
@@ -47,42 +51,33 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
     @ZenMethod
     public static void removeGrindstoneReicpe(IIngredient output) {
 
-        List<ItemStack> toRemove = new ArrayList();
-        List<ItemStack> toRemoveValues = new ArrayList();
-        List<Integer> timeToRemove = new ArrayList();
+        List<GrindstoneRecipe> toRemove = Lists.newArrayList();
+        List<Integer> removeIndex = Lists.newArrayList();
 
-        for (Map.Entry<ItemStack, ItemStack> entry: GrindstoneRecipes.instance().getGrindstoneList().entrySet()) {
-            if (OreDictionary.itemMatches(MineTweakerMC.getItemStack(output), entry.getKey(), false)) {
-                toRemove.add(entry.getKey());
-                toRemoveValues.add(entry.getValue());
-                timeToRemove.add(GrindstoneRecipes.instance().getGrindstoneTime(entry.getKey()));
+        for (int i = 0; i < GrindstoneRecipes.instance().getGrindstoneRecipes().size(); i++) {
+            GrindstoneRecipe recipe = GrindstoneRecipes.instance().getGrindstoneRecipes().get(i);
+            if (OreDictionary.itemMatches(MineTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
+                toRemove.add(recipe);
+                removeIndex.add(Integer.valueOf(i));
             }
         }
-        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(toRemove, toRemoveValues, timeToRemove);
+        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(toRemove, removeIndex);
         MineTweakerAPI.apply(recipe);
         actions.add(recipe);
     }
 
-    @Override
-    public void handle(MineTweakerImplementationAPI.ReloadEvent reloadEvent) {
-        actions.clear();
-    }
-
     private static class AddGrindstoneRecipe implements IUndoableAction {
 
-        private final IIngredient output;
-        private final IIngredient input;
-        private final int time;
+        private final GrindstoneRecipe recipe;
 
-        private AddGrindstoneRecipe(IIngredient input, IIngredient output, int time) {
-            this.output = output;
-            this.input = input;
-            this.time = time;
+        private AddGrindstoneRecipe(GrindstoneRecipe recipe) {
+            this.recipe = recipe;
         }
 
         @Override
         public void apply() {
-            GrindstoneRecipes.instance().addGrindstoneRecipe(MineTweakerMC.getItemStack(input), MineTweakerMC.getItemStack(output), time);
+            GrindstoneRecipes.instance().addGrindstoneRecipe(recipe);
+            MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.grinding");
         }
 
         @Override
@@ -92,17 +87,18 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
 
         @Override
         public void undo() {
-            GrindstoneRecipes.instance().removeGrindstoneRecipe(MineTweakerMC.getItemStack(input));
+            GrindstoneRecipes.instance().removeGrindstoneRecipe(recipe);
+            MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.grinding");
         }
 
         @Override
         public String describe() {
-            return "Adding grindstone recipe for " + output;
+            return "Adding grindstone recipe for " + recipe.getOutput().getDisplayName();
         }
 
         @Override
         public String describeUndo() {
-            return "Removing grindstone recipe for " + output;
+            return "Removing grindstone recipe for " + recipe.getOutput().getDisplayName();
         }
 
         @Override
@@ -112,21 +108,20 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
     }
 
     private static class RemoveGrindstoneRecipe implements IUndoableAction {
+        private final List<Integer> removingIndices;
+        private final List<GrindstoneRecipe> recipes;
 
-        private final List<ItemStack> output;
-        private final List<ItemStack> input;
-        private final List<Integer> time;
-
-        private RemoveGrindstoneRecipe(List<ItemStack> output, List<ItemStack> input, List<Integer> time) {
-            this.output = output;
-            this.input = input;
-            this.time = time;
+        private RemoveGrindstoneRecipe(List<GrindstoneRecipe> recipes, List<Integer> removingIndices) {
+            this.recipes = recipes;
+            this.removingIndices = removingIndices;
         }
 
         @Override
         public void apply() {
-            for (ItemStack in: input)
-                GrindstoneRecipes.instance().removeGrindstoneRecipe(in);
+            for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
+                GrindstoneRecipes.instance().getGrindstoneRecipes().remove(removingIndices.get(i).intValue());
+                MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipes.get(i), "horsepower.grinding");
+            }
         }
 
         @Override
@@ -136,18 +131,21 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
 
         @Override
         public void undo() {
-            for (int i = 0; i < input.size(); i++)
-                GrindstoneRecipes.instance().addGrindstoneRecipe(input.get(i), output.get(i), time.get(i));
+            for(int i = 0; i < this.removingIndices.size(); ++i) {
+                int index = Math.min(GrindstoneRecipes.instance().getGrindstoneRecipes().size(), this.removingIndices.get(i).intValue());
+                GrindstoneRecipes.instance().getGrindstoneRecipes().add(index, recipes.get(i));
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipes.get(i), "horsepower.grinding");
+            }
         }
 
         @Override
         public String describe() {
-            return "Removing grindstone recipe for " + output;
+            return "Removing " + recipes.size() + " grindstone recipes";
         }
 
         @Override
         public String describeUndo() {
-            return "Adding grindstone recipe for " + output;
+            return "Restoring " + recipes.size() + " grindstone recipes";
         }
 
         @Override

@@ -186,7 +186,7 @@ public class TileEntityGrindstone extends TileEntity implements ITickable, ISide
         if (validationTimer <= 0) {
             valid = validateArea();
             if (valid)
-                validationTimer = 1200;
+                validationTimer = 220;
             else
                 validationTimer = 60;
         }
