@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
     }
@@ -7,18 +8,35 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+
+configurations {
+    deployerJars
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = mod_version
-group = "se.gorymoon.horsepower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "HorsePower"
+// Define properties file
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    // Load config.  It shall from now be referenced as simply config or project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
+
+version = "${config.mc_version}-${config.mod_version}.${System.getenv("BUILD_NUMBER") ?: config.local_build}"
+group = "se.gorymoon.horsepower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "HorsePower"
 
 minecraft {
     version = "1.11.2-13.20.0.2303"
@@ -33,7 +51,7 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     replaceIn "Reference.java"
-    replace "@MOD_VERSION@", mod_version
+    replace "@MOD_VERSION@", config.mod_version
     if (project.hasProperty("ms_sha1_signature")) {
         replace "@FINGERPRINT@", project.ms_sha1_signature
     }
@@ -61,19 +79,20 @@ repositories {
 }
 
 dependencies {
+    deployerJars "org.apache.maven.wagon:wagon-ftp:2.10"
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}:api"
+    deobfCompile "mezz.jei:jei_${config.mc_version}:${config.jei_version}:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+    runtime "mezz.jei:jei_${config.mc_version}:${config.jei_version}"
 
-    deobfCompile "mcjty.theoneprobe:TheOneProbe:1.1x-${top_version}"
+    deobfCompile "mcjty.theoneprobe:TheOneProbe:1.1x-${config.top_version}"
 
-    deobfCompile "mcp.mobius.waila:Waila:${waila_version}:dev"
+    deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}:dev"
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
+    inputs.property "version", "${config.mob_version}.${System.getenv("BUILD_NUMBER") ?: config.local_build}"
     inputs.property "mcversion", project.minecraft.version
 
     // replace stuff in mcmod.info, nothing else
@@ -81,7 +100,7 @@ processResources {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': config.mod_version + ".${System.getenv("BUILD_NUMBER") ?: config.local_build}", 'mcversion': project.minecraft.version
     }
         
     // copy everything else except the mcmod.info
@@ -102,4 +121,63 @@ task devJar(type: Jar, dependsOn: 'classes') {
 artifacts {
     archives devJar
     archives sourceJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (project.hasProperty("maven_url")) {
+                logger.info('Publishing to files server')
+                configuration = configurations.deployerJars
+
+                repository(url: project.maven_url) {
+                    authentication(userName: project.maven_username ?: "", password: project.maven_password ?: "")
+                }
+            } else if (project.hasProperty("local_maven")) {
+                repository(url: "file://${project.getProperty('local_maven')}")
+            }
+
+            pom {
+                groupId = project.group
+                version = project.version
+                artifactId = project.archivesBaseName
+            }
+
+            pom.project {
+                name project.archivesBaseName
+                packaging 'jar'
+                description 'HorsePower'
+                url 'https://github.com/GoryMoon/HorsePower/'
+
+                scm {
+                    url 'https://github.com/GoryMoon/HorsePower/'
+                    connection 'scm:git:git://github.com/GoryMoon/HorsePower.git'
+                    developerConnection 'scm:git:git@github.com/GoryMoon/HorsePower.git'
+                }
+
+                issueManagement {
+                    system 'github'
+                    url 'https://github.com/GoryMoon/HorsePower/issues'
+                }
+
+                licenses {
+                    license {
+                        name 'GNU Lesser General Public License 3.0'
+                        url 'https://www.gnu.org/licenses/lgpl-3.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'Gory_Moon'
+                        name 'Gory_Moon'
+                        roles {
+                            role 'developer'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

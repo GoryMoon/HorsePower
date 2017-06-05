@@ -17,6 +17,7 @@ classes
 # gradle
 build
 .gradle
+gradle.properties
 
 # other
 eclipse
