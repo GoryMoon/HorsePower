@@ -35,7 +35,7 @@ compileJava {
 }
 
 version = "${config.mc_version}-${config.mod_version}.${System.getenv("BUILD_NUMBER") ?: config.local_build}"
-group = "se.gorymoon.horsepower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "HorsePower"
 
 minecraft {
