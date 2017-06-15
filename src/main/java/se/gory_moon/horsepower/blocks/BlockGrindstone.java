@@ -41,9 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockGrindstone extends Block implements IProbeInfoAccessor {
+public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
 
-    private static boolean keepInventory = false;
     public static final PropertyBool FILLED = PropertyBool.create("filled");
     private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 8D/16D, 1.0D);
     private static final AxisAlignedBB BOUNDING_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 13D/16D, 1.0D);
@@ -58,11 +57,6 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
         setCreativeTab(CreativeTabs.DECORATIONS);
     }
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
-
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         return BOUNDING_AABB;
     }
@@ -73,16 +67,6 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
         return COLLISION_AABB;
     }
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
@@ -90,33 +74,10 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-
-        if (!player.capabilities.isCreativeMode && !worldIn.isRemote) {
-            TileEntityGrindstone te = getTileEntity(worldIn, pos);
-
-            if (te != null) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, te);
-                if (te.hasWorker())
-                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
-            }
-        }
-    }
-
-    private TileEntityGrindstone getTileEntity(World worldIn, BlockPos pos) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof TileEntityGrindstone ? (TileEntityGrindstone)tileentity : null;
-    }
-
-    @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, new IProperty[] {FILLED});
     }
 
-    /**
-     * Convert the BlockState into the correct metadata value
-     */
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(FILLED).booleanValue() ? 1: 0;
@@ -125,11 +86,6 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(FILLED, meta == 1);
-    }
-
-    @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        return super.getActualState(state, worldIn, pos);
     }
 
     public static void setState(boolean filled, World worldIn, BlockPos pos) {
@@ -143,89 +99,6 @@ public class BlockGrindstone extends Block implements IProbeInfoAccessor {
             worldIn.setTileEntity(pos, tileentity);
             tileentity.validate();
         }
-    }
-
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        if (!keepInventory && !worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
-
-            if (tileentity instanceof TileEntityGrindstone) {
-                worldIn.updateComparatorOutputLevel(pos, this);
-            }
-        }
-        super.breakBlock(worldIn, pos, state);
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = playerIn.getHeldItem(hand);
-        TileEntityGrindstone tileEntityGrindstone = (TileEntityGrindstone) worldIn.getTileEntity(pos);
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
-
-        EntityCreature creature = null;
-        ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-        search: for (Class<? extends Entity> clazz: clazzes) {
-            for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                if (entity instanceof EntityCreature) {
-                    EntityCreature tmp = (EntityCreature) entity;
-                    if ((tmp.getLeashed() && tmp.getLeashedToEntity() == playerIn)) {
-                        creature = tmp;
-                        break search;
-                    }
-                }
-            }
-        }
-        if (stack.getItem() instanceof ItemLead && creature != null || creature != null) {
-            if (!tileEntityGrindstone.hasWorker()) {
-                creature.clearLeashed(true, false);
-                tileEntityGrindstone.setWorker(creature);
-                return true;
-            } else {
-                return false;
-            }
-        } else if (!stack.isEmpty() && tileEntityGrindstone.isItemValidForSlot(0, stack)) {
-            ItemStack itemStack = tileEntityGrindstone.getStackInSlot(0);
-            boolean flag = false;
-
-            if (itemStack.isEmpty()) {
-                tileEntityGrindstone.setInventorySlotContents(0, stack.copy());
-                stack.setCount(0);
-                flag = true;
-            } else if (TileEntityGrindstone.canCombine(itemStack, stack)) {
-                int i = stack.getMaxStackSize() - itemStack.getCount();
-                int j = Math.min(stack.getCount(), i);
-                stack.shrink(j);
-                itemStack.grow(j);
-                flag = j > 0;
-            }
-
-            if (flag)
-                return true;
-        }
-
-        ItemStack result = tileEntityGrindstone.removeStackFromSlot(1);
-        if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
-            result = tileEntityGrindstone.removeStackFromSlot(0);
-            BlockGrindstone.setState(false, worldIn, pos);
-        }
-
-        if (result.isEmpty()) {
-            if (!stack.isEmpty())
-                return false;
-
-            tileEntityGrindstone.setWorkerToPlayer(playerIn);
-        }
-
-        if (stack.isEmpty()) {
-            playerIn.setHeldItem(hand, result);
-        } else if (playerIn.func_191521_c(result)) {
-            playerIn.dropItem(result, false);
-        }
-
-        tileEntityGrindstone.markDirty();
-        return true;
     }
 
     @Override
