@@ -10,7 +10,7 @@ import minetweaker.api.minecraft.MineTweakerMC;
 import minetweaker.util.IEventHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import se.gory_moon.horsepower.recipes.GrindstoneRecipes;
+import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -66,8 +66,8 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         List<GrindstoneRecipe> toRemove = Lists.newArrayList();
         List<Integer> removeIndex = Lists.newArrayList();
 
-        for (int i = 0; i < GrindstoneRecipes.instance().getGrindstoneRecipes().size(); i++) {
-            GrindstoneRecipe recipe = GrindstoneRecipes.instance().getGrindstoneRecipes().get(i);
+        for (int i = 0; i < HPRecipes.instance().getGrindstoneRecipes().size(); i++) {
+            GrindstoneRecipe recipe = HPRecipes.instance().getGrindstoneRecipes().get(i);
             if (OreDictionary.itemMatches(MineTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
                 toRemove.add(recipe);
                 removeIndex.add(i);
@@ -96,7 +96,7 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         public void apply() {
             for (ItemStack stack: input) {
                 GrindstoneRecipe recipe = new GrindstoneRecipe(stack, output, time);
-                GrindstoneRecipes.instance().addGrindstoneRecipe(recipe);
+                HPRecipes.instance().addGrindstoneRecipe(recipe);
                 MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.grinding");
             }
         }
@@ -110,7 +110,7 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         public void undo() {
             for (ItemStack stack: input) {
                 GrindstoneRecipe recipe = new GrindstoneRecipe(stack, output, time);
-                GrindstoneRecipes.instance().removeGrindstoneRecipe(recipe);
+                HPRecipes.instance().removeGrindstoneRecipe(recipe);
                 MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.grinding");
             }
         }
@@ -143,7 +143,7 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         @Override
         public void apply() {
             for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
-                GrindstoneRecipes.instance().getGrindstoneRecipes().remove(removingIndices.get(i).intValue());
+                HPRecipes.instance().getGrindstoneRecipes().remove(removingIndices.get(i).intValue());
                 MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipes.get(i), "horsepower.grinding");
             }
         }
@@ -156,8 +156,8 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         @Override
         public void undo() {
             for(int i = 0; i < this.removingIndices.size(); ++i) {
-                int index = Math.min(GrindstoneRecipes.instance().getGrindstoneRecipes().size(), removingIndices.get(i));
-                GrindstoneRecipes.instance().getGrindstoneRecipes().add(index, recipes.get(i));
+                int index = Math.min(HPRecipes.instance().getGrindstoneRecipes().size(), removingIndices.get(i));
+                HPRecipes.instance().getGrindstoneRecipes().add(index, recipes.get(i));
                 MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipes.get(i), "horsepower.grinding");
             }
         }

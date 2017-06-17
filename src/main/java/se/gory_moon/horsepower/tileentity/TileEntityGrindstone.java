@@ -4,10 +4,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
-import se.gory_moon.horsepower.recipes.GrindstoneRecipes;
+import se.gory_moon.horsepower.recipes.HPRecipes;
 
 public class TileEntityGrindstone extends TileEntityHPBase {
 
@@ -48,7 +47,6 @@ public class TileEntityGrindstone extends TileEntityHPBase {
             BlockGrindstone.setState(false, world, pos);
 
         super.markDirty();
-        notifyUpdate();
     }
 
     @Override
@@ -74,13 +72,13 @@ public class TileEntityGrindstone extends TileEntityHPBase {
     }
 
     @Override
-    boolean targetReached() {
+    public boolean targetReached() {
         currentItemMillTime++;
 
         if (currentItemMillTime >= totalItemMillTime) {
             currentItemMillTime = 0;
 
-            totalItemMillTime = GrindstoneRecipes.instance().getGrindstoneTime(getStackInSlot(0));
+            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0));
             millItem();
             return true;
         }
@@ -88,28 +86,19 @@ public class TileEntityGrindstone extends TileEntityHPBase {
     }
 
     @Override
-    public boolean canWork() {
-        if (getStackInSlot(0).isEmpty()) {
-            return false;
-        } else {
-            ItemStack itemstack = GrindstoneRecipes.instance().getGrindstoneResult(getStackInSlot(0));
+    public ItemStack getRecipeItemStack() {
+        return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0));
+    }
 
-            if (itemstack.isEmpty()) {
-                return false;
-            } else {
-                ItemStack output = getStackInSlot(1);
-                if (output.isEmpty()) return true;
-                if (!output.isItemEqual(itemstack)) return false;
-                int result = output.getCount() + itemstack.getCount();
-                return result <= getInventoryStackLimit() && result <= output.getMaxStackSize();
-            }
-        }
+    @Override
+    public int getPositionOffset() {
+        return -1;
     }
 
     private void millItem() {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);
-            ItemStack result = GrindstoneRecipes.instance().getGrindstoneResult(getStackInSlot(0));
+            ItemStack result = getRecipeItemStack();
             ItemStack output = getStackInSlot(1);
 
             if (output.isEmpty()) {
@@ -140,7 +129,7 @@ public class TileEntityGrindstone extends TileEntityHPBase {
         ItemStack itemstack = getStackInSlot(index);
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemMillTime = GrindstoneRecipes.instance().getGrindstoneTime(stack);
+            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack);
             currentItemMillTime = 0;
             markDirty();
         }
@@ -153,16 +142,16 @@ public class TileEntityGrindstone extends TileEntityHPBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && GrindstoneRecipes.instance().hasRecipe(stack);
+        return index != 1 && index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack);
     }
 
     @Override
     public int getField(int id) {
         switch (id) {
             case 0:
-                return this.totalItemMillTime;
+                return totalItemMillTime;
             case 1:
-                return this.currentItemMillTime;
+                return currentItemMillTime;
             default:
                 return 0;
         }
@@ -172,10 +161,10 @@ public class TileEntityGrindstone extends TileEntityHPBase {
     public void setField(int id, int value) {
         switch (id) {
             case 0:
-                this.totalItemMillTime = value;
+                totalItemMillTime = value;
                 break;
             case 1:
-                this.currentItemMillTime = value;
+                currentItemMillTime = value;
         }
     }
 

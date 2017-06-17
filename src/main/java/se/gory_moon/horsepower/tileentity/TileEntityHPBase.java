@@ -19,6 +19,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -59,11 +60,31 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
         NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
 
-    abstract boolean validateArea();
+    public abstract boolean validateArea();
 
-    abstract boolean targetReached();
+    public abstract boolean targetReached();
 
-    abstract boolean canWork();
+    public abstract ItemStack getRecipeItemStack();
+
+    public abstract int getPositionOffset();
+
+    public boolean canWork() {
+        if (getStackInSlot(0).isEmpty()) {
+            return false;
+        } else {
+            ItemStack itemstack = getRecipeItemStack();
+
+            if (itemstack.isEmpty()) {
+                return false;
+            } else {
+                ItemStack output = getStackInSlot(1);
+                if (output.isEmpty()) return true;
+                if (!output.isItemEqual(itemstack)) return false;
+                int result = output.getCount() + itemstack.getCount();
+                return result <= getInventoryStackLimit() && result <= output.getMaxStackSize();
+            }
+        }
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -100,6 +121,12 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
         return super.writeToNBT(compound);
     }
 
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        notifyUpdate();
+    }
+
     public void setWorker(EntityCreature newWorker) {
         hasWorker = true;
         worker = newWorker;
@@ -134,15 +161,23 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
         return worker;
     }
 
+    private Vec3d getPathPosition(int i) {
+        double x = pos.getX() + path[i][0] * 2;
+        double y = pos.getY() + getPositionOffset();
+        double z = pos.getZ() + path[i][1] * 2;
+        return new Vec3d(x, y, z);
+    }
+
     protected int getClosestTarget() {
         if (hasWorker()) {
             double dist = Double.MAX_VALUE;
             int closest = 0;
 
             for (int i = 0; i < path.length; i++) {
-                double x = pos.getX() + path[i][0] * 2;
-                double y = pos.getY() - 1;
-                double z = pos.getZ() + path[i][1] * 2;
+                Vec3d pos = getPathPosition(i);
+                double x = pos.xCoord;
+                double y = pos.yCoord;
+                double z = pos.zCoord;
 
                 double tmp = worker.getDistance(x, y, z);
                 if (tmp < dist) {
@@ -207,9 +242,10 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
             if (hasWorker()) {
                 if (running) {
 
-                    double x = pos.getX() + path[target][0] * 2;
-                    double y = pos.getY() - 1;
-                    double z = pos.getZ() + path[target][1] * 2;
+                    Vec3d pos = getPathPosition(target);
+                    double x = pos.xCoord;
+                    double y = pos.yCoord;
+                    double z = pos.zCoord;
 
                     if (searchAreas[target] == null)
                         searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D);
@@ -234,9 +270,10 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
                     }
 
                     if (target != -1 && worker.getNavigator().noPath()) {
-                        x = pos.getX() + path[target][0] * 2;
-                        y = pos.getY() - 1;
-                        z = pos.getZ() + path[target][1] * 2;
+                        pos = getPathPosition(target);
+                        x = pos.xCoord;
+                        y = pos.yCoord;
+                        z = pos.zCoord;
 
                         worker.getNavigator().tryMoveToXYZ(x, y, z, 1D);
                     }
@@ -343,7 +380,7 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
     public void setInventorySlotContents(int index, ItemStack stack) {
         itemStacks.set(index, stack);
 
-        if (stack.getCount() > this.getInventoryStackLimit()) {
+        if (index == 0 && stack.getCount() > this.getInventoryStackLimit()) {
             stack.setCount(this.getInventoryStackLimit());
         }
     }
@@ -354,19 +391,10 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
-
-    }
+    public void openInventory(EntityPlayer player) {}
 
     @Override
-    public void closeInventory(EntityPlayer player) {
-
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return false;
-    }
+    public void closeInventory(EntityPlayer player) {}
 
     @Override
     public int getField(int id) {

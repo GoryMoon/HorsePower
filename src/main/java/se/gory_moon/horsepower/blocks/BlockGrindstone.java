@@ -118,4 +118,9 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
             probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().suffix("%"));
         }
     }
+
+    @Override
+    public void emptiedOutput(World world, BlockPos pos) {
+        BlockGrindstone.setState(false, world, pos);
+    }
 }

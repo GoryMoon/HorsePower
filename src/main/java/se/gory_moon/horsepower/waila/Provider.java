@@ -10,6 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.blocks.BlockFiller;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
 
@@ -20,6 +23,7 @@ public class Provider implements IWailaDataProvider {
     public static void callbackRegister(IWailaRegistrar registrar) {
         Provider provider = new Provider();
 
+        registrar.registerStackProvider(provider, BlockFiller.class);
         registrar.registerBodyProvider(provider, BlockGrindstone.class);
         registrar.registerNBTProvider(provider, BlockGrindstone.class);
         //registrar.addConfig(Reference.NAME, "showItems", Localization.WAILA.SHOW_ITEMS.translate());
@@ -27,6 +31,8 @@ public class Provider implements IWailaDataProvider {
 
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        if (accessor.getBlock().equals(ModBlocks.BLOCK_CHOPPER_FILLER))
+            return new ItemStack(ModBlocks.BLOCK_CHOPPER, 1);
         return null;
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -31,6 +32,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,10 +41,23 @@ import java.util.Random;
 public class BlockFiller extends BlockDirectional {
 
     public static final IUnlistedProperty<Integer> MISC_DATA = Properties.toUnlisted(PropertyInteger.create("misc_data", 0, 32));
+    public boolean useTileEntity;
 
-    public BlockFiller(Material materialIn, String name) {
+    public BlockFiller(Material materialIn, String name, boolean useTileEntity) {
         super(materialIn);
         setRegistryName(name + "filler");
+        this.useTileEntity = useTileEntity;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileEntityFiller();
+    }
+
+    @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return useTileEntity;
     }
 
     private IBlockState getFillerState(IBlockAccess world, BlockPos pos) {
@@ -124,7 +139,7 @@ public class BlockFiller extends BlockDirectional {
     @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
         IBlockState state = world.getBlockState(pos);
-        if (!((World) world).isRemote && pos.equals(neighbor.offset(state.getValue(FACING)))) {
+        if (!((World) world).isRemote && pos.offset(state.getValue(FACING)).equals(neighbor) && world.isAirBlock(neighbor)) {
             ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
         }
     }

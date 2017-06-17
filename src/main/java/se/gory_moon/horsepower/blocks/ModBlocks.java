@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import se.gory_moon.horsepower.items.ItemBlockChopper;
+import se.gory_moon.horsepower.tileentity.TileEntityChopper;
+import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
@@ -22,7 +24,7 @@ public class ModBlocks {
 
     public static final BlockGrindstone BLOCK_GRINDSTONE = new BlockGrindstone();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
-    public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_").setHardness(2F).setResistance(5F);
+    public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHardness(2F).setResistance(5F);
 
     @Mod.EventBusSubscriber(modid = Reference.MODID)
     public static class RegistrationHandler {
@@ -64,7 +66,9 @@ public class ModBlocks {
     }
 
     public static void registerTileEntities() {
-        registerTileEntityNoPrefix(TileEntityGrindstone.class, TileEntityGrindstone.class.getSimpleName().replaceFirst("TileEntity", ""), Constants.GRINDSTONE_TE);
+        registerTileEntity(TileEntityGrindstone.class);
+        registerTileEntity(TileEntityChopper.class);
+        registerTileEntity(TileEntityFiller.class);
     }
 
     private static void registerTileEntity(Class<? extends TileEntity> tileEntityClass) {

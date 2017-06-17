@@ -16,7 +16,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.util.Utils;
 
@@ -29,6 +28,8 @@ public abstract class BlockHPBase extends Block {
     public BlockHPBase(Material materialIn) {
         super(materialIn);
     }
+
+    public abstract void emptiedOutput(World world, BlockPos pos);
 
     @Override
     public boolean hasTileEntity(IBlockState state) {
@@ -70,7 +71,7 @@ public abstract class BlockHPBase extends Block {
         if (!keepInventory && !worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
 
-            if (tileentity instanceof TileEntityGrindstone) {
+            if (tileentity instanceof TileEntityHPBase) {
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
         }
@@ -112,7 +113,7 @@ public abstract class BlockHPBase extends Block {
 
             if (itemStack.isEmpty()) {
                 tileEntityHPBase.setInventorySlotContents(0, stack.copy());
-                stack.setCount(0);
+                stack.setCount(stack.getCount() - tileEntityHPBase.getInventoryStackLimit());
                 flag = true;
             } else if (TileEntityHPBase.canCombine(itemStack, stack)) {
                 int i = stack.getMaxStackSize() - itemStack.getCount();
@@ -129,7 +130,8 @@ public abstract class BlockHPBase extends Block {
         ItemStack result = tileEntityHPBase.removeStackFromSlot(1);
         if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
             result = tileEntityHPBase.removeStackFromSlot(0);
-            BlockGrindstone.setState(false, worldIn, pos);
+            if (!result.isEmpty())
+                emptiedOutput(worldIn, pos);
         }
 
         if (result.isEmpty()) {

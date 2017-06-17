@@ -28,7 +28,7 @@ import se.gory_moon.horsepower.jei.DummyJeiPlugin;
 import se.gory_moon.horsepower.jei.IJeiPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.proxy.CommonProxy;
-import se.gory_moon.horsepower.recipes.GrindstoneRecipes;
+import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
@@ -71,7 +71,7 @@ public class HorsePowerMod {
         } else {
             tweakerPlugin = new DummyTweakPluginImpl();
         }
-        GrindstoneRecipes.instance().reloadRecipes();
+        HPRecipes.instance().reloadRecipes();
     }
 
     @EventHandler
@@ -97,7 +97,7 @@ public class HorsePowerMod {
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 if (args.length == 1 && "reload".equals(args[0])) {
                     ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-                    GrindstoneRecipes.instance().reloadRecipes();
+                    HPRecipes.instance().reloadRecipes();
                     sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload"));
                 } else {
                     throw new WrongUsageException("/horsepower reload");
