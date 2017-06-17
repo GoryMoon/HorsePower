@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:builtin/generated"
+  },
+  "variants": {
+    "facing": {
+      "north": {},
+      "south": {},
+      "west": {},
+      "east": {},
+      "up": {},
+      "down": {}
+    },
+    "inventory": { "model": "minecraft:builtin/generated" }
+  }
+}

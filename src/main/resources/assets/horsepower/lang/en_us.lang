@@ -9,6 +9,7 @@ item.horsepower:grindstone.description.use=To use the grindstone attach a horse 
 
 # Blocks
 tile.grindstone.name=Horse Grindstone
+tile.chopper.name=Horse Chopping Block
 
 # Info
 info.horsepower:grindstone.invalid=INVALID 7x7x2 AREA

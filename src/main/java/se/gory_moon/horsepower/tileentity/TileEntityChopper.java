@@ -53,7 +53,6 @@ public class TileEntityChopper extends TileEntityHPBase {
         super.markDirty();
     }
 
-    //TODO recipes
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
