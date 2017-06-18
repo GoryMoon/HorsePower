@@ -28,6 +28,10 @@ public class Configs {
     @Name("Windup time for chop")
     public static int pointsForWindup = 8;
 
+    @Comment({"The amount of points per rotation with a hand grindstone", "The points correspond to the recipes requirement of time"})
+    @Name("Points Per Rotation")
+    public static int pointsPerRotation = 2;
+
     @Comment({"Add mobs that can use the grindstone", "Only mobs that can be leashed can use the grindstone", "Add the full path to the mob class, can be found with CraftTweaker /mt entities",
             "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
     @Name("Grindstone Mob List")

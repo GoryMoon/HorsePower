@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -37,36 +38,45 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class TileEntityHPBase extends TileEntity implements ITickable, ISidedInventory {
+public abstract class TileEntityHPBase extends TileEntity implements ISidedInventory {
 
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
 
-    protected static double[][] path = {{-1.5, -1.5}, {0, -1.5}, {1, -1.5}, {1, 0}, {1, 1}, {0, 1}, {-1.5, 1}, {-1.5, 0}};
-    protected AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
-    protected List<BlockPos> searchPos = null;
-    protected int origin = -1;
-    protected int target = origin;
-
-    protected boolean hasWorker = false;
-    protected EntityCreature worker;
-    protected NBTTagCompound nbtWorker;
-
-    protected boolean valid = false;
-    protected int validationTimer = 0;
-    protected boolean running = true;
-    protected boolean wasRunning = false;
+    private EnumFacing forward = null;
 
     public TileEntityHPBase(int inventorySize) {
         NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
 
-    public abstract boolean validateArea();
-
-    public abstract boolean targetReached();
-
     public abstract ItemStack getRecipeItemStack();
 
-    public abstract int getPositionOffset();
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+
+        itemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, itemStacks);
+
+        if (canBeRotated()) {
+            forward = EnumFacing.byName(compound.getString("forward"));
+        }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        ItemStackHelper.saveAllItems(compound, itemStacks);
+
+        if (canBeRotated()) {
+            compound.setString("forward", getForward().getName());
+        }
+        return super.writeToNBT(compound);
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        notifyUpdate();
+    }
 
     public boolean canWork() {
         if (getStackInSlot(0).isEmpty()) {
@@ -86,213 +96,26 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
         }
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-
-        itemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, itemStacks);
-
-        target = compound.getInteger("target");
-        origin = compound.getInteger("origin");
-        hasWorker = compound.getBoolean("hasWorker");
-
-        if (hasWorker && compound.hasKey("leash", 10)) {
-            nbtWorker = compound.getCompoundTag("leash");
-        }
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        ItemStackHelper.saveAllItems(compound, itemStacks);
-
-        compound.setInteger("target", target);
-        compound.setInteger("origin", origin);
-        compound.setBoolean("hasWorker", hasWorker);
-
-        if (this.worker != null) {
-            NBTTagCompound nbtTagCompound = new NBTTagCompound();
-            UUID uuid = worker.getUniqueID();
-            nbtTagCompound.setUniqueId("UUID", uuid);
-
-            compound.setTag("leash", nbtTagCompound);
-        }
-
-        return super.writeToNBT(compound);
-    }
-
-    @Override
-    public void markDirty() {
-        super.markDirty();
-        notifyUpdate();
-    }
-
-    public void setWorker(EntityCreature newWorker) {
-        hasWorker = true;
-        worker = newWorker;
-        worker.setHomePosAndDistance(pos, 3);
-        target = getClosestTarget();
-    }
-
-    public void setWorkerToPlayer(EntityPlayer player) {
-        if (hasWorker() && worker.canBeLeashedTo(player)) {
-            hasWorker = false;
-            worker.detachHome();
-            worker.setLeashedToEntity(player, true);
-            worker = null;
-        }
-    }
-
-    public boolean hasWorker() {
-        if (worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
-            return true;
-        } else {
-            if (worker != null) {
-                worker = null;
-                if (!getWorld().isRemote)
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
-            }
-            hasWorker = false;
-            return false;
-        }
-    }
-
-    public EntityCreature getWorker() {
-        return worker;
-    }
-
-    private Vec3d getPathPosition(int i) {
-        double x = pos.getX() + path[i][0] * 2;
-        double y = pos.getY() + getPositionOffset();
-        double z = pos.getZ() + path[i][1] * 2;
-        return new Vec3d(x, y, z);
-    }
-
-    protected int getClosestTarget() {
-        if (hasWorker()) {
-            double dist = Double.MAX_VALUE;
-            int closest = 0;
-
-            for (int i = 0; i < path.length; i++) {
-                Vec3d pos = getPathPosition(i);
-                double x = pos.xCoord;
-                double y = pos.yCoord;
-                double z = pos.zCoord;
-
-                double tmp = worker.getDistance(x, y, z);
-                if (tmp < dist) {
-                    dist = tmp;
-                    closest = i;
-                }
-            }
-
-            return closest;
-        }
-        return 0;
-    }
-
-    @Override
-    public void update() {
-        validationTimer--;
-        if (validationTimer <= 0) {
-            valid = validateArea();
-            if (valid)
-                validationTimer = 220;
-            else
-                validationTimer = 60;
-        }
-
-        if (nbtWorker != null) {
-            if (hasWorker) {
-                UUID uuid = nbtWorker.getUniqueId("UUID");
-                int x = pos.getX();
-                int y = pos.getY();
-                int z = pos.getZ();
-
-                ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-                search: for (Class<? extends Entity> clazz: clazzes) {
-                    for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                        if (entity instanceof EntityCreature) {
-                            EntityCreature creature = (EntityCreature) entity;
-                            if (creature.getUniqueID().equals(uuid)) {
-                                setWorker(creature);
-                                break search;
-                            }
-                        }
-                    }
-                }
-            }
-            nbtWorker = null;
-        }
-
-        boolean flag = false;
-
-        if (!world.isRemote && valid) {
-            if (!running && canWork()) {
-                running = true;
-            } else if (running && !canWork()){
-                running = false;
-            }
-
-            if (running != wasRunning) {
-                target = getClosestTarget();
-                wasRunning = running;
-            }
-
-            if (hasWorker()) {
-                if (running) {
-
-                    Vec3d pos = getPathPosition(target);
-                    double x = pos.xCoord;
-                    double y = pos.yCoord;
-                    double z = pos.zCoord;
-
-                    if (searchAreas[target] == null)
-                        searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D);
-
-                    if (worker.getEntityBoundingBox().intersectsWith(searchAreas[target])) {
-                        int next = target + 1;
-                        int previous = target -1;
-                        if (next >= path.length)
-                            next = 0;
-                        if (previous < 0)
-                            previous = path.length - 1;
-
-                        if (origin != target && target != previous) {
-                            origin = target;
-                            flag = targetReached();
-                        }
-                        target = next;
-                    }
-
-                    if (worker instanceof AbstractHorse && ((AbstractHorse)worker).isEatingHaystack()) {
-                        ((AbstractHorse)worker).setEatingHaystack(false);
-                    }
-
-                    if (target != -1 && worker.getNavigator().noPath()) {
-                        pos = getPathPosition(target);
-                        x = pos.xCoord;
-                        y = pos.yCoord;
-                        z = pos.zCoord;
-
-                        worker.getNavigator().tryMoveToXYZ(x, y, z, 1D);
-                    }
-
-                }
-            }
-        }
-
-        if (flag) {
-            markDirty();
-        }
-    }
-
     public static boolean canCombine(ItemStack stack1, ItemStack stack2) {
         return stack1.getItem() == stack2.getItem() && (stack1.getMetadata() == stack2.getMetadata() && (stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2)));
     }
 
     public void notifyUpdate() {
         getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), 3);
+    }
+
+    public boolean canBeRotated() {
+        return false;
+    }
+
+    public EnumFacing getForward() {
+        if (forward == null)
+            return EnumFacing.NORTH;
+        return forward;
+    }
+
+    public void setForward(EnumFacing forward) {
+        this.forward = forward;
     }
 
     @Override
@@ -321,16 +144,6 @@ public abstract class TileEntityHPBase extends TileEntity implements ITickable, 
     public void handleUpdateTag(NBTTagCompound tag) {
         readFromNBT(tag);
         markDirty();
-    }
-
-    //TODO change
-    @Nullable
-    @Override
-    public ITextComponent getDisplayName() {
-        if (valid)
-            return super.getDisplayName();
-        else
-            return new TextComponentTranslation(Localization.INFO.GRINDSTONE_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 
     @Override

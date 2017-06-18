@@ -2,6 +2,7 @@ package se.gory_moon.horsepower.jei;
 
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.blocks.ModBlocks;
@@ -25,19 +26,18 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         jeiHelpers = registry.getJeiHelpers();
         guiHelper = jeiHelpers.getGuiHelper();
 
-        registry.addRecipeCategories(new HorsePowerGrindingCategory(jeiHelpers.getGuiHelper()));
         registry.handleRecipes(GrindstoneRecipe.class, GrindstoneRecipeWrapper::new, GRINDING);
         registry.addRecipes(GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers), GRINDING);
 
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINSTONE), GRINDING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
 
-        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
-
-        registry.addDescription(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
+        registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-        this.jeiRuntime = jeiRuntime;
+        HorsePowerPlugin.jeiRuntime = jeiRuntime;
     }
 
     @Override
@@ -48,6 +48,11 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
     @Override
     public void registerIngredients(IModIngredientRegistration registry) {
 
+    }
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registry) {
+        registry.addRecipeCategories(new HorsePowerGrindingCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
     @Override

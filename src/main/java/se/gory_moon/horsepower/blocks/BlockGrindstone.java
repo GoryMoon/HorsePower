@@ -51,6 +51,7 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
         super(Material.ROCK);
         setHardness(1.5F);
         setResistance(10F);
+        setHarvestLevel("pickaxe", 1);
         setSoundType(SoundType.STONE);
         setRegistryName(Constants.GRINDSTONE_BLOCK);
         setUnlocalizedName(Constants.GRINDSTONE_BLOCK);

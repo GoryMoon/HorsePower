@@ -8,6 +8,7 @@ item.horsepower:grindstone.description.location=The grindstone needs to be place
 item.horsepower:grindstone.description.use=To use the grindstone attach a horse with a lead
 
 # Blocks
+tile.hand_grindstone.name=Grindstone
 tile.grindstone.name=Horse Grindstone
 tile.chopper.name=Horse Chopping Block
 

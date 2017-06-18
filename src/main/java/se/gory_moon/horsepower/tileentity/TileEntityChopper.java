@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
-public class TileEntityChopper extends TileEntityHPBase {
+public class TileEntityChopper extends TileEntityHPHorseBase {
 
     private static final int[] SLOTS_TOP = new int[] {0};
     private static final int[] SLOTS_SIDE = new int[] {0};

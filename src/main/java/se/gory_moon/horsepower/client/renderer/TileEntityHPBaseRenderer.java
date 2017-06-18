@@ -11,13 +11,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 
-public abstract class TileEntityHPBaseRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
+public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> extends TileEntitySpecialRenderer<T> {
 
-    protected void renderItem(World world, ItemStack stack, float partialTicks) {
+    protected void renderItem(World world, ItemStack stack, float x, float y, float z, float scale) {
         RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
         if (stack != null) {
-            GlStateManager.translate(0.5, 1, 0.5);
+            GlStateManager.translate(x, y, z);
             EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, stack);
             entityitem.getEntityItem().setCount(1);
             entityitem.hoverStart = 0.0F;
@@ -27,7 +28,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntity> extends Til
             float rotation = (float) (720.0 * (System.currentTimeMillis() & 0x3FFFL) / 0x3FFFL);
 
             GlStateManager.rotate(rotation, 0.0F, 1.0F, 0);
-            GlStateManager.scale(0.5F, 0.5F, 0.5F);
+            GlStateManager.scale(0.5F * scale, 0.5F * scale, 0.5F * scale);
             GlStateManager.pushAttrib();
             RenderHelper.enableStandardItemLighting();
             itemRenderer.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
@@ -37,6 +38,16 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntity> extends Til
             GlStateManager.enableLighting();
             GlStateManager.popMatrix();
         }
+    }
+
+    protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(ox, oy, oz);
+        GlStateManager.translate( 0.5, 0.5, 0.5 );
+        FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
+        GlStateManager.translate( -0.5, -0.5, -0.5 );
+        renderItem(tile.getWorld(), stack, x, y, z, scale);
+        GlStateManager.popMatrix();
     }
 
     /**

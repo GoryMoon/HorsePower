@@ -11,7 +11,7 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
             renderLeash(te.getWorker(), x, y, z, 0, partialTicks, te.getPos());
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        renderItem(te.getWorld(), te.getStackInSlot(0), partialTicks);
+        renderItem(te.getWorld(), te.getStackInSlot(0), 0.5F, 1F, 0.5F, 1F);
         GlStateManager.popMatrix();
 
         super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);

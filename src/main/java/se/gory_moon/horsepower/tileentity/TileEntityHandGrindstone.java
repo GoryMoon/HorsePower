@@ -1,14 +1,13 @@
 package se.gory_moon.horsepower.tileentity;
 
-import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import se.gory_moon.horsepower.blocks.BlockGrindstone;
+import net.minecraft.util.ITickable;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
-public class TileEntityGrindstone extends TileEntityHPHorseBase {
+public class TileEntityHandGrindstone extends TileEntityHPBase implements ITickable {
 
     private static final int[] SLOTS_TOP = new int[] {0};
     private static final int[] SLOTS_BOTTOM = new int[] {1};
@@ -16,7 +15,14 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     private int currentItemMillTime;
     private int totalItemMillTime;
 
-    public TileEntityGrindstone() {
+
+    private final int ticksPerRotation = 18;
+    private float visibleRotation = 0;
+    private int currentTicks = 0;
+    private int rotation = 0;
+
+
+    public TileEntityHandGrindstone() {
         super(2);
     }
 
@@ -24,6 +30,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         compound.setInteger("millTime", currentItemMillTime);
         compound.setInteger("totalMillTime", totalItemMillTime);
+        compound.setInteger("currentRotation", rotation);
 
         return super.writeToNBT(compound);
     }
@@ -35,67 +42,17 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
         if (getStackInSlot(0).getCount() > 0) {
             currentItemMillTime = compound.getInteger("millTime");
             totalItemMillTime = compound.getInteger("totalMillTime");
+            rotation = compound.getInteger("currentRotation");
         } else {
             currentItemMillTime = 0;
             totalItemMillTime = 1;
+            rotation = 0;
         }
-    }
-
-    @Override
-    public void markDirty() {
-        if (getStackInSlot(1).isEmpty())
-            BlockGrindstone.setState(false, world, pos);
-
-        if (getStackInSlot(0).isEmpty())
-            currentItemMillTime = 0;
-
-        super.markDirty();
-    }
-
-    @Override
-    public boolean validateArea() {
-        if (searchPos == null) {
-            searchPos = Lists.newArrayList();
-
-            for (int x = -3; x <= 3; x++) {
-                for (int z = -3; z <= 3; z++) {
-                    if (x == 0 && z == 0)
-                        continue;
-                    searchPos.add(getPos().add(x, 0, z));
-                    searchPos.add(getPos().add(x, -1, z));
-                }
-            }
-        }
-
-        for (BlockPos pos: searchPos) {
-            if (!getWorld().isAirBlock(pos))
-                return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean targetReached() {
-        currentItemMillTime++;
-
-        if (currentItemMillTime >= totalItemMillTime) {
-            currentItemMillTime = 0;
-
-            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0));
-            millItem();
-            return true;
-        }
-        return false;
     }
 
     @Override
     public ItemStack getRecipeItemStack() {
         return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0));
-    }
-
-    @Override
-    public int getPositionOffset() {
-        return -1;
     }
 
     private void millItem() {
@@ -111,7 +68,6 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
             }
 
             input.shrink(1);
-            BlockGrindstone.setState(true, world, pos);
         }
     }
 
@@ -121,15 +77,21 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     }
 
     @Override
+    public void markDirty() {
+        super.markDirty();
+        if (getStackInSlot(0).isEmpty())
+            currentItemMillTime = 0;
+    }
+
+    @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
+        ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
         if (index == 1 && getStackInSlot(1).isEmpty()) {
-            BlockGrindstone.setState(false, world, pos);
             markDirty();
         }
 
-        ItemStack itemstack = getStackInSlot(index);
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
             totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack);
@@ -137,7 +99,6 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
             markDirty();
         }
     }
-
     @Override
     public int getInventoryStackLimit() {
         return 64;
@@ -178,6 +139,51 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public String getName() {
-        return "container.mill";
+        return "container.hand_mill";
+    }
+
+    public void turn() {
+        if (getWorld().isRemote)
+            return;
+
+        if (rotation < 3 && canWork()) {
+            rotation += ticksPerRotation;
+            markDirty();
+        }
+    }
+
+    @Override
+    public void update() {
+        if (rotation > 0) {
+
+            visibleRotation = (visibleRotation - 360 / (ticksPerRotation)) % -360;
+            currentTicks++;
+            if (currentTicks >= ticksPerRotation) {
+                currentTicks -= ticksPerRotation;
+
+                currentItemMillTime += Configs.pointsPerRotation;
+
+                if (currentItemMillTime >= totalItemMillTime) {
+                    currentItemMillTime = 0;
+
+                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0));
+                    millItem();
+                }
+                markDirty();
+            }
+
+            rotation--;
+        } else {
+            visibleRotation = 0;
+        }
+    }
+
+    public float getVisibleRotation() {
+        return visibleRotation;
+    }
+
+    @Override
+    public boolean canBeRotated() {
+        return true;
     }
 }

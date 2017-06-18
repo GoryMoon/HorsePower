@@ -10,11 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.blocks.BlockChopper;
-import se.gory_moon.horsepower.blocks.BlockFiller;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.blocks.*;
 import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.blocks.BlockGrindstone;
 
 import java.util.List;
 
@@ -25,7 +22,9 @@ public class Provider implements IWailaDataProvider {
 
         registrar.registerStackProvider(provider, BlockFiller.class);
         registrar.registerBodyProvider(provider, BlockGrindstone.class);
+        registrar.registerBodyProvider(provider, BlockHandGrindstone.class);
         registrar.registerNBTProvider(provider, BlockGrindstone.class);
+        registrar.registerNBTProvider(provider, BlockHandGrindstone.class);
         //registrar.addConfig(Reference.NAME, "showItems", Localization.WAILA.SHOW_ITEMS.translate());
     }
 

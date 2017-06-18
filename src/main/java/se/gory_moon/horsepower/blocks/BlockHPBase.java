@@ -15,8 +15,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
+import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
 import se.gory_moon.horsepower.util.Utils;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 public abstract class BlockHPBase extends Block {
 
     protected static boolean keepInventory = false;
+    public static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
     public BlockHPBase(Material materialIn) {
         super(materialIn);
@@ -55,13 +58,13 @@ public abstract class BlockHPBase extends Block {
 
             if (te != null) {
                 InventoryHelper.dropInventoryItems(worldIn, pos, te);
-                if (te.hasWorker())
+                if (te instanceof TileEntityHPHorseBase && ((TileEntityHPHorseBase) te).hasWorker())
                     InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
             }
         }
     }
 
-    private TileEntityHPBase getTileEntity(World worldIn, BlockPos pos) {
+    protected TileEntityHPBase getTileEntity(IBlockAccess worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return tileentity instanceof TileEntityHPBase ? (TileEntityHPBase)tileentity : null;
     }
@@ -81,7 +84,10 @@ public abstract class BlockHPBase extends Block {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
-        TileEntityHPBase tileEntityHPBase = (TileEntityHPBase) worldIn.getTileEntity(pos);
+        TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
+        TileEntityHPHorseBase teH = null;
+        if (te instanceof TileEntityHPHorseBase)
+            teH = (TileEntityHPHorseBase) te;
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -99,21 +105,21 @@ public abstract class BlockHPBase extends Block {
                 }
             }
         }
-        if (stack.getItem() instanceof ItemLead && creature != null || creature != null) {
-            if (!tileEntityHPBase.hasWorker()) {
+        if (teH != null && stack.getItem() instanceof ItemLead && creature != null || creature != null) {
+            if (!teH.hasWorker()) {
                 creature.clearLeashed(true, false);
-                tileEntityHPBase.setWorker(creature);
+                teH.setWorker(creature);
                 return true;
             } else {
                 return false;
             }
-        } else if (!stack.isEmpty() && tileEntityHPBase.isItemValidForSlot(0, stack)) {
-            ItemStack itemStack = tileEntityHPBase.getStackInSlot(0);
+        } else if (!stack.isEmpty() && te.isItemValidForSlot(0, stack)) {
+            ItemStack itemStack = te.getStackInSlot(0);
             boolean flag = false;
 
             if (itemStack.isEmpty()) {
-                tileEntityHPBase.setInventorySlotContents(0, stack.copy());
-                stack.setCount(stack.getCount() - tileEntityHPBase.getInventoryStackLimit());
+                te.setInventorySlotContents(0, stack.copy());
+                stack.setCount(stack.getCount() - te.getInventoryStackLimit());
                 flag = true;
             } else if (TileEntityHPBase.canCombine(itemStack, stack)) {
                 int i = stack.getMaxStackSize() - itemStack.getCount();
@@ -127,9 +133,9 @@ public abstract class BlockHPBase extends Block {
                 return true;
         }
 
-        ItemStack result = tileEntityHPBase.removeStackFromSlot(1);
+        ItemStack result = te.removeStackFromSlot(1);
         if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
-            result = tileEntityHPBase.removeStackFromSlot(0);
+            result = te.removeStackFromSlot(0);
             if (!result.isEmpty())
                 emptiedOutput(worldIn, pos);
         }
@@ -137,8 +143,8 @@ public abstract class BlockHPBase extends Block {
         if (result.isEmpty()) {
             if (!stack.isEmpty())
                 return false;
-
-            tileEntityHPBase.setWorkerToPlayer(playerIn);
+            if (teH != null)
+                teH.setWorkerToPlayer(playerIn);
         }
 
         if (stack.isEmpty()) {
@@ -147,7 +153,7 @@ public abstract class BlockHPBase extends Block {
             playerIn.dropItem(result, false);
         }
 
-        tileEntityHPBase.markDirty();
+        te.markDirty();
         return true;
     }
 }

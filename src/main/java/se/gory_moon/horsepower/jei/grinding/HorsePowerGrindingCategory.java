@@ -10,6 +10,7 @@ import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
+import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.util.Localization;
 
 
@@ -43,6 +44,11 @@ public class HorsePowerGrindingCategory extends BlankRecipeCategory<GrindstoneRe
     @Override
     public String getTitle() {
         return localizedName;
+    }
+
+    @Override
+    public String getModName() {
+        return Reference.NAME;
     }
 
     @Override

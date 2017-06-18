@@ -63,5 +63,6 @@ public class ModItems {
             OreDictionary.registerOre("foodDough", DOUGH);
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
     }
 }
