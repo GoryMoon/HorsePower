@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.jei.grinding;
+package se.gory_moon.horsepower.jei;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;

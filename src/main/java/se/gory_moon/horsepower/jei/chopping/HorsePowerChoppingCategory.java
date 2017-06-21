@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.jei.grinding;
+package se.gory_moon.horsepower.jei.chopping;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -9,23 +9,22 @@ import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.util.Localization;
 
-
-public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRecipeWrapper> {
+public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipeWrapper> {
 
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
 
     private final String localizedName;
 
-    public HorsePowerGrindingCategory(IGuiHelper guiHelper) {
+    public HorsePowerChoppingCategory(IGuiHelper guiHelper) {
         super(guiHelper);
 
-        localizedName = Localization.GUI.CATEGORY_GRINDING.translate();
+        localizedName = Localization.GUI.CATEGORY_CHOPPING.translate();
     }
 
     @Override
     public String getUid() {
-        return HorsePowerPlugin.GRINDING;
+        return HorsePowerPlugin.CHOPPING;
     }
 
     @Override
@@ -40,7 +39,7 @@ public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRec
 
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, ChoppingRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
         guiItemStacks.init(inputSlot, true, 34, 32);

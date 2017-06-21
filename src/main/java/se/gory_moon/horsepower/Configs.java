@@ -57,7 +57,7 @@ public class Configs {
             "minecraft:log:1-minecraft:planks:1@4-1",
             "minecraft:log:2-minecraft:planks:2@4-1",
             "minecraft:log:3-minecraft:planks:3@4-1",
-            "minecraft:log:4-minecraft:planks:4@4-1",
-            "minecraft:log:5-minecraft:planks:5@4-1"};
+            "minecraft:log2:0-minecraft:planks:4@4-1",
+            "minecraft:log2:1-minecraft:planks:5@4-1"};
 
 }

@@ -29,7 +29,7 @@ commands.horsepower.reload=HorsePower configs reloaded
 
 # Gui
 gui.horsepower.jei.category.grinding=Grindstone
-gui.horsepower.jei.category.chopping=Chopping
+gui.horsepower.jei.category.chopping=Chopping Block
 
 # Waila
 gui.horsepower.waila.grindstone.progress=Grinding: [%1]
