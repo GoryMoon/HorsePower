@@ -99,6 +99,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
             markDirty();
         }
     }
+
     @Override
     public int getInventoryStackLimit() {
         return 64;

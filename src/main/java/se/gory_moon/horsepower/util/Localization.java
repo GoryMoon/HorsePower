@@ -41,7 +41,7 @@ public final class Localization {
 
     public static class ITEM {
 
-        public enum MILL {
+        public enum HORSE_GRINDSTONE {
             SIZE, LOCATION, USE;
 
             public String translate(String... vars) {
@@ -49,11 +49,28 @@ public final class Localization {
             }
         }
 
+        public enum HAND_GRINDSTONE {
+            INFO;
+
+            public String translate(String... vars) {
+                return Localization.translateString("item.horsepower:hand_grindstone.description." + toString().toLowerCase(), vars);
+            }
+        }
+
+        public enum HORSE_CHOPPING {
+            SIZE, LOCATION, USE;
+
+            public String translate(String... vars) {
+                return Localization.translateString("item.horsepower:chopping.description." + toString().toLowerCase(), vars);
+            }
+        }
+
     }
 
     public enum  INFO {
 
-        GRINDSTONE_INVALID;
+        GRINDSTONE_INVALID,
+        CHOPPING_INVALID;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
@@ -65,7 +82,8 @@ public final class Localization {
     }
 
     public enum GUI {
-        CATEGORY_GRINDING;
+        CATEGORY_GRINDING,
+        CATEGORY_CHOPPING;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
@@ -78,7 +96,9 @@ public final class Localization {
     }
 
     public enum WAILA {
-        PROGRESS;
+        GRINDSTONE_PROGRESS,
+        WINDUP_PROGRESS,
+        CHOPPING_PROGRESS;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);

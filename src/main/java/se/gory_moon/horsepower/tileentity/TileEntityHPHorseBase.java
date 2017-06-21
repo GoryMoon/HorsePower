@@ -12,14 +12,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.Utils;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -239,15 +233,5 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         if (flag) {
             markDirty();
         }
-    }
-
-    //TODO change
-    @Nullable
-    @Override
-    public ITextComponent getDisplayName() {
-        if (valid)
-            return super.getDisplayName();
-        else
-            return new TextComponentTranslation(Localization.INFO.GRINDSTONE_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 }

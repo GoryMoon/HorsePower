@@ -5,8 +5,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+import se.gory_moon.horsepower.util.Localization;
+
+import javax.annotation.Nullable;
 
 public class TileEntityChopper extends TileEntityHPHorseBase {
 
@@ -17,6 +24,8 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     private int currentWindup;
     private int currentItemChopTime;
     private int totalItemChopTime;
+    private float visualWindup = 0;
+    private float oldVisualWindup = -1;
 
     public TileEntityChopper() {
         super(2);
@@ -54,6 +63,11 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     @Override
+    public boolean canBeRotated() {
+        return true;
+    }
+
+    @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
@@ -81,6 +95,14 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     @Override
+    public void update() {
+        super.update();
+
+        float windup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 8;
+        visualWindup = -0.74F + (0.74F * (((float)currentWindup) / (windup - 1)));
+    }
+
+    @Override
     public boolean targetReached() {
         currentWindup++;
 
@@ -96,6 +118,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
                 return true;
             }
         }
+        markDirty();
         return false;
     }
 
@@ -112,7 +135,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             }
 
             input.shrink(1);
-            //BlockGrindstone.setState(true, world, pos);
+            markDirty();
         }
     }
 
@@ -167,5 +190,22 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     @Override
     public String getName() {
         return "container.chopper";
+    }
+
+    public float getVisualWindup() {
+        return visualWindup;
+    }
+
+    public float getOldVisualWindup() {
+        return oldVisualWindup;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getDisplayName() {
+        if (valid)
+            return super.getDisplayName();
+        else
+            return new TextComponentTranslation(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 }

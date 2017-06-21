@@ -10,7 +10,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.blocks.*;
+import se.gory_moon.horsepower.blocks.BlockFiller;
+import se.gory_moon.horsepower.blocks.BlockGrindstone;
+import se.gory_moon.horsepower.blocks.BlockHandGrindstone;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.util.Localization;
 
 import java.util.List;
@@ -49,7 +52,7 @@ public class Provider implements IWailaDataProvider {
             double total = (double) nbt.getInteger("totalMillTime");
             double current = (double) nbt.getInteger("millTime");
             double progress = Math.round(((current / total) * 100D) * 100D) / 100D;
-            currenttip.add(Localization.WAILA.PROGRESS.translate(String.valueOf(progress) + "%"));
+            currenttip.add(Localization.WAILA.GRINDSTONE_PROGRESS.translate(String.valueOf(progress) + "%"));
         }
         return currenttip;
     }

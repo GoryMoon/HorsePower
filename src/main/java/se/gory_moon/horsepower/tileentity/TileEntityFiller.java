@@ -6,17 +6,23 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 public class TileEntityFiller extends TileEntity implements ISidedInventory {
 
     private TileEntityHPBase getFilledTileEntity() {
-        EnumFacing facing = getWorld().getBlockState(getPos()).getValue(BlockDirectional.FACING);
-        TileEntity tileEntity = getWorld().getTileEntity(pos.offset(facing));
+        BlockPos pos = getFilledPos();
+        TileEntity tileEntity = getWorld().getTileEntity(pos);
         if (tileEntity instanceof TileEntityHPBase) {
             return (TileEntityHPBase) tileEntity;
         }
         return null;
+    }
+
+    public BlockPos getFilledPos() {
+        EnumFacing facing = getWorld().getBlockState(getPos()).getValue(BlockDirectional.FACING);
+        return pos.offset(facing);
     }
 
     @Override

@@ -5,8 +5,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+import se.gory_moon.horsepower.util.Localization;
+
+import javax.annotation.Nullable;
 
 public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
@@ -179,5 +186,14 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     @Override
     public String getName() {
         return "container.mill";
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getDisplayName() {
+        if (valid)
+            return super.getDisplayName();
+        else
+            return new TextComponentTranslation(Localization.INFO.GRINDSTONE_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 }

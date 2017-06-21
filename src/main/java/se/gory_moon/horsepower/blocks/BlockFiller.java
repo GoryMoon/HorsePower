@@ -1,5 +1,6 @@
 package se.gory_moon.horsepower.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -7,6 +8,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,10 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -147,7 +146,7 @@ public class BlockFiller extends BlockDirectional {
     @Override
     public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
         pos = pos.offset(state.getValue(FACING));
-        worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
+        worldIn.destroyBlock(pos, true);
     }
 
     @Override
@@ -259,7 +258,11 @@ public class BlockFiller extends BlockDirectional {
     public boolean addHitEffects(IBlockState state, World worldObj, RayTraceResult target, ParticleManager manager) {
         BlockPos pos = target.getBlockPos().offset(state.getValue(FACING));
         IBlockState state1 = worldObj.getBlockState(pos);
-        return state1.getBlock().addHitEffects(state1, worldObj, target, manager);
+        RayTraceResult target1 = new RayTraceResult(target.typeOfHit, target.hitVec.subtract(0, 1, 0), target.sideHit, pos);
+        boolean flag = state1.getBlock().addHitEffects(state1, worldObj, target1, manager);
+        if (!flag)
+            Minecraft.getMinecraft().effectRenderer.addBlockHitEffects(pos, target.sideHit);
+        return true;
     }
 
     @Override
@@ -267,14 +270,20 @@ public class BlockFiller extends BlockDirectional {
     public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         pos = pos.offset(world.getBlockState(pos).getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
-        return state1.getBlock().addDestroyEffects(world, pos, manager);
+        boolean flag = state1.getBlock().addDestroyEffects(world, pos, manager);
+        if (!flag)
+            Minecraft.getMinecraft().effectRenderer.addBlockDestroyEffects(pos, state1);
+        return true;
     }
 
     @Override
     public boolean addLandingEffects(IBlockState state, WorldServer worldObj, BlockPos blockPosition, IBlockState iblockstate, EntityLivingBase entity, int numberOfParticles) {
         BlockPos pos = blockPosition.offset(state.getValue(FACING));
         IBlockState state1 = worldObj.getBlockState(pos);
-        return state1.getBlock().addLandingEffects(state1, worldObj, pos, iblockstate, entity, numberOfParticles);
+        boolean flag = state1.getBlock().addLandingEffects(state1, worldObj, pos, iblockstate, entity, numberOfParticles);
+        if (!flag)
+            worldObj.spawnParticle(EnumParticleTypes.BLOCK_DUST, blockPosition.getX() + 0.5, blockPosition.getY() + 1, blockPosition.getZ() + 0.5, numberOfParticles, 0.0D, 0.0D, 0.0D, 0.15000000596046448D, Block.getStateId(state1));
+        return true;
     }
 
     @Override

@@ -5,7 +5,6 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -13,31 +12,20 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemLead;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
-import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
-import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.lib.Constants;
+import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.util.Colors;
-import se.gory_moon.horsepower.util.Utils;
+import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
@@ -104,9 +92,9 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        tooltip.add(Localization.ITEM.MILL.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
-        tooltip.add(Localization.ITEM.MILL.LOCATION.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
-        tooltip.add(Localization.ITEM.MILL.USE.translate());
+        tooltip.add(Localization.ITEM.HORSE_GRINDSTONE.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
+        tooltip.add(Localization.ITEM.HORSE_GRINDSTONE.LOCATION.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
+        tooltip.add(Localization.ITEM.HORSE_GRINDSTONE.USE.translate());
     }
 
     // The One Probe Integration

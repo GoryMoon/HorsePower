@@ -29,11 +29,13 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.client.renderer.HandGrindstoneModels;
 import se.gory_moon.horsepower.lib.Constants;
-import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.util.Colors;
+import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccessor {
@@ -97,6 +99,11 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     }
 
     @Override
+    public boolean hasCustomBreakingProgress(IBlockState state) {
+        return true;
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
         return new ExtendedBlockState(this, new IProperty[] {PART}, new IUnlistedProperty[]{FACING});
     }
@@ -112,7 +119,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         if (tile == null)
             return state;
 
-        return ((IExtendedBlockState) state).withProperty(FACING, tile.getForward()).withProperty(PART, HandGrindstoneModels.BASE);
+        return ((IExtendedBlockState) state).withProperty(FACING, tile.getForward()).withProperty(PART, state.getValue(PART));
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
@@ -124,6 +131,10 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         tile.setForward(placer.getAdjustedHorizontalFacing().getOpposite());
     }
 
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        tooltip.add(Localization.ITEM.HAND_GRINDSTONE.INFO.translate("\n" + Colors.LIGHTGRAY.toString()));
+    }
 
     // The One Probe Integration
     @Optional.Method(modid = "theoneprobe")

@@ -6,6 +6,11 @@ item.dough.name=Dough
 item.horsepower:grindstone.description.size=For the grindstone to work an [%1]7x7[%2] and [%1]2 blocks[%2] high area is needed
 item.horsepower:grindstone.description.location=The grindstone needs to be placed [%1]one block[%2] up in the middle
 item.horsepower:grindstone.description.use=To use the grindstone attach a horse with a lead
+item.horsepower:chopping.description.size=For the chopping block to work an [%1]7x7[%2] and [%1]2 blocks[%2] high area is needed
+item.horsepower:chopping.description.location=The chopping block needs to be placed in the middle
+item.horsepower:chopping.description.use=To use the chopping block attach a horse with a lead
+
+item.horsepower:hand_grindstone.description.info=Right click the block with the item to grind[%1]Sneak right click to remove item[%1]Right click block with item in it to start grinding
 
 # Blocks
 tile.hand_grindstone.name=Grindstone
@@ -13,6 +18,7 @@ tile.grindstone.name=Horse Grindstone
 tile.chopper.name=Horse Chopping Block
 
 # Info
+info.horsepower:chopping.invalid=INVALID 7x7x2 AREA
 info.horsepower:grindstone.invalid=INVALID 7x7x2 AREA
 info.horsepower:grindstone.info1=The grindstone will grind down items to their base components. When setting up a grindstone make sure you have a 7x7 and 2 blocks high area cleared before starting, there needs to be solid ground under the 7x7 area.
 info.horsepower:grindstone.info2=In the middle of the 7x7 place a block of your choice and then place the grindstone above that. If the area isn't cleared to grindstone will say that when looking at it. Next, use a lead to get a Horse/Donkey/Mule/Llama of your choice to be working the grinder.
@@ -23,6 +29,9 @@ commands.horsepower.reload=HorsePower configs reloaded
 
 # Gui
 gui.horsepower.jei.category.grinding=Grindstone
+gui.horsepower.jei.category.chopping=Chopping
 
 # Waila
-gui.horsepower.waila.progress=Grinding: [%1]
+gui.horsepower.waila.grindstone.progress=Grinding: [%1]
+gui.horsepower.waila.chopping.windup=Windup: [%1]
+gui.horsepower.waila.chopping.chopping=Chopping: [%1]
