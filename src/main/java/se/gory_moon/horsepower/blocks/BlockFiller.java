@@ -1,5 +1,10 @@
 package se.gory_moon.horsepower.blocks;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.ProbeHitData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
@@ -29,6 +34,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
@@ -37,7 +43,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class BlockFiller extends BlockDirectional {
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor {
 
     public static final IUnlistedProperty<Integer> MISC_DATA = Properties.toUnlisted(PropertyInteger.create("misc_data", 0, 32));
     public boolean useTileEntity;
@@ -57,10 +64,6 @@ public class BlockFiller extends BlockDirectional {
     @Override
     public boolean hasTileEntity(IBlockState state) {
         return useTileEntity;
-    }
-
-    private IBlockState getFillerState(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos);
     }
 
     private int getValue(IExtendedBlockState state, int location, int size) {
@@ -288,4 +291,14 @@ public class BlockFiller extends BlockDirectional {
 
     @Override
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {}
+
+
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        BlockPos pos = data.getPos().offset(blockState.getValue(FACING));
+        IBlockState state = world.getBlockState(pos);
+        if (state.getBlock() instanceof BlockHPBase && state.getBlock() instanceof IProbeInfoAccessor) {
+            ((IProbeInfoAccessor) state.getBlock()).addProbeInfo(mode, probeInfo, player, world, state, new ProbeHitData(pos, data.getHitVec(), data.getSideHit(), data.getPickBlock()));
+        }
+    }
 }

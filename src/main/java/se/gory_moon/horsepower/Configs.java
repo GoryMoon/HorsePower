@@ -26,6 +26,7 @@ public class Configs {
 
     @Comment({"That amount of \"points\" for the chopper to do windup and do a chop", "One lap around the chopping block is 8 \"points\""})
     @Name("Windup time for chop")
+    @Config.RangeInt(min = 1)
     public static int pointsForWindup = 8;
 
     @Comment({"The amount of points per rotation with a hand grindstone", "The points correspond to the recipes requirement of time"})

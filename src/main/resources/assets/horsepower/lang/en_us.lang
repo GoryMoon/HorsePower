@@ -33,5 +33,10 @@ gui.horsepower.jei.category.chopping=Chopping
 
 # Waila
 gui.horsepower.waila.grindstone.progress=Grinding: [%1]
-gui.horsepower.waila.chopping.windup=Windup: [%1]
-gui.horsepower.waila.chopping.chopping=Chopping: [%1]
+gui.horsepower.waila.windup.progress=Windup: [%1]
+gui.horsepower.waila.chopping.progress=Chopping: [%1]
+
+# TOP
+gui.horsepower.top.grindstone.progress=Grinding:
+gui.horsepower.top.windup.progress=Windup:
+gui.horsepower.top.chopping.progress=Chopping:

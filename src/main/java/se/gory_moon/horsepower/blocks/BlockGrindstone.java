@@ -104,7 +104,7 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
         TileEntity tileEntity = world.getTileEntity(data.getPos());
         if (tileEntity instanceof TileEntityGrindstone) {
             TileEntityGrindstone te = (TileEntityGrindstone) tileEntity;
-            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().suffix("%"));
+            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
         }
     }
 

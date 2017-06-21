@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class TileEntityFiller extends TileEntity implements ISidedInventory {
 
-    private TileEntityHPBase getFilledTileEntity() {
+    public TileEntityHPBase getFilledTileEntity() {
         BlockPos pos = getFilledPos();
         TileEntity tileEntity = getWorld().getTileEntity(pos);
         if (tileEntity instanceof TileEntityHPBase) {

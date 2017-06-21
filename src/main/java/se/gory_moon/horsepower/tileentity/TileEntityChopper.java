@@ -98,7 +98,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     public void update() {
         super.update();
 
-        float windup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 8;
+        float windup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
         visualWindup = -0.74F + (0.74F * (((float)currentWindup) / (windup - 1)));
     }
 
@@ -166,6 +166,8 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
                 return totalItemChopTime;
             case 1:
                 return currentItemChopTime;
+            case 2:
+                return currentWindup;
             default:
                 return 0;
         }
@@ -179,12 +181,14 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
                 break;
             case 1:
                 currentItemChopTime = value;
+            case 2:
+                currentWindup = value;
         }
     }
 
     @Override
     public int getFieldCount() {
-        return 2;
+        return 3;
     }
 
     @Override

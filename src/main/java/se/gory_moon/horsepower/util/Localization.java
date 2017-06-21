@@ -109,4 +109,18 @@ public final class Localization {
         }
     }
 
+    public enum TOP {
+        GRINDSTONE_PROGRESS,
+        WINDUP_PROGRESS,
+        CHOPPING_PROGRESS;
+
+        public String translate(String... vars) {
+            return Localization.translateString(key(), vars);
+        }
+
+        public String key() {
+            return "gui.horsepower.top." + toString().toLowerCase().replaceAll("_", ".");
+        }
+    }
+
 }

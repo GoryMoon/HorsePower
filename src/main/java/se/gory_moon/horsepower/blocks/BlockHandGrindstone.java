@@ -143,7 +143,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         TileEntity tileEntity = world.getTileEntity(data.getPos());
         if (tileEntity instanceof TileEntityHandGrindstone) {
             TileEntityHandGrindstone te = (TileEntityHandGrindstone) tileEntity;
-            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().suffix("%"));
+            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
         }
     }
 }

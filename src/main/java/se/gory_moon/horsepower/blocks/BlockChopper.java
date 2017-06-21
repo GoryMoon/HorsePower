@@ -1,5 +1,10 @@
 package se.gory_moon.horsepower.blocks;
 
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -21,6 +26,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.common.Optional;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.client.renderer.ChopperModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
@@ -32,7 +39,8 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public class BlockChopper extends BlockHPBase {
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockChopper extends BlockHPBase implements IProbeInfoAccessor {
 
     public static final UnlistedDirection FACING = new UnlistedDirection("facing");
     public static final PropertyDirection DIRECTION = PropertyDirection.create("facing", Arrays.asList(EnumFacing.HORIZONTALS));
@@ -113,5 +121,19 @@ public class BlockChopper extends BlockHPBase {
         tooltip.add(Localization.ITEM.HORSE_CHOPPING.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
         tooltip.add(Localization.ITEM.HORSE_CHOPPING.LOCATION.translate());
         tooltip.add(Localization.ITEM.HORSE_CHOPPING.USE.translate());
+    }
+
+    // The One Probe Integration
+    @Optional.Method(modid = "theoneprobe")
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntity tileEntity = world.getTileEntity(data.getPos());
+        if (tileEntity instanceof TileEntityChopper) {
+            TileEntityChopper te = (TileEntityChopper) tileEntity;
+            double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
+            probeInfo.progress((long) ((((double)te.getField(2)) / totalWindup) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.WINDUP_PROGRESS.translate() + " ").suffix("%"));
+            if (te.getField(1) > 1)
+                probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
+        }
     }
 }
