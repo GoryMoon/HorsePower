@@ -122,6 +122,24 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         return false;
     }
 
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        ItemStack itemstack = getStackInSlot(index);
+        super.setInventorySlotContents(index, stack);
+
+        if (index == 1 && getStackInSlot(1).isEmpty()) {
+            markDirty();
+        }
+
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        if (index == 0 && !flag) {
+            totalItemChopTime = HPRecipes.instance().getChopperTime(stack);
+            currentItemChopTime = 0;
+            currentWindup = 0;
+            markDirty();
+        }
+    }
+
     private void chopItem() {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);

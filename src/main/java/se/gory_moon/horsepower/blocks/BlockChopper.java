@@ -132,7 +132,7 @@ public class BlockChopper extends BlockHPBase implements IProbeInfoAccessor {
             TileEntityChopper te = (TileEntityChopper) tileEntity;
             double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
             probeInfo.progress((long) ((((double)te.getField(2)) / totalWindup) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.WINDUP_PROGRESS.translate() + " ").suffix("%"));
-            if (te.getField(1) > 1)
+            if (te.getField(0) > 1)
                 probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
         }
     }

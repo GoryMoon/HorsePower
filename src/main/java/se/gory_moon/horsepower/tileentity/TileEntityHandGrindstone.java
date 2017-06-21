@@ -167,8 +167,8 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
                 if (currentItemMillTime >= totalItemMillTime) {
                     currentItemMillTime = 0;
 
-                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0));
                     millItem();
+                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0));
                 }
                 markDirty();
             }

@@ -129,6 +129,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
+        ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
         if (index == 1 && getStackInSlot(1).isEmpty()) {
@@ -136,7 +137,6 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
             markDirty();
         }
 
-        ItemStack itemstack = getStackInSlot(index);
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
             totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack);

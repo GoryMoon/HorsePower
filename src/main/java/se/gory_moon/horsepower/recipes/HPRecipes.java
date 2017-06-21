@@ -2,7 +2,6 @@ package se.gory_moon.horsepower.recipes;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -235,7 +234,7 @@ public class HPRecipes {
             }
         }
 
-        return 16;
+        return 1;
     }
 
 }
