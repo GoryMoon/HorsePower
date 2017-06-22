@@ -14,7 +14,7 @@ public class ChoppingRecipeMaker {
     public static List<ChoppingRecipeWrapper> getGrindstoneRecipes(IJeiHelpers helpers) {
         IStackHelper stackHelper = helpers.getStackHelper();
         HPRecipes furnaceRecipes = HPRecipes.instance();
-        ArrayList<ChopperRecipe> grindingRecipes = furnaceRecipes.getChopperRecipes();;
+        ArrayList<ChopperRecipe> grindingRecipes = furnaceRecipes.getChoppingRecipes();
 
         List<ChoppingRecipeWrapper> recipes = new ArrayList<>();
 

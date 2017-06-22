@@ -9,6 +9,7 @@ public class HPRecipeBase {
     private int time;
 
     public HPRecipeBase(ItemStack input, ItemStack output, int time) {
+        input.setCount(1);
         this.input = input;
         this.output = output;
         this.time = time;

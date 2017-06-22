@@ -113,7 +113,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             if (currentItemChopTime >= totalItemChopTime) {
                 currentItemChopTime = 0;
 
-                totalItemChopTime = HPRecipes.instance().getChopperTime(getStackInSlot(0));
+                totalItemChopTime = HPRecipes.instance().getChoppingTime(getStackInSlot(0));
                 chopItem();
                 return true;
             }
@@ -133,7 +133,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemChopTime = HPRecipes.instance().getChopperTime(stack);
+            totalItemChopTime = HPRecipes.instance().getChoppingTime(stack);
             currentItemChopTime = 0;
             currentWindup = 0;
             markDirty();
