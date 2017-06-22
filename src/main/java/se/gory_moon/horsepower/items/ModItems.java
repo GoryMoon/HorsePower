@@ -13,8 +13,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.lib.Constants;
+import se.gory_moon.horsepower.lib.Reference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -64,5 +64,6 @@ public class ModItems {
         }
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Items.LEAD, 'F', Items.FLINT, 'W', "logWood"));
     }
 }
