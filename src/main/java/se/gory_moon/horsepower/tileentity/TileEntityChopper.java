@@ -88,7 +88,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         }
 
         for (BlockPos pos: searchPos) {
-            if (!getWorld().isAirBlock(pos))
+            if (!getWorld().getBlockState(pos).getBlock().isReplaceable(world, pos))
                 return false;
         }
         return true;

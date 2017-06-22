@@ -293,6 +293,8 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {}
 
 
+    // The One Probe Integration
+    @Optional.Method(modid = "theoneprobe")
     @Override
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         BlockPos pos = data.getPos().offset(blockState.getValue(FACING));
