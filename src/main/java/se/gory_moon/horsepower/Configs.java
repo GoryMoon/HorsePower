@@ -19,6 +19,11 @@ public class Configs {
     @Name("Enable Dough")
     public static boolean enableDough = true;
 
+    @Comment({"Removes the vanilla crafting recipes that grinds or uses grinded resources", "Removes Reeds -> Sugar, Bone -> Bonemeal, Wheat -> Bread, Flowers -> Dye"})
+    @RequiresMcRestart
+    @Name("Remove Vanilla Recipes")
+    public static boolean removeVanillaRecipes = false;
+
     @Comment({"Use the base definition of a horse, in vanilla it includes Horse, Donkey, Mule & Mule", "If false only entries in the list are valid",
             "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
     @Name("Use AbstractHorse")
@@ -44,7 +49,27 @@ public class Configs {
             "The time for the horse increases for each point that it reaches, one lap is 8 points.",
             "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
     @Name("Grindstone Recipes")
-    public static String[] grindstoneRecipes = {"minecraft:wheat-horsepower:flour-12"};
+    public static String[] grindstoneRecipes = {
+            "minecraft:wheat-horsepower:flour-12",
+            "minecraft:reeds-minecraft:sugar-12",
+            "minecraft:red_flower-minecraft:dye:1-12",
+            "minecraft:red_flower:4-minecraft:dye:1-12",
+            "minecraft:double_plant:4-minecraft:dye:1@2-12",
+            "minecraft:beetroot-minecraft:dye:1-12",
+            "minecraft:red_flower:3-minecraft:dye:7-12",
+            "minecraft:red_flower:6-minecraft:dye:7-12",
+            "minecraft:red_flower:8-minecraft:dye:7-12",
+            "minecraft:red_flower:7-minecraft:dye:9-12",
+            "minecraft:double_plant:5-minecraft:dye:9@2-12",
+            "minecraft:yellow_flower-minecraft:dye:11-12",
+            "minecraft:double_plant-minecraft:dye:11@2-12",
+            "minecraft:red_flower:1-minecraft:dye:12-12",
+            "minecraft:red_flower:2-minecraft:dye:13-12",
+            "minecraft:double_plant:1-minecraft:dye:13@2-12",
+            "minecraft:red_flower:5-minecraft:dye:14-12",
+            "minecraft:bone-minecraft:dye:15@3-12",
+            "minecraft:bone_block-minecraft:dye:15@9-12",
+    };
 
     @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta-modid:output:meta@amount-time",
             "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
