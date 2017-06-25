@@ -25,12 +25,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.client.renderer.ChopperModels;
+import se.gory_moon.horsepower.client.renderer.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
-import se.gory_moon.horsepower.util.Colors;
 import se.gory_moon.horsepower.util.Localization;
+import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nullable;
 import java.util.List;

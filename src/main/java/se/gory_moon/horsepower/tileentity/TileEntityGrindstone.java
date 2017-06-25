@@ -9,11 +9,14 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 
 public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
@@ -22,6 +25,11 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     private int currentItemMillTime;
     private int totalItemMillTime;
+
+    @SideOnly(Side.CLIENT)
+    public ItemStack renderStack = ItemStack.EMPTY;
+    @SideOnly(Side.CLIENT)
+    public Color grindColor;
 
     public TileEntityGrindstone() {
         super(2);

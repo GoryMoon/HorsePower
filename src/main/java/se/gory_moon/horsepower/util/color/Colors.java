@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.util;
+package se.gory_moon.horsepower.util.color;
 
 import net.minecraftforge.fml.client.FMLClientHandler;
 

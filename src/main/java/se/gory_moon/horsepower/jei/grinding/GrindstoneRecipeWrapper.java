@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
-import se.gory_moon.horsepower.util.Colors;
+import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.Collections;
 import java.util.List;

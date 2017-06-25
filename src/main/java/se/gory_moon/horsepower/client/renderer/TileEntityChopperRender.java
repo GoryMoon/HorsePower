@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.client.renderer.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 
 public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntityChopper> {
 
     @Override
     public void renderTileEntityAt(TileEntityChopper te, double x, double y, double z, float partialTicks, int destroyStage) {
-
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
@@ -35,11 +35,13 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         } else
             dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), bladeModel, blockState, te.getPos(), buffer, false );
 
+        buffer.setTranslation( 0, 0, 0 );
+
         GlStateManager.pushMatrix();
         GlStateManager.translate( x, y, z );
 
+        // Apply GL transformations relative to the center of the block: 1) TE rotation and 2) crank rotation
         GlStateManager.translate( 0.5, 0.5, 0.5 );
-        //FacingToRotation.get( te.getForward()).glRotateCurrentMat();
         GlStateManager.translate( 0, te.getVisualWindup(), 0 );
         GlStateManager.translate( -0.5, -0.5, -0.5 );
 

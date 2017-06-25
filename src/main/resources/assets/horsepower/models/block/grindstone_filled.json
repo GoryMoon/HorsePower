@@ -11,7 +11,7 @@
       "from": [2, 3, 2],
       "to": [15, 6, 14],
       "shade": true,
-      "faces": {"up": {"uv": [0, 0, 16, 16], "texture": "#0"}}
+      "faces": {"up": {"uv": [0, 0, 16, 16], "texture": "#0", "tintindex": 0}}
     }
   ]
 }

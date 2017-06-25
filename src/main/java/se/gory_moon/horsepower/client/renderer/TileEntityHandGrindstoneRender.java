@@ -4,24 +4,22 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockHandGrindstone;
+import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 
 public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityHandGrindstone> {
 
-    private ModelResourceLocation centerModelLocation = new ModelResourceLocation("horsepower:hand_grindstone", "part=center");
-
     @Override
     public void renderTileEntityAt(TileEntityHandGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
-
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
-        IBakedModel centerModel = dispatcher.getBlockModelShapes().getModelManager().getModel(centerModelLocation);
+        IBlockState centerState = blockState.withProperty(BlockHandGrindstone.PART, HandGrindstoneModels.CENTER);
+        IBakedModel centerModel = dispatcher.getBlockModelShapes().getModelForState(centerState);
 
         preDestroyRender(destroyStage);
         setRenderSettings();
@@ -33,9 +31,9 @@ public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<Til
 
         if (destroyStage >= 0) {
             buffer.noColor();
-            renderBlockDamage(blockState.withProperty(BlockHandGrindstone.PART, HandGrindstoneModels.CENTER), te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
+            renderBlockDamage(centerState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
         } else
-            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), centerModel, blockState, te.getPos(), buffer, false );
+            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), centerModel, centerState, te.getPos(), buffer, false );
 
         buffer.setTranslation( 0, 0, 0 );
 

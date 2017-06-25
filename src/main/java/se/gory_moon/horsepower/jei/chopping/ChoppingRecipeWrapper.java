@@ -15,7 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChopperRecipe;
-import se.gory_moon.horsepower.util.Colors;
+import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.Collections;
 import java.util.List;

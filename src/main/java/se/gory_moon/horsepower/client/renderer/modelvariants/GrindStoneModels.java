@@ -1,10 +1,10 @@
-package se.gory_moon.horsepower.client.renderer;
+package se.gory_moon.horsepower.client.renderer.modelvariants;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum HandGrindstoneModels implements IStringSerializable {
+public enum GrindStoneModels implements IStringSerializable {
     BASE,
-    CENTER;
+    FILLED;
 
     @Override
     public String getName() {

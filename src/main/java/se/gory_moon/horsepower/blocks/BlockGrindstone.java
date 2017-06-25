@@ -7,8 +7,8 @@ import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,10 +20,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
-import se.gory_moon.horsepower.util.Colors;
 import se.gory_moon.horsepower.util.Localization;
+import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,6 +33,8 @@ import java.util.List;
 public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
 
     public static final PropertyBool FILLED = PropertyBool.create("filled");
+    public static final PropertyEnum<GrindStoneModels> PART = PropertyEnum.create("part", GrindStoneModels.class);
+
     private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 8D/16D, 1.0D);
     private static final AxisAlignedBB BOUNDING_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 13D/16D, 1.0D);
 
@@ -64,23 +67,23 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[] {FILLED});
+        return new BlockStateContainer(this, FILLED, PART);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(FILLED).booleanValue() ? 1: 0;
+        return state.getValue(FILLED) ? 1: 0;
     }
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FILLED, meta == 1);
+        return getDefaultState().withProperty(FILLED, meta == 1).withProperty(PART, GrindStoneModels.BASE);
     }
 
     public static void setState(boolean filled, World worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         keepInventory = true;
-        worldIn.setBlockState(pos, ModBlocks.BLOCK_GRINDSTONE.getDefaultState().withProperty(FILLED, filled), 3);
+        worldIn.setBlockState(pos, ModBlocks.BLOCK_GRINDSTONE.getDefaultState().withProperty(FILLED, filled).withProperty(PART, GrindStoneModels.BASE), 3);
         keepInventory = false;
 
         if (tileentity != null) {

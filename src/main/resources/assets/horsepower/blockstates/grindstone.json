@@ -4,13 +4,13 @@
     "model": "horsepower:grindstone"
   },
   "variants": {
+    "part": {
+      "base": { "model": "horsepower:grindstone" },
+      "filled": { "model": "horsepower:grindstone_filled" }
+    },
     "filled": {
-      "true": {
-        "submodel": "horsepower:grindstone_filled"
-      },
-      "false": {
-
-      }
+      "true": {},
+      "false": {}
     },
     "inventory": { "model": "horsepower:grindstone" }
   }

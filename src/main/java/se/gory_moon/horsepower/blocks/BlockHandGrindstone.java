@@ -27,12 +27,12 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
-import se.gory_moon.horsepower.client.renderer.HandGrindstoneModels;
+import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
-import se.gory_moon.horsepower.util.Colors;
 import se.gory_moon.horsepower.util.Localization;
+import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -123,7 +123,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     }
 
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        worldIn.setBlockState(pos, ((IExtendedBlockState)state).withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        worldIn.setBlockState(pos, ((IExtendedBlockState)state).withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(PART, HandGrindstoneModels.BASE), 2);
 
         TileEntityHPBase tile = getTileEntity(worldIn, pos);
         if (tile == null)

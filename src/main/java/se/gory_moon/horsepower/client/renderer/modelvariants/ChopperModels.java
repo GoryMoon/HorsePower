@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.client.renderer;
+package se.gory_moon.horsepower.client.renderer.modelvariants;
 
 
 import net.minecraft.util.IStringSerializable;
