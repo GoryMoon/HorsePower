@@ -86,7 +86,8 @@ public class Provider implements IWailaDataProvider {
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
         NBTTagCompound tile = new NBTTagCompound();
         if (te instanceof TileEntityFiller) te = ((TileEntityFiller) te).getFilledTileEntity();
-        te.writeToNBT(tile);
+        if (te != null)
+            te.writeToNBT(tile);
         if (te instanceof TileEntityGrindstone || te instanceof TileEntityHandGrindstone) tag.setTag("horsepower:grindstone", tile);
         else if (te instanceof TileEntityChopper) tag.setTag("horsepower:chopper", tile);
         return tag;

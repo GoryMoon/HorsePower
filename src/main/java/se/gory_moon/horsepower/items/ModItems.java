@@ -68,13 +68,14 @@ public class ModItems {
 
     public static void registerRecipes() {
         if (Configs.enableDough) {
-            if (Configs.enableFlour) {
+            if (Configs.enableFlour)
                 GameRegistry.addShapelessRecipe(new ItemStack(DOUGH), FLOUR, Items.WATER_BUCKET);
-                OreDictionary.registerOre("foodFlour", FLOUR);
-            }
             GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
             OreDictionary.registerOre("foodDough", DOUGH);
         }
+        if (Configs.enableFlour)
+            OreDictionary.registerOre("foodFlour", FLOUR);
+
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Items.LEAD, 'F', Items.FLINT, 'W', "logWood"));
@@ -97,26 +98,26 @@ public class ModItems {
         InventoryCrafting crafting = new InventoryCrafting(dummyContainer, 3, 3);
 
 
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "###", '#', Items.WHEAT)));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', Items.REEDS)));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.BONE_BLOCK))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', Items.BONE)));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', Items.BEETROOT)));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.YELLOW_FLOWER, 1, BlockFlower.EnumFlowerType.DANDELION.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.POPPY.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "###", '#', Items.WHEAT)));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', Items.REEDS)));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.BONE_BLOCK))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', Items.BONE)));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', Items.BEETROOT)));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.YELLOW_FLOWER, 1, BlockFlower.EnumFlowerType.DANDELION.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.POPPY.getMeta()))));
 
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ALLIUM.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.HOUSTONIA.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.RED_TULIP.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ORANGE_TULIP.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.WHITE_TULIP.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.PINK_TULIP.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SYRINGA.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.ROSE.getMeta()))));
-        removeRecipesWithRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.BLUE_ORCHID.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ALLIUM.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.HOUSTONIA.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.RED_TULIP.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.ORANGE_TULIP.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.WHITE_TULIP.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.PINK_TULIP.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.RED_FLOWER, 1, BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SUNFLOWER.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SYRINGA.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.ROSE.getMeta()))));
+        removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta()))));
     }
 
     private static InventoryCrafting setRecipe(InventoryCrafting crafting, Object... recipeComponents) {
@@ -184,7 +185,7 @@ public class ModItems {
         }
     }
 
-    private static void removeRecipesWithRecipe(IRecipe recipe) {
+    private static void removeRecipe(IRecipe recipe) {
         ArrayList recipes = (ArrayList) CraftingManager.getInstance().getRecipeList();
 
         if (recipe != null)

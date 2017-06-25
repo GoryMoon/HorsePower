@@ -15,7 +15,7 @@ public class Utils {
         if (Configs.useHorseInterface)
             clazzes.add(AbstractHorse.class);
 
-        for (String e: Configs.grindstoneModList) {
+        for (String e: Configs.grindstoneMobList) {
             try {
                 Class clazz = Class.forName(e);
 

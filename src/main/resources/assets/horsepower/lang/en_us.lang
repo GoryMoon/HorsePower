@@ -26,6 +26,10 @@ info.horsepower:grindstone.info3=With the animal attached with the lead right cl
 
 # Command
 commands.horsepower.reload=HorsePower configs reloaded
+commands.horsepower.usage=/horsepower <entity|reload>
+commands.horsepower.entity.invalid=Can only do this command as a player
+commands.horsepower.entity.no=Not looking at an entity
+commands.horsepower.entity.has=Entity: %s
 
 # Gui
 gui.horsepower.jei.category.grinding=Grindstone
