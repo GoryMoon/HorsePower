@@ -9,6 +9,8 @@
       "blade": { "model": "horsepower:chopper_blade" }
     },
     "facing": {
+      "up":    {},
+      "down": {},
       "north": {},
       "east":  { "y": 90 },
       "south": { "y": 180 },
