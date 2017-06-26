@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,6 +15,7 @@ import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.util.HorsePowerCommand;
 import se.gory_moon.horsepower.util.color.ColorGetter;
 
 @SideOnly(Side.CLIENT)
@@ -29,6 +31,8 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void loadComplete() {
+        ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
+
         ((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> {
             TileEntityHPBaseRenderer.clearDestroyStageicons();
         });

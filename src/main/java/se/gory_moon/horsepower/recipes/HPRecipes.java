@@ -4,14 +4,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.rcon.RConConsoleSource;
-import net.minecraft.tileentity.CommandBlockBaseLogic;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
@@ -68,9 +63,8 @@ public class HPRecipes {
                     addGrindstoneRecipe(in, (ItemStack) stacks.get(1), time);
                 }
             } else {
-                String text = "Couldn't load grindstone recipe " + Joiner.on("-").join(comp) + ")";
+                String text = "Couldn't load grindstone recipe (" + Joiner.on("-").join(comp) + ")";
                 HorsePowerMod.logger.warn(text);
-                sendMessage(sender, text);
             }
         }
         for (int i = 0; i < Configs.choppingRecipes.length; i++) {
@@ -106,21 +100,10 @@ public class HPRecipes {
             } else {
                 String text = "Couldn't load chopping recipe (" + Joiner.on("-").join(comp) + ")";
                 HorsePowerMod.logger.warn(text);
-                sendMessage(sender, text);
             }
         }
         HorsePowerMod.jeiPlugin.addRecipes();
         HorsePowerMod.tweakerPlugin.applyTweaker();
-    }
-
-    private void sendMessage(ICommandSender sender, String message) {
-        if (sender != null) {
-            if(sender instanceof EntityPlayer || sender instanceof RConConsoleSource || sender instanceof CommandBlockBaseLogic) {
-                sender.sendMessage(new TextComponentString(message));
-            } else if(sender.getName().equals("Server")) {
-                FMLServerHandler.instance().getServer().sendMessage(new TextComponentString(message));
-            }
-        }
     }
 
     private Object parseItemStack(String item) {

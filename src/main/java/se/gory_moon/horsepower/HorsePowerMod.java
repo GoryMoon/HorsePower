@@ -1,12 +1,19 @@
 package se.gory_moon.horsepower;
 
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.blocks.ModBlocks;
@@ -20,7 +27,6 @@ import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
-import se.gory_moon.horsepower.util.HorsePowerCommand;
 
 @Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.11.2]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;")
 @EventBusSubscriber
@@ -41,9 +47,7 @@ public class HorsePowerMod {
         proxy.preInit();
         PacketHandler.init();
 
-        if (FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER)) {
-            logger.info("Loaded Waila Integration");
-        }
+        FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER);
 
         ModBlocks.registerTileEntities();
     }
@@ -55,9 +59,9 @@ public class HorsePowerMod {
         if (Loader.isModLoaded("crafttweaker")) {
             tweakerPlugin = new TweakerPluginImpl();
             tweakerPlugin.register();
-        } else {
+        } else
             tweakerPlugin = new DummyTweakPluginImpl();
-        }
+
         HPRecipes.instance().reloadRecipes(null);
     }
 
@@ -66,8 +70,11 @@ public class HorsePowerMod {
         proxy.loadComplete();
     }
 
-    @EventHandler
-    public void onServerStarting(FMLServerStartingEvent event) {
-        event.registerServerCommand(new HorsePowerCommand());
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(Reference.MODID)) {
+            ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
+            HPRecipes.instance().reloadRecipes(null);
+        }
     }
 }

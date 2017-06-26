@@ -25,7 +25,7 @@ public class Configs {
     public static boolean removeVanillaRecipes = false;
 
     @Comment({"Use the base definition of a horse, in vanilla it includes Horse, Donkey & Mule", "If false only entries in the list are valid",
-            "Can be reloaded with /horsepower reload or /hp reload, but must be edited with in-game editor for that to work."})
+            "Must be edited with in-game editor for live changes."})
     @Name("Use AbstractHorse")
     public static boolean useHorseInterface = true;
 
@@ -39,7 +39,7 @@ public class Configs {
     public static int pointsPerRotation = 2;
 
     @Comment({"Add mobs that can use the grindstone", "Only mobs that can be leashed can use the grindstone", "Add the full path to the mob class, can be found with /horsepower entity or /hp entity",
-            "Can be reloaded with /horsepower reload or /hp reload, but must be edited with in-game editor for that to work."})
+            "Must be edited with in-game editor for live changes."})
     @Name("Grindstone Mob List")
     public static String[] grindstoneMobList = {};
 
@@ -47,7 +47,7 @@ public class Configs {
             "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
             "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
             "The time for the horse increases for each point that it reaches, one lap is 8 points.",
-            "Can be reloaded with /horsepower reload or /hp reload, but must be edited with in-game editor for that to work."})
+            "Must be edited with in-game editor for live changes."})
     @Name("Grindstone Recipes")
     public static String[] grindstoneRecipes = {
             "minecraft:wheat-horsepower:flour-12",
@@ -75,7 +75,7 @@ public class Configs {
             "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
             "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
             "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
-            "Can be reloaded with /horsepower reload, but must be edited with in-game editor for that to work."})
+            "Must be edited with in-game editor for live changes."})
     @Name("Chopping Recipes")
     public static String[] choppingRecipes = {
             "minecraft:log:0-minecraft:planks:0@4-1",
