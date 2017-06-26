@@ -9,8 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -30,10 +28,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,13 +40,18 @@ import java.util.Random;
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor {
 
-    public static final IUnlistedProperty<Integer> MISC_DATA = Properties.toUnlisted(PropertyInteger.create("misc_data", 0, 32));
-    public boolean useTileEntity;
+    private boolean useTileEntity;
+    private boolean providePower;
 
-    public BlockFiller(Material materialIn, String name, boolean useTileEntity) {
+    public BlockFiller(Material materialIn, String name, boolean useTileEntity, boolean providePower) {
         super(materialIn);
         setRegistryName(name + "filler");
         this.useTileEntity = useTileEntity;
+        this.providePower = providePower;
+    }
+
+    public BlockFiller(Material materialIn, String name, boolean useTileEntity) {
+        this(materialIn, name, useTileEntity, false);
     }
 
     @Nullable
@@ -66,17 +65,9 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
         return useTileEntity;
     }
 
-    private int getValue(IExtendedBlockState state, int location, int size) {
-        return (state.getValue(MISC_DATA) >> location) & ((1 << size) - 1);
-    }
-
-    private int setValue(int meta, int location, int value) {
-        return meta | (value << location);
-    }
-
     @Override
     protected BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[]{ FACING }, new IUnlistedProperty[]{ MISC_DATA });
+        return new BlockStateContainer(this, FACING);
     }
 
     @Override
@@ -87,20 +78,6 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(FACING).getIndex();
-    }
-
-    @Override
-    public IBlockState getActualState(IBlockState baseState, IBlockAccess worldIn, BlockPos pos) {
-        if (baseState instanceof IExtendedBlockState) {
-            IExtendedBlockState extState = (IExtendedBlockState) baseState;
-            pos = pos.offset(extState.getValue(FACING));
-            IBlockState state1 = worldIn.getBlockState(pos);
-            int meta = setValue(state1.getBlock().canProvidePower(state1)? 1: 0, 0, 1);
-
-
-            return ((IExtendedBlockState) baseState).withProperty(MISC_DATA, meta);
-        }
-        return super.getActualState(baseState, worldIn, pos);
     }
 
     @Override
@@ -205,10 +182,14 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
 
     @Override
     public boolean canProvidePower(IBlockState state) {
-        if (state instanceof IExtendedBlockState) {
-            return getValue((IExtendedBlockState) state, 0, 1) == 1;
-        }
-        return super.canProvidePower(state);
+        return providePower;
+    }
+
+    @Override
+    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, @Nullable EnumFacing side) {
+        pos = pos.offset(state.getValue(FACING));
+        IBlockState state1 = world.getBlockState(pos);
+        return state1.getBlock().canConnectRedstone(state1, world, pos, side);
     }
 
     @Override
