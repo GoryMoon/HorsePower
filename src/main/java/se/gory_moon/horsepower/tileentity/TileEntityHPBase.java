@@ -1,42 +1,24 @@
 package se.gory_moon.horsepower.tileentity;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public abstract class TileEntityHPBase extends TileEntity implements ISidedInventory {
 
@@ -54,7 +36,7 @@ public abstract class TileEntityHPBase extends TileEntity implements ISidedInven
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
-        itemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        itemStacks = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, itemStacks);
 
         if (canBeRotated()) {
@@ -64,18 +46,22 @@ public abstract class TileEntityHPBase extends TileEntity implements ISidedInven
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
         ItemStackHelper.saveAllItems(compound, itemStacks);
 
         if (canBeRotated()) {
             compound.setString("forward", getForward().getName());
         }
-        return super.writeToNBT(compound);
+        return compound;
     }
 
     @Override
     public void markDirty() {
-        super.markDirty();
-        notifyUpdate();
+        if (!getWorld().isRemote) {
+            final IBlockState state = getWorld().getBlockState(getPos());
+            getWorld().notifyBlockUpdate(getPos(), state, state, 8);
+            super.markDirty();
+        }
     }
 
     public boolean canWork() {
@@ -98,10 +84,6 @@ public abstract class TileEntityHPBase extends TileEntity implements ISidedInven
 
     public static boolean canCombine(ItemStack stack1, ItemStack stack2) {
         return stack1.getItem() == stack2.getItem() && (stack1.getMetadata() == stack2.getMetadata() && (stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2)));
-    }
-
-    public void notifyUpdate() {
-        getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), 3);
     }
 
     public boolean canBeRotated() {
@@ -180,6 +162,8 @@ public abstract class TileEntityHPBase extends TileEntity implements ISidedInven
     @Override
     public ItemStack decrStackSize(int index, int count) {
         ItemStack stack = ItemStackHelper.getAndSplit(itemStacks, index, count);
+        if (!stack.isEmpty())
+            markDirty();
         return stack;
     }
 

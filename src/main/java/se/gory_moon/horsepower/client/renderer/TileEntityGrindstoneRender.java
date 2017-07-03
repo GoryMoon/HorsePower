@@ -55,7 +55,9 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        renderItem(te.getWorld(), te.getStackInSlot(0), 0.5F, 1F, 0.5F, 1F);
+        renderItem(te, te.getStackInSlot(0), 0.5F, 1F, 0.5F, 1F);
+        if (!te.getStackInSlot(0).isEmpty() && getWorld().isAirBlock(te.getPos().up()))
+            drawString(te, String.valueOf(te.getStackInSlot(0).getCount()), 0, 0.35,  0);
         GlStateManager.popMatrix();
 
         super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);

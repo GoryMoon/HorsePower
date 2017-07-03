@@ -2,6 +2,7 @@ package se.gory_moon.horsepower.client.renderer;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -9,14 +10,17 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 
 import java.util.Arrays;
@@ -25,19 +29,19 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
 
     private static TextureAtlasSprite[] destroyBlockIcons = new TextureAtlasSprite[10];
 
-    protected void renderStillItem(World world, ItemStack stack, float x, float y, float z, float scale) {
-        renderItem(world, stack, x, y, z, scale, false);
+    protected void renderStillItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
+        renderItem(te, stack, x, y, z, scale, false, false);
     }
 
-    protected void renderItem(World world, ItemStack stack, float x, float y, float z, float scale) {
-        renderItem(world, stack, x, y, z, scale, true);
+    protected void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
+        renderItem(te, stack, x, y, z, scale, true, true);
     }
 
-    private void renderItem(World world, ItemStack stack, float x, float y, float z, float scale, boolean rotate) {
+    private void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale, boolean rotate, boolean displayAmount) {
         RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
         if (stack != null) {
             GlStateManager.translate(x, y, z);
-            EntityItem entityitem = new EntityItem(world, 0.0D, 0.0D, 0.0D, stack);
+            EntityItem entityitem = new EntityItem(te.getWorld(), 0.0D, 0.0D, 0.0D, stack.copy());
             entityitem.getEntityItem().setCount(1);
             entityitem.hoverStart = 0.0F;
             GlStateManager.pushMatrix();
@@ -59,13 +63,68 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         }
     }
 
+    public void drawString(TileEntityHPBase te, String str, double x, double y, double z) {
+        if (!canShowAmount(te))
+            return;
+        setLightmapDisabled(true);
+        Entity entity = this.rendererDispatcher.entity;
+        double d0 = te.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+
+        if (d0 <= (double)(14 * 14)) {
+            float f = this.rendererDispatcher.entityYaw;
+            float f1 = this.rendererDispatcher.entityPitch;
+            FontRenderer fontRenderer = getFontRenderer();
+            GlStateManager.pushMatrix();
+
+            GlStateManager.translate(x, y, z);
+            GlStateManager.glNormal3f(0.0F, 1.0F, 0.0F);
+            if (te.getForward() == EnumFacing.EAST || te.getForward() == EnumFacing.WEST)
+                FacingToRotation.get( te.getForward().getOpposite()).glRotateCurrentMat();
+            else
+                FacingToRotation.get( te.getForward()).glRotateCurrentMat();
+
+
+            GlStateManager.rotate(-f, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotate(f1, 1.0F, 0.0F, 0.0F);
+            GlStateManager.scale(-0.015F, -0.015F, 0.015F);
+            GlStateManager.disableLighting();
+            GlStateManager.depthMask(false);
+            GlStateManager.disableDepth();
+            GlStateManager.enableBlend();
+
+            GlStateManager.enableDepth();
+            GlStateManager.depthMask(true);
+            fontRenderer.drawString(str, -fontRenderer.getStringWidth(str) / 2, 0, -1);
+
+            GlStateManager.enableLighting();
+            GlStateManager.disableBlend();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.popMatrix();
+        }
+        setLightmapDisabled(false);
+    }
+
+    public boolean canShowAmount(TileEntityHPBase te) {
+        return Configs.renderItemAmount && (!Configs.mustLookAtBlock || this.rendererDispatcher.cameraHitResult != null && te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()));
+    }
+
     protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(ox, oy, oz);
         GlStateManager.translate( 0.5, 0.5, 0.5 );
         FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
         GlStateManager.translate( -0.5, -0.5, -0.5 );
-        renderItem(tile.getWorld(), stack, x, y, z, scale);
+        renderItem(tile, stack, x, y, z, scale);
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(ox , oy, oz);
+        GlStateManager.translate( 0.5, 0.5, 0.5 );
+        FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
+        GlStateManager.translate( -0.5, -0.5, -0.5 );
+
+        if (!stack.isEmpty())
+            drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3,  z);
         GlStateManager.popMatrix();
     }
 

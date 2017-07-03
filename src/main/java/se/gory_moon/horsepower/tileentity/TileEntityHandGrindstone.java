@@ -88,16 +88,12 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
         ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
-        if (index == 1 && getStackInSlot(1).isEmpty()) {
-            markDirty();
-        }
-
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
             totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack);
             currentItemMillTime = 0;
-            markDirty();
         }
+        markDirty();
     }
 
     @Override

@@ -24,6 +24,14 @@ public class Configs {
     @Name("Remove Vanilla Recipes")
     public static boolean removeVanillaRecipes = false;
 
+    @Comment("If the amount text on how many items is in a stack in a grindstone should render")
+    @Name("Render Item Amount")
+    public static boolean renderItemAmount = true;
+
+    @Comment("Must look at the block to show the amount in it")
+    @Name("Must Look For Amount ")
+    public static boolean mustLookAtBlock = true;
+
     @Comment({"Use the base definition of a horse, in vanilla it includes Horse, Donkey & Mule", "If false only entries in the list are valid",
             "Must be edited with in-game editor for live changes."})
     @Name("Use AbstractHorse")
