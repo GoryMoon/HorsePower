@@ -98,7 +98,8 @@ public final class Localization {
     public enum WAILA {
         GRINDSTONE_PROGRESS,
         WINDUP_PROGRESS,
-        CHOPPING_PROGRESS;
+        CHOPPING_PROGRESS,
+        SHOW_ITEMS;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);

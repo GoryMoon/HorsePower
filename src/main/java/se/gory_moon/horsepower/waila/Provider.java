@@ -1,9 +1,6 @@
 package se.gory_moon.horsepower.waila;
 
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
+import mcp.mobius.waila.api.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,12 +9,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.*;
-import se.gory_moon.horsepower.tileentity.TileEntityChopper;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
-import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
-import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.tileentity.*;
 import se.gory_moon.horsepower.util.Localization;
 
+import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.List;
 
 public class Provider implements IWailaDataProvider {
@@ -34,7 +31,8 @@ public class Provider implements IWailaDataProvider {
         registrar.registerNBTProvider(provider, BlockHandGrindstone.class);
         registrar.registerNBTProvider(provider, BlockChopper.class);
         registrar.registerNBTProvider(provider, BlockFiller.class);
-        //registrar.addConfig(Reference.NAME, "showItems", Localization.WAILA.SHOW_ITEMS.translate());
+        registrar.addConfig(Reference.NAME, "horsepower:showItems", Localization.WAILA.SHOW_ITEMS.translate());
+        registrar.registerTooltipRenderer("horsepower.stack", new TTRenderStack());
     }
 
     @Override
@@ -62,7 +60,7 @@ public class Provider implements IWailaDataProvider {
         } else if (nbt.hasKey("horsepower:chopper", 10)) {
             nbt = nbt.getCompoundTag("horsepower:chopper");
 
-            double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
+            double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup : 1;
             double windup = (double) nbt.getInteger("currentWindup");
             double current = (double) nbt.getInteger("chopTime");
             double total = (double) nbt.getInteger("totalChopTime");
@@ -72,6 +70,23 @@ public class Provider implements IWailaDataProvider {
             currenttip.add(Localization.WAILA.WINDUP_PROGRESS.translate(String.valueOf(progressWindup) + "%"));
             if (total > 1) {
                 currenttip.add(Localization.WAILA.CHOPPING_PROGRESS.translate(String.valueOf(progressChopping) + "%"));
+            }
+        }
+
+        if (accessor.getTileEntity() instanceof TileEntityHPBase) {
+            if (accessor.getPlayer().isSneaking() && config.getConfig("horsepower:showItems")) {
+                {
+                    final ItemStack stack = ((TileEntityHPBase) accessor.getTileEntity()).getStackInSlot(0);
+                    final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                    if (!stack.isEmpty())
+                        currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
+                }
+                {
+                    final ItemStack stack = ((TileEntityHPBase) accessor.getTileEntity()).getStackInSlot(1);
+                    final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                    if (!stack.isEmpty())
+                        currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
+                }
             }
         }
         return currenttip;
@@ -88,7 +103,8 @@ public class Provider implements IWailaDataProvider {
         if (te instanceof TileEntityFiller) te = ((TileEntityFiller) te).getFilledTileEntity();
         if (te != null)
             te.writeToNBT(tile);
-        if (te instanceof TileEntityGrindstone || te instanceof TileEntityHandGrindstone) tag.setTag("horsepower:grindstone", tile);
+        if (te instanceof TileEntityGrindstone || te instanceof TileEntityHandGrindstone)
+            tag.setTag("horsepower:grindstone", tile);
         else if (te instanceof TileEntityChopper) tag.setTag("horsepower:chopper", tile);
         return tag;
     }
