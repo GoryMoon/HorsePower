@@ -91,6 +91,7 @@ public class GrindstoneRecipeTweaker {
                 HPRecipes.instance().removeGrindstoneRecipe(recipe);
                 MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.grinding");
             }
+            TweakerPluginImpl.actions.remove(this);
         }
 
         @Override
@@ -138,6 +139,7 @@ public class GrindstoneRecipeTweaker {
                 HPRecipes.instance().getGrindstoneRecipes().add(index, recipes.get(i));
                 MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipes.get(i), "horsepower.grinding");
             }
+            TweakerPluginImpl.actions.remove(this);
         }
 
         @Override

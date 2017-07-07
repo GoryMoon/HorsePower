@@ -2,7 +2,7 @@ package se.gory_moon.horsepower.recipes;
 
 import net.minecraft.item.ItemStack;
 
-public class HPRecipeBase {
+public abstract class HPRecipeBase {
 
     private ItemStack input;
     private ItemStack output;
@@ -30,7 +30,7 @@ public class HPRecipeBase {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GrindstoneRecipe)) return false;
+        if (!(o instanceof HPRecipeBase)) return false;
 
         HPRecipeBase recipe = (HPRecipeBase) o;
 

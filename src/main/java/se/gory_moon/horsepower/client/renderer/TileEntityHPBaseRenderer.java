@@ -30,19 +30,18 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     private static TextureAtlasSprite[] destroyBlockIcons = new TextureAtlasSprite[10];
 
     protected void renderStillItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
-        renderItem(te, stack, x, y, z, scale, false, false);
+        renderItem(te, stack, x, y, z, scale, false);
     }
 
     protected void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
-        renderItem(te, stack, x, y, z, scale, true, true);
+        renderItem(te, stack, x, y, z, scale, true);
     }
 
-    private void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale, boolean rotate, boolean displayAmount) {
+    private void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale, boolean rotate) {
         RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
         if (stack != null) {
             GlStateManager.translate(x, y, z);
             EntityItem entityitem = new EntityItem(te.getWorld(), 0.0D, 0.0D, 0.0D, stack.copy());
-            entityitem.getEntityItem().setCount(1);
             entityitem.hoverStart = 0.0F;
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();

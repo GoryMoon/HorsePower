@@ -3,14 +3,19 @@ package se.gory_moon.horsepower.recipes;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +24,8 @@ public class HPRecipes {
     private static HPRecipes INSTANCE = new HPRecipes();
 
     private final ArrayList<GrindstoneRecipe> grindstoneRecipes = Lists.newArrayList();
-    private final ArrayList<ChopperRecipe> chopperRecipes = Lists.newArrayList();
+    private final ArrayList<ChoppingBlockRecipe> choppingBlockRecipes = Lists.newArrayList();
+    public static ArrayList<String> ERRORS = Lists.newArrayList();
 
     public static HPRecipes instance() {
         return INSTANCE;
@@ -27,101 +33,105 @@ public class HPRecipes {
 
     private HPRecipes() {}
 
-    public void reloadRecipes(ICommandSender sender) {
+    public void reloadRecipes() {
         HorsePowerMod.jeiPlugin.removeRecipe();
         grindstoneRecipes.clear();
-        chopperRecipes.clear();
+        choppingBlockRecipes.clear();
 
-        for (int i = 0; i < Configs.grindstoneRecipes.length; i++) {
-            String[] comp = Configs.grindstoneRecipes[i].split("-");
+        //TODO sync on server world load
+        //TODO sync changes from OP to server
+        createRecipes(GrindstoneRecipe.class, Configs.grindstoneRecipes).forEach(this::addGrindstoneRecipe);
+        createRecipes(ChoppingBlockRecipe.class, Configs.choppingRecipes).forEach(this::addChoppingRecipe);
+
+        HorsePowerMod.jeiPlugin.addRecipes();
+        HorsePowerMod.tweakerPlugin.applyTweaker();
+    }
+
+    private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, String[] data) {
+        List<T> recipes = new ArrayList<>();
+        for (String aData : data) {
+            String[] comp = aData.split("-");
+            if (aData.isEmpty()) continue;
+
             List<Object> stacks = Lists.newArrayList();
             int time = -1;
-            for (String item: comp) {
+            for (String item : comp) {
                 if (item.contains(":")) {
-                    Object stack = parseItemStack(item);
+                    Object stack;
+                    try {
+                        stack = parseItemStack(item);
+                    } catch (Exception e) {
+                        errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ".");
+                        break;
+                    }
                     if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
                         stacks.add(stack);
                 } else if (stacks.size() == 2) {
                     try {
                         time = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        HorsePowerMod.logger.error("Parse error with grindstone time '" + item + "' in config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
+                        errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
                         time = -1;
                     }
                 }
             }
             if (stacks.size() == 2 && time > -1) {
-                if (stacks.get(0) instanceof List) {
-                    for (Object stack: (List)stacks.get(0)) {
-                        ItemStack in = ((ItemStack) stack);
+                try {
+                    if (stacks.get(0) instanceof List) {
+                        for (Object stack : (List) stacks.get(0)) {
+                            ItemStack in = ((ItemStack) stack);
+                            in.setCount(1);
+                            recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, int.class).newInstance(in, stacks.get(1), time));
+                        }
+                    } else {
+                        ItemStack in = ((ItemStack) stacks.get(0));
                         in.setCount(1);
-                        addGrindstoneRecipe(in, (ItemStack) stacks.get(1), time);
+                        recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, int.class).newInstance(in, stacks.get(1), time));
                     }
-                } else {
-                    ItemStack in = ((ItemStack) stacks.get(0));
-                    in.setCount(1);
-                    addGrindstoneRecipe(in, (ItemStack) stacks.get(1), time);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    e.printStackTrace();
                 }
             } else {
-                String text = "Couldn't load grindstone recipe (" + Joiner.on("-").join(comp) + ")";
-                HorsePowerMod.logger.warn(text);
+                errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + ")");
             }
         }
-        for (int i = 0; i < Configs.choppingRecipes.length; i++) {
-            String[] comp = Configs.choppingRecipes[i].split("-");
-            List<Object> stacks = Lists.newArrayList();
-            int time = -1;
-            for (String item: comp) {
-                if (item.contains(":")) {
-                    Object stack = parseItemStack(item);
-                    if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
-                        stacks.add(stack);
-                } else if (stacks.size() == 2){
-                    try {
-                        time = Integer.parseInt(item);
-                    } catch (NumberFormatException e) {
-                        HorsePowerMod.logger.error("Parse error with chopping time '" + item + "' in config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
-                        time = -1;
-                    }
-                }
-            }
-            if (stacks.size() == 2 && time > -1) {
-                if (stacks.get(0) instanceof List) {
-                    for (Object stack: (List)stacks.get(0)) {
-                        ItemStack in = ((ItemStack) stack);
-                        in.setCount(1);
-                        addChoppingRecipe(in, (ItemStack) stacks.get(1), time);
-                    }
-                } else {
-                    ItemStack in = ((ItemStack) stacks.get(0));
-                    in.setCount(1);
-                    addChoppingRecipe(in, (ItemStack) stacks.get(1), time);
-                }
-            } else {
-                String text = "Couldn't load chopping recipe (" + Joiner.on("-").join(comp) + ")";
-                HorsePowerMod.logger.warn(text);
-            }
-        }
-        HorsePowerMod.jeiPlugin.addRecipes();
-        HorsePowerMod.tweakerPlugin.applyTweaker();
+        return recipes;
     }
 
-    private Object parseItemStack(String item) {
-        String[] data = item.split("@");
-        int amount = data.length == 1 ? 1: Integer.parseInt(data[1]);
-        if (data.length == 2) {
-            item = item.substring(0, item.indexOf("@"));
+    private void errorMessage(String message) {
+        if (FMLCommonHandler.instance().getSide().isClient()) {
+            if (FMLClientHandler.instance().getClientPlayerEntity() != null)
+                FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + message));
+            else
+                ERRORS.add(message);
         }
+        HorsePowerMod.logger.warn(message);
+    }
+
+    private Object parseItemStack(String item) throws Exception {
+        String[] data = item.split("\\$");
+        NBTTagCompound nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
+        if (data.length == 2)
+            item = item.substring(0, item.indexOf("$"));
+
+        data = item.split("@");
+        int amount = data.length == 1 ? 1: Integer.parseInt(data[1]);
+        if (data.length == 2)
+            item = item.substring(0, item.indexOf("@"));
+
         data = item.split(":");
-        int meta = data.length == 2 ? 0 : "*".equals(data[2]) ?  OreDictionary.WILDCARD_VALUE: Integer.parseInt(data[2]);
+        int meta = data.length == 2 ? 0 : "*".equals(data[2]) ? OreDictionary.WILDCARD_VALUE: Integer.parseInt(data[2]);
+
         if (item.startsWith("ore:")) {
-            NonNullList<ItemStack> items = OreDictionary.getOres(item.substring(4));
-            return items;
+            return OreDictionary.getOres(item.substring(4));
         } else {
-            Item item1 = Item.getByNameOrId(data[0] + ":" + data[1]);
-            if (item1 == null)
-                return ItemStack.EMPTY;
-            ItemStack stack = new ItemStack(item1, amount, meta);
+            NBTTagCompound compound = new NBTTagCompound();
+            compound.setString("id", data[0] + ":" + data[1]);
+            compound.setByte("Count", (byte) amount);
+            compound.setShort("Damage", (short) meta);
+            if (nbt != null)
+                compound.setTag("tag", nbt);
+            ItemStack stack = new ItemStack(compound);
             return stack;
         }
     }
@@ -154,12 +164,12 @@ public class HPRecipes {
 
     public void addChoppingRecipe(ItemStack input, ItemStack output, int time) {
         if (getChopperResult(input) != ItemStack.EMPTY) return;
-        chopperRecipes.add(new ChopperRecipe(input, output, time));
+        choppingBlockRecipes.add(new ChoppingBlockRecipe(input, output, time));
     }
 
-    public void addChoppingRecipe(ChopperRecipe recipe) {
+    public void addChoppingRecipe(ChoppingBlockRecipe recipe) {
         if (getChopperResult(recipe.getInput()) != ItemStack.EMPTY) return;
-        chopperRecipes.add(recipe);
+        choppingBlockRecipes.add(recipe);
     }
 
     public void removeGrindstoneRecipe(GrindstoneRecipe recipe) {
@@ -177,17 +187,17 @@ public class HPRecipes {
         }
     }
 
-    public void removeChoppingRecipe(ChopperRecipe recipe) {
+    public void removeChoppingRecipe(ChoppingBlockRecipe recipe) {
         if (hasChopperRecipe(recipe.getInput())) {
-            chopperRecipes.remove(recipe);
+            choppingBlockRecipes.remove(recipe);
         }
     }
 
     public void removeChoppingRecipe(ItemStack input) {
         if (hasChopperRecipe(input)) {
-            for (ChopperRecipe recipe: chopperRecipes) {
+            for (ChoppingBlockRecipe recipe: choppingBlockRecipes) {
                 if (OreDictionary.itemMatches(recipe.getInput(), input, false)) {
-                    chopperRecipes.remove(recipe);
+                    choppingBlockRecipes.remove(recipe);
                 }
             }
         }
@@ -204,7 +214,7 @@ public class HPRecipes {
     }
 
     public ItemStack getChopperResult(ItemStack stack) {
-        for (ChopperRecipe recipe : chopperRecipes) {
+        for (ChoppingBlockRecipe recipe : choppingBlockRecipes) {
             if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
                 return recipe.getOutput();
             }
@@ -223,7 +233,7 @@ public class HPRecipes {
     }
 
     public boolean hasChopperRecipe(ItemStack stack) {
-        for (ChopperRecipe recipe: chopperRecipes) {
+        for (ChoppingBlockRecipe recipe: choppingBlockRecipes) {
             if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
                 return true;
             }
@@ -235,8 +245,8 @@ public class HPRecipes {
         return grindstoneRecipes;
     }
 
-    public ArrayList<ChopperRecipe> getChoppingRecipes() {
-        return chopperRecipes;
+    public ArrayList<ChoppingBlockRecipe> getChoppingRecipes() {
+        return choppingBlockRecipes;
     }
 
     public int getGrindstoneTime(ItemStack stack) {
@@ -250,7 +260,7 @@ public class HPRecipes {
     }
 
     public int getChoppingTime(ItemStack stack) {
-        for (ChopperRecipe recipe : chopperRecipes) {
+        for (ChoppingBlockRecipe recipe : choppingBlockRecipes) {
             if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
                 return recipe.getTime();
             }

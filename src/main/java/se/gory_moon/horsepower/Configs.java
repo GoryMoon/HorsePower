@@ -51,8 +51,8 @@ public class Configs {
     @Name("Grindstone Mob List")
     public static String[] grindstoneMobList = {};
 
-    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta-modid:output:meta@amount-time",
-            "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
+    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
+            "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
             "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
             "The time for the horse increases for each point that it reaches, one lap is 8 points.",
             "Must be edited with in-game editor for live changes."})
@@ -79,8 +79,8 @@ public class Configs {
             "minecraft:bone_block-minecraft:dye:15@9-12",
     };
 
-    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta-modid:output:meta@amount-time",
-            "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default",
+    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
+            "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
             "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
             "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
             "Must be edited with in-game editor for live changes."})

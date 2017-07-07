@@ -1,8 +1,15 @@
 package se.gory_moon.horsepower;
 
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -62,7 +69,7 @@ public class HorsePowerMod {
         } else
             tweakerPlugin = new DummyTweakPluginImpl();
 
-        HPRecipes.instance().reloadRecipes(null);
+        HPRecipes.instance().reloadRecipes();
     }
 
     @EventHandler
@@ -74,7 +81,15 @@ public class HorsePowerMod {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(Reference.MODID)) {
             ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-            HPRecipes.instance().reloadRecipes(null);
+            HPRecipes.instance().reloadRecipes();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onWorldLoad(EntityJoinWorldEvent event) {
+        if (FMLCommonHandler.instance().getSide().isClient() && event.getEntity() instanceof EntityPlayerSP && event.getWorld() instanceof WorldClient && FMLClientHandler.instance().getClientPlayerEntity() != null && HPRecipes.ERRORS.size() > 0) {
+            HPRecipes.ERRORS.forEach(s -> FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED +s)));
+            HPRecipes.ERRORS.clear();
         }
     }
 }

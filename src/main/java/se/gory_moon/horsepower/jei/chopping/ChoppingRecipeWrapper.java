@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
-import se.gory_moon.horsepower.recipes.ChopperRecipe;
+import se.gory_moon.horsepower.recipes.ChoppingBlockRecipe;
 import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.Collections;
@@ -28,7 +28,7 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper {
     private final double printLaps;
     private final IDrawableAnimated arrow;
 
-    public ChoppingRecipeWrapper(ChopperRecipe recipe) {
+    public ChoppingRecipeWrapper(ChoppingBlockRecipe recipe) {
         this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getTime());
     }
 

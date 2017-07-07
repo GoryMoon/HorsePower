@@ -3,8 +3,8 @@ package se.gory_moon.horsepower.jei.grinding;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
-import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
+import se.gory_moon.horsepower.recipes.HPRecipes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,7 @@ public class GrindingRecipeMaker {
 
     public static List<GrindstoneRecipeWrapper> getGrindstoneRecipes(IJeiHelpers helpers) {
         IStackHelper stackHelper = helpers.getStackHelper();
-        HPRecipes furnaceRecipes = HPRecipes.instance();
-        ArrayList<GrindstoneRecipe> grindingRecipes = furnaceRecipes.getGrindstoneRecipes();;
+        ArrayList<GrindstoneRecipe> grindingRecipes = HPRecipes.instance().getGrindstoneRecipes();;
 
         List<GrindstoneRecipeWrapper> recipes = new ArrayList<>();
 
