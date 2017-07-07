@@ -13,30 +13,31 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.registries.GameData;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @GameRegistry.ObjectHolder(Reference.MODID)
+@Mod.EventBusSubscriber(modid = Reference.MODID)
 public class ModItems {
 
     public static final Item FLOUR = new Item().setRegistryName(Constants.FLOUR_ITEM).setUnlocalizedName(Constants.FLOUR_ITEM).setCreativeTab(CreativeTabs.FOOD);
     public static final Item DOUGH = new Item().setRegistryName(Constants.DOUGH_ITEM).setUnlocalizedName(Constants.DOUGH_ITEM).setCreativeTab(CreativeTabs.FOOD);
+
+    private static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
+    private static List<ResourceLocation> recipesToRemove = new LinkedList<>();
 
     @Mod.EventBusSubscriber(modid = Reference.MODID)
     public static class RegistrationHandler {
@@ -68,18 +69,16 @@ public class ModItems {
 
     public static void registerRecipes() {
         if (Configs.enableDough) {
-            if (Configs.enableFlour)
-                GameRegistry.addShapelessRecipe(new ItemStack(DOUGH), FLOUR, Items.WATER_BUCKET);
             GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
             OreDictionary.registerOre("foodDough", DOUGH);
         }
         if (Configs.enableFlour)
             OreDictionary.registerOre("foodFlour", FLOUR);
+    }
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Items.LEAD, 'F', Items.FLINT, 'W', "logWood"));
-
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
+        recipes = ev.getRegistry().getEntries();
         if (Configs.removeVanillaRecipes)
             removeRecipes();
     }
@@ -118,6 +117,8 @@ public class ModItems {
         removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.SYRINGA.getMeta()))));
         removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.ROSE.getMeta()))));
         removeRecipe(findMatchingRecipe(setRecipe(crafting, "#", '#', new ItemStack(Blocks.DOUBLE_PLANT, 1, BlockDoublePlant.EnumPlantType.PAEONIA.getMeta()))));
+
+        recipesToRemove.forEach(recipe -> RegistryManager.ACTIVE.getRegistry(GameData.RECIPES).remove(recipe));
     }
 
     private static InventoryCrafting setRecipe(InventoryCrafting crafting, Object... recipeComponents) {
@@ -174,28 +175,24 @@ public class ModItems {
     }
 
     private static void removeRecipesWithResult(ItemStack resultItem) {
-        ArrayList recipes = (ArrayList) CraftingManager.getInstance().getRecipeList();
 
-        for (int scan = 0; scan < recipes.size(); scan++) {
-            IRecipe tmpRecipe = (IRecipe) recipes.get(scan);
-            ItemStack recipeResult = tmpRecipe.getRecipeOutput();
+        for (Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
+            ItemStack recipeResult = recipe.getValue().getRecipeOutput();
             if (ItemStack.areItemStacksEqual(resultItem, recipeResult)) {
-                recipes.remove(scan);
+                recipesToRemove.add(recipe.getKey());
             }
         }
     }
 
-    private static void removeRecipe(IRecipe recipe) {
-        ArrayList recipes = (ArrayList) CraftingManager.getInstance().getRecipeList();
-
+    private static void removeRecipe(ResourceLocation recipe) {
         if (recipe != null)
-            recipes.remove(recipe);
+            recipesToRemove.add(recipe);
     }
 
-    public static IRecipe findMatchingRecipe(InventoryCrafting craftMatrix) {
-        for (IRecipe irecipe : CraftingManager.getInstance().getRecipeList()) {
-            if (irecipe.matches(craftMatrix, null)) {
-                return irecipe;
+    public static ResourceLocation findMatchingRecipe(InventoryCrafting craftMatrix) {
+        for (Map.Entry<ResourceLocation, IRecipe> recipe : recipes) {
+            if (recipe.getValue().matches(craftMatrix, null)) {
+                return recipe.getKey();
             }
         }
 

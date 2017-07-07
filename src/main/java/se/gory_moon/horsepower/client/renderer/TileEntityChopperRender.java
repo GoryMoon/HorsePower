@@ -13,9 +13,9 @@ import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntityChopper> {
 
     @Override
-    public void renderTileEntityAt(TileEntityChopper te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileEntityChopper te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         IBlockState bladeState = blockState.withProperty(BlockChopper.PART, ChopperModels.BLADE);
@@ -66,7 +66,7 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         renderStillItem(te, te.getStackInSlot(1), 0.5F, 0.54F, 0.5F, 1.3F);
         GlStateManager.popMatrix();
 
-        super.renderTileEntityAt(te, x, y + 1, z, partialTicks, destroyStage);
+        super.render(te, x, y + 1, z, partialTicks, destroyStage, alpha);
     }
 
 }

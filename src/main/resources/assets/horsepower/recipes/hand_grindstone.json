@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "horsepower",
+  "pattern": [
+    "  S",
+    "###",
+    "###"
+  ],
+  "key": {
+    "S": {
+      "item": "#STICKS"
+    },
+    "#": [
+      {
+        "item": "#STONES"
+      }
+    ]
+  },
+  "result": {
+    "item": "horsepower:hand_grindstone"
+  }
+}

@@ -1,10 +1,16 @@
 package se.gory_moon.horsepower;
 
+import com.google.gson.JsonObject;
+import net.minecraft.util.JsonUtils;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
+import net.minecraftforge.common.crafting.IConditionFactory;
+import net.minecraftforge.common.crafting.JsonContext;
 import se.gory_moon.horsepower.lib.Reference;
+
+import java.util.function.BooleanSupplier;
 
 @Config(modid = Reference.MODID)
 public class Configs {
@@ -93,4 +99,12 @@ public class Configs {
             "minecraft:log2:0-minecraft:planks:4@4-1",
             "minecraft:log2:1-minecraft:planks:5@4-1"};
 
+    public static class ConfigFactory implements IConditionFactory {
+
+        @Override
+        public BooleanSupplier parse(JsonContext context, JsonObject json) {
+            String item = JsonUtils.getString(json, "enabled");
+            return () -> "flour".equals(item) ? enableFlour: "dough".equals(item) && enableDough;
+        }
+    }
 }

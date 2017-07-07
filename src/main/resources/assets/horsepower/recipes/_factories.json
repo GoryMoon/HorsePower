@@ -1,0 +1,5 @@
+{
+  "conditions": {
+    "config": "se.gory_moon.horsepower.Configs$ConfigFactory"
+  }
+}

@@ -123,9 +123,9 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
             for (int i = 0; i < path.length; i++) {
                 Vec3d pos = getPathPosition(i);
-                double x = pos.xCoord;
-                double y = pos.yCoord;
-                double z = pos.zCoord;
+                double x = pos.x;
+                double y = pos.y;
+                double z = pos.z;
 
                 double tmp = worker.getDistance(x, y, z);
                 if (tmp < dist) {
@@ -191,14 +191,14 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
                 if (running) {
 
                     Vec3d pos = getPathPosition(target);
-                    double x = pos.xCoord;
-                    double y = pos.yCoord;
-                    double z = pos.zCoord;
+                    double x = pos.x;
+                    double y = pos.y;
+                    double z = pos.z;
 
                     if (searchAreas[target] == null)
                         searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D);
 
-                    if (worker.getEntityBoundingBox().intersectsWith(searchAreas[target])) {
+                    if (worker.getEntityBoundingBox().intersects(searchAreas[target])) {
                         int next = target + 1;
                         int previous = target -1;
                         if (next >= path.length)
@@ -219,9 +219,9 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
                     if (target != -1 && worker.getNavigator().noPath()) {
                         pos = getPathPosition(target);
-                        x = pos.xCoord;
-                        y = pos.yCoord;
-                        z = pos.zCoord;
+                        x = pos.x;
+                        y = pos.y;
+                        z = pos.z;
 
                         worker.getNavigator().tryMoveToXYZ(x, y, z, 1D);
                     }

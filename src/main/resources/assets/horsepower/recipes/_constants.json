@@ -1,0 +1,24 @@
+[
+  {
+    "name": "STICKS",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    }
+  },
+  {
+    "name": "STONES",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "stone"
+    }
+  },
+  {
+    "name": "LOGS",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    }
+  }
+]
+

@@ -54,7 +54,7 @@ public class GrindstoneRecipeWrapper extends BlankRecipeWrapper {
     @SideOnly(Side.CLIENT)
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         arrow.draw(minecraft, 57, 32);
-        minecraft.fontRendererObj.drawStringWithShadow("x" + printLaps, 58, 23, Colors.WHITE.getRGB());
+        minecraft.fontRenderer.drawStringWithShadow("x" + printLaps, 58, 23, Colors.WHITE.getRGB());
     }
 
     @Override

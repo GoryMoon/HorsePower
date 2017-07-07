@@ -149,7 +149,7 @@ public abstract class BlockHPBase extends Block {
 
         if (stack.isEmpty()) {
             playerIn.setHeldItem(hand, result);
-        } else if (playerIn.func_191521_c(result)) {
+        } else if (playerIn.addItemStackToInventory(result)) {
             playerIn.dropItem(result, false);
         }
 

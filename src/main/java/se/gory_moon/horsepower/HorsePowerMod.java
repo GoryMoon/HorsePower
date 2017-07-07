@@ -33,9 +33,8 @@ import se.gory_moon.horsepower.proxy.CommonProxy;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
-import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
 
-@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.11.2]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;")
+@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.12]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;")
 @EventBusSubscriber
 public class HorsePowerMod {
 
@@ -64,10 +63,10 @@ public class HorsePowerMod {
         ModItems.registerRecipes();
 
         if (Loader.isModLoaded("crafttweaker")) {
-            tweakerPlugin = new TweakerPluginImpl();
-            tweakerPlugin.register();
+            //tweakerPlugin = new TweakerPluginImpl();
         } else
             tweakerPlugin = new DummyTweakPluginImpl();
+        tweakerPlugin.register();
 
         HPRecipes.instance().reloadRecipes();
     }

@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.tweaker;
-
+/*
 import com.google.common.collect.Lists;
 import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
@@ -35,3 +35,4 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
         MineTweakerAPI.registerClass(ChoppingRecipeTweaker.class);
     }
 }
+*/

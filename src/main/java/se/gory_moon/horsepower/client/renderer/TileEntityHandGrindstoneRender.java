@@ -13,9 +13,9 @@ import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityHandGrindstone> {
 
     @Override
-    public void renderTileEntityAt(TileEntityHandGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileEntityHandGrindstone te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         IBlockState centerState = blockState.withProperty(BlockHandGrindstone.PART, HandGrindstoneModels.CENTER);
@@ -56,7 +56,7 @@ public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<Til
         renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(0), x, y, z, 0.5F, 0.7F, 0.8F, 0.7F);
         renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(1), x, y, z, 0.5F, 0.7F, 0.2F, 0.7F);
 
-        super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
     }
 
 }

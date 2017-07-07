@@ -53,7 +53,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             GlStateManager.scale(0.5F * scale, 0.5F * scale, 0.5F * scale);
             GlStateManager.pushAttrib();
             RenderHelper.enableStandardItemLighting();
-            itemRenderer.renderItem(entityitem.getEntityItem(), ItemCameraTransforms.TransformType.FIXED);
+            itemRenderer.renderItem(entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED);
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popAttrib();
 
@@ -127,7 +127,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.popMatrix();
     }
 
-    protected void renderBaseModel(TileEntityHPBase te, Tessellator tessellator, VertexBuffer buffer, double x, double y, double z) {
+    protected void renderBaseModel(TileEntityHPBase te, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z) {
         // Most of this is blatantly copied from FastTESR
         setRenderSettings();
 
@@ -145,7 +145,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.popMatrix();
     }
 
-    protected void renderBaseModelWithFacing(TileEntityHPBase te, IBlockState blockState, Tessellator tessellator, VertexBuffer buffer, double x, double y, double z, int destroyStage) {
+    protected void renderBaseModelWithFacing(TileEntityHPBase te, IBlockState blockState, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z, int destroyStage) {
         // Most of this is blatantly copied from FastTESR
         preDestroyRender(destroyStage);
         setRenderSettings();
@@ -266,7 +266,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
 
     protected void renderLeach(double x1, double y1, double z1, double ox, double oy, double oz, double x2, double y2, double z2) {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
 
         double d13 = (double)((float)(x1 - x2));
         double d14 = (double)((float)(y1 - y2));

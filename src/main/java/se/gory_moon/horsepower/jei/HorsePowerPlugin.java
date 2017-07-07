@@ -37,7 +37,7 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         registry.handleRecipes(ChoppingBlockRecipe.class, ChoppingRecipeWrapper::new, CHOPPING);
         registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers), CHOPPING);
 
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINSTONE), GRINDING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE), GRINDING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_CHOPPER), CHOPPING);
 

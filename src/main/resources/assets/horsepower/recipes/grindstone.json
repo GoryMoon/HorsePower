@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "horsepower",
+  "pattern": [
+    "LSL",
+    "###",
+    "###"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:lead"
+    },
+    "S": {
+      "item": "#STICKS"
+    },
+    "#": [
+      {
+        "item": "#STONES"
+      }
+    ]
+  },
+  "result": {
+    "item": "horsepower:grindstone"
+  }
+}

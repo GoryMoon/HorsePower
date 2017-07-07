@@ -106,11 +106,6 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     }
 
     @Override
-    public boolean isFullyOpaque(IBlockState state) {
-        return false;
-    }
-
-    @Override
     public boolean isBlockNormalCube(IBlockState state) {
         return false;
     }

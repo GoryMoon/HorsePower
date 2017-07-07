@@ -14,12 +14,12 @@ import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityGrindstone> {
 
     @Override
-    public void renderTileEntityAt(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         ItemStack outputStack = te.getStackInSlot(1);
         if (blockState.getValue(BlockGrindstone.FILLED)) {
             Tessellator tessellator = Tessellator.getInstance();
-            VertexBuffer buffer = tessellator.getBuffer();
+            BufferBuilder buffer = tessellator.getBuffer();
             BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
             IBlockState filledState = blockState.withProperty(BlockGrindstone.PART, GrindStoneModels.FILLED);
@@ -60,6 +60,6 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
             drawString(te, String.valueOf(te.getStackInSlot(0).getCount()), 0, 0.35,  0);
         GlStateManager.popMatrix();
 
-        super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
     }
 }

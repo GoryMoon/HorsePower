@@ -11,6 +11,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -94,7 +95,7 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced) {
         tooltip.add(Localization.ITEM.HORSE_GRINDSTONE.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
         tooltip.add(Localization.ITEM.HORSE_GRINDSTONE.LOCATION.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
         tooltip.add(Localization.ITEM.HORSE_GRINDSTONE.USE.translate());
