@@ -32,6 +32,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
     protected boolean valid = false;
     protected int validationTimer = 0;
+    protected int locateHorseTimer = 0;
     protected boolean running = true;
     protected boolean wasRunning = false;
 
@@ -150,28 +151,29 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
                 validationTimer = 60;
         }
 
-        if (nbtWorker != null) {
-            if (hasWorker) {
-                UUID uuid = nbtWorker.getUniqueId("UUID");
-                int x = pos.getX();
-                int y = pos.getY();
-                int z = pos.getZ();
+        if (!hasWorker())
+            locateHorseTimer--;
+        if (!hasWorker() && nbtWorker != null && locateHorseTimer <= 0) {
+            UUID uuid = nbtWorker.getUniqueId("UUID");
+            int x = pos.getX();
+            int y = pos.getY();
+            int z = pos.getZ();
 
-                ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-                search: for (Class<? extends Entity> clazz: clazzes) {
-                    for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                        if (entity instanceof EntityCreature) {
-                            EntityCreature creature = (EntityCreature) entity;
-                            if (creature.getUniqueID().equals(uuid)) {
-                                setWorker(creature);
-                                break search;
-                            }
+            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            search: for (Class<? extends Entity> clazz: clazzes) {
+                for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
+                    if (entity instanceof EntityCreature) {
+                        EntityCreature creature = (EntityCreature) entity;
+                        if (creature.getUniqueID().equals(uuid)) {
+                            setWorker(creature);
+                            break search;
                         }
                     }
                 }
             }
-            nbtWorker = null;
         }
+        if (locateHorseTimer <= 0)
+            locateHorseTimer = 220;
 
         boolean flag = false;
 
