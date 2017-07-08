@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "horsepower:flour"
+    },
+    "title": {
+      "translate": "advancements.horsepower.flour.title"
+    },
+    "description": {
+      "translate": "advancements.horsepower.flour.description"
+    }
+  },
+  "parent": "horsepower:horsepower/root",
+  "criteria": {
+    "get_flour": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "horsepower:flour"
+          }
+        ]
+      }
+    }
+  }
+}

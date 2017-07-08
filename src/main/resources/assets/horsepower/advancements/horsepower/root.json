@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "item": "horsepower:hand_grindstone"
+    },
+    "title": {
+      "translate": "advancements.horsepower.root.title"
+    },
+    "description": {
+      "translate": "advancements.horsepower.root.description"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "get_grindstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "horsepower:hand_grindstone"
+          }
+        ]
+      }
+    },
+    "get_wheat": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:wheat"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_grindstone", "get_wheat"]]
+}

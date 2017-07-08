@@ -34,6 +34,8 @@ public abstract class BlockHPBase extends Block {
 
     public abstract void emptiedOutput(World world, BlockPos pos);
 
+    public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {}
+
     @Override
     public boolean hasTileEntity(IBlockState state) {
         return true;
@@ -109,6 +111,7 @@ public abstract class BlockHPBase extends Block {
             if (!teH.hasWorker()) {
                 creature.clearLeashed(true, false);
                 teH.setWorker(creature);
+                onWorkerAttached(playerIn, creature);
                 return true;
             } else {
                 return false;

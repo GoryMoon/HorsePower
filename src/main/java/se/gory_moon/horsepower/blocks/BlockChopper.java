@@ -13,8 +13,10 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -26,6 +28,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.advancements.Manager;
 import se.gory_moon.horsepower.client.renderer.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
@@ -34,13 +37,13 @@ import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockChopper extends BlockHPBase implements IProbeInfoAccessor {
 
-    //TODO add in future, causing bug when reenter ", Arrays.asList(EnumFacing.HORIZONTALS)"
-    public static final PropertyDirection FACING = PropertyDirection.create("facing");
+    public static final PropertyDirection FACING = PropertyDirection.create("facing", Arrays.asList(EnumFacing.HORIZONTALS));
     public static final PropertyEnum<ChopperModels> PART = PropertyEnum.create("part", ChopperModels.class);
 
     private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D);
@@ -136,6 +139,12 @@ public class BlockChopper extends BlockHPBase implements IProbeInfoAccessor {
 
     @Override
     public void emptiedOutput(World world, BlockPos pos) {}
+
+    @Override
+    public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
+        if (playerIn instanceof EntityPlayerMP)
+            Manager.USE_CHOPPER.trigger((EntityPlayerMP) playerIn);
+    }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced) {

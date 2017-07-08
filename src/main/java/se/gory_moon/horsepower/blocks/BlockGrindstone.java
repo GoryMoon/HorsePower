@@ -13,7 +13,9 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -21,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import se.gory_moon.horsepower.advancements.Manager;
 import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
@@ -110,6 +113,12 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
             TileEntityGrindstone te = (TileEntityGrindstone) tileEntity;
             probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
         }
+    }
+
+    @Override
+    public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
+        if (playerIn instanceof EntityPlayerMP)
+            Manager.USE_GRINDSTONE.trigger((EntityPlayerMP) playerIn);
     }
 
     @Override

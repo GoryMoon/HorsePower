@@ -45,3 +45,13 @@ gui.horsepower.waila.show.items=Show items
 gui.horsepower.top.grindstone.progress=Grinding:
 gui.horsepower.top.windup.progress=Windup:
 gui.horsepower.top.chopping.progress=Chopping:
+
+#Advancements
+advancements.horsepower.root.title=Horse Powered
+advancements.horsepower.root.description=The start of automation
+advancements.horsepower.flour.title=Grindy
+advancements.horsepower.flour.description=Grind some wheat to flour
+advancements.horsepower.grindstone.title=Horse Grindstone Labor
+advancements.horsepower.grindstone.description=Put a horse to work grinding things
+advancements.horsepower.chopping.title=Horse Chopping Labor
+advancements.horsepower.chopping.description=Make a horse work for you chopping blocks

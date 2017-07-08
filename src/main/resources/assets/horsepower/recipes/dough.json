@@ -6,7 +6,6 @@
     }
   ],
   "type": "minecraft:crafting_shapeless",
-  "group": "horsepower",
   "ingredients": [
     {
       "item": "horsepower:flour"
