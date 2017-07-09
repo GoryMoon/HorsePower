@@ -34,6 +34,10 @@ public abstract class BlockHPBase extends Block {
 
     public abstract void emptiedOutput(World world, BlockPos pos);
 
+    public int getSlot(IBlockState state, float hitX, float hitY, float hitZ) {
+        return -1;
+    }
+
     @Override
     public boolean hasTileEntity(IBlockState state) {
         return true;
@@ -133,11 +137,20 @@ public abstract class BlockHPBase extends Block {
                 return true;
         }
 
-        ItemStack result = te.removeStackFromSlot(1);
-        if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
-            result = te.removeStackFromSlot(0);
-            if (!result.isEmpty())
-                emptiedOutput(worldIn, pos);
+        int slot = getSlot(state.getBlock().getExtendedState(state, worldIn, pos), hitX, hitY, hitZ);
+        ItemStack result = ItemStack.EMPTY;
+        if (slot > -1) {
+            result = te.removeStackFromSlot(slot);
+        } else if (slot > -2){
+            result = te.removeStackFromSlot(1);
+            if (result.isEmpty()) {
+                result = te.removeStackFromSlot(2);
+                if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
+                    result = te.removeStackFromSlot(0);
+                    if (!result.isEmpty())
+                        emptiedOutput(worldIn, pos);
+                }
+            }
         }
 
         if (result.isEmpty()) {

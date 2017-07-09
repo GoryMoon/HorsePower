@@ -3,6 +3,8 @@ package se.gory_moon.horsepower.util;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.passive.AbstractHorse;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
 
@@ -29,6 +31,16 @@ public class Utils {
             }
         }
         return clazzes;
+    }
+
+    public static int getItemStackHashCode(ItemStack stack) {
+        if (stack.isEmpty()) return 0;
+
+        NBTTagCompound tag = stack.writeToNBT(new NBTTagCompound());
+        tag.removeTag("Count");
+        tag.removeTag("Damage");
+        return tag.hashCode();
+
     }
 
 }

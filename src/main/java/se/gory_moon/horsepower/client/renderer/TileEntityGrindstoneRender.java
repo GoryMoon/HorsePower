@@ -17,6 +17,10 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
     public void renderTileEntityAt(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         ItemStack outputStack = te.getStackInSlot(1);
+        ItemStack secondaryStack = te.getStackInSlot(2);
+        if (outputStack.getCount() < secondaryStack.getCount())
+            outputStack = secondaryStack;
+
         if (blockState.getValue(BlockGrindstone.FILLED)) {
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();

@@ -10,8 +10,8 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends BlankRecipeCategory<T> {
 
-    private final IDrawable background;
-    private final HorseDrawable horse;
+    protected IDrawable background;
+    protected HorseDrawable horse;
 
     public HorsePowerCategory(IGuiHelper guiHelper) {
         ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei.png");
@@ -21,7 +21,7 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
         IDrawableStatic horseAnim2 = guiHelper.createDrawable(location, 0, 94, 30, 20);
         IDrawableStatic horseAnim3 = guiHelper.createDrawable(location, 30, 74, 30, 20);
         IDrawableStatic horseAnim4 = guiHelper.createDrawable(location, 30, 94, 30, 20);
-        horse = new HorseDrawable(guiHelper, horseAnim1, horseAnim2, horseAnim3, horseAnim4);
+        horse = new HorseDrawable(guiHelper, horseAnim1, horseAnim2, horseAnim3, horseAnim4, false);
     }
 
     @Override

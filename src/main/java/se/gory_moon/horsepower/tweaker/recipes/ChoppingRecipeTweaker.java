@@ -33,7 +33,7 @@ public class ChoppingRecipeTweaker {
         ItemStack[] items2 = getItemStacks(items);
         ItemStack output2 = getItemStack(output);
 
-        AddChoppingRecipe recipe = new AddChoppingRecipe(input, items2, output2, time);
+        AddChoppingRecipe recipe = new AddChoppingRecipe(input, items2, output2, ItemStack.EMPTY, 0, time);
         MineTweakerAPI.apply(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
@@ -63,19 +63,23 @@ public class ChoppingRecipeTweaker {
         private final IIngredient ingredient;
         private final ItemStack[] input;
         private final ItemStack output;
+        private final ItemStack secondary;
+        private final int secondaryChance;
         private final int time;
 
-        public AddChoppingRecipe(IIngredient ingredient, ItemStack[] inputs, ItemStack output2, int time) {
+        public AddChoppingRecipe(IIngredient ingredient, ItemStack[] inputs, ItemStack output2, ItemStack secondary, int secondaryChance, int time) {
             this.ingredient = ingredient;
             this.input = inputs;
             this.output = output2;
+            this.secondary = secondary;
+            this.secondaryChance = secondaryChance;
             this.time = time;
         }
 
         @Override
         public void apply() {
             for (ItemStack stack: input) {
-                ChoppingBlockRecipe recipe = new ChoppingBlockRecipe(stack, output, time);
+                ChoppingBlockRecipe recipe = new ChoppingBlockRecipe(stack, output, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
                 HPRecipes.instance().addChoppingRecipe(recipe);
                 MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.chopping");
             }
@@ -89,7 +93,7 @@ public class ChoppingRecipeTweaker {
         @Override
         public void undo() {
             for (ItemStack stack: input) {
-                ChoppingBlockRecipe recipe = new ChoppingBlockRecipe(stack, output, time);
+                ChoppingBlockRecipe recipe = HPRecipes.instance().getChoppingBlockRecipe(stack);
                 HPRecipes.instance().removeChoppingRecipe(recipe);
                 MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.chopping");
             }

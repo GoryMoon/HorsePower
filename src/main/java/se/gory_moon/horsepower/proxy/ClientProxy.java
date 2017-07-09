@@ -43,6 +43,9 @@ public class ClientProxy extends CommonProxy {
                 if (tileEntity instanceof TileEntityGrindstone) {
                     TileEntityGrindstone te = (TileEntityGrindstone) tileEntity;
                     ItemStack outputStack = te.getStackInSlot(1);
+                    ItemStack secondaryStack = te.getStackInSlot(2);
+                    if (outputStack.getCount() < secondaryStack.getCount())
+                        outputStack = secondaryStack;
                     if (!OreDictionary.itemMatches(te.renderStack, outputStack, true)) {
                         te.renderStack = outputStack;
                         if (!outputStack.isEmpty())

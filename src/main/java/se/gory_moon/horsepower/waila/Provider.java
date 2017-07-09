@@ -87,6 +87,12 @@ public class Provider implements IWailaDataProvider {
                     if (!stack.isEmpty())
                         currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
                 }
+                {
+                    final ItemStack stack = ((TileEntityHPBase) accessor.getTileEntity()).getStackInSlot(2);
+                    final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                    if (!stack.isEmpty())
+                        currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
+                }
             }
         }
         return currenttip;
