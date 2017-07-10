@@ -37,11 +37,11 @@ gui.horsepower.jei.category.chopping=砧板
 
 # Waila
 gui.horsepower.waila.grindstone.progress=磨制进度：[%1]
-gui.horsepower.waila.windup.progress=产物：[%1]
+gui.horsepower.waila.windup.progress=进度：[%1]
 gui.horsepower.waila.chopping.progress=砧板进度：[%1]
 gui.horsepower.waila.show.items=显示产物
 
 # TOP
 gui.horsepower.top.grindstone.progress=磨制进度：
-gui.horsepower.top.windup.progress=产物：
+gui.horsepower.top.windup.progress=进度：
 gui.horsepower.top.chopping.progress=砧板进度：
