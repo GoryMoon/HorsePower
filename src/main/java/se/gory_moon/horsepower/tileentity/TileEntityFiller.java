@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower.tileentity;
 
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -8,6 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import se.gory_moon.horsepower.blocks.BlockHPBase;
 
 public class TileEntityFiller extends TileEntity implements ISidedInventory {
 
@@ -21,7 +23,9 @@ public class TileEntityFiller extends TileEntity implements ISidedInventory {
     }
 
     public BlockPos getFilledPos() {
-        EnumFacing facing = getWorld().getBlockState(getPos()).getValue(BlockDirectional.FACING);
+        IBlockState state = getWorld().getBlockState(getPos());
+        if (!(state instanceof BlockHPBase)) return getPos();
+        EnumFacing facing = state.getValue(BlockDirectional.FACING);
         return pos.offset(facing);
     }
 

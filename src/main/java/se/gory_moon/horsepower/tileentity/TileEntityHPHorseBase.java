@@ -32,6 +32,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
     protected boolean valid = false;
     protected int validationTimer = 0;
+    protected int locateHorseTimer = 0;
     protected boolean running = true;
     protected boolean wasRunning = false;
 
@@ -65,11 +66,14 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         compound.setBoolean("hasWorker", hasWorker);
 
         if (this.worker != null) {
-            NBTTagCompound nbtTagCompound = new NBTTagCompound();
-            UUID uuid = worker.getUniqueID();
-            nbtTagCompound.setUniqueId("UUID", uuid);
+            if (nbtWorker == null) {
+                NBTTagCompound nbtTagCompound = new NBTTagCompound();
+                UUID uuid = worker.getUniqueID();
+                nbtTagCompound.setUniqueId("UUID", uuid);
+                nbtWorker = nbtTagCompound;
+            }
 
-            compound.setTag("leash", nbtTagCompound);
+            compound.setTag("leash", nbtWorker);
         }
 
         return super.writeToNBT(compound);
@@ -80,6 +84,10 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         worker = newWorker;
         worker.setHomePosAndDistance(pos, 3);
         target = getClosestTarget();
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        UUID uuid = worker.getUniqueID();
+        nbtTagCompound.setUniqueId("UUID", uuid);
+        nbtWorker = nbtTagCompound;
     }
 
     public void setWorkerToPlayer(EntityPlayer player) {
@@ -88,6 +96,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
             worker.detachHome();
             worker.setLeashedToEntity(player, true);
             worker = null;
+            nbtWorker = null;
         }
     }
 
@@ -150,28 +159,29 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
                 validationTimer = 60;
         }
 
-        if (nbtWorker != null) {
-            if (hasWorker) {
-                UUID uuid = nbtWorker.getUniqueId("UUID");
-                int x = pos.getX();
-                int y = pos.getY();
-                int z = pos.getZ();
+        if (!hasWorker())
+            locateHorseTimer--;
+        if (!hasWorker() && nbtWorker != null && locateHorseTimer <= 0) {
+            UUID uuid = nbtWorker.getUniqueId("UUID");
+            int x = pos.getX();
+            int y = pos.getY();
+            int z = pos.getZ();
 
-                ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-                search: for (Class<? extends Entity> clazz: clazzes) {
-                    for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                        if (entity instanceof EntityCreature) {
-                            EntityCreature creature = (EntityCreature) entity;
-                            if (creature.getUniqueID().equals(uuid)) {
-                                setWorker(creature);
-                                break search;
-                            }
+            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            search: for (Class<? extends Entity> clazz: clazzes) {
+                for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
+                    if (entity instanceof EntityCreature) {
+                        EntityCreature creature = (EntityCreature) entity;
+                        if (creature.getUniqueID().equals(uuid)) {
+                            setWorker(creature);
+                            break search;
                         }
                     }
                 }
             }
-            nbtWorker = null;
         }
+        if (locateHorseTimer <= 0)
+            locateHorseTimer = 220;
 
         boolean flag = false;
 

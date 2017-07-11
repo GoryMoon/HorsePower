@@ -88,6 +88,7 @@ public abstract class BlockHPBase extends Block {
         ItemStack stack = playerIn.getHeldItem(hand);
         TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
         TileEntityHPHorseBase teH = null;
+        if (te == null) return false;
         if (te instanceof TileEntityHPHorseBase)
             teH = (TileEntityHPHorseBase) te;
         int x = pos.getX();
@@ -107,7 +108,7 @@ public abstract class BlockHPBase extends Block {
                 }
             }
         }
-        if (teH != null && stack.getItem() instanceof ItemLead && creature != null || creature != null) {
+        if (teH != null && ((stack.getItem() instanceof ItemLead && creature != null) || creature != null)) {
             if (!teH.hasWorker()) {
                 creature.clearLeashed(true, false);
                 teH.setWorker(creature);

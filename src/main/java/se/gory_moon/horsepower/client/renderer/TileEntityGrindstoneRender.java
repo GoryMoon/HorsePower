@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
+import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 
@@ -16,13 +17,16 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
     @Override
     public void render(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         ItemStack outputStack = te.getStackInSlot(1);
         if (blockState.getValue(BlockGrindstone.FILLED)) {
+            IBlockState filledState = blockState.withProperty(BlockGrindstone.PART, GrindStoneModels.FILLED);
+            if (!(filledState.getBlock() instanceof BlockHPBase)) return;
+
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
             BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 
-            IBlockState filledState = blockState.withProperty(BlockGrindstone.PART, GrindStoneModels.FILLED);
             IBakedModel filledModel = dispatcher.getBlockModelShapes().getModelForState(filledState);
 
             setRenderSettings();
