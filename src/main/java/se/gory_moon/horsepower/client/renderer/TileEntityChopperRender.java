@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.client.renderer.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 
@@ -18,6 +19,7 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         VertexBuffer buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         IBlockState bladeState = blockState.withProperty(BlockChopper.PART, ChopperModels.BLADE);
         IBakedModel bladeModel = dispatcher.getBlockModelShapes().getModelForState(bladeState);
 

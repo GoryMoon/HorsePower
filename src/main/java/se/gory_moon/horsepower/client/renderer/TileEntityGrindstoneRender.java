@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
+import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 
@@ -16,6 +17,7 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
     @Override
     public void renderTileEntityAt(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         ItemStack outputStack = te.getStackInSlot(1);
         ItemStack secondaryStack = te.getStackInSlot(2);
         if (outputStack.getCount() < secondaryStack.getCount())

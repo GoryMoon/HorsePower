@@ -89,6 +89,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
             worker.detachHome();
             worker.setLeashedToEntity(player, true);
             worker = null;
+            nbtWorker = null;
         }
     }
 

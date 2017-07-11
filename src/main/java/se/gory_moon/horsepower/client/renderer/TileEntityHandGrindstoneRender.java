@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
+import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.BlockHandGrindstone;
 import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
@@ -18,6 +19,7 @@ public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<Til
         VertexBuffer buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         IBlockState centerState = blockState.withProperty(BlockHandGrindstone.PART, HandGrindstoneModels.CENTER);
         IBakedModel centerModel = dispatcher.getBlockModelShapes().getModelForState(centerState);
 
