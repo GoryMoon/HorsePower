@@ -4,13 +4,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
 public class TileEntityHandGrindstone extends TileEntityHPBase implements ITickable {
 
     private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1};
+    private static final int[] SLOTS_BOTTOM = new int[] {1, 2};
 
     private int currentItemMillTime;
     private int totalItemMillTime;
@@ -23,7 +25,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
 
     public TileEntityHandGrindstone() {
-        super(2);
+        super(3);
     }
 
     @Override
@@ -55,19 +57,42 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
         return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0));
     }
 
+    @Override
+    public HPRecipeBase getRecipe() {
+        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0));
+    }
+
     private void millItem() {
-        if (canWork()) {
+        if (!world.isRemote && canWork()) {
+            HPRecipeBase recipe = getRecipe();
+            ItemStack result = recipe.getOutput();
+            ItemStack secondary = recipe.getSecondary();
+
             ItemStack input = getStackInSlot(0);
-            ItemStack result = getRecipeItemStack();
             ItemStack output = getStackInSlot(1);
+            ItemStack secondaryOutput = getStackInSlot(2);
 
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
-            } else if (output.getItem() == result.getItem()) {
+            } else if (output.isItemEqual(result)) {
                 output.grow(result.getCount());
             }
+            processSecondaries(getWorld(), secondary, secondaryOutput, recipe, this);
 
             input.shrink(1);
+        }
+    }
+
+    public static void processSecondaries(World world, ItemStack secondary, ItemStack secondaryOutput, HPRecipeBase recipe, TileEntityHPBase teBase) {
+        if (!secondary.isEmpty()) {
+            int recipeChance = recipe.getSecondaryChance();
+            if (recipeChance >= 100 || world.rand.nextInt(100) < recipeChance) {
+                if (secondaryOutput.isEmpty()) {
+                    teBase.setInventorySlotContents(2, secondary.copy());
+                } else if (secondaryOutput.isItemEqual(secondary)) {
+                    secondaryOutput.grow(secondary.getCount());
+                }
+            }
         }
     }
 
@@ -103,7 +128,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack);
+        return index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack);
     }
 
     @Override

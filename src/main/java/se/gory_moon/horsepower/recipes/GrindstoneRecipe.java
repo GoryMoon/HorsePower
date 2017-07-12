@@ -4,8 +4,8 @@ import net.minecraft.item.ItemStack;
 
 public class GrindstoneRecipe extends HPRecipeBase {
 
-    public GrindstoneRecipe(ItemStack input, ItemStack output, int time) {
-        super(input, output, time);
+    public GrindstoneRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
+        super(input, output, secondary, secondaryChance, time);
     }
 
     @Override

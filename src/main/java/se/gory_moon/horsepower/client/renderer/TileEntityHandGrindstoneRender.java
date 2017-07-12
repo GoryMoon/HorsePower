@@ -56,8 +56,9 @@ public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<Til
         postDestroyRender(destroyStage);
         RenderHelper.enableStandardItemLighting();
 
-        renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(0), x, y, z, 0.5F, 0.7F, 0.8F, 0.7F);
-        renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(1), x, y, z, 0.5F, 0.7F, 0.2F, 0.7F);
+        renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(0), x, y, z, 0.8F, 0.7F, 0.5F, 0.7F);
+        renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(1), x, y, z, 0.2F, 0.7F, 0.5F, 0.7F);
+        renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(2), x, y, z, 0.5F, 0.7F, 0.2F, 0.7F);
 
         super.render(te, x, y, z, partialTicks, destroyStage, alpha);
     }

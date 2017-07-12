@@ -2,6 +2,7 @@ package se.gory_moon.horsepower.recipes;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,15 +18,18 @@ import se.gory_moon.horsepower.HorsePowerMod;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class HPRecipes {
 
     private static HPRecipes INSTANCE = new HPRecipes();
 
-    private final ArrayList<GrindstoneRecipe> grindstoneRecipes = Lists.newArrayList();
-    private final ArrayList<ChoppingBlockRecipe> choppingBlockRecipes = Lists.newArrayList();
+    private final Map<ComparableItemStack, GrindstoneRecipe> grindstoneRecipes = Maps.newHashMap();
+    private final Map<ComparableItemStack, ChoppingBlockRecipe> choppingBlockRecipes = Maps.newHashMap();
     public static ArrayList<String> ERRORS = Lists.newArrayList();
+    public static boolean serverSyncedRecipes = false;
 
     public static HPRecipes instance() {
         return INSTANCE;
@@ -34,20 +38,23 @@ public class HPRecipes {
     private HPRecipes() {}
 
     public void reloadRecipes() {
+        if (!serverSyncedRecipes)
+            reloadRecipes(Arrays.asList(Configs.grindstoneRecipes), Arrays.asList(Configs.choppingRecipes));
+    }
+
+    public void reloadRecipes(List<String> grindstone, List<String> chopping) {
         HorsePowerMod.jeiPlugin.removeRecipe();
         grindstoneRecipes.clear();
         choppingBlockRecipes.clear();
 
-        //TODO sync on server world load
-        //TODO sync changes from OP to server
-        createRecipes(GrindstoneRecipe.class, Configs.grindstoneRecipes).forEach(this::addGrindstoneRecipe);
-        createRecipes(ChoppingBlockRecipe.class, Configs.choppingRecipes).forEach(this::addChoppingRecipe);
+        createRecipes(GrindstoneRecipe.class, grindstone).forEach(this::addGrindstoneRecipe);
+        createRecipes(ChoppingBlockRecipe.class, chopping).forEach(this::addChoppingRecipe);
 
         HorsePowerMod.jeiPlugin.addRecipes();
         HorsePowerMod.tweakerPlugin.applyTweaker();
     }
 
-    private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, String[] data) {
+    private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, List<String> data) {
         List<T> recipes = new ArrayList<>();
         for (String aData : data) {
             String[] comp = aData.split("-");
@@ -55,6 +62,7 @@ public class HPRecipes {
 
             List<Object> stacks = Lists.newArrayList();
             int time = -1;
+            int secondaryChance = 0;
             for (String item : comp) {
                 if (item.contains(":")) {
                     Object stack;
@@ -73,25 +81,38 @@ public class HPRecipes {
                         errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
                         time = -1;
                     }
+                } else if (stacks.size() == 3) {
+                    try {
+                        secondaryChance = Integer.parseInt(item);
+                    } catch (NumberFormatException e) {
+                        errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2));
+                    }
                 }
             }
-            if (stacks.size() == 2 && time > -1) {
-                try {
-                    if (stacks.get(0) instanceof List) {
-                        for (Object stack : (List) stacks.get(0)) {
-                            ItemStack in = ((ItemStack) stack);
+            boolean flag = false;
+            if (stacks.size() >= 2 && time > -1) {
+                if (!(stacks.size() == 3 && secondaryChance == 0)) {
+                    try {
+                        if (stacks.get(0) instanceof List) {
+                            for (Object stack : (List) stacks.get(0)) {
+                                ItemStack in = ((ItemStack) stack);
+                                in.setCount(1);
+                                ItemStack secondary = stacks.size() == 3 ? (ItemStack) stacks.get(2) : ItemStack.EMPTY;
+                                recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, ItemStack.class, int.class, int.class).newInstance(in, stacks.get(1), secondary, secondaryChance, time));
+                            }
+                        } else {
+                            ItemStack in = ((ItemStack) stacks.get(0));
                             in.setCount(1);
-                            recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, int.class).newInstance(in, stacks.get(1), time));
+                            ItemStack secondary = stacks.size() == 3 ? (ItemStack) stacks.get(2) : ItemStack.EMPTY;
+                            recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, ItemStack.class, int.class, int.class).newInstance(in, stacks.get(1), secondary, secondaryChance, time));
                         }
-                    } else {
-                        ItemStack in = ((ItemStack) stacks.get(0));
-                        in.setCount(1);
-                        recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, int.class).newInstance(in, stacks.get(1), time));
+                        flag = true;
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                        e.printStackTrace();
                     }
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                    e.printStackTrace();
                 }
-            } else {
+            }
+            if (!flag) {
                 errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + ")");
             }
         }
@@ -131,8 +152,7 @@ public class HPRecipes {
             compound.setShort("Damage", (short) meta);
             if (nbt != null)
                 compound.setTag("tag", nbt);
-            ItemStack stack = new ItemStack(compound);
-            return stack;
+            return new ItemStack(compound);
         }
     }
 
@@ -146,12 +166,17 @@ public class HPRecipes {
 
     public void addGrindstoneRecipe(ItemStack input, ItemStack output, int time) {
         if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
-        grindstoneRecipes.add(new GrindstoneRecipe(input, output, time));
+        addGrindstoneRecipe(input, output, ItemStack.EMPTY, 0, time);
+    }
+
+    public void addGrindstoneRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
+        if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
+        addGrindstoneRecipe(new GrindstoneRecipe(input, output, secondary, secondaryChance, time));
     }
 
     public void addGrindstoneRecipe(GrindstoneRecipe recipe) {
         if (getGrindstoneResult(recipe.getInput()) != ItemStack.EMPTY) return;
-        grindstoneRecipes.add(recipe);
+        grindstoneRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
     }
 
     public void addChoppingRecipe(Block input, ItemStack output, int time) {
@@ -164,109 +189,81 @@ public class HPRecipes {
 
     public void addChoppingRecipe(ItemStack input, ItemStack output, int time) {
         if (getChopperResult(input) != ItemStack.EMPTY) return;
-        choppingBlockRecipes.add(new ChoppingBlockRecipe(input, output, time));
+        addChoppingRecipe(input, output, ItemStack.EMPTY, 0, time);
+    }
+
+    public void addChoppingRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
+        if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
+        addChoppingRecipe(input, output, ItemStack.EMPTY, secondaryChance, time);
     }
 
     public void addChoppingRecipe(ChoppingBlockRecipe recipe) {
         if (getChopperResult(recipe.getInput()) != ItemStack.EMPTY) return;
-        choppingBlockRecipes.add(recipe);
+        choppingBlockRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
     }
 
     public void removeGrindstoneRecipe(GrindstoneRecipe recipe) {
-        if (hasGrindstoneRecipe(recipe.getInput()))
-            grindstoneRecipes.remove(recipe);
+        removeGrindstoneRecipe(recipe.getInput());
     }
 
     public void removeGrindstoneRecipe(ItemStack input) {
-        if (hasGrindstoneRecipe(input)) {
-            for (GrindstoneRecipe recipe: grindstoneRecipes) {
-                if (OreDictionary.itemMatches(recipe.getInput(), input, false)) {
-                    grindstoneRecipes.remove(recipe);
-                }
-            }
-        }
+        grindstoneRecipes.remove(new ComparableItemStack(input));
     }
 
     public void removeChoppingRecipe(ChoppingBlockRecipe recipe) {
-        if (hasChopperRecipe(recipe.getInput())) {
-            choppingBlockRecipes.remove(recipe);
-        }
+        removeChoppingRecipe(recipe.getInput());
     }
 
     public void removeChoppingRecipe(ItemStack input) {
-        if (hasChopperRecipe(input)) {
-            for (ChoppingBlockRecipe recipe: choppingBlockRecipes) {
-                if (OreDictionary.itemMatches(recipe.getInput(), input, false)) {
-                    choppingBlockRecipes.remove(recipe);
-                }
-            }
-        }
+        choppingBlockRecipes.remove(new ComparableItemStack(input));
+    }
+
+    public GrindstoneRecipe getGrindstoneRecipe(ItemStack stack) {
+        if (stack.isEmpty())
+            return null;
+        return grindstoneRecipes.get(new ComparableItemStack(stack));
+    }
+
+    public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack) {
+        if (stack.isEmpty())
+            return null;
+        return choppingBlockRecipes.get(new ComparableItemStack(stack));
     }
 
     public ItemStack getGrindstoneResult(ItemStack stack) {
-        for (GrindstoneRecipe recipe : grindstoneRecipes) {
-            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
-                return recipe.getOutput();
-            }
-        }
-
-        return ItemStack.EMPTY;
+        GrindstoneRecipe recipe = getGrindstoneRecipe(stack);
+        return recipe != null ? recipe.getOutput(): ItemStack.EMPTY;
     }
 
     public ItemStack getChopperResult(ItemStack stack) {
-        for (ChoppingBlockRecipe recipe : choppingBlockRecipes) {
-            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
-                return recipe.getOutput();
-            }
-        }
-
-        return ItemStack.EMPTY;
+        ChoppingBlockRecipe recipe = getChoppingBlockRecipe(stack);
+        return recipe != null ? recipe.getOutput(): ItemStack.EMPTY;
     }
 
     public boolean hasGrindstoneRecipe(ItemStack stack) {
-        for (GrindstoneRecipe recipe: grindstoneRecipes) {
-            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
-                return true;
-            }
-        }
-        return false;
+        return getGrindstoneRecipe(stack) != null;
     }
 
     public boolean hasChopperRecipe(ItemStack stack) {
-        for (ChoppingBlockRecipe recipe: choppingBlockRecipes) {
-            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
-                return true;
-            }
-        }
-        return false;
+        return getChoppingBlockRecipe(stack) != null;
     }
 
     public ArrayList<GrindstoneRecipe> getGrindstoneRecipes() {
-        return grindstoneRecipes;
+        return new ArrayList<>(grindstoneRecipes.values());
     }
 
     public ArrayList<ChoppingBlockRecipe> getChoppingRecipes() {
-        return choppingBlockRecipes;
+        return new ArrayList<>(choppingBlockRecipes.values());
     }
 
     public int getGrindstoneTime(ItemStack stack) {
-        for (GrindstoneRecipe recipe : grindstoneRecipes) {
-            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
-                return recipe.getTime();
-            }
-        }
-
-        return 16;
+        GrindstoneRecipe recipe = getGrindstoneRecipe(stack);
+        return recipe != null ? recipe.getTime(): 16;
     }
 
     public int getChoppingTime(ItemStack stack) {
-        for (ChoppingBlockRecipe recipe : choppingBlockRecipes) {
-            if (OreDictionary.itemMatches(recipe.getInput(), stack, false)) {
-                return recipe.getTime();
-            }
-        }
-
-        return 1;
+        ChoppingBlockRecipe recipe = getChoppingBlockRecipe(stack);
+        return recipe != null ? recipe.getTime(): 1;
     }
 
 }

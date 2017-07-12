@@ -16,14 +16,17 @@ public class HorseDrawable implements IDrawableAnimated {
     private final ITickTimer animTimer;
     private final ITickTimer pathTimer;
 
-    public HorseDrawable(IGuiHelper guiHelper, IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4) {
+    private final boolean grinding;
+
+    public HorseDrawable(IGuiHelper guiHelper, IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4, boolean grinding) {
         this.horse1 = horse1;
         this.horse2 = horse2;
         this.horse3 = horse3;
         this.horse4 = horse4;
+        this.grinding = grinding;
 
         animTimer = guiHelper.createTickTimer(20, 1, false);
-        pathTimer = guiHelper.createTickTimer(100, 324, false);
+        pathTimer = guiHelper.createTickTimer(100, grinding ? 352: 324, false);
     }
 
     @Override
@@ -48,20 +51,38 @@ public class HorseDrawable implements IDrawableAnimated {
         boolean reverse = false;
         int location = pathTimer.getValue();
 
-        if (location <= 112) {
-            x = location;
-            y = 0;
-        } else if (location <= 162) {
-            x = 112;
-            y = location - 112;
-            reverse = true;
-        } else if (location <= 274) {
-            x = 112 - (location - 160);
-            y = 50;
-            reverse = true;
+        if (grinding) {
+            if (location <= 112) {
+                x = location;
+                y = 0;
+            } else if (location <= 176) {
+                x = 112;
+                y = location - 112;
+                reverse = true;
+            } else if (location <= 288) {
+                x = 112 - (location - 174);
+                y = 64;
+                reverse = true;
+            } else {
+                x = 0;
+                y = 64 - (location - 288);
+            }
         } else {
-            x = 0;
-            y = 50 - (location - 274);
+            if (location <= 112) {
+                x = location;
+                y = 0;
+            } else if (location <= 162) {
+                x = 112;
+                y = location - 112;
+                reverse = true;
+            } else if (location <= 274) {
+                x = 112 - (location - 160);
+                y = 50;
+                reverse = true;
+            } else {
+                x = 0;
+                y = 50 - (location - 274);
+            }
         }
 
         IDrawableStatic draw;

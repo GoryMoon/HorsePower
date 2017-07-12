@@ -9,9 +9,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
+import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Localization;
 
@@ -21,18 +20,16 @@ import java.awt.*;
 public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1};
+    private static final int[] SLOTS_BOTTOM = new int[] {1, 2};
 
     private int currentItemMillTime;
     private int totalItemMillTime;
 
-    @SideOnly(Side.CLIENT)
     public ItemStack renderStack = ItemStack.EMPTY;
-    @SideOnly(Side.CLIENT)
     public Color grindColor;
 
     public TileEntityGrindstone() {
-        super(2);
+        super(3);
     }
 
     @Override
@@ -58,7 +55,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public void markDirty() {
-        if (getStackInSlot(1).isEmpty())
+        if (getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
             BlockGrindstone.setState(false, world, pos);
 
         if (getStackInSlot(0).isEmpty())
@@ -104,6 +101,11 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     }
 
     @Override
+    public HPRecipeBase getRecipe() {
+        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0));
+    }
+
+    @Override
     public ItemStack getRecipeItemStack() {
         return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0));
     }
@@ -115,15 +117,20 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     private void millItem() {
         if (canWork()) {
+            HPRecipeBase recipe = getRecipe();
+            ItemStack result = recipe.getOutput();
+            ItemStack secondary = recipe.getSecondary();
+
             ItemStack input = getStackInSlot(0);
-            ItemStack result = getRecipeItemStack();
             ItemStack output = getStackInSlot(1);
+            ItemStack secondaryOutput = getStackInSlot(2);
 
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
-            } else if (output.getItem() == result.getItem()) {
+            } else if (output.isItemEqual(result)) {
                 output.grow(result.getCount());
             }
+            TileEntityHandGrindstone.processSecondaries(getWorld(), secondary, secondaryOutput, recipe, this);
 
             input.shrink(1);
             BlockGrindstone.setState(true, world, pos);
@@ -140,17 +147,15 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
         ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
-        if (index == 1 && getStackInSlot(1).isEmpty()) {
+        if ((index == 1 || index == 2) && getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
             BlockGrindstone.setState(false, world, pos);
-            markDirty();
-        }
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
             totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack);
             currentItemMillTime = 0;
-            markDirty();
         }
+        markDirty();
     }
 
     @Override
@@ -160,7 +165,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack);
+        return index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack);
     }
 
     @Override

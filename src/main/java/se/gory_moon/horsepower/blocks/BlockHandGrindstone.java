@@ -59,7 +59,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return BOUNDING_AABB;
+        return COLLISION_AABB;
     }
 
     @Nullable
@@ -74,6 +74,21 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     }
 
     @Override
+    public int getSlot(IBlockState state, float hitX, float hitY, float hitZ) {
+        EnumFacing f = ((IExtendedBlockState)state).getValue(FACING).getOpposite();
+        if (hitX >= 0.3125 && hitX <= 0.6875 && hitY >= 0.52 && hitZ >= 0.625 && hitZ <= 0.9375)
+            return f == EnumFacing.NORTH ? 2: f == EnumFacing.SOUTH ? -2: f == EnumFacing.EAST ? 1: 0;
+        else if (hitX >= 0.3125 && hitX <= 0.6875 && hitY >= 0.52 && hitZ >= 0.0625 && hitZ <= 0.375)
+            return f == EnumFacing.NORTH ? -2: f == EnumFacing.SOUTH ? 2: f == EnumFacing.EAST ? 0: 1;
+        else if (hitX >= 0.0625 && hitX <= 0.375 && hitY >= 0.52 && hitZ >= 0.3125 && hitZ <= 0.6875)
+            return f == EnumFacing.NORTH ? 0: f == EnumFacing.SOUTH ? 1: f == EnumFacing.EAST ? 2: -2;
+        else if (hitX >= 0.625 && hitX <= 0.9375 && hitY >= 0.52 && hitZ >= 0.3125 && hitZ <= 0.6875)
+            return f == EnumFacing.NORTH ? 1: f == EnumFacing.SOUTH ? 0: f == EnumFacing.EAST ? -2: 2;
+
+        return -2;
+    }
+
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
         if (player instanceof FakePlayer || player == null)
@@ -81,8 +96,11 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
 
         TileEntityHPBase tile = getTileEntity(worldIn, pos);
         if (tile instanceof TileEntityHandGrindstone && tile.canWork() && !player.isSneaking()) {
-            ((TileEntityHandGrindstone) tile).turn();
-            return true;
+            if (!worldIn.isRemote) {
+                ((TileEntityHandGrindstone) tile).turn();
+                return true;
+            } else
+                return true;
         }
 
         return super.onBlockActivated(worldIn, pos, state, player, hand, facing, hitX, hitY, hitZ);

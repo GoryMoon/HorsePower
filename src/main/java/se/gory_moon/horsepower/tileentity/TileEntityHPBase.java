@@ -17,18 +17,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import se.gory_moon.horsepower.recipes.HPRecipeBase;
 
 import javax.annotation.Nullable;
 
 public abstract class TileEntityHPBase extends TileEntity implements ISidedInventory {
 
-    protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
 
     private EnumFacing forward = null;
 
     public TileEntityHPBase(int inventorySize) {
         NonNullList.withSize(inventorySize, ItemStack.EMPTY);
     }
+
+    public abstract HPRecipeBase getRecipe();
 
     public abstract ItemStack getRecipeItemStack();
 
@@ -68,16 +71,22 @@ public abstract class TileEntityHPBase extends TileEntity implements ISidedInven
         if (getStackInSlot(0).isEmpty()) {
             return false;
         } else {
-            ItemStack itemstack = getRecipeItemStack();
+            HPRecipeBase recipeBase = getRecipe();
+            if (recipeBase == null) return false;
+
+            ItemStack itemstack = recipeBase.getOutput();
+            ItemStack secondary = recipeBase.getSecondary();
 
             if (itemstack.isEmpty()) {
                 return false;
             } else {
                 ItemStack output = getStackInSlot(1);
-                if (output.isEmpty()) return true;
-                if (!output.isItemEqual(itemstack)) return false;
-                int result = output.getCount() + itemstack.getCount();
-                return result <= getInventoryStackLimit() && result <= output.getMaxStackSize();
+                ItemStack outputSecondary = getStackInSlot(2);
+                if (!secondary.isEmpty() && !outputSecondary.isEmpty()) {
+                    if (!outputSecondary.isItemEqual(secondary)) return false;
+                    if (outputSecondary.getCount() + secondary.getCount() > secondary.getMaxStackSize()) return false;
+                }
+                return output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize();
             }
         }
     }
@@ -135,7 +144,7 @@ public abstract class TileEntityHPBase extends TileEntity implements ISidedInven
 
     @Override
     public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction) {
-        return direction == EnumFacing.DOWN && index == 1;
+        return direction == EnumFacing.DOWN && (index == 1 || index == 2);
     }
 
     @Override

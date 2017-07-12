@@ -19,6 +19,10 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         ItemStack outputStack = te.getStackInSlot(1);
+        ItemStack secondaryStack = te.getStackInSlot(2);
+        if (outputStack.getCount() < secondaryStack.getCount())
+            outputStack = secondaryStack;
+
         if (blockState.getValue(BlockGrindstone.FILLED)) {
             IBlockState filledState = blockState.withProperty(BlockGrindstone.PART, GrindStoneModels.FILLED);
             if (!(filledState.getBlock() instanceof BlockHPBase)) return;

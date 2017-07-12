@@ -10,6 +10,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Localization;
 
@@ -160,6 +161,11 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     @Override
     public ItemStack getRecipeItemStack() {
         return HPRecipes.instance().getChopperResult(getStackInSlot(0));
+    }
+
+    @Override
+    public HPRecipeBase getRecipe() {
+        return HPRecipes.instance().getChoppingBlockRecipe(getStackInSlot(0));
     }
 
     @Override

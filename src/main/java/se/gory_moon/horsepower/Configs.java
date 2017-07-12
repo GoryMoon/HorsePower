@@ -57,8 +57,9 @@ public class Configs {
     @Name("Grindstone Mob List")
     public static String[] grindstoneMobList = {};
 
-    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
+    @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: " + "modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time[-modid:secondary:meta@amount${nbt}-chance]",
             "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
+            "The part in [] is optional, the chance can be 0-100",
             "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
             "The time for the horse increases for each point that it reaches, one lap is 8 points.",
             "Must be edited with in-game editor for live changes."})
