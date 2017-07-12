@@ -83,6 +83,7 @@ public final class Localization {
 
     public enum GUI {
         CATEGORY_GRINDING,
+        CATEGORY_HAND_GRINDING,
         CATEGORY_CHOPPING;
 
         public String translate(String... vars) {

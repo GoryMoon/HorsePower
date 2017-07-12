@@ -17,7 +17,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
     private final String localizedName;
 
     public HorsePowerChoppingCategory(IGuiHelper guiHelper) {
-        super(guiHelper);
+        super(guiHelper, 0, false);
 
         localizedName = Localization.GUI.CATEGORY_CHOPPING.translate();
     }
@@ -46,5 +46,6 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
         guiItemStacks.init(outputSlot, false, 90, 32);
 
         guiItemStacks.set(ingredients);
+        super.openRecipe();
     }
 }

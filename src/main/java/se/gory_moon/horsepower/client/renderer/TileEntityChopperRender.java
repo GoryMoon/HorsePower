@@ -21,6 +21,7 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         IBlockState bladeState = blockState.withProperty(BlockChopper.PART, ChopperModels.BLADE);
+        if (!(bladeState.getBlock() instanceof BlockHPBase)) return;
         IBakedModel bladeModel = dispatcher.getBlockModelShapes().getModelForState(bladeState);
 
         preDestroyRender(destroyStage);

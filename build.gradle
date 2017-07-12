@@ -39,7 +39,7 @@ group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conve
 archivesBaseName = "HorsePower"
 
 minecraft {
-    version = "1.11.2-13.20.0.2303"
+    version = "1.11.2-13.20.1.2393"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
