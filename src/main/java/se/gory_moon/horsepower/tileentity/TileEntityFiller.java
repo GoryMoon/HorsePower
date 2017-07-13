@@ -28,9 +28,7 @@ public class TileEntityFiller extends TileEntity {
         if (!(state.getBlock() instanceof BlockFiller)) return getPos();
         EnumFacing facing = state.getValue(BlockDirectional.FACING);
         IBlockState state1 = getWorld().getBlockState(pos.offset(facing));
-        if (state1.getBlock() instanceof BlockHPBase) {
-            System.out.println("instance");
-        }
+        if (!(state1.getBlock() instanceof BlockHPBase)) return getPos();
         return pos.offset(facing);
     }
 
