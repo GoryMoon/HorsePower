@@ -7,6 +7,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import se.gory_moon.horsepower.blocks.BlockFiller;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 
 import javax.annotation.Nullable;
@@ -24,8 +25,12 @@ public class TileEntityFiller extends TileEntity {
 
     public BlockPos getFilledPos() {
         IBlockState state = getWorld().getBlockState(getPos());
-        if (!(state.getBlock() instanceof BlockHPBase)) return getPos();
+        if (!(state.getBlock() instanceof BlockFiller)) return getPos();
         EnumFacing facing = state.getValue(BlockDirectional.FACING);
+        IBlockState state1 = getWorld().getBlockState(pos.offset(facing));
+        if (state1.getBlock() instanceof BlockHPBase) {
+            System.out.println("instance");
+        }
         return pos.offset(facing);
     }
 
