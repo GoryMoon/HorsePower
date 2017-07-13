@@ -2,7 +2,6 @@ package se.gory_moon.horsepower.tileentity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
@@ -10,9 +9,6 @@ import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
 public class TileEntityHandGrindstone extends TileEntityHPBase implements ITickable {
-
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1, 2};
 
     private int currentItemMillTime;
     private int totalItemMillTime;
@@ -40,7 +36,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
-        if (getStackInSlot(0).getCount() > 0) {
+        if (inventory.getStackInSlot(0).getCount() > 0) {
             currentItemMillTime = compound.getInteger("millTime");
             totalItemMillTime = compound.getInteger("totalMillTime");
             rotation = compound.getInteger("currentRotation");
@@ -53,12 +49,12 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0), true);
+        return HPRecipes.instance().getGrindstoneResult(inventory.getStackInSlot(0), true);
     }
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0), true);
+        return HPRecipes.instance().getGrindstoneRecipe(inventory.getStackInSlot(0), true);
     }
 
     private void millItem() {
@@ -67,9 +63,9 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
             ItemStack result = recipe.getOutput();
             ItemStack secondary = recipe.getSecondary();
 
-            ItemStack input = getStackInSlot(0);
-            ItemStack output = getStackInSlot(1);
-            ItemStack secondaryOutput = getStackInSlot(2);
+            ItemStack input = inventory.getStackInSlot(0);
+            ItemStack output = inventory.getStackInSlot(1);
+            ItemStack secondaryOutput = inventory.getStackInSlot(2);
 
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
@@ -96,20 +92,15 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? SLOTS_BOTTOM : (side == EnumFacing.UP ? SLOTS_TOP : new int[0]);
-    }
-
-    @Override
     public void markDirty() {
         super.markDirty();
-        if (getStackInSlot(0).isEmpty())
+        if (inventory.getStackInSlot(0).isEmpty())
             currentItemMillTime = 0;
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        ItemStack itemstack = getStackInSlot(index);
+        ItemStack itemstack = inventory.getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
@@ -163,6 +154,11 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
         return "container.hand_mill";
     }
 
+    @Override
+    public int getOutputSlot() {
+        return 2;
+    }
+
     public void turn() {
         if (getWorld().isRemote)
             return;
@@ -188,7 +184,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
                     currentItemMillTime = 0;
 
                     millItem();
-                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0), true);
+                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(inventory.getStackInSlot(0), true);
                 }
                 markDirty();
             }

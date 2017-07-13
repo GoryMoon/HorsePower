@@ -9,6 +9,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -18,10 +23,6 @@ import javax.annotation.Nullable;
 
 public class TileEntityChopper extends TileEntityHPHorseBase {
 
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_SIDE = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1};
-
     private int currentWindup;
     private int currentItemChopTime;
     private int totalItemChopTime;
@@ -30,6 +31,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     public TileEntityChopper() {
         super(2);
+        handlerSide = new RangedWrapper(new InvWrapper(inventory), 0, 1);
     }
 
     @Override
@@ -46,7 +48,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         super.readFromNBT(compound);
         currentWindup = compound.getInteger("currentWindup");
 
-        if (getStackInSlot(0).getCount() > 0) {
+        if (inventory.getStackInSlot(0).getCount() > 0) {
             currentItemChopTime = compound.getInteger("chopTime");
             totalItemChopTime = compound.getInteger("totalChopTime");
         } else {
@@ -70,7 +72,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(0).isEmpty();
     }
 
     @Override
@@ -114,7 +116,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             if (currentItemChopTime >= totalItemChopTime) {
                 currentItemChopTime = 0;
 
-                totalItemChopTime = HPRecipes.instance().getChoppingTime(getStackInSlot(0));
+                totalItemChopTime = HPRecipes.instance().getChoppingTime(inventory.getStackInSlot(0));
                 chopItem();
                 return true;
             }
@@ -125,10 +127,10 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        ItemStack itemstack = getStackInSlot(index);
+        ItemStack itemstack = inventory.getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
-        if (index == 1 && getStackInSlot(1).isEmpty()) {
+        if (index == 1 && inventory.getStackInSlot(1).isEmpty()) {
             markDirty();
         }
 
@@ -143,9 +145,9 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     private void chopItem() {
         if (canWork()) {
-            ItemStack input = getStackInSlot(0);
+            ItemStack input = inventory.getStackInSlot(0);
             ItemStack result = getRecipeItemStack();
-            ItemStack output = getStackInSlot(1);
+            ItemStack output = inventory.getStackInSlot(1);
 
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
@@ -160,22 +162,17 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getChopperResult(getStackInSlot(0));
+        return HPRecipes.instance().getChopperResult(inventory.getStackInSlot(0));
     }
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getChoppingBlockRecipe(getStackInSlot(0));
+        return HPRecipes.instance().getChoppingBlockRecipe(inventory.getStackInSlot(0));
     }
 
     @Override
     public int getPositionOffset() {
         return 0;
-    }
-
-    @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? SLOTS_BOTTOM : (side == EnumFacing.UP ? SLOTS_TOP : SLOTS_SIDE);
     }
 
     @Override
@@ -220,6 +217,11 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         return "container.chopper";
     }
 
+    @Override
+    public int getOutputSlot() {
+        return 1;
+    }
+
     public float getVisualWindup() {
         return visualWindup;
     }
@@ -235,5 +237,18 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             return super.getDisplayName();
         else
             return new TextComponentTranslation(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+    }
+
+    private IItemHandler handlerSide = null;
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return super.hasCapability(capability, facing) || (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        T cap = super.getCapability(capability, facing);
+        return cap != null ? cap: (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ? (T) handlerSide : null;
     }
 }

@@ -61,7 +61,7 @@ public abstract class BlockHPBase extends Block {
             TileEntityHPBase te = getTileEntity(worldIn, pos);
 
             if (te != null) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, te);
+                InventoryHelper.dropInventoryItems(worldIn, pos, te.getInventory());
                 if (te instanceof TileEntityHPHorseBase && ((TileEntityHPHorseBase) te).hasWorker())
                     InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
             }

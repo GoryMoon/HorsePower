@@ -220,7 +220,7 @@ public class HPRecipes {
     }
 
     public void removeGrindstoneRecipe(ItemStack input, boolean hand) {
-        if (hand)
+        if (hand && Configs.useSeperateRecipes)
             handgrindstoneRecipes.remove(new ComparableItemStack(input));
         else
             grindstoneRecipes.remove(new ComparableItemStack(input));
@@ -237,7 +237,7 @@ public class HPRecipes {
     public GrindstoneRecipe getGrindstoneRecipe(ItemStack stack, boolean hand) {
         if (stack.isEmpty())
             return null;
-        return hand ? handgrindstoneRecipes.get(new ComparableItemStack(stack)): grindstoneRecipes.get(new ComparableItemStack(stack));
+        return hand && Configs.useSeperateRecipes ? handgrindstoneRecipes.get(new ComparableItemStack(stack)): grindstoneRecipes.get(new ComparableItemStack(stack));
     }
 
     public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack) {
