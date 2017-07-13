@@ -54,6 +54,7 @@ public abstract class TileEntityHPBase extends TileEntity {
 
             @Override
             public ItemStack getStackInSlot(int index) {
+                if (index >= itemStacks.size()) return ItemStack.EMPTY;
                 return itemStacks.get(index);
             }
 
@@ -232,7 +233,7 @@ public abstract class TileEntityHPBase extends TileEntity {
                 return false;
             } else {
                 ItemStack output = inventory.getStackInSlot(1);
-                ItemStack outputSecondary = inventory.getStackInSlot(2);
+                ItemStack outputSecondary = secondary.isEmpty() ? ItemStack.EMPTY: inventory.getStackInSlot(2);
                 if (!secondary.isEmpty() && !outputSecondary.isEmpty()) {
                     if (!outputSecondary.isItemEqual(secondary)) return false;
                     if (outputSecondary.getCount() + secondary.getCount() > secondary.getMaxStackSize()) return false;
