@@ -9,6 +9,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.RangedWrapper;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -18,10 +23,6 @@ import javax.annotation.Nullable;
 
 public class TileEntityChopper extends TileEntityHPHorseBase {
 
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_SIDE = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1};
-
     private int currentWindup;
     private int currentItemChopTime;
     private int totalItemChopTime;
@@ -30,6 +31,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     public TileEntityChopper() {
         super(2);
+        handlerSide = new RangedWrapper(new InvWrapper(inventory), 0, 1);
     }
 
     @Override
@@ -174,11 +176,6 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? SLOTS_BOTTOM : (side == EnumFacing.UP ? SLOTS_TOP : SLOTS_SIDE);
-    }
-
-    @Override
     public int getInventoryStackLimit() {
         return 1;
     }
@@ -220,6 +217,11 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         return "container.chopper";
     }
 
+    @Override
+    public int getOutputSlot() {
+        return 1;
+    }
+
     public float getVisualWindup() {
         return visualWindup;
     }
@@ -235,5 +237,18 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             return super.getDisplayName();
         else
             return new TextComponentTranslation(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+    }
+
+    private IItemHandler handlerSide = null;
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return super.hasCapability(capability, facing) || (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        T cap = super.getCapability(capability, facing);
+        return cap != null ? cap: (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ? (T) handlerSide : null;
     }
 }

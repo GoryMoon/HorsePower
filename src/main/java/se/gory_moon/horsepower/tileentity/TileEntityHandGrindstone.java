@@ -2,7 +2,6 @@ package se.gory_moon.horsepower.tileentity;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
@@ -11,12 +10,8 @@ import se.gory_moon.horsepower.recipes.HPRecipes;
 
 public class TileEntityHandGrindstone extends TileEntityHPBase implements ITickable {
 
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1, 2};
-
     private int currentItemMillTime;
     private int totalItemMillTime;
-
 
     private final int ticksPerRotation = 18;
     private float visibleRotation = 0;
@@ -97,11 +92,6 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? SLOTS_BOTTOM : (side == EnumFacing.UP ? SLOTS_TOP : new int[0]);
-    }
-
-    @Override
     public void markDirty() {
         super.markDirty();
         if (getStackInSlot(0).isEmpty())
@@ -162,6 +152,11 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     @Override
     public String getName() {
         return "container.hand_mill";
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 2;
     }
 
     public void turn() {

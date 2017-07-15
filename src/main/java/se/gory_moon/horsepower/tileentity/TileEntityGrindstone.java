@@ -3,7 +3,6 @@ package se.gory_moon.horsepower.tileentity;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -18,9 +17,6 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 public class TileEntityGrindstone extends TileEntityHPHorseBase {
-
-    private static final int[] SLOTS_TOP = new int[] {0};
-    private static final int[] SLOTS_BOTTOM = new int[] {1, 2};
 
     private int currentItemMillTime;
     private int totalItemMillTime;
@@ -138,11 +134,6 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     }
 
     @Override
-    public int[] getSlotsForFace(EnumFacing side) {
-        return side == EnumFacing.DOWN ? SLOTS_BOTTOM : (side == EnumFacing.UP ? SLOTS_TOP : new int[0]);
-    }
-
-    @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
@@ -199,6 +190,11 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     @Override
     public String getName() {
         return "container.mill";
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 2;
     }
 
     @Nullable
