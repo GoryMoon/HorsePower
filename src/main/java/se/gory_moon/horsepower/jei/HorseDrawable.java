@@ -1,10 +1,15 @@
 package se.gory_moon.horsepower.jei;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.ITickTimer;
 import net.minecraft.client.Minecraft;
+
+import java.util.Collections;
+import java.util.List;
 
 public class HorseDrawable implements IDrawableAnimated {
 
@@ -17,16 +22,21 @@ public class HorseDrawable implements IDrawableAnimated {
     private final ITickTimer pathTimer;
 
     private final boolean grinding;
+    private boolean reverse;
+    private int location;
+    private int x;
+    private int y;
+    private String hovering;
 
-    public HorseDrawable(IGuiHelper guiHelper, IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4, boolean grinding) {
+    public HorseDrawable(IGuiHelper guiHelper, IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4, ITickTimer animTimer, ITickTimer pathTimer, boolean grinding, String hovering) {
         this.horse1 = horse1;
         this.horse2 = horse2;
         this.horse3 = horse3;
         this.horse4 = horse4;
         this.grinding = grinding;
-
-        animTimer = guiHelper.createTickTimer(20, 1, false);
-        pathTimer = guiHelper.createTickTimer(100, grinding ? 352: 324, false);
+        this.animTimer = animTimer;
+        this.pathTimer = pathTimer;
+        this.hovering = hovering;
     }
 
     @Override
@@ -46,9 +56,21 @@ public class HorseDrawable implements IDrawableAnimated {
 
     @Override
     public void draw(Minecraft minecraft, int xOffset, int yOffset) {
-        int x = 0;
-        int y = 0;
-        boolean reverse = false;
+        reverse = false;
+        location = pathTimer.getValue();
+        setXYPos();
+
+        IDrawableStatic draw;
+        if (animTimer.getValue() == 0) {
+            draw = reverse ? horse3: horse1;
+        } else {
+            draw = reverse ? horse4: horse2;
+        }
+
+        draw.draw(minecraft, xOffset + x, yOffset + y, 0, 0, 0, 0);
+    }
+
+    private void setXYPos() {
         int location = pathTimer.getValue();
 
         if (grinding) {
@@ -84,14 +106,14 @@ public class HorseDrawable implements IDrawableAnimated {
                 y = 50 - (location - 274);
             }
         }
+    }
 
-        IDrawableStatic draw;
-        if (animTimer.getValue() == 0) {
-            draw = reverse ? horse3: horse1;
-        } else {
-            draw = reverse ? horse4: horse2;
-        }
+    private boolean isHovering(int mx, int my) {
+        return mx >= x && mx <= x + horse1.getWidth() && my >= y && my <= y + horse1.getHeight();
+    }
 
-        draw.draw(minecraft, xOffset + x, yOffset + y, 0, 0, 0, 0);
+    public List<String> getTooltipStrings(int mouseX, int mouseY) {
+        setXYPos();
+        return isHovering(mouseX, mouseY) && hovering != null ? Lists.newArrayList(Splitter.on('\n').split(hovering)): Collections.emptyList();
     }
 }

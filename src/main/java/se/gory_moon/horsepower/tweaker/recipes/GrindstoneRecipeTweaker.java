@@ -25,7 +25,7 @@ import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
 public class GrindstoneRecipeTweaker {
 
     @ZenMethod
-    public static void add(IIngredient input, IItemStack output, int time, @Optional IItemStack secondary, @Optional int secondaryChance) {
+    public static void add(IIngredient input, IItemStack output, int time, @Optional boolean hand, @Optional IItemStack secondary, @Optional int secondaryChance) {
         List<IItemStack> items = input.getItems();
         if(items == null) {
             HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a grinding recipe");
@@ -35,13 +35,13 @@ public class GrindstoneRecipeTweaker {
         ItemStack output2 = getItemStack(output);
         ItemStack secondary2 = getItemStack(secondary);
 
-        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, items2, output2, secondary2, secondaryChance, time);
+        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, items2, output2, secondary2, secondaryChance, time, hand);
         MineTweakerAPI.apply(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
     @ZenMethod
-    public static void remove(IIngredient output) {
+    public static void remove(IIngredient output, @Optional boolean hand) {
 
         List<GrindstoneRecipe> toRemove = Lists.newArrayList();
         List<Integer> removeIndex = Lists.newArrayList();
@@ -53,7 +53,7 @@ public class GrindstoneRecipeTweaker {
                 removeIndex.add(i);
             }
         }
-        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(toRemove, removeIndex);
+        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(toRemove, removeIndex, hand);
         MineTweakerAPI.apply(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
@@ -66,21 +66,23 @@ public class GrindstoneRecipeTweaker {
         private final ItemStack secondary;
         private final int secondaryChance;
         private final int time;
+        private final boolean hand;
 
-        public AddGrindstoneRecipe(IIngredient ingredient, ItemStack[] inputs, ItemStack output2, ItemStack secondary, int secondaryChance, int time) {
+        public AddGrindstoneRecipe(IIngredient ingredient, ItemStack[] inputs, ItemStack output2, ItemStack secondary, int secondaryChance, int time, boolean hand) {
             this.ingredient = ingredient;
             this.input = inputs;
             this.output = output2;
             this.secondary = secondary;
             this.secondaryChance = secondaryChance;
             this.time = time;
+            this.hand = hand;
         }
 
         @Override
         public void apply() {
             for (ItemStack stack: input) {
                 GrindstoneRecipe recipe = new GrindstoneRecipe(stack, output, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
-                HPRecipes.instance().addGrindstoneRecipe(recipe);
+                HPRecipes.instance().addGrindstoneRecipe(recipe, hand);
                 MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.grinding");
             }
         }
@@ -93,8 +95,8 @@ public class GrindstoneRecipeTweaker {
         @Override
         public void undo() {
             for (ItemStack stack: input) {
-                GrindstoneRecipe recipe = HPRecipes.instance().getGrindstoneRecipe(stack);
-                HPRecipes.instance().removeGrindstoneRecipe(recipe);
+                GrindstoneRecipe recipe = HPRecipes.instance().getGrindstoneRecipe(stack, hand);
+                HPRecipes.instance().removeGrindstoneRecipe(recipe, hand);
                 MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.grinding");
             }
             TweakerPluginImpl.actions.remove(this);
@@ -119,17 +121,20 @@ public class GrindstoneRecipeTweaker {
     private static class RemoveGrindstoneRecipe implements IUndoableAction {
         private final List<Integer> removingIndices;
         private final List<GrindstoneRecipe> recipes;
+        private final boolean hand;
 
-        private RemoveGrindstoneRecipe(List<GrindstoneRecipe> recipes, List<Integer> removingIndices) {
+        private RemoveGrindstoneRecipe(List<GrindstoneRecipe> recipes, List<Integer> removingIndices, boolean hand) {
             this.recipes = recipes;
             this.removingIndices = removingIndices;
+            this.hand = hand;
         }
 
         @Override
         public void apply() {
+            ArrayList<GrindstoneRecipe> grindRecipe = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
             for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
-                HPRecipes.instance().getGrindstoneRecipes().remove(removingIndices.get(i).intValue());
-                MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipes.get(i), "horsepower.grinding");
+                grindRecipe.remove(removingIndices.get(i).intValue());
+                MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipes.get(i), hand ? "horsepower.hand_grinding": "horsepower.grinding");
             }
         }
 
@@ -140,10 +145,11 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void undo() {
+            ArrayList<GrindstoneRecipe> grindRecipe = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
             for(int i = 0; i < this.removingIndices.size(); ++i) {
-                int index = Math.min(HPRecipes.instance().getGrindstoneRecipes().size(), removingIndices.get(i));
-                HPRecipes.instance().getGrindstoneRecipes().add(index, recipes.get(i));
-                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipes.get(i), "horsepower.grinding");
+                int index = Math.min(grindRecipe.size(), removingIndices.get(i));
+                grindRecipe.add(index, recipes.get(i));
+                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipes.get(i), hand ? "horsepower.hand_grinding": "horsepower.grinding");
             }
             TweakerPluginImpl.actions.remove(this);
         }

@@ -1,12 +1,10 @@
 package se.gory_moon.horsepower.jei.grinding;
 
 import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.util.ResourceLocation;
-import se.gory_moon.horsepower.jei.HorseDrawable;
 import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.lib.Reference;
@@ -15,29 +13,24 @@ import se.gory_moon.horsepower.util.Localization;
 
 public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRecipeWrapper> {
 
+    private boolean handHandler;
+
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
     private static final int secondarySlot = 2;
 
     private final String localizedName;
 
-    public HorsePowerGrindingCategory(IGuiHelper guiHelper) {
-        super(guiHelper);
-        ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei_grindstone.png");
-        background = guiHelper.createDrawable(location, 0, 0, 146, 85);
+    public HorsePowerGrindingCategory(IGuiHelper guiHelper, boolean hand) {
+        super(guiHelper, 16, true, 146, 85, new ResourceLocation("horsepower", "textures/gui/jei_grindstone.png"));
+        this.handHandler = hand;
 
-        IDrawableStatic horseAnim1 = guiHelper.createDrawable(location, 0, 90, 30, 20);
-        IDrawableStatic horseAnim2 = guiHelper.createDrawable(location, 0, 110, 30, 20);
-        IDrawableStatic horseAnim3 = guiHelper.createDrawable(location, 30, 90, 30, 20);
-        IDrawableStatic horseAnim4 = guiHelper.createDrawable(location, 30, 110, 30, 20);
-        horse = new HorseDrawable(guiHelper, horseAnim1, horseAnim2, horseAnim3, horseAnim4, true);
-
-        localizedName = Localization.GUI.CATEGORY_GRINDING.translate();
+        localizedName = handHandler ? Localization.GUI.CATEGORY_HAND_GRINDING.translate(): Localization.GUI.CATEGORY_GRINDING.translate();
     }
 
     @Override
     public String getUid() {
-        return HorsePowerPlugin.GRINDING;
+        return handHandler ? HorsePowerPlugin.HAND_GRINDING : HorsePowerPlugin.GRINDING;
     }
 
     @Override
@@ -65,5 +58,6 @@ public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRec
         });
 
         guiItemStacks.set(ingredients);
+        super.openRecipe();
     }
 }

@@ -14,9 +14,9 @@ public class GrindingRecipeMaker {
     public GrindingRecipeMaker() {
     }
 
-    public static List<GrindstoneRecipeWrapper> getGrindstoneRecipes(IJeiHelpers helpers) {
+    public static List<GrindstoneRecipeWrapper> getGrindstoneRecipes(IJeiHelpers helpers, boolean hand) {
         IStackHelper stackHelper = helpers.getStackHelper();
-        ArrayList<GrindstoneRecipe> grindingRecipes = HPRecipes.instance().getGrindstoneRecipes();;
+        ArrayList<GrindstoneRecipe> grindingRecipes = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
 
         List<GrindstoneRecipeWrapper> recipes = new ArrayList<>();
 

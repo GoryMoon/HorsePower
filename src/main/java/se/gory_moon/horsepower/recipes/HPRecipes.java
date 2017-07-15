@@ -27,6 +27,7 @@ public class HPRecipes {
     private static HPRecipes INSTANCE = new HPRecipes();
 
     private final Map<ComparableItemStack, GrindstoneRecipe> grindstoneRecipes = Maps.newHashMap();
+    private final Map<ComparableItemStack, GrindstoneRecipe> handgrindstoneRecipes = Maps.newHashMap();
     private final Map<ComparableItemStack, ChoppingBlockRecipe> choppingBlockRecipes = Maps.newHashMap();
     public static ArrayList<String> ERRORS = Lists.newArrayList();
     public static boolean serverSyncedRecipes = false;
@@ -39,15 +40,17 @@ public class HPRecipes {
 
     public void reloadRecipes() {
         if (!serverSyncedRecipes)
-            reloadRecipes(Arrays.asList(Configs.grindstoneRecipes), Arrays.asList(Configs.choppingRecipes));
+            reloadRecipes(Arrays.asList(Configs.grindstoneRecipes), Arrays.asList(Configs.handGrindstoneRecipes), Arrays.asList(Configs.choppingRecipes));
     }
 
-    public void reloadRecipes(List<String> grindstone, List<String> chopping) {
+    public void reloadRecipes(List<String> grindstone, List<String> handGrindstone, List<String> chopping) {
         HorsePowerMod.jeiPlugin.removeRecipe();
         grindstoneRecipes.clear();
+        handgrindstoneRecipes.clear();
         choppingBlockRecipes.clear();
 
         createRecipes(GrindstoneRecipe.class, grindstone).forEach(this::addGrindstoneRecipe);
+        createRecipes(HandGrindstoneRecipe.class, handGrindstone).forEach(this::addHandGrindstoneRecipe);
         createRecipes(ChoppingBlockRecipe.class, chopping).forEach(this::addChoppingRecipe);
 
         HorsePowerMod.jeiPlugin.addRecipes();
@@ -156,27 +159,38 @@ public class HPRecipes {
         }
     }
 
-    public void addGrindstoneRecipe(Block input, ItemStack output, int time) {
-        addGrindstoneRecipe(Item.getItemFromBlock(input), output, time);
+    public void addGrindstoneRecipe(Block input, ItemStack output, int time, boolean hand) {
+        addGrindstoneRecipe(Item.getItemFromBlock(input), output, time, hand);
     }
 
-    public void addGrindstoneRecipe(Item input, ItemStack output, int time) {
-        addGrindstoneRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output, time);
+    public void addGrindstoneRecipe(Item input, ItemStack output, int time, boolean hand) {
+        addGrindstoneRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output, time, hand);
     }
 
-    public void addGrindstoneRecipe(ItemStack input, ItemStack output, int time) {
-        if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
-        addGrindstoneRecipe(input, output, ItemStack.EMPTY, 0, time);
+    public void addGrindstoneRecipe(ItemStack input, ItemStack output, int time, boolean hand) {
+        if (getGrindstoneResult(input, hand) != ItemStack.EMPTY) return;
+        addGrindstoneRecipe(input, output, ItemStack.EMPTY, 0, time, hand);
     }
 
-    public void addGrindstoneRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
-        if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
-        addGrindstoneRecipe(new GrindstoneRecipe(input, output, secondary, secondaryChance, time));
+    public void addGrindstoneRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time, boolean hand) {
+        if (getGrindstoneResult(input, hand) != ItemStack.EMPTY) return;
+        addGrindstoneRecipe(new GrindstoneRecipe(input, output, secondary, secondaryChance, time), hand);
     }
 
-    public void addGrindstoneRecipe(GrindstoneRecipe recipe) {
-        if (getGrindstoneResult(recipe.getInput()) != ItemStack.EMPTY) return;
+    public void addGrindstoneRecipe(GrindstoneRecipe recipe, boolean hand) {
+        if (getGrindstoneResult(recipe.getInput(), hand) != ItemStack.EMPTY) return;
+        if (hand && Configs.useSeperateRecipes)
+            addHandGrindstoneRecipe(recipe);
+        else
+            addGrindstoneRecipe(recipe);
+    }
+
+    private void addGrindstoneRecipe(GrindstoneRecipe recipe) {
         grindstoneRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
+    }
+
+    private void addHandGrindstoneRecipe(GrindstoneRecipe recipe) {
+        handgrindstoneRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
     }
 
     public void addChoppingRecipe(Block input, ItemStack output, int time) {
@@ -193,8 +207,8 @@ public class HPRecipes {
     }
 
     public void addChoppingRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
-        if (getGrindstoneResult(input) != ItemStack.EMPTY) return;
-        addChoppingRecipe(input, output, ItemStack.EMPTY, secondaryChance, time);
+        if (getChopperResult(input) != ItemStack.EMPTY) return;
+        addChoppingRecipe(new ChoppingBlockRecipe(input, output, ItemStack.EMPTY, secondaryChance, time));
     }
 
     public void addChoppingRecipe(ChoppingBlockRecipe recipe) {
@@ -202,12 +216,15 @@ public class HPRecipes {
         choppingBlockRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
     }
 
-    public void removeGrindstoneRecipe(GrindstoneRecipe recipe) {
-        removeGrindstoneRecipe(recipe.getInput());
+    public void removeGrindstoneRecipe(GrindstoneRecipe recipe, boolean hand) {
+        removeGrindstoneRecipe(recipe.getInput(), hand);
     }
 
-    public void removeGrindstoneRecipe(ItemStack input) {
-        grindstoneRecipes.remove(new ComparableItemStack(input));
+    public void removeGrindstoneRecipe(ItemStack input, boolean hand) {
+        if (hand)
+            handgrindstoneRecipes.remove(new ComparableItemStack(input));
+        else
+            grindstoneRecipes.remove(new ComparableItemStack(input));
     }
 
     public void removeChoppingRecipe(ChoppingBlockRecipe recipe) {
@@ -218,10 +235,10 @@ public class HPRecipes {
         choppingBlockRecipes.remove(new ComparableItemStack(input));
     }
 
-    public GrindstoneRecipe getGrindstoneRecipe(ItemStack stack) {
+    public GrindstoneRecipe getGrindstoneRecipe(ItemStack stack, boolean hand) {
         if (stack.isEmpty())
             return null;
-        return grindstoneRecipes.get(new ComparableItemStack(stack));
+        return hand ? handgrindstoneRecipes.get(new ComparableItemStack(stack)): grindstoneRecipes.get(new ComparableItemStack(stack));
     }
 
     public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack) {
@@ -230,9 +247,14 @@ public class HPRecipes {
         return choppingBlockRecipes.get(new ComparableItemStack(stack));
     }
 
-    public ItemStack getGrindstoneResult(ItemStack stack) {
-        GrindstoneRecipe recipe = getGrindstoneRecipe(stack);
+    public ItemStack getGrindstoneResult(ItemStack stack, boolean hand) {
+        GrindstoneRecipe recipe = getGrindstoneRecipe(stack, hand);
         return recipe != null ? recipe.getOutput(): ItemStack.EMPTY;
+    }
+
+    public ItemStack getGrindstoneSecondary(ItemStack stack, boolean hand) {
+        GrindstoneRecipe recipe = getGrindstoneRecipe(stack, hand);
+        return recipe != null ? recipe.getSecondary(): ItemStack.EMPTY;
     }
 
     public ItemStack getChopperResult(ItemStack stack) {
@@ -240,8 +262,8 @@ public class HPRecipes {
         return recipe != null ? recipe.getOutput(): ItemStack.EMPTY;
     }
 
-    public boolean hasGrindstoneRecipe(ItemStack stack) {
-        return getGrindstoneRecipe(stack) != null;
+    public boolean hasGrindstoneRecipe(ItemStack stack, boolean hand) {
+        return getGrindstoneRecipe(stack, hand) != null;
     }
 
     public boolean hasChopperRecipe(ItemStack stack) {
@@ -252,12 +274,16 @@ public class HPRecipes {
         return new ArrayList<>(grindstoneRecipes.values());
     }
 
+    public ArrayList<GrindstoneRecipe> getHandGrindstoneRecipes() {
+        return new ArrayList<>(handgrindstoneRecipes.values());
+    }
+
     public ArrayList<ChoppingBlockRecipe> getChoppingRecipes() {
         return new ArrayList<>(choppingBlockRecipes.values());
     }
 
-    public int getGrindstoneTime(ItemStack stack) {
-        GrindstoneRecipe recipe = getGrindstoneRecipe(stack);
+    public int getGrindstoneTime(ItemStack stack, boolean hand) {
+        GrindstoneRecipe recipe = getGrindstoneRecipe(stack, hand);
         return recipe != null ? recipe.getTime(): 16;
     }
 

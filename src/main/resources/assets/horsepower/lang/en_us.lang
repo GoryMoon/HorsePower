@@ -32,8 +32,11 @@ commands.horsepower.entity.no=Not looking at an entity
 commands.horsepower.entity.has=Entity copied to clipboard: %s
 
 # Gui
+gui.horsepower.jei.category.hand.grinding=Hand Grindstone
 gui.horsepower.jei.category.grinding=Grindstone
 gui.horsepower.jei.category.chopping=Chopping Block
+config.gui.client=Client
+config.gui.client.tooltip=Client only configs
 
 # Waila
 gui.horsepower.waila.grindstone.progress=Grinding: [%1]

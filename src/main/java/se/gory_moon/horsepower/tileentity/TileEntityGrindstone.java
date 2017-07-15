@@ -93,7 +93,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
         if (currentItemMillTime >= totalItemMillTime) {
             currentItemMillTime = 0;
 
-            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0));
+            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0), false);
             millItem();
             return true;
         }
@@ -102,12 +102,12 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0));
+        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0), false);
     }
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0));
+        return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0), false);
     }
 
     @Override
@@ -152,7 +152,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack);
+            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack, false);
             currentItemMillTime = 0;
         }
         markDirty();
@@ -165,7 +165,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack);
+        return index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack, false);
     }
 
     @Override

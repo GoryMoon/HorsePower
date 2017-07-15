@@ -15,6 +15,9 @@ import java.util.function.BooleanSupplier;
 @Config(modid = Reference.MODID)
 public class Configs {
 
+    @Config.LangKey("config.gui.client")
+    public static final Client client = new Client();
+
     @Comment({"Enables the flour item", "If disabled all related recipes will be disabled", "Requires minecraft restart"})
     @RequiresMcRestart
     @Name("Enable Flour")
@@ -29,14 +32,6 @@ public class Configs {
     @RequiresMcRestart
     @Name("Remove Vanilla Recipes")
     public static boolean removeVanillaRecipes = false;
-
-    @Comment("If the amount text on how many items is in a stack in a grindstone should render")
-    @Name("Render Item Amount")
-    public static boolean renderItemAmount = true;
-
-    @Comment("Must look at the block to show the amount in it")
-    @Name("Must Look For Amount ")
-    public static boolean mustLookAtBlock = true;
 
     @Comment({"Use the base definition of a horse, in vanilla it includes Horse, Donkey & Mule", "If false only entries in the list are valid",
             "Must be edited with in-game editor for live changes."})
@@ -55,7 +50,18 @@ public class Configs {
     @Comment({"Add mobs that can use the grindstone", "Only mobs that can be leashed can use the grindstone", "Add the full path to the mob class, can be found with /horsepower entity or /hp entity",
             "Must be edited with in-game editor for live changes."})
     @Name("Grindstone Mob List")
-    public static String[] grindstoneMobList = {};
+    public static String[] grindstoneMobList = {
+            "com.animania.common.entities.rodents.EntityHedgehog"
+    };
+
+    @Comment("If the separate list of recipes should be used for the hand grindstone")
+    @Name("Separate Grindstone Recipes")
+    @RequiresMcRestart
+    public static boolean useSeperateRecipes = false;
+
+    @Comment({"Uses the same syntax as the regular grindstone recipes", "These recipes are only used when the config to separate them is enabled"})
+    @Name("Hand Grindstone Recipes")
+    public static String[] handGrindstoneRecipes = {};
 
     @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: " + "modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time[-modid:secondary:meta@amount${nbt}-chance]",
             "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
@@ -83,7 +89,7 @@ public class Configs {
             "minecraft:double_plant:1-minecraft:dye:13@2-12",
             "minecraft:red_flower:5-minecraft:dye:14-12",
             "minecraft:bone-minecraft:dye:15@3-12",
-            "minecraft:bone_block-minecraft:dye:15@9-12",
+            "minecraft:bone_block-minecraft:dye:15@9-12"
     };
 
     @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
@@ -99,6 +105,17 @@ public class Configs {
             "minecraft:log:3-minecraft:planks:3@4-1",
             "minecraft:log2:0-minecraft:planks:4@4-1",
             "minecraft:log2:1-minecraft:planks:5@4-1"};
+
+    public static class Client {
+
+        @Comment("If the amount text on how many items is in a stack in a grindstone should render")
+        @Name("Render Item Amount")
+        public boolean renderItemAmount = true;
+
+        @Comment("Must look at the block to show the amount in it")
+        @Name("Must Look For Amount")
+        public boolean mustLookAtBlock = true;
+    }
 
     public static class ConfigFactory implements IConditionFactory {
 

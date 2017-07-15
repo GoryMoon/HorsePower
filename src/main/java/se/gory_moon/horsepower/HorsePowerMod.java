@@ -53,6 +53,7 @@ public class HorsePowerMod {
 
         if (Loader.isModLoaded("crafttweaker")) {
             //tweakerPlugin = new TweakerPluginImpl();
+            tweakerPlugin = new DummyTweakPluginImpl();
         } else
             tweakerPlugin = new DummyTweakPluginImpl();
         tweakerPlugin.register();
