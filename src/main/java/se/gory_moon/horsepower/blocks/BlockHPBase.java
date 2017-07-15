@@ -21,6 +21,7 @@ import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
 import se.gory_moon.horsepower.util.Utils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public abstract class BlockHPBase extends Block {
@@ -71,6 +72,21 @@ public abstract class BlockHPBase extends Block {
     protected TileEntityHPBase getTileEntity(IBlockAccess worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return tileentity instanceof TileEntityHPBase ? (TileEntityHPBase)tileentity : null;
+    }
+
+    @Override
+    public boolean removedByPlayer(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
+        // we pull up a few calls to this point in time because we still have the TE here
+        // the execution otherwise is equivalent to vanilla order
+        this.onBlockDestroyedByPlayer(world, pos, state);
+        if(willHarvest) {
+            this.harvestBlock(world, player, pos, state, world.getTileEntity(pos), player.getHeldItemMainhand());
+        }
+
+        world.setBlockToAir(pos);
+        // return false to prevent the above called functions to be called again
+        // side effect of this is that no xp will be dropped. but it shoudln't anyway from a table :P
+        return false;
     }
 
     @Override

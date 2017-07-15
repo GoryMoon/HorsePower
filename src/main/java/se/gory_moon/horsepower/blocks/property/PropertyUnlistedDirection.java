@@ -1,13 +1,13 @@
-package se.gory_moon.horsepower.blocks;
+package se.gory_moon.horsepower.blocks.property;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
-public class UnlistedDirection implements IUnlistedProperty<EnumFacing> {
+public class PropertyUnlistedDirection implements IUnlistedProperty<EnumFacing> {
 
     private final String name;
 
-    public UnlistedDirection(String name) {
+    public PropertyUnlistedDirection(String name) {
         this.name = name;
     }
 

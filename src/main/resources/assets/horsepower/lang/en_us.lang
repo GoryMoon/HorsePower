@@ -37,6 +37,7 @@ gui.horsepower.jei.category.grinding=Grindstone
 gui.horsepower.jei.category.chopping=Chopping Block
 config.gui.client=Client
 config.gui.client.tooltip=Client only configs
+itemGroup.horsepower=Horse Power
 
 # Waila
 gui.horsepower.waila.grindstone.progress=Grinding: [%1]

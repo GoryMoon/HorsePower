@@ -34,6 +34,7 @@ public class HorsePowerMod {
     @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.COMMON_PROXY)
     public static CommonProxy proxy;
 
+    public static HorsePowerCreativeTab creativeTab = new HorsePowerCreativeTab();
     public static ITweakerPlugin tweakerPlugin;
     public static IJeiPlugin jeiPlugin = new DummyJeiPlugin();
     public static Logger logger = LogManager.getLogger("HorsePower");

@@ -3,17 +3,22 @@ package se.gory_moon.horsepower.client;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.client.model.BakedChopperModel;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.lib.Reference;
 
@@ -26,8 +31,22 @@ public class ModModelManager {
 
     public static final ModModelManager INSTANCE = new ModModelManager();
     private final Set<Item> itemsRegistered = new HashSet<>();
+    private static final ResourceLocation MODEL_ChoppingBlock = new ResourceLocation("horsepower","block/chopper");
 
     public ModModelManager() {
+    }
+
+    @SubscribeEvent
+    public static void onModelBake(ModelBakeEvent event) {
+        replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=north,part=base"), MODEL_ChoppingBlock, event);
+        replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=south,part=base"), MODEL_ChoppingBlock, event);
+        replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=west,part=base"), MODEL_ChoppingBlock, event);
+        replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=east,part=base"), MODEL_ChoppingBlock, event);
+
+        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=north,part=base")));
+        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=south,part=base")));
+        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=west,part=base")));
+        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=east,part=base")));
     }
 
     @SubscribeEvent
@@ -190,6 +209,23 @@ public class ModModelManager {
 
     public static ModelResourceLocation getModel(String resource) {
         return new ModelResourceLocation(Reference.MODID + ":" + resource, "inventory");
+    }
+
+    public static void replaceChoppingModel(ModelResourceLocation modelVariantLocation, ResourceLocation modelLocation, ModelBakeEvent event) {
+        try {
+            IModel model = ModelLoaderRegistry.getModel(modelLocation);
+            if(model instanceof IRetexturableModel) {
+                IRetexturableModel tableModel = (IRetexturableModel) model;
+                IBakedModel standard = event.getModelRegistry().getObject(modelVariantLocation);
+                if(standard instanceof IPerspectiveAwareModel) {
+                    IBakedModel finalModel = new BakedChopperModel((IPerspectiveAwareModel) standard, tableModel, DefaultVertexFormats.BLOCK);
+
+                    event.getModelRegistry().putObject(modelVariantLocation, finalModel);
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

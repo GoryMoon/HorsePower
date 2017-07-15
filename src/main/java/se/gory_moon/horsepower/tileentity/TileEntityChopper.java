@@ -1,6 +1,8 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -10,14 +12,17 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Localization;
+import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nullable;
 
@@ -57,12 +62,38 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         }
     }
 
-    @Override
-    public void markDirty() {
-        //if (getStackInSlot(1).isEmpty())
-            //BlockGrindstone.setState(false, world, pos);
+    public IExtendedBlockState getExtendedState(IExtendedBlockState state) {
+        String side_texture = getTileData().getString("side_texture");
+        String top_texture = getTileData().getString("top_texture");
 
-        super.markDirty();
+        if (side_texture.isEmpty() || top_texture.isEmpty()) {
+            ItemStack stack = new ItemStack(getTileData().getCompoundTag("textureBlock"));
+            if (!stack.isEmpty()) {
+                Block block = Block.getBlockFromItem(stack.getItem());
+                IBlockState state1 = block.getStateFromMeta(stack.getMetadata());
+                side_texture = Utils.getTextureFromBlockstate(state1).getIconName();
+                top_texture = Utils.getTopTextureFromBlockstate(state1).getIconName();
+                getTileData().setString("side_texture", side_texture);
+            }
+        }
+
+        if (!side_texture.isEmpty())
+            state = state.withProperty(BlockChopper.SIDE_TEXTURE, side_texture);
+        if (!top_texture.isEmpty())
+            state = state.withProperty(BlockChopper.TOP_TEXTURE, top_texture);
+
+        state = (IExtendedBlockState) state.withProperty(BlockChopper.FACING, getForward());
+        state = (IExtendedBlockState) state.withProperty(BlockChopper.PART, state.getValue(BlockChopper.PART));
+
+        return state;
+    }
+
+    public void setTextureBlock(NBTTagCompound textureBlock) {
+        getTileData().setTag("textureBlock", textureBlock);
+    }
+
+    public NBTTagCompound getTextureBlock() {
+        return getTileData().getCompoundTag("textureBlock");
     }
 
     @Override

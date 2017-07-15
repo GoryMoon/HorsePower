@@ -38,7 +38,7 @@ public class Provider implements IWailaDataProvider {
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
         if (accessor.getBlock().equals(ModBlocks.BLOCK_CHOPPER_FILLER))
-            return new ItemStack(ModBlocks.BLOCK_CHOPPER, 1);
+            return accessor.getBlock().getPickBlock(accessor.getBlockState(), accessor.getMOP(), accessor.getWorld(), accessor.getPosition(), accessor.getPlayer());
         return null;
     }
 

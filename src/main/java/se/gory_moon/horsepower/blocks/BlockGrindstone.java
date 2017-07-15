@@ -11,7 +11,6 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
@@ -46,7 +46,7 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
         setSoundType(SoundType.STONE);
         setRegistryName(Constants.GRINDSTONE_BLOCK);
         setUnlocalizedName(Constants.GRINDSTONE_BLOCK);
-        setCreativeTab(CreativeTabs.DECORATIONS);
+        setCreativeTab(HorsePowerMod.creativeTab);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -57,6 +57,14 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return COLLISION_AABB;
+    }
+
+    @Override
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        if (!worldIn.isRemote) {
+            boolean filled = state.getValue(FILLED);
+            worldIn.setBlockState(pos, state.withProperty(FILLED, filled).withProperty(PART, GrindStoneModels.BASE), 2);
+        }
     }
 
     @Nullable
