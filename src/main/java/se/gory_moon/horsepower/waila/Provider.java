@@ -22,7 +22,7 @@ public class Provider implements IWailaDataProvider {
     public static void callbackRegister(IWailaRegistrar registrar) {
         Provider provider = new Provider();
 
-        registrar.registerStackProvider(provider, BlockFiller.class);
+        //registrar.registerStackProvider(provider, BlockFiller.class);
         registrar.registerBodyProvider(provider, BlockGrindstone.class);
         registrar.registerBodyProvider(provider, BlockHandGrindstone.class);
         registrar.registerBodyProvider(provider, BlockChopper.class);
@@ -38,7 +38,7 @@ public class Provider implements IWailaDataProvider {
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
         if (accessor.getBlock().equals(ModBlocks.BLOCK_CHOPPER_FILLER))
-            return new ItemStack(ModBlocks.BLOCK_CHOPPER, 1);
+            return accessor.getBlock().getPickBlock(accessor.getBlockState(), accessor.getMOP(), accessor.getWorld(), accessor.getPosition(), accessor.getPlayer());
         return null;
     }
 

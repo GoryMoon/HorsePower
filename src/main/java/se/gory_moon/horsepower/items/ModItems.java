@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoublePlant;
 import net.minecraft.block.BlockFlower;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -14,6 +13,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,8 +24,11 @@ import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 
 import java.util.*;
 
@@ -33,8 +36,8 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = Reference.MODID)
 public class ModItems {
 
-    public static final Item FLOUR = new Item().setRegistryName(Constants.FLOUR_ITEM).setUnlocalizedName(Constants.FLOUR_ITEM).setCreativeTab(CreativeTabs.FOOD);
-    public static final Item DOUGH = new Item().setRegistryName(Constants.DOUGH_ITEM).setUnlocalizedName(Constants.DOUGH_ITEM).setCreativeTab(CreativeTabs.FOOD);
+    public static final Item FLOUR = new Item().setRegistryName(Constants.FLOUR_ITEM).setUnlocalizedName(Constants.FLOUR_ITEM).setCreativeTab(HorsePowerMod.creativeTab);
+    public static final Item DOUGH = new Item().setRegistryName(Constants.DOUGH_ITEM).setUnlocalizedName(Constants.DOUGH_ITEM).setCreativeTab(HorsePowerMod.creativeTab);
 
     private static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     private static List<ResourceLocation> recipesToRemove = new LinkedList<>();
@@ -79,6 +82,9 @@ public class ModItems {
     @SubscribeEvent
     public static void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
         recipes = ev.getRegistry().getEntries();
+        ResourceLocation loc = new ResourceLocation("horsepower:chopper");
+        ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Ingredient.fromStacks(new ItemStack(Items.LEAD)), 'F', Ingredient.fromStacks(new ItemStack(Items.FLINT)), 'W', "logWood").setRegistryName(loc));
+
         if (Configs.removeVanillaRecipes)
             removeRecipes();
     }

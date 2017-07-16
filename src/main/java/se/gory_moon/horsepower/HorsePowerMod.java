@@ -1,6 +1,5 @@
 package se.gory_moon.horsepower;
 
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -33,7 +32,8 @@ public class HorsePowerMod {
     @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.COMMON_PROXY)
     public static CommonProxy proxy;
 
-    public static ITweakerPlugin tweakerPlugin;
+    public static HorsePowerCreativeTab creativeTab = new HorsePowerCreativeTab();
+    public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
     public static IJeiPlugin jeiPlugin = new DummyJeiPlugin();
     public static Logger logger = LogManager.getLogger("HorsePower");
 
@@ -51,11 +51,9 @@ public class HorsePowerMod {
     public void init(FMLInitializationEvent event) {
         ModItems.registerRecipes();
 
-        if (Loader.isModLoaded("crafttweaker")) {
+        //if (Loader.isModLoaded("crafttweaker"))
             //tweakerPlugin = new TweakerPluginImpl();
-            tweakerPlugin = new DummyTweakPluginImpl();
-        } else
-            tweakerPlugin = new DummyTweakPluginImpl();
+
         tweakerPlugin.register();
 
         HPRecipes.instance().reloadRecipes();

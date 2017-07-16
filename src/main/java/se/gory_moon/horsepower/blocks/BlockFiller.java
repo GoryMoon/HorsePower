@@ -121,7 +121,15 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     @Override
     public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
         pos = pos.offset(state.getValue(FACING));
+        worldIn.getBlockState(pos).getBlock().onBlockDestroyedByPlayer(worldIn, pos, worldIn.getBlockState(pos));
         worldIn.destroyBlock(pos, true);
+    }
+
+    @Override
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+        BlockPos pos1 = pos.offset(state.getValue(FACING));
+        world.getBlockState(pos1).getBlock().removedByPlayer(world.getBlockState(pos1), world, pos1, player, willHarvest);
+        return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
 
     @Override

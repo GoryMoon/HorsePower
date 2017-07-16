@@ -12,7 +12,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -28,6 +27,8 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.blocks.property.PropertyUnlistedDirection;
 import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
@@ -41,7 +42,7 @@ import java.util.List;
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccessor {
 
-    public static final UnlistedDirection FACING = new UnlistedDirection("facing");
+    public static final PropertyUnlistedDirection FACING = new PropertyUnlistedDirection("facing");
     public static final PropertyEnum<HandGrindstoneModels> PART = PropertyEnum.create("part", HandGrindstoneModels.class);
 
     private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(1D/16D, 0.0D, 1D/16D, 15D/16D, 10D/16D, 15D/16D);
@@ -55,7 +56,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         setSoundType(SoundType.STONE);
         setRegistryName(Constants.HAND_GRINDSTONE_BLOCK);
         setUnlocalizedName(Constants.HAND_GRINDSTONE_BLOCK);
-        setCreativeTab(CreativeTabs.DECORATIONS);
+        setCreativeTab(HorsePowerMod.creativeTab);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -86,6 +87,15 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
             return f == EnumFacing.NORTH ? 1: f == EnumFacing.SOUTH ? 0: f == EnumFacing.EAST ? -2: 2;
 
         return -2;
+    }
+
+    @Override
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+        if (!worldIn.isRemote) {
+            IExtendedBlockState extendedState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
+            EnumFacing enumfacing = extendedState.getValue(FACING);
+            worldIn.setBlockState(pos, extendedState.withProperty(FACING, enumfacing).withProperty(PART, HandGrindstoneModels.BASE), 2);
+        }
     }
 
     @Override
