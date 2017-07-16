@@ -78,7 +78,7 @@ public class ModItems {
             OreDictionary.registerOre("foodFlour", FLOUR);
 
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINDSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
         GameRegistry.addRecipe(new ChoppingRecipe(OreDictionary.getOres("logWood"), ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Items.LEAD, 'F', Items.FLINT, 'W', "logWood"));
 
         if (Configs.removeVanillaRecipes)

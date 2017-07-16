@@ -57,9 +57,9 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         registry.handleRecipes(ChoppingRecipe.class, ChoppingBlockCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
 
         if (Configs.useSeperateRecipes)
-            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINSTONE), HAND_GRINDING);
+            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE), HAND_GRINDING);
         else
-            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINSTONE), GRINDING);
+            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE), GRINDING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_CHOPPER), CHOPPING);
 

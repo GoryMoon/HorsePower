@@ -53,7 +53,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         super.readFromNBT(compound);
         currentWindup = compound.getInteger("currentWindup");
 
-        if (inventory.getStackInSlot(0).getCount() > 0) {
+        if (getStackInSlot(0).getCount() > 0) {
             currentItemChopTime = compound.getInteger("chopTime");
             totalItemChopTime = compound.getInteger("totalChopTime");
         } else {
@@ -103,7 +103,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
     @Override
@@ -147,7 +147,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             if (currentItemChopTime >= totalItemChopTime) {
                 currentItemChopTime = 0;
 
-                totalItemChopTime = HPRecipes.instance().getChoppingTime(inventory.getStackInSlot(0));
+                totalItemChopTime = HPRecipes.instance().getChoppingTime(getStackInSlot(0));
                 chopItem();
                 return true;
             }
@@ -158,10 +158,10 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        ItemStack itemstack = inventory.getStackInSlot(index);
+        ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
-        if (index == 1 && inventory.getStackInSlot(1).isEmpty()) {
+        if (index == 1 && getStackInSlot(1).isEmpty()) {
             markDirty();
         }
 
@@ -176,9 +176,9 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     private void chopItem() {
         if (canWork()) {
-            ItemStack input = inventory.getStackInSlot(0);
+            ItemStack input = getStackInSlot(0);
             ItemStack result = getRecipeItemStack();
-            ItemStack output = inventory.getStackInSlot(1);
+            ItemStack output = getStackInSlot(1);
 
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
@@ -193,12 +193,12 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getChopperResult(inventory.getStackInSlot(0));
+        return HPRecipes.instance().getChopperResult(getStackInSlot(0));
     }
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getChoppingBlockRecipe(inventory.getStackInSlot(0));
+        return HPRecipes.instance().getChoppingBlockRecipe(getStackInSlot(0));
     }
 
     @Override

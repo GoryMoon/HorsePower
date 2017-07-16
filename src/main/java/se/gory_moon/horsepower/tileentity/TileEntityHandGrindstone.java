@@ -36,7 +36,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
-        if (inventory.getStackInSlot(0).getCount() > 0) {
+        if (getStackInSlot(0).getCount() > 0) {
             currentItemMillTime = compound.getInteger("millTime");
             totalItemMillTime = compound.getInteger("totalMillTime");
             rotation = compound.getInteger("currentRotation");
@@ -49,12 +49,12 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getGrindstoneResult(inventory.getStackInSlot(0), true);
+        return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0), true);
     }
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getGrindstoneRecipe(inventory.getStackInSlot(0), true);
+        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0), true);
     }
 
     private void millItem() {
@@ -63,9 +63,9 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
             ItemStack result = recipe.getOutput();
             ItemStack secondary = recipe.getSecondary();
 
-            ItemStack input = inventory.getStackInSlot(0);
-            ItemStack output = inventory.getStackInSlot(1);
-            ItemStack secondaryOutput = inventory.getStackInSlot(2);
+            ItemStack input = getStackInSlot(0);
+            ItemStack output = getStackInSlot(1);
+            ItemStack secondaryOutput = getStackInSlot(2);
 
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
@@ -94,13 +94,13 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     @Override
     public void markDirty() {
         super.markDirty();
-        if (inventory.getStackInSlot(0).isEmpty())
+        if (getStackInSlot(0).isEmpty())
             currentItemMillTime = 0;
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        ItemStack itemstack = inventory.getStackInSlot(index);
+        ItemStack itemstack = getStackInSlot(index);
         super.setInventorySlotContents(index, stack);
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
@@ -184,7 +184,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
                     currentItemMillTime = 0;
 
                     millItem();
-                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(inventory.getStackInSlot(0), true);
+                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0), true);
                 }
                 markDirty();
             }

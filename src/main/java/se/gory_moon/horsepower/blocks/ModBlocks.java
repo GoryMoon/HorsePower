@@ -11,10 +11,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import se.gory_moon.horsepower.items.ItemBlockChopper;
+import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
-import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 
 import java.util.HashSet;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 public class ModBlocks {
 
-    public static final BlockHandGrindstone BLOCK_HAND_GRINSTONE = new BlockHandGrindstone();
+    public static final BlockHandGrindstone BLOCK_HAND_GRINDSTONE = new BlockHandGrindstone();
     public static final BlockGrindstone BLOCK_GRINDSTONE = new BlockGrindstone();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
     public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHardness(2F).setResistance(5F);
@@ -40,7 +40,7 @@ public class ModBlocks {
         public static void registerBlocks(RegistryEvent.Register<Block> event) {
             final IForgeRegistry<Block> registry = event.getRegistry();
 
-            final Block[] blocks = {BLOCK_HAND_GRINSTONE, BLOCK_GRINDSTONE, BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER};
+            final Block[] blocks = {BLOCK_HAND_GRINDSTONE, BLOCK_GRINDSTONE, BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER};
 
             registry.registerAll(blocks);
         }
@@ -53,7 +53,7 @@ public class ModBlocks {
         @SubscribeEvent
         public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
             final ItemBlock[] items = {
-                new ItemBlock(BLOCK_HAND_GRINSTONE),
+                new ItemBlock(BLOCK_HAND_GRINDSTONE),
                 new ItemBlock(BLOCK_GRINDSTONE),
                 new ItemBlockChopper(BLOCK_CHOPPER)
             };

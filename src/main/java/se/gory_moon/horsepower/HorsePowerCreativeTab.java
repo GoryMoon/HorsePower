@@ -12,6 +12,6 @@ public class HorsePowerCreativeTab extends CreativeTabs {
 
     @Override
     public ItemStack getTabIconItem() {
-        return new ItemStack(ModBlocks.BLOCK_HAND_GRINSTONE);
+        return new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE);
     }
 }
