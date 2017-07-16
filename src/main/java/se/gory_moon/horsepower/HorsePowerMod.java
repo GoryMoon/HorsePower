@@ -1,5 +1,6 @@
 package se.gory_moon.horsepower;
 
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -21,6 +22,7 @@ import se.gory_moon.horsepower.proxy.CommonProxy;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
+import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
 
 @Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.12]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;")
 @EventBusSubscriber
@@ -45,16 +47,16 @@ public class HorsePowerMod {
         FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER);
 
         ModBlocks.registerTileEntities();
+
+        if (Loader.isModLoaded("crafttweaker"))
+            tweakerPlugin = new TweakerPluginImpl();
+
+        tweakerPlugin.register();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         ModItems.registerRecipes();
-
-        //if (Loader.isModLoaded("crafttweaker"))
-            //tweakerPlugin = new TweakerPluginImpl();
-
-        tweakerPlugin.register();
 
         HPRecipes.instance().reloadRecipes();
     }

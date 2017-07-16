@@ -2,7 +2,7 @@
 {
   "modid": "horsepower",
   "name": "Horse Power",
-  "description": "A mods that adds a horse powered blocks.",
+  "description": "A mods that adds horse powered blocks.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

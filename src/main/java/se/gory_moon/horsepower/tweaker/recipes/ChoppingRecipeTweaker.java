@@ -1,11 +1,11 @@
 package se.gory_moon.horsepower.tweaker.recipes;
-/*
+
 import com.google.common.collect.Lists;
-import minetweaker.IUndoableAction;
-import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IIngredient;
-import minetweaker.api.item.IItemStack;
-import minetweaker.api.minecraft.MineTweakerMC;
+import crafttweaker.CraftTweakerAPI;
+import crafttweaker.IAction;
+import crafttweaker.api.item.IIngredient;
+import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.HorsePowerMod;
@@ -17,8 +17,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.List;
 
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStack;
-import static minetweaker.api.minecraft.MineTweakerMC.getItemStacks;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
+import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStacks;
 
 @ZenClass("mods.horsepower.ChoppingBlock")
 public class ChoppingRecipeTweaker {
@@ -34,7 +34,7 @@ public class ChoppingRecipeTweaker {
         ItemStack output2 = getItemStack(output);
 
         AddChoppingRecipe recipe = new AddChoppingRecipe(input, items2, output2, ItemStack.EMPTY, 0, time);
-        MineTweakerAPI.apply(recipe);
+        CraftTweakerAPI.apply(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
@@ -46,19 +46,19 @@ public class ChoppingRecipeTweaker {
 
         for (int i = 0; i < HPRecipes.instance().getGrindstoneRecipes().size(); i++) {
             ChoppingBlockRecipe recipe = HPRecipes.instance().getChoppingRecipes().get(i);
-            if (OreDictionary.itemMatches(MineTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
+            if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
                 toRemove.add(recipe);
                 removeIndex.add(i);
             }
         }
         RemoveChoppingRecipe recipe = new RemoveChoppingRecipe(toRemove, removeIndex);
-        MineTweakerAPI.apply(recipe);
+        CraftTweakerAPI.apply(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
 
 
-    private static class AddChoppingRecipe implements IUndoableAction {
+    private static class AddChoppingRecipe implements IAction {
 
         private final IIngredient ingredient;
         private final ItemStack[] input;
@@ -81,42 +81,16 @@ public class ChoppingRecipeTweaker {
             for (ItemStack stack: input) {
                 ChoppingBlockRecipe recipe = new ChoppingBlockRecipe(stack, output, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
                 HPRecipes.instance().addChoppingRecipe(recipe);
-                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipe, "horsepower.chopping");
             }
-        }
-
-        @Override
-        public boolean canUndo() {
-            return true;
-        }
-
-        @Override
-        public void undo() {
-            for (ItemStack stack: input) {
-                ChoppingBlockRecipe recipe = HPRecipes.instance().getChoppingBlockRecipe(stack);
-                HPRecipes.instance().removeChoppingRecipe(recipe);
-                MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipe, "horsepower.chopping");
-            }
-            TweakerPluginImpl.actions.remove(this);
         }
 
         @Override
         public String describe() {
             return "Adding chopping recipe for " + ingredient;
         }
-
-        @Override
-        public String describeUndo() {
-            return "Removing chopping recipe for " + ingredient;
-        }
-
-        @Override
-        public Object getOverrideKey() {
-            return null;
-        }
     }
 
-    private static class RemoveChoppingRecipe implements IUndoableAction {
+    private static class RemoveChoppingRecipe implements IAction {
         private final List<Integer> removingIndices;
         private final List<ChoppingBlockRecipe> recipes;
 
@@ -127,25 +101,9 @@ public class ChoppingRecipeTweaker {
 
         @Override
         public void apply() {
-            for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
+            for (int i = this.removingIndices.size() - 1; i >= 0; --i) {
                 HPRecipes.instance().getChoppingRecipes().remove(removingIndices.get(i).intValue());
-                MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipes.get(i), "horsepower.chopping");
             }
-        }
-
-        @Override
-        public boolean canUndo() {
-            return true;
-        }
-
-        @Override
-        public void undo() {
-            for(int i = 0; i < this.removingIndices.size(); ++i) {
-                int index = Math.min(HPRecipes.instance().getGrindstoneRecipes().size(), removingIndices.get(i));
-                HPRecipes.instance().getChoppingRecipes().add(index, recipes.get(i));
-                MineTweakerAPI.getIjeiRecipeRegistry().addRecipe(recipes.get(i), "horsepower.chopping");
-            }
-            TweakerPluginImpl.actions.remove(this);
         }
 
         @Override
@@ -153,16 +111,5 @@ public class ChoppingRecipeTweaker {
             return "Removing " + recipes.size() + " chopping recipes";
         }
 
-        @Override
-        public String describeUndo() {
-            return "Restoring " + recipes.size() + " chopping recipes";
-        }
-
-        @Override
-        public Object getOverrideKey() {
-            return null;
-        }
     }
-
 }
-*/
