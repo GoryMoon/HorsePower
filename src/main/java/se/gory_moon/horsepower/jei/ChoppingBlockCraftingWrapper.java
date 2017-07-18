@@ -5,7 +5,6 @@ import mezz.jei.api.gui.IGuiIngredientGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IStackHelper;
 import mezz.jei.api.recipe.wrapper.ICustomCraftingRecipeWrapper;
@@ -20,7 +19,7 @@ import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 
 import java.util.List;
 
-public class ChoppingBlockCraftingWrapper extends BlankRecipeWrapper implements IShapedCraftingRecipeWrapper, ICustomCraftingRecipeWrapper {
+public class ChoppingBlockCraftingWrapper implements IShapedCraftingRecipeWrapper, ICustomCraftingRecipeWrapper {
 
     private final ChoppingRecipe recipe;
     private final int width;

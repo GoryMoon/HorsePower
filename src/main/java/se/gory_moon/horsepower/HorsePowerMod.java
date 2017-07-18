@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,12 +57,11 @@ public class HorsePowerMod {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         ModItems.registerRecipes();
-
-        HPRecipes.instance().reloadRecipes();
     }
 
     @EventHandler
-    public void loadComplete(FMLLoadCompleteEvent event) {
+    public void loadComplete(FMLPostInitializationEvent event) {
+        HPRecipes.instance().reloadRecipes();
         proxy.loadComplete();
     }
 

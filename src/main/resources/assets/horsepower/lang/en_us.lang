@@ -14,8 +14,8 @@ item.horsepower:hand_grindstone.description.info=Right click the block with the 
 
 # Blocks
 tile.hand_grindstone.name=Grindstone
-tile.grindstone.name=Horse Grindstone
-tile.chopper.name=Horse Chopping Block
+tile.grindstone.name=Horse Powered Grindstone
+tile.chopper.name=Horse Powered Chopping Block
 
 # Info
 info.horsepower:chopping.invalid=INVALID 7x7x2 AREA

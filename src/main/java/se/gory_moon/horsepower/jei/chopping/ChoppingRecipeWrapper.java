@@ -5,7 +5,7 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +20,7 @@ import se.gory_moon.horsepower.util.color.Colors;
 import java.util.Collections;
 import java.util.List;
 
-public class ChoppingRecipeWrapper extends BlankRecipeWrapper {
+public class ChoppingRecipeWrapper implements IRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
     private final ItemStack output;

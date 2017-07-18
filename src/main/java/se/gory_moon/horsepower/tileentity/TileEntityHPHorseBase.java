@@ -84,10 +84,12 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         worker = newWorker;
         worker.setHomePosAndDistance(pos, 3);
         target = getClosestTarget();
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        UUID uuid = worker.getUniqueID();
-        nbtTagCompound.setUniqueId("UUID", uuid);
-        nbtWorker = nbtTagCompound;
+        if (worker != null) {
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            UUID uuid = worker.getUniqueID();
+            nbtTagCompound.setUniqueId("UUID", uuid);
+            nbtWorker = nbtTagCompound;
+        }
     }
 
     public void setWorkerToPlayer(EntityPlayer player) {
