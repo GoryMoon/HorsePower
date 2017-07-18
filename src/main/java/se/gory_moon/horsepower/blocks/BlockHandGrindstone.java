@@ -91,9 +91,9 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
-            //IExtendedBlockState extendedState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
-            //EnumFacing enumfacing = extendedState.getValue(FACING);
-            //worldIn.setBlockState(pos, extendedState.withProperty(FACING, enumfacing).withProperty(PART, HandGrindstoneModels.BASE), 2);
+            IExtendedBlockState extendedState = (IExtendedBlockState) getExtendedState(state, worldIn, pos);
+            EnumFacing enumfacing = extendedState.getValue(FACING);
+            worldIn.setBlockState(pos, extendedState.withProperty(FACING, enumfacing).withProperty(PART, HandGrindstoneModels.BASE), 2);
         }
     }
 

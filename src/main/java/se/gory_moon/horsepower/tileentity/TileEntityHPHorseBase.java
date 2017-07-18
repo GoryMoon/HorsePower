@@ -66,11 +66,13 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         compound.setBoolean("hasWorker", hasWorker);
 
         if (this.worker != null) {
-            NBTTagCompound nbtTagCompound = new NBTTagCompound();
-            UUID uuid = worker.getUniqueID();
-            nbtTagCompound.setUniqueId("UUID", uuid);
-
-            compound.setTag("leash", nbtTagCompound);
+            if (nbtWorker == null) {
+                NBTTagCompound nbtTagCompound = new NBTTagCompound();
+                UUID uuid = worker.getUniqueID();
+                nbtTagCompound.setUniqueId("UUID", uuid);
+                nbtWorker = nbtTagCompound;
+            }
+            compound.setTag("leash", nbtWorker);
         }
 
         return super.writeToNBT(compound);
@@ -81,6 +83,12 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         worker = newWorker;
         worker.setHomePosAndDistance(pos, 3);
         target = getClosestTarget();
+        if (worker != null) {
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            UUID uuid = worker.getUniqueID();
+            nbtTagCompound.setUniqueId("UUID", uuid);
+            nbtWorker = nbtTagCompound;
+        }
     }
 
     public void setWorkerToPlayer(EntityPlayer player) {
