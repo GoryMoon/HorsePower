@@ -26,15 +26,16 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.blocks.property.PropertyUnlistedDirection;
 import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.lib.Constants;
-import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -88,6 +89,12 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         return -2;
     }
 
+    @Nonnull
+    @Override
+    public Class<?> getTileClass() {
+        return TileEntityHandGrindstone.class;
+    }
+
     @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
@@ -102,10 +109,11 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         if (player instanceof FakePlayer || player == null)
             return true;
 
-        TileEntityHPBase tile = getTileEntity(worldIn, pos);
-        if (tile instanceof TileEntityHandGrindstone && tile.canWork() && !player.isSneaking()) {
+        TileEntityHandGrindstone tile = getTileEntity(worldIn, pos);
+        if (tile != null && tile.canWork() && !player.isSneaking()) {
             if (!worldIn.isRemote) {
-                ((TileEntityHandGrindstone) tile).turn();
+                if (tile.turn())
+                    player.addExhaustion((float) Configs.general.grindstoneExhaustion);
                 return true;
             } else
                 return true;
@@ -142,7 +150,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
 
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntityHPBase tile = getTileEntity(world, pos);
+        TileEntityHandGrindstone tile = getTileEntity(world, pos);
         if (tile == null)
             return state;
 
@@ -152,7 +160,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         worldIn.setBlockState(pos, ((IExtendedBlockState)state).withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(PART, HandGrindstoneModels.BASE), 2);
 
-        TileEntityHPBase tile = getTileEntity(worldIn, pos);
+        TileEntityHandGrindstone tile = getTileEntity(worldIn, pos);
         if (tile == null)
             return;
         tile.setForward(placer.getAdjustedHorizontalFacing().getOpposite());
@@ -167,10 +175,9 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
     @Optional.Method(modid = "theoneprobe")
     @Override
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntity tileEntity = world.getTileEntity(data.getPos());
-        if (tileEntity instanceof TileEntityHandGrindstone) {
-            TileEntityHandGrindstone te = (TileEntityHandGrindstone) tileEntity;
-            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
+        TileEntityHandGrindstone tileEntity = (TileEntityHandGrindstone) world.getTileEntity(data.getPos());
+        if (tileEntity != null) {
+            probeInfo.progress((long) ((((double) tileEntity.getField(1)) / ((double) tileEntity.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
         }
     }
 }

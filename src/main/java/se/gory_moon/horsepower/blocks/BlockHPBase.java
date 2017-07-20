@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemLead;
 import net.minecraft.item.ItemStack;
@@ -17,11 +18,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
+import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
 import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public abstract class BlockHPBase extends Block {
@@ -31,6 +35,8 @@ public abstract class BlockHPBase extends Block {
 
     public BlockHPBase(Material materialIn) {
         super(materialIn);
+        setCreativeTab(HorsePowerMod.creativeTab);
+
     }
 
     public abstract void emptiedOutput(World world, BlockPos pos);
@@ -69,16 +75,31 @@ public abstract class BlockHPBase extends Block {
         }
     }
 
-    protected TileEntityHPBase getTileEntity(IBlockAccess worldIn, BlockPos pos) {
+    @Nonnull
+    public abstract Class<?> getTileClass();
+
+    protected <T extends TileEntityHPBase> T getTileEntity(IBlockAccess worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        return tileentity instanceof TileEntityHPBase ? (TileEntityHPBase)tileentity : null;
+        return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity : null;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        try {
+            return (TileEntity) getTileClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public boolean removedByPlayer(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
         // we pull up a few calls to this point in time because we still have the TE here
         // the execution otherwise is equivalent to vanilla order
-        this.onBlockDestroyedByPlayer(world, pos, state);
+        onBlockDestroyedByPlayer(world, pos, state);
+        onBlockHarvested(world, pos, state, player);
         if(willHarvest) {
             this.harvestBlock(world, player, pos, state, world.getTileEntity(pos), player.getHeldItemMainhand());
         }
@@ -180,11 +201,8 @@ public abstract class BlockHPBase extends Block {
                 teH.setWorkerToPlayer(playerIn);
         }
 
-        if (stack.isEmpty()) {
-            playerIn.setHeldItem(hand, result);
-        } else if (playerIn.func_191521_c(result)) {
-            playerIn.dropItem(result, false);
-        }
+        if (!result.isEmpty())
+            ItemHandlerHelper.giveItemToPlayer(playerIn, result, EntityEquipmentSlot.MAINHAND.getSlotIndex());
 
         te.markDirty();
         return true;

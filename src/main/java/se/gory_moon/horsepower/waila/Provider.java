@@ -25,11 +25,13 @@ public class Provider implements IWailaDataProvider {
         registrar.registerStackProvider(provider, BlockFiller.class);
         registrar.registerBodyProvider(provider, BlockGrindstone.class);
         registrar.registerBodyProvider(provider, BlockHandGrindstone.class);
-        registrar.registerBodyProvider(provider, BlockChopper.class);
+        //registrar.registerBodyProvider(provider, BlockChopper.class);
+        registrar.registerBodyProvider(provider, BlockHPChoppingBase.class);
         registrar.registerBodyProvider(provider, BlockFiller.class);
         registrar.registerNBTProvider(provider, BlockGrindstone.class);
         registrar.registerNBTProvider(provider, BlockHandGrindstone.class);
         registrar.registerNBTProvider(provider, BlockChopper.class);
+        registrar.registerNBTProvider(provider, BlockChoppingBlock.class);
         registrar.registerNBTProvider(provider, BlockFiller.class);
         registrar.addConfig(Reference.NAME, "horsepower:showItems", Localization.WAILA.SHOW_ITEMS.translate());
         registrar.registerTooltipRenderer("horsepower.stack", new TTRenderStack());
@@ -60,15 +62,16 @@ public class Provider implements IWailaDataProvider {
         } else if (nbt.hasKey("horsepower:chopper", 10)) {
             nbt = nbt.getCompoundTag("horsepower:chopper");
 
-            double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup : 1;
+            double totalWindup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup : 1;
             double windup = (double) nbt.getInteger("currentWindup");
             double current = (double) nbt.getInteger("chopTime");
             double total = (double) nbt.getInteger("totalChopTime");
             double progressWindup = Math.round(((windup / totalWindup) * 100D) * 100D) / 100D;
             double progressChopping = Math.round(((current / total) * 100D) * 100D) / 100D;
 
-            currenttip.add(Localization.WAILA.WINDUP_PROGRESS.translate(String.valueOf(progressWindup) + "%"));
-            if (total > 1) {
+            if (accessor.getTileEntity() instanceof TileEntityChopper || accessor.getTileEntity() instanceof TileEntityFiller)
+                currenttip.add(Localization.WAILA.WINDUP_PROGRESS.translate(String.valueOf(progressWindup) + "%"));
+            if (total > 1 || accessor.getTileEntity() instanceof TileEntityManualChopper) {
                 currenttip.add(Localization.WAILA.CHOPPING_PROGRESS.translate(String.valueOf(progressChopping) + "%"));
             }
         }
@@ -106,12 +109,14 @@ public class Provider implements IWailaDataProvider {
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
         NBTTagCompound tile = new NBTTagCompound();
-        if (te instanceof TileEntityFiller) te = ((TileEntityFiller) te).getFilledTileEntity();
+        if (te instanceof TileEntityFiller)
+            te = ((TileEntityFiller) te).getFilledTileEntity();
         if (te != null)
             te.writeToNBT(tile);
         if (te instanceof TileEntityGrindstone || te instanceof TileEntityHandGrindstone)
             tag.setTag("horsepower:grindstone", tile);
-        else if (te instanceof TileEntityChopper) tag.setTag("horsepower:chopper", tile);
+        else if (te instanceof TileEntityChopper || te instanceof TileEntityManualChopper)
+            tag.setTag("horsepower:chopper", tile);
         return tag;
     }
 }

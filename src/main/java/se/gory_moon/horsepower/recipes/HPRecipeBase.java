@@ -41,6 +41,11 @@ public abstract class HPRecipeBase {
         return time;
     }
 
+    public static ItemStack getWithSize(ItemStack stack, int size) {
+        stack.setCount(size);
+        return stack;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

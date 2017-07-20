@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -191,6 +192,10 @@ public abstract class TileEntityHPBase extends TileEntity {
         return getInventoryStackLimit();
     }
 
+    public IExtendedBlockState getExtendedState(IExtendedBlockState state) {
+        return state;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -216,9 +221,9 @@ public abstract class TileEntityHPBase extends TileEntity {
 
     @Override
     public void markDirty() {
-            final IBlockState state = getWorld().getBlockState(getPos());
-            getWorld().notifyBlockUpdate(getPos(), state, state, 2);
-            super.markDirty();
+        final IBlockState state = getWorld().getBlockState(getPos());
+        getWorld().notifyBlockUpdate(getPos(), state, state, 2);
+        super.markDirty();
     }
 
     public boolean canWork() {

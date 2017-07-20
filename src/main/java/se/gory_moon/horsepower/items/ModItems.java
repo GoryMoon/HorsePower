@@ -56,9 +56,9 @@ public class ModItems {
             final IForgeRegistry<Item> registry = event.getRegistry();
 
             for (final Item item : items) {
-                if (!Configs.enableFlour && item == FLOUR)
+                if (!Configs.general.enableFlour && item == FLOUR)
                     continue;
-                if (!Configs.enableDough && item == DOUGH)
+                if (!Configs.general.enableDough && item == DOUGH)
                     continue;
 
                 registry.register(item);
@@ -68,20 +68,22 @@ public class ModItems {
     }
 
     public static void registerRecipes() {
-        if (Configs.enableDough) {
-            if (Configs.enableFlour)
+        if (Configs.general.enableDough) {
+            if (Configs.general.enableFlour)
                 GameRegistry.addShapelessRecipe(new ItemStack(DOUGH), FLOUR, Items.WATER_BUCKET);
             GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
             OreDictionary.registerOre("foodDough", DOUGH);
         }
-        if (Configs.enableFlour)
+        if (Configs.general.enableFlour)
             OreDictionary.registerOre("foodFlour", FLOUR);
 
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_GRINDSTONE, "LSL", "###", "###", 'S', "stickWood", '#', "stone", 'L', Items.LEAD));
         GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_HAND_GRINDSTONE, "  S", "###", "###", 'S', "stickWood", '#', "stone"));
         GameRegistry.addRecipe(new ChoppingRecipe(OreDictionary.getOres("logWood"), ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Items.LEAD, 'F', Items.FLINT, 'W', "logWood"));
+        if (Configs.general.enableHandChoppingBlock)
+            GameRegistry.addRecipe(new ChoppingRecipe(OreDictionary.getOres("logWood"), ModBlocks.BLOCK_MANUAL_CHOPPER, "W", 'W', "logWood"));
 
-        if (Configs.removeVanillaRecipes)
+        if (Configs.general.removeVanillaRecipes)
             removeRecipes();
     }
 

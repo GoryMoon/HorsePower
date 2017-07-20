@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.blocks.BlockChopper;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 
 import java.util.Arrays;
@@ -44,11 +44,11 @@ public class ChoppingBlockCraftingWrapper extends BlankRecipeWrapper implements 
 
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
         for(ItemStack stack : recipe.outputBlocks) {
-            BlockChopper block = ModBlocks.BLOCK_CHOPPER;
+            BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(recipe.getSimpleRecipeOutput().getItem());
             Block baseBlock = Block.getBlockFromItem(stack.getItem());
             if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 for(ItemStack sub : HorsePowerPlugin.jeiHelpers.getStackHelper().getSubtypes(stack)) {
-                    builder.add(BlockChopper.createItemStack(block, baseBlock, sub.getItemDamage()));
+                    builder.add(BlockHPChoppingBase.createItemStack(block, baseBlock, sub.getItemDamage()));
                 }
             }
             else {
@@ -115,7 +115,7 @@ public class ChoppingBlockCraftingWrapper extends BlankRecipeWrapper implements 
             // input means we clicked on an ingredient, make sure it is one that affects the legs
             if(mode == IFocus.Mode.INPUT && isOutputBlock(focus)) {
                 // first, get the output recipe
-                BlockChopper block = ModBlocks.BLOCK_CHOPPER;
+                BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(recipe.getSimpleRecipeOutput().getItem());
 
                 // then create a stack with the focus item (which we already validated above)
                 ItemStack outputFocus = BlockChopper.createItemStack(block, Block.getBlockFromItem(focus.getItem()), focus.getItemDamage());

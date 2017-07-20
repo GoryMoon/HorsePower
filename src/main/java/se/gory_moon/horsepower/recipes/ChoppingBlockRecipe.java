@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 public class ChoppingBlockRecipe extends HPRecipeBase {
 
     public ChoppingBlockRecipe(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
-        super(input, output, ItemStack.EMPTY, 0, time);
+        super(getWithSize(input, 1), output, ItemStack.EMPTY, 0, time);
     }
 
     @Override

@@ -11,9 +11,9 @@ import java.util.List;
 
 public class ChoppingRecipeMaker {
 
-    public static List<ChoppingRecipeWrapper> getChoppingRecipes(IJeiHelpers helpers) {
+    public static List<ChoppingRecipeWrapper> getChoppingRecipes(IJeiHelpers helpers, boolean hand) {
         IStackHelper stackHelper = helpers.getStackHelper();
-        ArrayList<ChoppingBlockRecipe> grindingRecipes = HPRecipes.instance().getChoppingRecipes();
+        ArrayList<ChoppingBlockRecipe> grindingRecipes = hand ? HPRecipes.instance().getManualChoppingRecipes(): HPRecipes.instance().getChoppingRecipes();
 
         List<ChoppingRecipeWrapper> recipes = new ArrayList<>();
 

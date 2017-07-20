@@ -1,8 +1,6 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +20,6 @@ import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nullable;
 
@@ -63,37 +60,10 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     public IExtendedBlockState getExtendedState(IExtendedBlockState state) {
-        String side_texture = getTileData().getString("side_texture");
-        String top_texture = getTileData().getString("top_texture");
-
-        if (side_texture.isEmpty() || top_texture.isEmpty()) {
-            ItemStack stack = new ItemStack(getTileData().getCompoundTag("textureBlock"));
-            if (!stack.isEmpty()) {
-                Block block = Block.getBlockFromItem(stack.getItem());
-                IBlockState state1 = block.getStateFromMeta(stack.getMetadata());
-                side_texture = Utils.getTextureFromBlockstate(state1).getIconName();
-                top_texture = Utils.getTopTextureFromBlockstate(state1).getIconName();
-                getTileData().setString("side_texture", side_texture);
-            }
-        }
-
-        if (!side_texture.isEmpty())
-            state = state.withProperty(BlockChopper.SIDE_TEXTURE, side_texture);
-        if (!top_texture.isEmpty())
-            state = state.withProperty(BlockChopper.TOP_TEXTURE, top_texture);
-
         state = (IExtendedBlockState) state.withProperty(BlockChopper.FACING, getForward());
         state = (IExtendedBlockState) state.withProperty(BlockChopper.PART, state.getValue(BlockChopper.PART));
 
         return state;
-    }
-
-    public void setTextureBlock(NBTTagCompound textureBlock) {
-        getTileData().setTag("textureBlock", textureBlock);
-    }
-
-    public NBTTagCompound getTextureBlock() {
-        return getTileData().getCompoundTag("textureBlock");
     }
 
     @Override
@@ -103,7 +73,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack, false) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
     @Override
@@ -132,7 +102,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     public void update() {
         super.update();
 
-        float windup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
+        float windup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup: 1;
         visualWindup = -0.74F + (0.74F * (((float)currentWindup) / (windup - 1)));
     }
 
@@ -140,14 +110,14 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     public boolean targetReached() {
         currentWindup++;
 
-        if (currentWindup >= Configs.pointsForWindup) {
+        if (currentWindup >= Configs.general.pointsForWindup) {
             currentWindup = 0;
             currentItemChopTime++;
 
             if (currentItemChopTime >= totalItemChopTime) {
                 currentItemChopTime = 0;
 
-                totalItemChopTime = HPRecipes.instance().getChoppingTime(getStackInSlot(0));
+                totalItemChopTime = HPRecipes.instance().getChoppingTime(getStackInSlot(0), false);
                 chopItem();
                 return true;
             }
@@ -167,7 +137,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemChopTime = HPRecipes.instance().getChoppingTime(stack);
+            totalItemChopTime = HPRecipes.instance().getChoppingTime(stack, false);
             currentItemChopTime = 0;
             currentWindup = 0;
             markDirty();
@@ -193,12 +163,12 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getChopperResult(getStackInSlot(0));
+        return HPRecipes.instance().getChopperResult(getStackInSlot(0), false);
     }
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getChoppingBlockRecipe(getStackInSlot(0));
+        return HPRecipes.instance().getChoppingBlockRecipe(getStackInSlot(0), false);
     }
 
     @Override

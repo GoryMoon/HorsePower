@@ -8,6 +8,7 @@ import minetweaker.api.item.IItemStack;
 import minetweaker.api.minecraft.MineTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -132,7 +133,7 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void apply() {
-            ArrayList<GrindstoneRecipe> grindRecipe = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
+            ArrayList<GrindstoneRecipe> grindRecipe = hand && Configs.recipes.useSeperateGrindstoneRecipes ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
             for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
                 grindRecipe.remove(removingIndices.get(i).intValue());
                 MineTweakerAPI.getIjeiRecipeRegistry().removeRecipe(recipes.get(i), hand ? "horsepower.hand_grinding": "horsepower.grinding");
@@ -146,7 +147,7 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void undo() {
-            ArrayList<GrindstoneRecipe> grindRecipe = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
+            ArrayList<GrindstoneRecipe> grindRecipe = hand && Configs.recipes.useSeperateGrindstoneRecipes ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
             for(int i = 0; i < this.removingIndices.size(); ++i) {
                 int index = Math.min(grindRecipe.size(), removingIndices.get(i));
                 grindRecipe.add(index, recipes.get(i));

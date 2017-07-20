@@ -16,7 +16,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
     private final String localizedName;
 
-    public HorsePowerChoppingCategory(IGuiHelper guiHelper) {
+    public HorsePowerChoppingCategory(IGuiHelper guiHelper, boolean hand) {
         super(guiHelper, 0, false);
 
         localizedName = Localization.GUI.CATEGORY_CHOPPING.translate();

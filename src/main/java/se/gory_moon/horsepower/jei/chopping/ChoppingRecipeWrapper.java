@@ -40,7 +40,7 @@ public class ChoppingRecipeWrapper extends BlankRecipeWrapper {
         IGuiHelper guiHelper = HorsePowerPlugin.guiHelper;
         ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei.png");
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 146, 0, 24, 17);
-        double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
+        double totalWindup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup: 1;
         int laps = (int)(((time * totalWindup) / 8D) * 100);
         printLaps = (double) Math.round(((time * totalWindup) / 8D) * 100.0D) / 100.0D;
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, laps, IDrawableAnimated.StartDirection.LEFT, false);

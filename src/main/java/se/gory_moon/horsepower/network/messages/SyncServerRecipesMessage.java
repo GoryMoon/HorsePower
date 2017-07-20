@@ -19,11 +19,13 @@ public class SyncServerRecipesMessage extends ClientMessageHandler<SyncServerRec
     private List<String> grindstoneRecipes = new ArrayList<>();
     private List<String> handGrindstoneRecipes = new ArrayList<>();
     private List<String> choppingRecipes = new ArrayList<>();
+    private List<String> manualChoppingRecipes = new ArrayList<>();
 
     public SyncServerRecipesMessage() {
-        grindstoneRecipes = Arrays.stream(Configs.grindstoneRecipes).collect(Collectors.toList());
-        handGrindstoneRecipes = Arrays.stream(Configs.handGrindstoneRecipes).collect(Collectors.toList());
-        choppingRecipes = Arrays.stream(Configs.choppingRecipes).collect(Collectors.toList());
+        grindstoneRecipes = Arrays.stream(Configs.recipes.grindstoneRecipes).collect(Collectors.toList());
+        handGrindstoneRecipes = Arrays.stream(Configs.recipes.handGrindstoneRecipes).collect(Collectors.toList());
+        choppingRecipes = Arrays.stream(Configs.recipes.choppingRecipes).collect(Collectors.toList());
+        manualChoppingRecipes = Arrays.stream(Configs.recipes.manualChoppingRecipes).collect(Collectors.toList());
     }
 
     @Override
@@ -33,10 +35,13 @@ public class SyncServerRecipesMessage extends ClientMessageHandler<SyncServerRec
             grindstoneRecipes.add(ByteBufUtils.readUTF8String(buf));
         size = buf.readInt();
         for (int i = 0; i < size; i++)
-            grindstoneRecipes.add(ByteBufUtils.readUTF8String(buf));
+            handGrindstoneRecipes.add(ByteBufUtils.readUTF8String(buf));
         size = buf.readInt();
         for (int i = 0; i < size; i++)
-            grindstoneRecipes.add(ByteBufUtils.readUTF8String(buf));
+            choppingRecipes.add(ByteBufUtils.readUTF8String(buf));
+        size = buf.readInt();
+        for (int i = 0; i < size; i++)
+            manualChoppingRecipes.add(ByteBufUtils.readUTF8String(buf));
     }
 
     @Override
@@ -47,12 +52,14 @@ public class SyncServerRecipesMessage extends ClientMessageHandler<SyncServerRec
         handGrindstoneRecipes.forEach(s -> ByteBufUtils.writeUTF8String(buf, s));
         buf.writeInt(choppingRecipes.size());
         choppingRecipes.forEach(s -> ByteBufUtils.writeUTF8String(buf, s));
+        buf.writeInt(manualChoppingRecipes.size());
+        manualChoppingRecipes.forEach(s -> ByteBufUtils.writeUTF8String(buf, s));
     }
 
     @Override
     protected void handle(SyncServerRecipesMessage message, MessageContext ctx) {
         HPRecipes.serverSyncedRecipes = true;
-        HPRecipes.instance().reloadRecipes(message.grindstoneRecipes, message.handGrindstoneRecipes, message.choppingRecipes);
+        HPRecipes.instance().reloadRecipes(message.grindstoneRecipes, message.handGrindstoneRecipes, message.choppingRecipes, message.manualChoppingRecipes);
         HorsePowerMod.logger.info("Synced recipes from server");
     }
 }
