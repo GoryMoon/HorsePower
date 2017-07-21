@@ -116,14 +116,17 @@ public abstract class BlockHPBase extends Block {
         int z = pos.getZ();
 
         EntityCreature creature = null;
-        ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-        search: for (Class<? extends Entity> clazz: clazzes) {
-            for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                if (entity instanceof EntityCreature) {
-                    EntityCreature tmp = (EntityCreature) entity;
-                    if ((tmp.getLeashed() && tmp.getLeashedToEntity() == playerIn)) {
-                        creature = tmp;
-                        break search;
+        if (teH != null) {
+            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            search:
+            for (Class<? extends Entity> clazz : clazzes) {
+                for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
+                    if (entity instanceof EntityCreature) {
+                        EntityCreature tmp = (EntityCreature) entity;
+                        if ((tmp.getLeashed() && tmp.getLeashedToEntity() == playerIn)) {
+                            creature = tmp;
+                            break search;
+                        }
                     }
                 }
             }
@@ -143,7 +146,7 @@ public abstract class BlockHPBase extends Block {
 
             if (itemStack.isEmpty()) {
                 te.setInventorySlotContents(0, stack.copy());
-                stack.setCount(stack.getCount() - te.getInventoryStackLimit());
+                stack.setCount(stack.getCount() - te.getInventoryStackLimit(stack));
                 flag = true;
             } else if (TileEntityHPBase.canCombine(itemStack, stack)) {
                 int i = stack.getMaxStackSize() - itemStack.getCount();

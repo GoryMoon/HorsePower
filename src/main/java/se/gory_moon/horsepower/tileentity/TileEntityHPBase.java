@@ -186,6 +186,10 @@ public abstract class TileEntityHPBase extends TileEntity {
         inventory.setSlotContent(index, stack);
     }
 
+    public int getInventoryStackLimit(ItemStack stack) {
+        return getInventoryStackLimit();
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -211,11 +215,9 @@ public abstract class TileEntityHPBase extends TileEntity {
 
     @Override
     public void markDirty() {
-        if (!getWorld().isRemote) {
-            final IBlockState state = getWorld().getBlockState(getPos());
-            getWorld().notifyBlockUpdate(getPos(), state, state, 8);
-            super.markDirty();
-        }
+        final IBlockState state = getWorld().getBlockState(getPos());
+        getWorld().notifyBlockUpdate(getPos(), state, state, 2);
+        super.markDirty();
     }
 
     public boolean canWork() {
