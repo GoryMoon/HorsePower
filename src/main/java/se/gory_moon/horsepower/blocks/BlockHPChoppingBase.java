@@ -19,6 +19,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.oredict.OreDictionary;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.property.PropertyUnlistedString;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
@@ -138,6 +139,8 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         for(ItemStack stack : OreDictionary.getOres("logWood")) {
+            if (!Configs.general.useDynamicDisplay && !"minecraft".equals(stack.getItem().getRegistryName().getResourceDomain()))
+                continue;
             Block block = getBlockFromItem(stack.getItem());
             int blockMeta = stack.getItemDamage();
 

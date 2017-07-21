@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 
 import javax.annotation.Nonnull;
@@ -30,7 +31,13 @@ public class ChoppingRecipe extends ShapedOreRecipe {
             for (ItemStack ore: outputBlocks) {
                 ItemStack stack = craftMatrix.getStackInSlot(i);
                 if (OreDictionary.itemMatches(ore, stack, false) && Block.getBlockFromItem(stack.getItem()) != Blocks.AIR) {
-                    BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(getSimpleRecipeOutput().getItem());;
+                    BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(getSimpleRecipeOutput().getItem());
+                    if (!Configs.general.useDynamicCrafting) {
+                        if ("minecraft".equals(ore.getItem().getRegistryName().getResourceDomain()))
+                            return createItemStack(block, Block.getBlockFromItem(stack.getItem()), stack.getItemDamage());
+                        else
+                            return createItemStack(block, Blocks.LOG, 0);
+                    }
                     return createItemStack(block, Block.getBlockFromItem(stack.getItem()), stack.getItemDamage());
                 }
             }

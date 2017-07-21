@@ -180,6 +180,14 @@ public class Configs {
         public String[] grindstoneMobList = {
                 "com.animania.common.entities.rodents.EntityHedgehog"
         };
+
+        @Comment({"If true the chopping blocks will use all logs types in the game when crafted", "If false the chopping blocks will only use the vanilla logs", "If only vanilla logs are used other logs in recipe will yield oak texture"})
+        @Name("Use Dynamic Chopping Crafting")
+        public boolean useDynamicCrafting = true;
+
+        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
+        @Name("Use Dynamic Chopping Display")
+        public boolean useDynamicDisplay = true;
     }
 
     public static class ConfigFactory implements IConditionFactory {
