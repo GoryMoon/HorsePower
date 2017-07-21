@@ -11,6 +11,8 @@ import se.gory_moon.horsepower.util.Localization;
 
 public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipeWrapper> {
 
+    private boolean handHandler;
+
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
 
@@ -18,13 +20,14 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
     public HorsePowerChoppingCategory(IGuiHelper guiHelper, boolean hand) {
         super(guiHelper, 0, false);
+        this.handHandler = hand;
 
-        localizedName = Localization.GUI.CATEGORY_CHOPPING.translate();
+        localizedName = handHandler ? Localization.GUI.CATEGORY_MANUAL_CHOPPING.translate(): Localization.GUI.CATEGORY_CHOPPING.translate();
     }
 
     @Override
     public String getUid() {
-        return HorsePowerPlugin.CHOPPING;
+        return handHandler ? HorsePowerPlugin.MANUAL_CHOPPING: HorsePowerPlugin.CHOPPING;
     }
 
     @Override

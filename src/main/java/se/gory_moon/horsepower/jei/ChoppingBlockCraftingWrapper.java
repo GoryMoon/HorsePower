@@ -11,9 +11,11 @@ import mezz.jei.api.recipe.IStackHelper;
 import mezz.jei.api.recipe.wrapper.ICustomCraftingRecipeWrapper;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
@@ -45,6 +47,10 @@ public class ChoppingBlockCraftingWrapper extends BlankRecipeWrapper implements 
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
         for(ItemStack stack : recipe.outputBlocks) {
             BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(recipe.getSimpleRecipeOutput().getItem());
+            if (!Configs.general.useDynamicCrafting && !"minecraft".equals(stack.getItem().getRegistryName().getResourceDomain())) {
+                builder.add(BlockHPChoppingBase.createItemStack(block, Blocks.LOG, 0));
+                break;
+            }
             Block baseBlock = Block.getBlockFromItem(stack.getItem());
             if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 for(ItemStack sub : HorsePowerPlugin.jeiHelpers.getStackHelper().getSubtypes(stack)) {
@@ -52,7 +58,7 @@ public class ChoppingBlockCraftingWrapper extends BlankRecipeWrapper implements 
                 }
             }
             else {
-                builder.add(BlockChopper.createItemStack(block, baseBlock, stack.getItemDamage()));
+                builder.add(BlockHPChoppingBase.createItemStack(block, baseBlock, stack.getItemDamage()));
             }
         }
         outputs = ImmutableList.of(builder.build());

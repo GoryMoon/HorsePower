@@ -22,7 +22,7 @@ public class ChoppingRecipeMaker {
             ItemStack output = recipe.getOutput();
 
             List<ItemStack> inputs = stackHelper.getSubtypes(input);
-            ChoppingRecipeWrapper grindstoneRecipeWrapper = new ChoppingRecipeWrapper(inputs, output, recipe.getTime());
+            ChoppingRecipeWrapper grindstoneRecipeWrapper = new ChoppingRecipeWrapper(inputs, output, recipe.getTime(), hand);
             recipes.add(grindstoneRecipeWrapper);
         }
 
