@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChoppingBlockRecipe;
+import se.gory_moon.horsepower.recipes.ManualChoppingBlockRecipe;
 import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.Collections;
@@ -27,20 +28,22 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
     private final int time;
     private final double printLaps;
     private final IDrawableAnimated arrow;
+    private boolean hand;
 
     public ChoppingRecipeWrapper(ChoppingBlockRecipe recipe) {
-        this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getTime());
+        this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getTime(), recipe instanceof ManualChoppingBlockRecipe);
     }
 
-    public ChoppingRecipeWrapper(List<ItemStack> inputs, ItemStack output, int time) {
+    public ChoppingRecipeWrapper(List<ItemStack> inputs, ItemStack output, int time, boolean hand) {
         this.inputs = Collections.singletonList(inputs);
         this.output = output;
         this.time = time;
+        this.hand = hand;
 
         IGuiHelper guiHelper = HorsePowerPlugin.guiHelper;
         ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei.png");
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 146, 0, 24, 17);
-        double totalWindup = Configs.pointsForWindup > 0 ? Configs.pointsForWindup: 1;
+        double totalWindup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup: 1;
         int laps = (int)(((time * totalWindup) / 8D) * 100);
         printLaps = (double) Math.round(((time * totalWindup) / 8D) * 100.0D) / 100.0D;
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, laps, IDrawableAnimated.StartDirection.LEFT, false);
@@ -56,7 +59,7 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
         List<String> tooltip = Lists.newArrayList();
         if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 33) {
-            tooltip.add("Time to chop: " + printLaps + " lap" + (printLaps >= 2D ? "s": ""));
+            tooltip.add("Time to chop: " + (hand ? Math.ceil(printLaps): printLaps) + (hand ? " chop":" lap") + (printLaps >= 2D ? "s": ""));
         }
         return tooltip;
     }
@@ -65,7 +68,7 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
     @SideOnly(Side.CLIENT)
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         arrow.draw(minecraft, 57, 32);
-        minecraft.fontRenderer.drawStringWithShadow("x" + printLaps, 58, 23, Colors.WHITE.getRGB());
+        minecraft.fontRenderer.drawStringWithShadow("x" + (hand ? Math.ceil(printLaps): printLaps), 58, 23, Colors.WHITE.getRGB());
     }
 
     @Override

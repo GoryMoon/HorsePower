@@ -22,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
-import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.advancements.Manager;
 import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.lib.Constants;
@@ -30,6 +29,7 @@ import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -50,7 +50,6 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
         setSoundType(SoundType.STONE);
         setRegistryName(Constants.GRINDSTONE_BLOCK);
         setUnlocalizedName(Constants.GRINDSTONE_BLOCK);
-        setCreativeTab(HorsePowerMod.creativeTab);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -69,12 +68,6 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
             boolean filled = state.getValue(FILLED);
             worldIn.setBlockState(pos, state.withProperty(FILLED, filled).withProperty(PART, GrindStoneModels.BASE), 2);
         }
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileEntityGrindstone();
     }
 
     @Override
@@ -116,10 +109,9 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
     @Optional.Method(modid = "theoneprobe")
     @Override
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntity tileEntity = world.getTileEntity(data.getPos());
-        if (tileEntity instanceof TileEntityGrindstone) {
-            TileEntityGrindstone te = (TileEntityGrindstone) tileEntity;
-            probeInfo.progress((long) ((((double)te.getField(1)) / ((double)te.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
+        TileEntityGrindstone tileEntity = getTileEntity(world, data.getPos());
+        if (tileEntity != null) {
+            probeInfo.progress((long) ((((double) tileEntity.getField(1)) / ((double) tileEntity.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
         }
     }
 
@@ -132,5 +124,11 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
     @Override
     public void emptiedOutput(World world, BlockPos pos) {
         BlockGrindstone.setState(false, world, pos);
+    }
+
+    @Nonnull
+    @Override
+    public Class<?> getTileClass() {
+        return TileEntityGrindstone.class;
     }
 }

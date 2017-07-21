@@ -159,14 +159,16 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
         return 2;
     }
 
-    public void turn() {
+    public boolean turn() {
         if (getWorld().isRemote)
-            return;
+            return false;
 
         if (rotation < 3 && canWork()) {
             rotation += ticksPerRotation;
             markDirty();
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -178,7 +180,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
             if (currentTicks >= ticksPerRotation) {
                 currentTicks -= ticksPerRotation;
 
-                currentItemMillTime += Configs.pointsPerRotation;
+                currentItemMillTime += Configs.general.pointsPerRotation;
 
                 if (currentItemMillTime >= totalItemMillTime) {
                     currentItemMillTime = 0;

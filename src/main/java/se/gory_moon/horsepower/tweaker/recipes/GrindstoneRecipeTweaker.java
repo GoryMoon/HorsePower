@@ -8,6 +8,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -107,7 +108,7 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void apply() {
-            ArrayList<GrindstoneRecipe> grindRecipe = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
+            ArrayList<GrindstoneRecipe> grindRecipe = hand && Configs.recipes.useSeperateGrindstoneRecipes ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
             for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
                 grindRecipe.remove(removingIndices.get(i).intValue());
             }

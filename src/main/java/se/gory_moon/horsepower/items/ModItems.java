@@ -59,9 +59,9 @@ public class ModItems {
             final IForgeRegistry<Item> registry = event.getRegistry();
 
             for (final Item item : items) {
-                if (!Configs.enableFlour && item == FLOUR)
+                if (!Configs.general.enableFlour && item == FLOUR)
                     continue;
-                if (!Configs.enableDough && item == DOUGH)
+                if (!Configs.general.enableDough && item == DOUGH)
                     continue;
 
                 registry.register(item);
@@ -71,11 +71,11 @@ public class ModItems {
     }
 
     public static void registerRecipes() {
-        if (Configs.enableDough) {
+        if (Configs.general.enableDough) {
             GameRegistry.addSmelting(DOUGH, new ItemStack(Items.BREAD), 0F);
             OreDictionary.registerOre("foodDough", DOUGH);
         }
-        if (Configs.enableFlour)
+        if (Configs.general.enableFlour)
             OreDictionary.registerOre("foodFlour", FLOUR);
     }
 
@@ -84,8 +84,12 @@ public class ModItems {
         recipes = ev.getRegistry().getEntries();
         ResourceLocation loc = new ResourceLocation("horsepower:chopper");
         ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Ingredient.fromStacks(new ItemStack(Items.LEAD)), 'F', Ingredient.fromStacks(new ItemStack(Items.FLINT)), 'W', "logWood").setRegistryName(loc));
+        if (Configs.general.enableHandChoppingBlock) {
+            loc = new ResourceLocation("horsepower:manual_chopping");
+            ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), ModBlocks.BLOCK_MANUAL_CHOPPER, "W", 'W', "logWood").setRegistryName(loc));
+        }
 
-        if (Configs.removeVanillaRecipes)
+        if (Configs.general.removeVanillaRecipes)
             removeRecipes();
     }
 

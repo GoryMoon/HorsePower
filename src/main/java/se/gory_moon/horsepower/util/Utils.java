@@ -25,10 +25,10 @@ public class Utils {
 
     public static ArrayList<Class<? extends EntityCreature>> getCreatureClasses() {
         ArrayList<Class<? extends EntityCreature>> clazzes = Lists.newArrayList();
-        if (Configs.useHorseInterface)
+        if (Configs.general.useHorseInterface)
             clazzes.add(AbstractHorse.class);
 
-        for (String e: Configs.grindstoneMobList) {
+        for (String e: Configs.general.grindstoneMobList) {
             try {
                 Class clazz = Class.forName(e);
 

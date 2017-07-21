@@ -34,6 +34,7 @@ public class ModModelManager {
     public static final ModModelManager INSTANCE = new ModModelManager();
     private final Set<Item> itemsRegistered = new HashSet<>();
     private static final ResourceLocation MODEL_ChoppingBlock = new ResourceLocation("horsepower","block/chopper");
+    private static final ResourceLocation MODEL_ManualChoppingBlock = new ResourceLocation("horsepower","block/chopping_block");
 
     public ModModelManager() {
     }
@@ -44,11 +45,13 @@ public class ModModelManager {
         replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=south,part=base"), MODEL_ChoppingBlock, event);
         replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=west,part=base"), MODEL_ChoppingBlock, event);
         replaceChoppingModel(new ModelResourceLocation("horsepower:chopper", "facing=east,part=base"), MODEL_ChoppingBlock, event);
+        replaceChoppingModel(new ModelResourceLocation("horsepower:chopping_block"), MODEL_ManualChoppingBlock, event);
 
-        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=north,part=base")));
-        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=south,part=base")));
-        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=west,part=base")));
-        event.getModelRegistry().putObject(new ModelResourceLocation("horsepower:chopper", "inventory"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=east,part=base")));
+        event.getModelRegistry().putObject(getModel("chopper"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=north,part=base")));
+        event.getModelRegistry().putObject(getModel("chopper"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=south,part=base")));
+        event.getModelRegistry().putObject(getModel("chopper"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=west,part=base")));
+        event.getModelRegistry().putObject(getModel("chopper"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopper", "facing=east,part=base")));
+        event.getModelRegistry().putObject(getModel("chopping_block"), event.getModelRegistry().getObject(new ModelResourceLocation("horsepower:chopping_block")));
     }
 
     @SubscribeEvent

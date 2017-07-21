@@ -15,6 +15,7 @@ item.horsepower:hand_grindstone.description.info=Right click the block with the 
 # Blocks
 tile.hand_grindstone.name=Grindstone
 tile.grindstone.name=Horse Powered Grindstone
+tile.chopping_block.name=Chopping Block
 tile.chopper.name=Horse Powered Chopping Block
 
 # Info
@@ -35,8 +36,19 @@ commands.horsepower.entity.has=Entity copied to clipboard: %s
 gui.horsepower.jei.category.hand.grinding=Hand Grindstone
 gui.horsepower.jei.category.grinding=Grindstone
 gui.horsepower.jei.category.chopping=Chopping Block
+gui.horsepower.jei.category.manual.chopping=Manual Chopping Block
+config.gui.general=General
+config.gui.general.tooltip=General configs
 config.gui.client=Client
 config.gui.client.tooltip=Client only configs
+config.gui.recipes=Recipes
+config.gui.recipes.tooltip=Contains the customizable recipes
+config.gui.recipes.grindstone=Grindstone Recipes
+config.gui.recipes.hand_grindstone=Hand Grindstone Recipes
+config.gui.recipes.chopping=Chopping Recipes
+config.gui.recipes.manual_chopping=Manual Chopping Recipes
+config.gui.mobs=Horse Powered Mob List
+config.gui.chopping_axes=Chopping Block Axes
 itemGroup.horsepower=Horse Power
 
 # Waila

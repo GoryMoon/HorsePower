@@ -28,6 +28,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nonnull;
@@ -107,10 +108,10 @@ public class BakedChopperModel implements IBakedModel {
 
         if(state instanceof IExtendedBlockState) {
             IExtendedBlockState extendedState = (IExtendedBlockState) state;
-            if(extendedState.getUnlistedNames().contains(BlockChopper.SIDE_TEXTURE))
-                side_texture = extendedState.getValue(BlockChopper.SIDE_TEXTURE);
-            if (extendedState.getUnlistedNames().contains(BlockChopper.TOP_TEXTURE))
-                top_texture = extendedState.getValue(BlockChopper.TOP_TEXTURE);
+            if(extendedState.getUnlistedNames().contains(BlockHPChoppingBase.SIDE_TEXTURE))
+                side_texture = extendedState.getValue(BlockHPChoppingBase.SIDE_TEXTURE);
+            if (extendedState.getUnlistedNames().contains(BlockHPChoppingBase.TOP_TEXTURE))
+                top_texture = extendedState.getValue(BlockHPChoppingBase.TOP_TEXTURE);
 
             if(extendedState.getPropertyKeys().contains(BlockChopper.FACING)) {
                 face = extendedState.getValue(BlockChopper.FACING);
