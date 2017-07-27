@@ -13,7 +13,6 @@ public abstract class HPRecipeBase {
     private int secondaryChance;
 
     public HPRecipeBase(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
-        input.setCount(1);
         this.input = input;
         this.output = output;
         this.time = time;
@@ -64,5 +63,12 @@ public abstract class HPRecipeBase {
         result = 31 * result + secondaryChance;
         result = 31 * result + time;
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return input + " -> " + output +
+                (time > -1 ? " = " + time: "") +
+                (!secondary.isEmpty() ? "{" + secondary + "->" + secondaryChance + "%}": "");
     }
 }

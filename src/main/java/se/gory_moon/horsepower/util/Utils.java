@@ -52,6 +52,14 @@ public class Utils {
         tag.removeTag("Count");
         tag.removeTag("Damage");
         return tag.hashCode();
+    }
+
+    public static int getItemStackCountHashCode(ItemStack stack) {
+        if (stack.isEmpty()) return 0;
+
+        NBTTagCompound tag = stack.writeToNBT(new NBTTagCompound());
+        tag.removeTag("Damage");
+        return tag.hashCode();
 
     }
 

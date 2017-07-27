@@ -5,8 +5,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.*;
 import se.gory_moon.horsepower.lib.Reference;
@@ -25,13 +27,14 @@ public class Provider implements IWailaDataProvider {
         registrar.registerStackProvider(provider, BlockFiller.class);
         registrar.registerBodyProvider(provider, BlockGrindstone.class);
         registrar.registerBodyProvider(provider, BlockHandGrindstone.class);
-        //registrar.registerBodyProvider(provider, BlockChopper.class);
         registrar.registerBodyProvider(provider, BlockHPChoppingBase.class);
+        registrar.registerBodyProvider(provider, BlockPress.class);
         registrar.registerBodyProvider(provider, BlockFiller.class);
         registrar.registerNBTProvider(provider, BlockGrindstone.class);
         registrar.registerNBTProvider(provider, BlockHandGrindstone.class);
         registrar.registerNBTProvider(provider, BlockChopper.class);
         registrar.registerNBTProvider(provider, BlockChoppingBlock.class);
+        registrar.registerNBTProvider(provider, BlockPress.class);
         registrar.registerNBTProvider(provider, BlockFiller.class);
         registrar.addConfig(Reference.NAME, "horsepower:showItems", Localization.WAILA.SHOW_ITEMS.translate());
         registrar.registerTooltipRenderer("horsepower.stack", new TTRenderStack());
@@ -74,28 +77,33 @@ public class Provider implements IWailaDataProvider {
             if (total > 1 || accessor.getTileEntity() instanceof TileEntityManualChopper) {
                 currenttip.add(Localization.WAILA.CHOPPING_PROGRESS.translate(String.valueOf(progressChopping) + "%"));
             }
+        } else if (nbt.hasKey("horsepower:press")) {
+            nbt = nbt.getCompoundTag("horsepower:press");
+            double current = (double) nbt.getInteger("currentPressStatus");
+            double total = Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1;
+            double progress = Math.round(((current / total) * 100D) * 100D) / 100D;
+            currenttip.add(Localization.WAILA.PRESS_PROGRESS.translate(String.valueOf(progress) + "%"));
         }
 
-        if (accessor.getTileEntity() instanceof TileEntityHPBase) {
-            if (accessor.getPlayer().isSneaking() && config.getConfig("horsepower:showItems")) {
-                {
-                    final ItemStack stack = ((TileEntityHPBase) accessor.getTileEntity()).getStackInSlot(0);
-                    final String name = String.valueOf(stack.getItem().getRegistryName().toString());
-                    if (!stack.isEmpty())
-                        currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
-                }
-                {
-                    final ItemStack stack = ((TileEntityHPBase) accessor.getTileEntity()).getStackInSlot(1);
-                    final String name = String.valueOf(stack.getItem().getRegistryName().toString());
-                    if (!stack.isEmpty())
-                        currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
-                }
-                {
-                    final ItemStack stack = ((TileEntityHPBase) accessor.getTileEntity()).getStackInSlot(2);
-                    final String name = String.valueOf(stack.getItem().getRegistryName().toString());
-                    if (!stack.isEmpty())
-                        currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
-                }
+        if (config.getConfig("horsepower:showItems") && (accessor.getTileEntity() instanceof TileEntityHPBase || accessor.getTileEntity() instanceof TileEntityFiller) && accessor.getPlayer().isSneaking()) {
+            TileEntity te = accessor.getTileEntity();
+            {
+                final ItemStack stack = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP).getStackInSlot(0);
+                final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                if (!stack.isEmpty())
+                    currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
+            }
+            {
+                final ItemStack stack = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP).getStackInSlot(1);
+                final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                if (!stack.isEmpty())
+                    currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
+            }
+            {
+                final ItemStack stack = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP).getStackInSlot(2);
+                final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                if (!stack.isEmpty())
+                    currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
             }
         }
         return currenttip;
@@ -117,6 +125,8 @@ public class Provider implements IWailaDataProvider {
             tag.setTag("horsepower:grindstone", tile);
         else if (te instanceof TileEntityChopper || te instanceof TileEntityManualChopper)
             tag.setTag("horsepower:chopper", tile);
+        else if (te instanceof TileEntityPress)
+            tag.setTag("horsepower:press", tile);
         return tag;
     }
 }

@@ -18,10 +18,10 @@ import se.gory_moon.horsepower.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.jei.grinding.GrindingRecipeMaker;
 import se.gory_moon.horsepower.jei.grinding.GrindstoneRecipeWrapper;
 import se.gory_moon.horsepower.jei.grinding.HorsePowerGrindingCategory;
-import se.gory_moon.horsepower.recipes.ChoppingBlockRecipe;
-import se.gory_moon.horsepower.recipes.ChoppingRecipe;
-import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
-import se.gory_moon.horsepower.recipes.HandGrindstoneRecipe;
+import se.gory_moon.horsepower.jei.press.HorsePowerPressCategory;
+import se.gory_moon.horsepower.jei.press.PressRecipeMaker;
+import se.gory_moon.horsepower.jei.press.PressRecipeWrapper;
+import se.gory_moon.horsepower.recipes.*;
 
 @JEIPlugin
 public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
@@ -30,6 +30,7 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
     public static final String GRINDING = "horsepower.grinding";
     public static final String MANUAL_CHOPPING = "horsepower.manual_chopping";
     public static final String CHOPPING = "horsepower.chopping";
+    public static final String PRESS = "horsepower.press";
 
     public static IJeiHelpers jeiHelpers;
     public static IGuiHelper guiHelper;
@@ -60,6 +61,9 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         registry.handleRecipes(ChoppingBlockRecipe.class, ChoppingRecipeWrapper::new, CHOPPING);
         registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false), CHOPPING);
 
+        registry.handleRecipes(PressRecipe.class, PressRecipeWrapper::new, PRESS);
+        registry.addRecipes(PressRecipeMaker.getPressRecipes(jeiHelpers), PRESS);
+
         registry.handleRecipes(ChoppingRecipe.class, ChoppingBlockCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
 
         if (Configs.recipes.useSeperateGrindstoneRecipes)
@@ -74,6 +78,7 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         }
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_CHOPPER), CHOPPING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS);
 
         registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
@@ -115,6 +120,8 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         if (Configs.general.enableHandChoppingBlock && Configs.recipes.useSeperateChoppingRecipes)
             registry.addRecipeCategories(new HorsePowerChoppingCategory(registry.getJeiHelpers().getGuiHelper(), true));
         registry.addRecipeCategories(new HorsePowerChoppingCategory(registry.getJeiHelpers().getGuiHelper(), false));
+
+        registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -138,6 +145,10 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         for (ChoppingRecipeWrapper recipe: ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false)) {
             jeiRuntime.getRecipeRegistry().removeRecipe(recipe, CHOPPING);
         }
+
+        for (PressRecipeWrapper recipe: PressRecipeMaker.getPressRecipes(jeiHelpers)) {
+            jeiRuntime.getRecipeRegistry().removeRecipe(recipe, PRESS);
+        }
     }
 
     @Override
@@ -160,6 +171,10 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
 
         for (ChoppingRecipeWrapper recipe: ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false)) {
             jeiRuntime.getRecipeRegistry().addRecipe(recipe, CHOPPING);
+        }
+
+        for (PressRecipeWrapper recipe: PressRecipeMaker.getPressRecipes(jeiHelpers)) {
+            jeiRuntime.getRecipeRegistry().addRecipe(recipe, PRESS);
         }
     }
 }

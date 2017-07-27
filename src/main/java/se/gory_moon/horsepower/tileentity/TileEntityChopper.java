@@ -3,18 +3,12 @@ package se.gory_moon.horsepower.tileentity;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.RangedWrapper;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
@@ -33,7 +27,6 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
     public TileEntityChopper() {
         super(2);
-        handlerSide = new RangedWrapper(new InvWrapper(inventory), 0, 1);
     }
 
     @Override
@@ -83,7 +76,7 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
 
             for (int x = -3; x <= 3; x++) {
                 for (int z = -3; z <= 3; z++) {
-                    if (x == 0 && z == 0)
+                    if ((x <= 1 && x >= -1) && (z <= 1 && z >= -1))
                         continue;
                     searchPos.add(getPos().add(x, 0, z));
                     searchPos.add(getPos().add(x, 1, z));
@@ -238,18 +231,5 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
             return super.getDisplayName();
         else
             return new TextComponentTranslation(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
-    }
-
-    private IItemHandler handlerSide = null;
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return super.hasCapability(capability, facing) || (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null);
-    }
-
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        T cap = super.getCapability(capability, facing);
-        return cap != null ? cap: (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ? (T) handlerSide : null;
     }
 }

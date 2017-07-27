@@ -7,6 +7,7 @@ import minetweaker.MineTweakerImplementationAPI;
 import minetweaker.util.IEventHandler;
 import se.gory_moon.horsepower.tweaker.recipes.ChoppingRecipeTweaker;
 import se.gory_moon.horsepower.tweaker.recipes.GrindstoneRecipeTweaker;
+import se.gory_moon.horsepower.tweaker.recipes.PressRecipeTweaker;
 
 import java.util.List;
 
@@ -33,5 +34,6 @@ public class TweakerPluginImpl implements ITweakerPlugin, IEventHandler<MineTwea
     public void register() {
         MineTweakerAPI.registerClass(GrindstoneRecipeTweaker.class);
         MineTweakerAPI.registerClass(ChoppingRecipeTweaker.class);
+        MineTweakerAPI.registerClass(PressRecipeTweaker.class);
     }
 }

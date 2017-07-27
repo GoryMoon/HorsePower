@@ -167,7 +167,7 @@ public abstract class BlockHPBase extends Block {
                 stack.setCount(stack.getCount() - te.getInventoryStackLimit(stack));
                 flag = true;
             } else if (TileEntityHPBase.canCombine(itemStack, stack)) {
-                int i = stack.getMaxStackSize() - itemStack.getCount();
+                int i = Math.min(te.getInventoryStackLimit(stack), stack.getMaxStackSize()) - itemStack.getCount();
                 int j = Math.min(stack.getCount(), i);
                 stack.shrink(j);
                 itemStack.grow(j);
@@ -188,10 +188,10 @@ public abstract class BlockHPBase extends Block {
                 result = te.removeStackFromSlot(2);
                 if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
                     result = te.removeStackFromSlot(0);
-                    if (!result.isEmpty())
-                        emptiedOutput(worldIn, pos);
                 }
             }
+            if (!result.isEmpty())
+                emptiedOutput(worldIn, pos);
         }
 
         if (result.isEmpty()) {

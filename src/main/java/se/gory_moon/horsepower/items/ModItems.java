@@ -82,7 +82,7 @@ public class ModItems {
         GameRegistry.addRecipe(new ChoppingRecipe(OreDictionary.getOres("logWood"), ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Items.LEAD, 'F', Items.FLINT, 'W', "logWood"));
         if (Configs.general.enableHandChoppingBlock)
             GameRegistry.addRecipe(new ChoppingRecipe(OreDictionary.getOres("logWood"), ModBlocks.BLOCK_MANUAL_CHOPPER, "W", 'W', "logWood"));
-
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModBlocks.BLOCK_PRESS, "LSL", "#P#", "###", 'S', "stickWood", '#', "plankWood", 'L', Items.LEAD, 'P', Blocks.WOODEN_PRESSURE_PLATE));
         if (Configs.general.removeVanillaRecipes)
             removeRecipes();
     }

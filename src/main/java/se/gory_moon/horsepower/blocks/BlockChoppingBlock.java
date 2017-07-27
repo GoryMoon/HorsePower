@@ -73,7 +73,8 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
             if (!held.isEmpty() && ((Configs.general.useAxeToolType && held.getItem() instanceof ItemAxe) || isItemWhitelisted(held))) {
                 if (te.chop(player)) {
                     player.addExhaustion((float) Configs.general.choppingblockExhaustion);
-                    held.damageItem(1, player);
+                    if (Configs.general.shouldDamageAxe)
+                        held.damageItem(1, player);
                 }
             }
         }

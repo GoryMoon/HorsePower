@@ -1,5 +1,6 @@
 package se.gory_moon.horsepower;
 
+import net.minecraft.init.Items;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.blocks.ModBlocks;
@@ -58,6 +60,11 @@ public class HorsePowerMod {
             tweakerPlugin.register();
         } else
             tweakerPlugin = new DummyTweakPluginImpl();
+
+        OreDictionary.registerOre("seed", Items.WHEAT_SEEDS);
+        OreDictionary.registerOre("seed", Items.PUMPKIN_SEEDS);
+        OreDictionary.registerOre("seed", Items.MELON_SEEDS);
+        OreDictionary.registerOre("seed", Items.BEETROOT_SEEDS);
 
         HPRecipes.instance().reloadRecipes();
     }

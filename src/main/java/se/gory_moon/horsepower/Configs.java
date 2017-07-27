@@ -75,7 +75,7 @@ public class Configs {
         @Name("Hand Grindstone Recipes")
         public String[] handGrindstoneRecipes = {};
 
-        @Comment({"Add recipes to the Grindstone Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
+        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
                 "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
                 "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
@@ -101,6 +101,16 @@ public class Configs {
                 "minecraft:log:3-minecraft:planks:3@4-4",
                 "minecraft:log2:0-minecraft:planks:4@4-4",
                 "minecraft:log2:1-minecraft:planks:5@4-4"
+        };
+
+        @Comment({"Add recipes to the Press Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}",
+                "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
+                "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
+                "The time is same for all recipes, it uses the \"Points For Press\"",
+                "Must be edited with in-game editor for live changes."})
+        @Name("Press Recipes")
+        public String[] pressRecipes = {
+                "minecraft:seed@12-minecraft:dirt"
         };
     }
 
@@ -134,6 +144,10 @@ public class Configs {
         @Comment("If the chopping block should use the axe tooltype over the whitelist")
         @Name("Use Axe Tooltype")
         public boolean useAxeToolType = true;
+
+        @Comment("If the item used as an axe for the manual chopping block should be damaged")
+        @Name("Should Damage Axe")
+        public boolean shouldDamageAxe = true;
 
         @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:axe:meta"})
         @Config.LangKey("config.gui.chopping_axes")
@@ -175,6 +189,10 @@ public class Configs {
                 "com.animania.common.entities.rodents.EntityHedgehog"
         };
 
+        @Comment("The amount of points that is needed for a full press")
+        @Name("Points For Press")
+        public int pointsForPress = 16;
+
         @Comment({"If true the chopping blocks will use all logs types in the game when crafted", "If false the chopping blocks will only use the vanilla logs", "If only vanilla logs are used other logs in recipe will yield oak texture"})
         @Name("Use Dynamic Chopping Crafting")
         public boolean useDynamicCrafting = true;
@@ -184,5 +202,3 @@ public class Configs {
         public boolean useDynamicDisplay = true;
     }
 }
-
-
