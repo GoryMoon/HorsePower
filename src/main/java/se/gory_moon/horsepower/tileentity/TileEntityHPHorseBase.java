@@ -107,6 +107,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         } else {
             if (worker != null) {
                 worker = null;
+                nbtWorker = null;
                 if (!getWorld().isRemote)
                     InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
             }

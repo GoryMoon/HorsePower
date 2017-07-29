@@ -21,7 +21,6 @@ import se.gory_moon.horsepower.jei.IJeiPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.proxy.CommonProxy;
-import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
@@ -66,7 +65,7 @@ public class HorsePowerMod {
         OreDictionary.registerOre("seed", Items.MELON_SEEDS);
         OreDictionary.registerOre("seed", Items.BEETROOT_SEEDS);
 
-        HPRecipes.instance().reloadRecipes();
+        HPEventHandler.reloadConfig();
     }
 
     @EventHandler

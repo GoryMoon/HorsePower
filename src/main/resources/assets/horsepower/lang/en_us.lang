@@ -44,17 +44,16 @@ gui.horsepower.jei.category.chopping=Chopping Block
 gui.horsepower.jei.category.manual.chopping=Manual Chopping Block
 gui.horsepower.jei.category.press=Press
 config.gui.general=General
-config.gui.general.tooltip=General configs
 config.gui.client=Client
-config.gui.client.tooltip=Client only configs
 config.gui.recipes=Recipes
-config.gui.recipes.tooltip=Contains the customizable recipes
+config.gui.misc=Misc
 config.gui.recipes.grindstone=Grindstone Recipes
 config.gui.recipes.hand_grindstone=Hand Grindstone Recipes
 config.gui.recipes.chopping=Chopping Recipes
 config.gui.recipes.manual_chopping=Manual Chopping Recipes
 config.gui.mobs=Horse Powered Mob List
 config.gui.chopping_axes=Chopping Block Axes
+config.gui.harvest=Harvestable Percentages
 itemGroup.horsepower=Horse Power
 
 # Waila

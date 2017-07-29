@@ -12,11 +12,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 
 public class TileEntityManualChopper extends TileEntityHPBase {
 
@@ -54,7 +57,7 @@ public class TileEntityManualChopper extends TileEntityHPBase {
         return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack, true) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
-    public boolean chop(EntityPlayer player) {
+    public boolean chop(EntityPlayer player, ItemStack held) {
         if (canWork()) {
             currentItemChopAmount++;
 
@@ -62,7 +65,7 @@ public class TileEntityManualChopper extends TileEntityHPBase {
                 currentItemChopAmount = 0;
 
                 totalItemChopAmount = HPRecipes.instance().getChoppingTime(getStackInSlot(0), true);
-                chopItem(player);
+                chopItem(player, held);
                 return true;
             }
             markDirty();
@@ -87,18 +90,26 @@ public class TileEntityManualChopper extends TileEntityHPBase {
         }
     }
 
-    private void chopItem(EntityPlayer player) {
+    private void chopItem(EntityPlayer player, ItemStack held) {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);
             if (!getWorld().isRemote) {
                 ItemStack result = getRecipeItemStack();
                 ItemStack output = getStackInSlot(1);
 
+                double baseAmount = ((double) getBaseAmount(held, player)) / 100D;
+                int chance = getChance(held, player);
+
+                result = result.copy();
+                result.setCount((int) Math.ceil((double) result.getCount() * baseAmount));
+                if (chance >= 100 || world.rand.nextInt(100) < chance)
+                    result.grow(1);
+
                 if (Configs.general.choppingBlockDrop) {
-                    InventoryHelper.spawnItemStack(getWorld(), getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), result.copy());
+                    InventoryHelper.spawnItemStack(getWorld(), getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), result);
                 } else {
                     if (output.isEmpty()) {
-                        setInventorySlotContents(1, result.copy());
+                        setInventorySlotContents(1, result);
                     } else if (output.getItem() == result.getItem()) {
                         output.grow(result.getCount());
                     }
@@ -108,6 +119,34 @@ public class TileEntityManualChopper extends TileEntityHPBase {
             input.shrink(1);
             markDirty();
         }
+    }
+
+    private int getBaseAmount(ItemStack held, EntityPlayer player) {
+        int baseAmount = 100;
+        int harvestLevel = held.getItem().getHarvestLevel(held, "axe", player, null);
+        if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
+            baseAmount = HPEventHandler.harvestPercentages.get(harvestLevel).getLeft();
+        }
+        for (Map.Entry<ItemStack, Pair<Integer, Integer>> entry: HPEventHandler.choppingAxes.entrySet()) {
+            if (entry.getKey().isItemEqual(held)) {
+                return entry.getValue().getLeft();
+            }
+        }
+        return baseAmount;
+    }
+
+    private int getChance(ItemStack held, EntityPlayer player) {
+        int chance = 0;
+        int harvestLevel = held.getItem().getHarvestLevel(held, "axe", player, null);
+        if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
+            chance = HPEventHandler.harvestPercentages.get(harvestLevel).getRight();
+        }
+        for (Map.Entry<ItemStack, Pair<Integer, Integer>> entry: HPEventHandler.choppingAxes.entrySet()) {
+            if (entry.getKey().isItemEqual(held)) {
+                return entry.getValue().getRight();
+            }
+        }
+        return chance;
     }
 
     @Override

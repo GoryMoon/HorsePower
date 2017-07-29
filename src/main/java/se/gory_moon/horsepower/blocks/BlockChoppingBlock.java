@@ -11,7 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -25,7 +24,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.EventHandler;
+import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
 import se.gory_moon.horsepower.util.Localization;
@@ -70,8 +69,8 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
 
         if (te != null) {
             ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
-            if (!held.isEmpty() && ((Configs.general.useAxeToolType && held.getItem() instanceof ItemAxe) || isItemWhitelisted(held))) {
-                if (te.chop(player)) {
+            if (!held.isEmpty() && ((held.getItem().getHarvestLevel(held, "axe", player, null) > -1) || isItemWhitelisted(held))) {
+                if (te.chop(player, held)) {
                     player.addExhaustion((float) Configs.general.choppingblockExhaustion);
                     if (Configs.general.shouldDamageAxe)
                         held.damageItem(1, player);
@@ -83,7 +82,7 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
     }
 
     private boolean isItemWhitelisted(ItemStack stack) {
-        for (ItemStack itemStack: EventHandler.choppingAxes) {
+        for (ItemStack itemStack: HPEventHandler.choppingAxes.keySet()) {
             if (ItemStack.areItemsEqualIgnoreDurability(itemStack, stack))
                 return true;
         }
