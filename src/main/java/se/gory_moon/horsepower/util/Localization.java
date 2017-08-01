@@ -65,12 +65,20 @@ public final class Localization {
             }
         }
 
+        public enum HORSE_PRESS {
+            SIZE, LOCATION, USE;
+
+            public String translate(String... vars) {
+                return Localization.translateString("item.horsepower:press.description." + toString().toLowerCase(), vars);
+            }
+        }
+
     }
 
     public enum  INFO {
-
         GRINDSTONE_INVALID,
-        CHOPPING_INVALID;
+        CHOPPING_INVALID,
+        PRESS_INVALID,;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
@@ -85,7 +93,8 @@ public final class Localization {
         CATEGORY_GRINDING,
         CATEGORY_HAND_GRINDING,
         CATEGORY_CHOPPING,
-        CATEGORY_MANUAL_CHOPPING;
+        CATEGORY_MANUAL_CHOPPING,
+        CATEGORY_PRESS;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
@@ -101,6 +110,7 @@ public final class Localization {
         GRINDSTONE_PROGRESS,
         WINDUP_PROGRESS,
         CHOPPING_PROGRESS,
+        PRESS_PROGRESS,
         SHOW_ITEMS;
 
         public String translate(String... vars) {
@@ -115,7 +125,8 @@ public final class Localization {
     public enum TOP {
         GRINDSTONE_PROGRESS,
         WINDUP_PROGRESS,
-        CHOPPING_PROGRESS;
+        CHOPPING_PROGRESS,
+        PRESS_PROGRESS;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);

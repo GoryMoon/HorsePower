@@ -13,9 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Map;
 import java.util.Set;
 
-public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlockTrigger.Instance>{
+public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instance>{
 
-    private static final ResourceLocation ID = new ResourceLocation("horsepower","use_chopping_block");
+    private static final ResourceLocation ID = new ResourceLocation("horsepower","use_horse_press");
     private final Map<PlayerAdvancements, Listeners> listeners = Maps.newHashMap();
 
     @Override
@@ -72,7 +72,7 @@ public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlo
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<Listener<UseChoppingBlockTrigger.Instance>> listeners = Sets.newHashSet();
+        private final Set<Listener<UsePressTrigger.Instance>> listeners = Sets.newHashSet();
 
         public Listeners(PlayerAdvancements playerAdvancementsIn)
         {

@@ -28,7 +28,7 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.advancements.Manager;
-import se.gory_moon.horsepower.client.renderer.modelvariants.ChopperModels;
+import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;

@@ -160,6 +160,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
             else
                 validationTimer = 60;
         }
+        boolean flag = false;
 
         if (!hasWorker())
             locateHorseTimer--;
@@ -176,6 +177,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
                         EntityCreature creature = (EntityCreature) entity;
                         if (creature.getUniqueID().equals(uuid)) {
                             setWorker(creature);
+                            flag = true;
                             break search;
                         }
                     }
@@ -184,8 +186,6 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         }
         if (locateHorseTimer <= 0)
             locateHorseTimer = 220;
-
-        boolean flag = false;
 
         if (!world.isRemote && valid) {
             if (!running && canWork()) {

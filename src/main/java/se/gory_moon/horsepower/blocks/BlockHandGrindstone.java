@@ -28,7 +28,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.property.PropertyUnlistedDirection;
-import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
+import se.gory_moon.horsepower.client.model.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 import se.gory_moon.horsepower.util.Localization;

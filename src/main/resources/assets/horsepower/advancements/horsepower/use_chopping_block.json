@@ -13,7 +13,7 @@
   "parent": "horsepower:horsepower/root",
   "criteria": {
     "get_chopper": {
-      "trigger": "horsepower:use_chopping_Block"
+      "trigger": "horsepower:use_chopping_block"
     }
   }
 }

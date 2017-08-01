@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.BlockHandGrindstone;
-import se.gory_moon.horsepower.client.renderer.modelvariants.HandGrindstoneModels;
+import se.gory_moon.horsepower.client.model.modelvariants.HandGrindstoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 
 public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityHandGrindstone> {

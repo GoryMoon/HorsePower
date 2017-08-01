@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "item": "horsepower:press"
+    },
+    "title": {
+      "translate": "advancements.horsepower.press.title"
+    },
+    "description": {
+      "translate": "advancements.horsepower.press.description"
+    }
+  },
+  "parent": "horsepower:horsepower/root",
+  "criteria": {
+    "get_chopper": {
+      "trigger": "horsepower:use_horse_press"
+    }
+  }
+}

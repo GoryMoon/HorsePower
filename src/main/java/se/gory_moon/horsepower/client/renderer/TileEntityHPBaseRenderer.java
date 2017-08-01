@@ -108,6 +108,8 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {
+        if (stack.isEmpty())
+            return;
         GlStateManager.pushMatrix();
         GlStateManager.translate(ox, oy, oz);
         GlStateManager.translate( 0.5, 0.5, 0.5 );
@@ -122,8 +124,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
         GlStateManager.translate( -0.5, -0.5, -0.5 );
 
-        if (!stack.isEmpty())
-            drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3,  z);
+        drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3,  z);
         GlStateManager.popMatrix();
     }
 

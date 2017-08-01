@@ -5,6 +5,7 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.IAction;
 import se.gory_moon.horsepower.tweaker.recipes.ChoppingRecipeTweaker;
 import se.gory_moon.horsepower.tweaker.recipes.GrindstoneRecipeTweaker;
+import se.gory_moon.horsepower.tweaker.recipes.PressRecipeTweaker;
 
 import java.util.List;
 
@@ -25,5 +26,6 @@ public class TweakerPluginImpl implements ITweakerPlugin {
     public void register() {
         CraftTweakerAPI.registerClass(GrindstoneRecipeTweaker.class);
         CraftTweakerAPI.registerClass(ChoppingRecipeTweaker.class);
+        CraftTweakerAPI.registerClass(PressRecipeTweaker.class);
     }
 }

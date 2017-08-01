@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.client.renderer.modelvariants.GrindStoneModels;
+import se.gory_moon.horsepower.client.model.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 
 public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityGrindstone> {
@@ -63,9 +63,11 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        renderItem(te, te.getStackInSlot(0), 0.5F, 1F, 0.5F, 1F);
-        if (!te.getStackInSlot(0).isEmpty() && getWorld().isAirBlock(te.getPos().up()))
-            drawString(te, String.valueOf(te.getStackInSlot(0).getCount()), 0, 0.35,  0);
+        if (!te.getStackInSlot(0).isEmpty()) {
+            renderItem(te, te.getStackInSlot(0), 0.5F, 1F, 0.5F, 1F);
+            if (getWorld().isAirBlock(te.getPos().up()))
+                drawString(te, String.valueOf(te.getStackInSlot(0).getCount()), 0, 0.35, 0);
+        }
         GlStateManager.popMatrix();
 
         super.render(te, x, y, z, partialTicks, destroyStage, alpha);

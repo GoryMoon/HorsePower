@@ -1,0 +1,24 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "horsepower:press"
+  },
+  "variants": {
+    "part": {
+      "base": { "model": "horsepower:press" },
+      "top": { "model": "horsepower:press_top" }
+    },
+    "facing": {
+      "up":    {},
+      "down": {},
+      "north": {},
+      "east":  { "y": 90 },
+      "south": { "y": 180 },
+      "west":  { "y": 270 }
+    },
+    "inventory": {
+      "model": "horsepower:press",
+      "submodel": "horsepower:press_top"
+    }
+  }
+}

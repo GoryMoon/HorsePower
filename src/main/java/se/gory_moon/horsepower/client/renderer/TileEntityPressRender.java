@@ -6,23 +6,24 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
-import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
-import se.gory_moon.horsepower.tileentity.TileEntityChopper;
+import se.gory_moon.horsepower.blocks.BlockPress;
+import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
+import se.gory_moon.horsepower.tileentity.TileEntityPress;
 
-public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntityChopper> {
+public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPress> {
 
     @Override
-    public void render(TileEntityChopper te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileEntityPress te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
-        IBlockState bladeState = blockState.withProperty(BlockChopper.PART, ChopperModels.BLADE);
-        if (!(bladeState.getBlock() instanceof BlockHPBase)) return;
-        IBakedModel bladeModel = dispatcher.getBlockModelShapes().getModelForState(bladeState);
+        IBlockState topState = blockState.withProperty(BlockPress.PART, PressModels.TOP);
+        if (!(topState.getBlock() instanceof BlockHPBase)) return;
+        IBakedModel pressModel = dispatcher.getBlockModelShapes().getModelForState(topState);
 
         preDestroyRender(destroyStage);
         setRenderSettings();
@@ -34,9 +35,9 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
 
         if (destroyStage >= 0) {
             buffer.noColor();
-            renderBlockDamage(bladeState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
+            renderBlockDamage(topState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
         } else
-            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), bladeModel, blockState, te.getPos(), buffer, false );
+            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), pressModel, blockState, te.getPos(), buffer, false );
 
         buffer.setTranslation( 0, 0, 0 );
 
@@ -44,8 +45,9 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         GlStateManager.translate( x, y, z );
 
         // Apply GL transformations relative to the center of the block: 1) TE rotation and 2) crank rotation
+        float move = (te.getField(0) / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1));
         GlStateManager.translate( 0.5, 0.5, 0.5 );
-        GlStateManager.translate( 0, te.getVisualWindup(), 0 );
+        GlStateManager.translate( 0, -( 0.58 * move), 0 );
         GlStateManager.translate( -0.5, -0.5, -0.5 );
 
         tessellator.draw();
@@ -54,24 +56,24 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         postDestroyRender(destroyStage);
         RenderHelper.enableStandardItemLighting();
 
-        renderLeach(x + 0.5, y + 2.9 + te.getVisualWindup(), z + 0.5, x + 0.5, y + 0.2, z + 0.5, x + 0.5, y + 1.7, z + 0.5);
+        if (!(blockState.getBlock() instanceof BlockHPBase)) return;
 
         if (te.hasWorker())
-            renderLeash(te.getWorker(), x, y, z, 0D, 1.1D, 0D, partialTicks, te.getPos());
+            renderLeash(te.getWorker(), x, y, z, 0D, 0.4D, 0D, partialTicks, te.getPos());
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        if (!te.getStackInSlot(0).isEmpty())
-            renderStillItem(te, te.getStackInSlot(0), 0.5F, 0.54F, 0.5F, 1.3F);
-        GlStateManager.popMatrix();
+        if (!te.getStackInSlot(0).isEmpty() && move <= 0.25) {
+            renderItem(te, te.getStackInSlot(0), 0.5F, 0.5F, 0.5F, 1F);
+            drawString(te, String.valueOf(te.getStackInSlot(0).getCount()), 0, 0.35, 0);
+        }
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-        if (!te.getStackInSlot(1).isEmpty())
-            renderStillItem(te, te.getStackInSlot(1), 0.5F, 0.54F, 0.5F, 1.3F);
+        if (!te.getStackInSlot(1).isEmpty() && move <= 0.25) {
+            renderItem(te, te.getStackInSlot(1), 0.5F, 0.5F, 0.5F, 1F);
+            drawString(te, String.valueOf(te.getStackInSlot(1).getCount()), 0, 0.35,  0);
+        }
         GlStateManager.popMatrix();
 
         super.render(te, x, y + 1, z, partialTicks, destroyStage, alpha);
     }
-
 }

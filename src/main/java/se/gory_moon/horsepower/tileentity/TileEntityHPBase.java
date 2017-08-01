@@ -81,14 +81,18 @@ public abstract class TileEntityHPBase extends TileEntity {
             public void setSlotContent(int index, ItemStack stack) {
                 itemStacks.set(index, stack);
 
-                if (index == 0 && stack.getCount() > this.getInventoryStackLimit()) {
-                    stack.setCount(this.getInventoryStackLimit());
+                if (index == 0 && stack.getCount() > this.getInventoryStackLimit(stack)) {
+                    stack.setCount(this.getInventoryStackLimit(stack));
                 }
             }
 
             @Override
             public int getInventoryStackLimit() {
                 return TileEntityHPBase.this.getInventoryStackLimit();
+            }
+
+            public int getInventoryStackLimit(ItemStack stack) {
+                return TileEntityHPBase.this.getInventoryStackLimit(stack);
             }
 
             @Override
@@ -145,8 +149,9 @@ public abstract class TileEntityHPBase extends TileEntity {
                 return TileEntityHPBase.this.getDisplayName();
             }
         };
-        handlerTop = new RangedWrapper(new InvWrapper(inventory), 0, 1);
+        handlerIn = new RangedWrapper(new InvWrapper(inventory), 0, 1);
         handlerBottom = new RangedWrapper(new InvWrapper(inventory), 1, getOutputSlot() + 1);
+        handlerNull = new InvWrapper(inventory);
     }
 
     public abstract HPRecipeBase getRecipe();
@@ -232,20 +237,22 @@ public abstract class TileEntityHPBase extends TileEntity {
             HPRecipeBase recipeBase = getRecipe();
             if (recipeBase == null) return false;
 
+            ItemStack input = recipeBase.getInput();
             ItemStack itemstack = recipeBase.getOutput();
             ItemStack secondary = recipeBase.getSecondary();
 
-            if (itemstack.isEmpty()) {
+            if (getStackInSlot(0).getCount() < input.getCount())
                 return false;
-            } else {
-                ItemStack output = getStackInSlot(1);
-                ItemStack outputSecondary = secondary.isEmpty() ? ItemStack.EMPTY: inventory.getStackInSlot(2);
-                if (!secondary.isEmpty() && !outputSecondary.isEmpty()) {
-                    if (!outputSecondary.isItemEqual(secondary)) return false;
-                    if (outputSecondary.getCount() + secondary.getCount() > secondary.getMaxStackSize()) return false;
-                }
-                return output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize();
+            if (itemstack.isEmpty())
+                return false;
+
+            ItemStack output = getStackInSlot(1);
+            ItemStack outputSecondary = secondary.isEmpty() ? ItemStack.EMPTY: inventory.getStackInSlot(2);
+            if (!secondary.isEmpty() && !outputSecondary.isEmpty()) {
+                if (!outputSecondary.isItemEqual(secondary)) return false;
+                if (outputSecondary.getCount() + secondary.getCount() > secondary.getMaxStackSize()) return false;
             }
+            return output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize();
         }
     }
 
@@ -295,22 +302,26 @@ public abstract class TileEntityHPBase extends TileEntity {
         markDirty();
     }
 
-    private IItemHandler handlerTop;
+    private IItemHandler handlerNull = null;
     private IItemHandler handlerBottom;
+    private IItemHandler handlerIn = null;
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (facing == EnumFacing.DOWN || facing == EnumFacing.UP)) || super.hasCapability(capability, facing);
+        return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getCapability(Capability<T> capability, @javax.annotation.Nullable EnumFacing facing) {
-        if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            if (facing == EnumFacing.DOWN)
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (facing == null)
+                return (T) handlerNull;
+            else if (facing == EnumFacing.DOWN)
                 return (T) handlerBottom;
-            else if (facing == EnumFacing.UP)
-                return (T) handlerTop;
+            else
+                return (T) handlerIn;
+        }
         return super.getCapability(capability, facing);
     }
 }
