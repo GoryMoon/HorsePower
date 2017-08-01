@@ -126,7 +126,7 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
 
     @Override
     public void removeRecipe() {
-        if (Configs.recipes.useSeperateChoppingRecipes) {
+        if (Configs.recipes.useSeperateGrindstoneRecipes) {
             for (GrindstoneRecipeWrapper recipe : GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, true)) {
                 jeiRuntime.getRecipeRegistry().removeRecipe(recipe, HAND_GRINDING);
             }
@@ -153,7 +153,7 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
 
     @Override
     public void addRecipes() {
-        if (Configs.recipes.useSeperateChoppingRecipes) {
+        if (Configs.recipes.useSeperateGrindstoneRecipes) {
             for (GrindstoneRecipeWrapper recipe : GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, true)) {
                 jeiRuntime.getRecipeRegistry().addRecipe(recipe, HAND_GRINDING);
             }

@@ -1,13 +1,13 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 @SideOnly(Side.CLIENT)
 public enum FacingToRotation {

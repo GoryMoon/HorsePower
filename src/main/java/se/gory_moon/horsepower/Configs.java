@@ -14,14 +14,21 @@ import java.util.function.BooleanSupplier;
 @Config(modid = Reference.MODID, category = "all")
 public class Configs {
 
+    @Comment("Client only configs")
     @Config.LangKey("config.gui.client")
     public static Client client = new Client();
 
+    @Comment("General configs")
     @Config.LangKey("config.gui.general")
     public static General general = new General();
 
+    @Comment("Contains the customizable recipes")
     @Config.LangKey("config.gui.recipes")
     public static Recipes recipes = new Recipes();
+
+    @Comment("Contains misc configs, mostly for debugging and dev")
+    @Config.LangKey("config.gui.misc")
+    public static Misc misc = new Misc();
 
     public static class Client {
 
@@ -109,14 +116,14 @@ public class Configs {
                 "minecraft:log2:1-minecraft:planks:5@4-4"
         };
 
-        @Comment({"Add recipes to the Press Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}",
+        @Comment({"Add recipes to the Press Block here, the format of the recipes are: modid:input:meta@amount${nbt}-modid:output:meta@amount${nbt}",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
                 "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
                 "The time is same for all recipes, it uses the \"Points For Press\"",
                 "Must be edited with in-game editor for live changes."})
         @Name("Press Recipes")
         public String[] pressRecipes = {
-                "minecraft:seed@12-minecraft:dirt"
+                "minecraft:wheat_seeds@12-minecraft:dirt"
         };
     }
 
@@ -147,18 +154,26 @@ public class Configs {
         @Name("Use AbstractHorse")
         public boolean useHorseInterface = true;
 
-        @Comment("If the chopping block should use the axe tooltype over the whitelist")
-        @Name("Use Axe Tooltype")
-        public boolean useAxeToolType = true;
-
         @Comment("If the item used as an axe for the manual chopping block should be damaged")
         @Name("Should Damage Axe")
         public boolean shouldDamageAxe = true;
 
-        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:axe:meta"})
+        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:input:meta${nbt}=baseAmount-chance", "meta is optional and ${nbt} is also optional and follows vanilla tag syntax", "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
         @Config.LangKey("config.gui.chopping_axes")
         @Name("Chopping Block Axes")
         public String[] choppingBlockAxes = {};
+
+        @Comment({"The percentage amount for the different materials", "The syntax is harvestLevel=baseAmount-chance",
+                "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
+        @Name("Harvestable Percentages")
+        @Config.LangKey("config.gui.harvest")
+        public String[] harvestable_percentage = {
+            "0=25-25",
+            "1=50-25",
+            "2=75-25",
+            "3=100-25",
+            "4=125-50"
+        };
 
         @Comment({"If true the manual chopping block will drop the result items", "If false the manual chopping block will put the result items in it's internal inventory"})
         @Name("Manual Chopping Block output")
@@ -215,5 +230,22 @@ public class Configs {
             String item = JsonUtils.getString(json, "enabled");
             return () -> "flour".equals(item) ? general.enableFlour: "dough".equals(item) && general.enableDough;
         }
+    }
+
+    public static class Misc {
+
+        @Comment("Will show a items all ore dictionaries in the tooltip")
+        @Name("Show Ore Dictionaries")
+        public boolean showOreDictionaries = false;
+
+        @Comment("Will show the harvest level of items in the tooltip")
+        @Name("Show Harvest Level")
+        public boolean showHarvestLevel = false;
+
+        @Comment("What harvest types to show the harvest level for")
+        @Name("Harvest Types")
+        public String[] harvestTypes = {
+                "axe"
+        };
     }
 }

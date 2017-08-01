@@ -46,7 +46,8 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", Arrays.asList(EnumFacing.HORIZONTALS));
     public static final PropertyEnum<PressModels> PART = PropertyEnum.create("part", PressModels.class);
 
-    private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D + 12D/16D, 1.0D);
+    private static final AxisAlignedBB BOUND_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D + 12D/16D, 1.0D);
+    private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D + 3D/16D, 1.0D);
 
     public BlockPress() {
         super(Material.ROCK);
@@ -60,7 +61,7 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return COLLISION_AABB;
+        return BOUND_AABB;
     }
 
     @Nullable

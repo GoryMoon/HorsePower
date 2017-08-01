@@ -6,22 +6,16 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.util.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class HPRecipes {
 
@@ -78,9 +72,9 @@ public class HPRecipes {
                 if (item.contains(":")) {
                     Object stack;
                     try {
-                        stack = parseItemStack(item);
+                        stack = Utils.parseItemStack(item, true, true);
                     } catch (Exception e) {
-                        errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ".");
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ".");
                         break;
                     }
                     if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
@@ -89,14 +83,14 @@ public class HPRecipes {
                     try {
                         time = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
                         time = -1;
                     }
                 } else if (stacks.size() == 3) {
                     try {
                         secondaryChance = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2));
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2));
                     }
                 }
             }
@@ -122,55 +116,10 @@ public class HPRecipes {
                 }
             }
             if (!flag) {
-                errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + ")");
+                Utils.errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + ")");
             }
         }
         return recipes;
-    }
-
-    private void errorMessage(String message) {
-        if (FMLCommonHandler.instance().getSide().isClient()) {
-            if (FMLClientHandler.instance().getClientPlayerEntity() != null)
-                FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + message));
-            else
-                ERRORS.add(message);
-        }
-        HorsePowerMod.logger.warn(message);
-    }
-
-    private Object parseItemStack(String item) throws Exception {
-        String[] data = item.split("\\$");
-        NBTTagCompound nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
-        if (data.length == 2)
-            item = item.substring(0, item.indexOf("$"));
-
-        data = item.split("@");
-        int amount = data.length == 1 ? 1: Integer.parseInt(data[1]);
-        if (data.length == 2)
-            item = item.substring(0, item.indexOf("@"));
-
-        data = item.split(":");
-        int meta = data.length == 2 ? 0 : "*".equals(data[2]) ? OreDictionary.WILDCARD_VALUE: Integer.parseInt(data[2]);
-
-        if (item.startsWith("ore:")) {
-
-            if (amount > 1) {
-                return OreDictionary.getOres(item.substring(4)).stream().map(stack -> {
-                    ItemStack stack1 = stack.copy();
-                    stack1.setCount(amount);
-                    return stack1;
-                }).collect(Collectors.toList());
-            } else
-                return OreDictionary.getOres(item.substring(4));
-        } else {
-            NBTTagCompound compound = new NBTTagCompound();
-            compound.setString("id", data[0] + ":" + data[1]);
-            compound.setByte("Count", (byte) amount);
-            compound.setShort("Damage", (short) meta);
-            if (nbt != null)
-                compound.setTag("tag", nbt);
-            return new ItemStack(compound);
-        }
     }
 
     public void addGrindstoneRecipe(Block input, ItemStack output, int time, boolean hand) {

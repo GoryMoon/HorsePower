@@ -19,7 +19,6 @@ import se.gory_moon.horsepower.jei.IJeiPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.proxy.CommonProxy;
-import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
@@ -61,7 +60,7 @@ public class HorsePowerMod {
 
     @EventHandler
     public void loadComplete(FMLPostInitializationEvent event) {
-        HPRecipes.instance().reloadRecipes();
+        HPEventHandler.reloadConfig();
         proxy.loadComplete();
     }
 
