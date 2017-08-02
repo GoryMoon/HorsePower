@@ -23,6 +23,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -111,6 +113,7 @@ public class HPEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SideOnly(Side.CLIENT)
     public static void onToolTip(ItemTooltipEvent event) {
         String part = "";
         if (Configs.misc.showOreDictionaries) {
