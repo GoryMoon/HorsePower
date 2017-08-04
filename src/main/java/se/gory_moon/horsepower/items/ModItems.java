@@ -83,10 +83,10 @@ public class ModItems {
     public static void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
         recipes = ev.getRegistry().getEntries();
         ResourceLocation loc = new ResourceLocation("horsepower:chopper");
-        ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), ModBlocks.BLOCK_CHOPPER, "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Ingredient.fromStacks(new ItemStack(Items.LEAD)), 'F', Ingredient.fromStacks(new ItemStack(Items.FLINT)), 'W', "logWood").setRegistryName(loc));
+        ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), new ItemStack(ModBlocks.BLOCK_CHOPPER), "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Ingredient.fromStacks(new ItemStack(Items.LEAD)), 'F', Ingredient.fromStacks(new ItemStack(Items.FLINT)), 'W', "logWood").setRegistryName(loc));
         if (Configs.general.enableHandChoppingBlock) {
             loc = new ResourceLocation("horsepower:manual_chopping");
-            ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), ModBlocks.BLOCK_MANUAL_CHOPPER, "W", 'W', "logWood").setRegistryName(loc));
+            ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), new ItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER), "W", 'W', "logWood").setRegistryName(loc));
         }
 
         if (Configs.general.removeVanillaRecipes)

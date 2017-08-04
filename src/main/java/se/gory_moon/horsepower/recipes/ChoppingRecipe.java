@@ -19,7 +19,7 @@ public class ChoppingRecipe extends ShapedOreRecipe {
 
     public final List<ItemStack> outputBlocks;
 
-    public ChoppingRecipe(ResourceLocation location, List<ItemStack> variantItems, BlockHPChoppingBase result, Object... recipe) {
+    public ChoppingRecipe(ResourceLocation location, List<ItemStack> variantItems, ItemStack result, Object... recipe) {
         super(location, result, recipe);
         this.outputBlocks = variantItems;
     }
