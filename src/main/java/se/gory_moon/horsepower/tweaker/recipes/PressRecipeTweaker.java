@@ -1,8 +1,6 @@
 package se.gory_moon.horsepower.tweaker.recipes;
 
 import com.google.common.collect.Lists;
-import crafttweaker.CraftTweakerAPI;
-import crafttweaker.IAction;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -11,6 +9,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.PressRecipe;
+import se.gory_moon.horsepower.tweaker.BaseHPAction;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -26,51 +25,28 @@ public class PressRecipeTweaker {
 
     @ZenMethod
     public static void add(IIngredient input, IItemStack output) {
-        List<IItemStack> items = input.getItems();
-        if(items == null) {
-            HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a press recipe");
-        }
-
-        ItemStack[] items2 = getItemStacks(items);
-        ItemStack output2 = getItemStack(output);
-
-        AddPressRecipe recipe = new AddPressRecipe(input, items2, output2, ItemStack.EMPTY, 0, 0);
-        CraftTweakerAPI.apply(recipe);
+        AddPressRecipe recipe = new AddPressRecipe(input, output, ItemStack.EMPTY, 0, 0);
+        TweakerPluginImpl.toAdd.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
     @ZenMethod
     public static void remove(IIngredient output) {
-
-        List<PressRecipe> toRemove = Lists.newArrayList();
-        List<Integer> removeIndex = Lists.newArrayList();
-
-        for (int i = 0; i < HPRecipes.instance().getGrindstoneRecipes().size(); i++) {
-            PressRecipe recipe = HPRecipes.instance().getPressRecipes().get(i);
-            if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
-                toRemove.add(recipe);
-                removeIndex.add(i);
-            }
-        }
-        RemovePressRecipe recipe = new RemovePressRecipe(toRemove, removeIndex);
-        CraftTweakerAPI.apply(recipe);
+        RemovePressRecipe recipe = new RemovePressRecipe(output);
+        TweakerPluginImpl.toRemove.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
+    private static class AddPressRecipe extends BaseHPAction {
 
-
-    private static class AddPressRecipe implements IAction {
-
-        private final IIngredient ingredient;
-        private final ItemStack[] input;
-        private final ItemStack output;
+        private final IIngredient input;
+        private final IItemStack output;
         private final ItemStack secondary;
         private final int secondaryChance;
         private final int time;
 
-        public AddPressRecipe(IIngredient ingredient, ItemStack[] inputs, ItemStack output2, ItemStack secondary, int secondaryChance, int time) {
-            this.ingredient = ingredient;
-            this.input = inputs;
+        public AddPressRecipe(IIngredient input, IItemStack output2, ItemStack secondary, int secondaryChance, int time) {
+            this.input = input;
             this.output = output2;
             this.secondary = secondary;
             this.secondaryChance = secondaryChance;
@@ -79,38 +55,54 @@ public class PressRecipeTweaker {
 
         @Override
         public void apply() {
-            for (ItemStack stack: input) {
-                PressRecipe recipe = new PressRecipe(stack, output, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
+            List<IItemStack> items = input.getItems();
+            if(items == null) {
+                HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a press recipe");
+            }
+
+            ItemStack[] items2 = getItemStacks(items);
+            ItemStack output2 = getItemStack(output);
+
+            for (ItemStack stack: items2) {
+                PressRecipe recipe = new PressRecipe(stack, output2, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
                 HPRecipes.instance().addPressRecipe(recipe);
             }
         }
 
         @Override
         public String describe() {
-            return "Adding press recipe for " + ingredient;
+            return "Adding press recipe for " + input;
         }
     }
 
-    private static class RemovePressRecipe implements IAction {
-        private final List<Integer> removingIndices;
-        private final List<PressRecipe> recipes;
+    private static class RemovePressRecipe extends BaseHPAction {
 
-        private RemovePressRecipe(List<PressRecipe> recipes, List<Integer> removingIndices) {
-            this.recipes = recipes;
-            this.removingIndices = removingIndices;
+        private final IIngredient output;
+
+        public RemovePressRecipe(IIngredient output) {
+            this.output = output;
         }
 
         @Override
         public void apply() {
+            List<Integer> removeIndex = Lists.newArrayList();
+
+            for (int i = 0; i < HPRecipes.instance().getGrindstoneRecipes().size(); i++) {
+                PressRecipe recipe = HPRecipes.instance().getPressRecipes().get(i);
+                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
+                    removeIndex.add(i);
+                }
+            }
+
             ArrayList<PressRecipe> recipeList = HPRecipes.instance().getPressRecipes();
-            for(int i = this.removingIndices.size() - 1; i >= 0; --i) {
-                recipeList.remove(removingIndices.get(i).intValue());
+            for(int i = removeIndex.size() - 1; i >= 0; --i) {
+                recipeList.remove(removeIndex.get(i).intValue());
             }
         }
 
         @Override
         public String describe() {
-            return "Removing " + recipes.size() + " press recipes";
+            return "Removing press recipes for " + output;
         }
     }
 

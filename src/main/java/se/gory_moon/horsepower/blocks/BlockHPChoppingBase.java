@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -121,14 +122,20 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
         tile.getTileData().setTag("textureBlock", baseTag);
     }
 
-    public static ItemStack createItemStack(BlockHPChoppingBase table, Block block, int blockMeta) {
-        ItemStack stack = new ItemStack(table, 1);
+    public static ItemStack createItemStack(BlockHPChoppingBase table, int amount, ItemStack blockItem) {
+        ItemStack stack = new ItemStack(table, amount);
+        Block block = Block.getBlockFromItem(blockItem.getItem());
 
-        if(block != null) {
-            ItemStack blockStack = new ItemStack(block, 1, blockMeta);
+        if(block != Blocks.AIR) {
+            ItemStack blockStack = new ItemStack(block, 1, blockItem.getItemDamage());
             NBTTagCompound tag = new NBTTagCompound();
             NBTTagCompound subTag = new NBTTagCompound();
-            blockStack.writeToNBT(subTag);
+            if (block instanceof BlockHPChoppingBase) {
+                subTag = blockItem.getSubCompound("textureBlock");
+                subTag = subTag != null ? subTag: new NBTTagCompound();
+            } else {
+                blockStack.writeToNBT(subTag);
+            }
             tag.setTag("textureBlock", subTag);
             stack.setTagCompound(tag);
         }
@@ -138,7 +145,8 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-        for(ItemStack stack : OreDictionary.getOres("logWood")) {
+        List<ItemStack> stacks = Utils.getCraftingItems(this);
+        for(ItemStack stack : stacks) {
             if (!Configs.general.useDynamicDisplay && !"minecraft".equals(stack.getItem().getRegistryName().getResourceDomain()))
                 continue;
             Block block = getBlockFromItem(stack.getItem());
@@ -149,11 +157,11 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
                 block.getSubBlocks(null, subBlocks);
 
                 for(ItemStack subBlock : subBlocks) {
-                    list.add(createItemStack(this, getBlockFromItem(subBlock.getItem()), subBlock.getItemDamage()));
+                    list.add(createItemStack(this, 1, subBlock));
                 }
             }
             else {
-                list.add(createItemStack(this, block, blockMeta));
+                list.add(createItemStack(this, 1, stack));
             }
         }
     }

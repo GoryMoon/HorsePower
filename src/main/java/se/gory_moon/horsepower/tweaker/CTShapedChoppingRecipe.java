@@ -2,20 +2,19 @@ package se.gory_moon.horsepower.tweaker;
 
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.oredict.IOreDictEntry;
 
-public class ShapedChoppingRecipe {
+public class CTShapedChoppingRecipe {
 
     private final int width;
     private final int height;
     private final byte[] posx;
     private final byte[] posy;
-    private final IOreDictEntry ore;
+    private final IIngredient ore;
     private final IItemStack output;
     private final IIngredient[] ingredients;
     private final String name;
 
-    public ShapedChoppingRecipe(IOreDictEntry ore, String name, IItemStack output, IIngredient[][] ingredients) {
+    public CTShapedChoppingRecipe(IIngredient ore, String name, IItemStack output, IIngredient[][] ingredients) {
         int numIngredients = 0;
         IIngredient[][] var8 = ingredients;
         int height1 = ingredients.length;
@@ -88,7 +87,7 @@ public class ShapedChoppingRecipe {
         return this.output;
     }
 
-    public IOreDictEntry getOre() {
+    public IIngredient getOre() {
         return ore;
     }
 

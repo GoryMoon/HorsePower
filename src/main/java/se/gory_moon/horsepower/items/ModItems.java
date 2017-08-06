@@ -28,7 +28,8 @@ import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.recipes.ChoppingRecipe;
+import se.gory_moon.horsepower.recipes.ShapedChoppingRecipe;
+import se.gory_moon.horsepower.recipes.ShapelessChoppingRecipe;
 
 import java.util.*;
 
@@ -83,10 +84,10 @@ public class ModItems {
     public static void registerRecipes(RegistryEvent.Register<IRecipe> ev) throws NoSuchFieldException, IllegalAccessException {
         recipes = ev.getRegistry().getEntries();
         ResourceLocation loc = new ResourceLocation("horsepower:chopper");
-        ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), new ItemStack(ModBlocks.BLOCK_CHOPPER), "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Ingredient.fromStacks(new ItemStack(Items.LEAD)), 'F', Ingredient.fromStacks(new ItemStack(Items.FLINT)), 'W', "logWood").setRegistryName(loc));
+        ev.getRegistry().register(new ShapedChoppingRecipe(loc, OreDictionary.getOres("logWood"), new ItemStack(ModBlocks.BLOCK_CHOPPER), "LSL", "SFS", "SWS", 'S', "stickWood", 'L', Ingredient.fromStacks(new ItemStack(Items.LEAD)), 'F', Ingredient.fromStacks(new ItemStack(Items.FLINT)), 'W', "logWood").setRegistryName(loc));
         if (Configs.general.enableHandChoppingBlock) {
             loc = new ResourceLocation("horsepower:manual_chopping");
-            ev.getRegistry().register(new ChoppingRecipe(loc, OreDictionary.getOres("logWood"), new ItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER), "W", 'W', "logWood").setRegistryName(loc));
+            ev.getRegistry().register(new ShapelessChoppingRecipe(loc, OreDictionary.getOres("logWood"), new ItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER, 2), "logWood", Items.FLINT).setRegistryName(loc));
         }
 
         if (Configs.general.removeVanillaRecipes)

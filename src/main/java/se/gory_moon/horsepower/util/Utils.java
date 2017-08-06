@@ -11,10 +11,13 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.passive.AbstractHorse;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -24,10 +27,14 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+import se.gory_moon.horsepower.recipes.ShapedChoppingRecipe;
+import se.gory_moon.horsepower.recipes.ShapelessChoppingRecipe;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -171,5 +178,33 @@ public class Utils {
                 compound.setTag("tag", nbt);
             return new ItemStack(compound);
         }
+    }
+
+    public static List<ItemStack> getCraftingItems(BlockHPChoppingBase block) {
+        NonNullList<ItemStack> stacks = NonNullList.create();
+        main: for (IRecipe recipe : ForgeRegistries.RECIPES) {
+            if (recipe instanceof ShapedChoppingRecipe) {
+                if (((ShapedChoppingRecipe) recipe).getSimpleRecipeOutput().getItem() instanceof ItemBlock && ((ItemBlock) ((ShapedChoppingRecipe) recipe).getSimpleRecipeOutput().getItem()).getBlock() == block) {
+                    for (ItemStack stack : ((ShapedChoppingRecipe) recipe).outputBlocks) {
+                        if (Block.getBlockFromItem(stack.getItem()) instanceof BlockHPChoppingBase) {
+                            Block.getBlockFromItem(stack.getItem()).getSubBlocks(null, stacks);
+                            continue main;
+                        }
+                    }
+                    stacks.addAll(((ShapedChoppingRecipe) recipe).outputBlocks);
+                }
+            } else if (recipe instanceof ShapelessChoppingRecipe) {
+                if (((ShapelessChoppingRecipe) recipe).getSimpleRecipeOutput().getItem() instanceof ItemBlock && ((ItemBlock) ((ShapelessChoppingRecipe) recipe).getSimpleRecipeOutput().getItem()).getBlock() == block) {
+                    for (ItemStack stack : ((ShapelessChoppingRecipe) recipe).outputBlocks) {
+                        if (Block.getBlockFromItem(stack.getItem()) instanceof BlockHPChoppingBase) {
+                            Block.getBlockFromItem(stack.getItem()).getSubBlocks(null, stacks);
+                            continue main;
+                        }
+                    }
+                    stacks.addAll(((ShapelessChoppingRecipe) recipe).outputBlocks);
+                }
+            }
+        }
+        return stacks;
     }
 }
