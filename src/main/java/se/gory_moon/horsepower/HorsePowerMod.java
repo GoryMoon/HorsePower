@@ -6,10 +6,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.blocks.ModBlocks;
@@ -19,6 +16,7 @@ import se.gory_moon.horsepower.jei.IJeiPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.proxy.CommonProxy;
+import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.IHPAction;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
@@ -66,6 +64,11 @@ public class HorsePowerMod {
 
         HPEventHandler.reloadConfig();
         proxy.loadComplete();
+    }
+
+    @EventHandler
+    public void serverLoad(FMLServerAboutToStartEvent event) {
+        HPRecipes.instance().reloadRecipes();
     }
 
 }
