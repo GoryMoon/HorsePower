@@ -55,8 +55,8 @@ public class HPRecipes {
         createRecipes(ManualChoppingBlockRecipe.class, manualChopping, true).forEach(this::addManualChoppingRecipe);
         createRecipes(PressRecipe.class, press, false).forEach(this::addPressRecipe);
 
-        HorsePowerMod.jeiPlugin.addRecipes();
         HorsePowerMod.tweakerPlugin.applyTweaker();
+        HorsePowerMod.jeiPlugin.addRecipes();
     }
 
     private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, List<String> data, boolean requireTime) {
@@ -142,7 +142,7 @@ public class HPRecipes {
 
     public void addGrindstoneRecipe(GrindstoneRecipe recipe, boolean hand) {
         if (getGrindstoneResult(recipe.getInput(), hand) != ItemStack.EMPTY) return;
-        if (hand && Configs.recipes.useSeperateChoppingRecipes)
+        if (hand && Configs.recipes.useSeperateGrindstoneRecipes)
             addHandGrindstoneRecipe(recipe);
         else
             addGrindstoneRecipe(recipe);
