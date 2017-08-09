@@ -118,36 +118,38 @@ public class HPEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     @SideOnly(Side.CLIENT)
     public static void onToolTip(ItemTooltipEvent event) {
-        String part = "";
-        if (Configs.misc.showOreDictionaries) {
-            StringBuilder out = null;
-            for (int id: OreDictionary.getOreIDs(event.getItemStack())) {
-                String s = OreDictionary.getOreName(id);
-                if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "Ores: " + Colors.ORANGE + s);
-                else out.append(", ").append(s);
+        if (!event.getItemStack().isEmpty()) {
+            String part = "";
+            if (Configs.misc.showOreDictionaries) {
+                StringBuilder out = null;
+                for (int id : OreDictionary.getOreIDs(event.getItemStack())) {
+                    String s = OreDictionary.getOreName(id);
+                    if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "Ores: " + Colors.ORANGE + s);
+                    else out.append(", ").append(s);
+                }
+                if (out != null) {
+                    event.getToolTip().add(out.toString());
+                    part = "OreDict";
+                }
             }
-            if (out != null) {
-                event.getToolTip().add(out.toString());
-                part = "OreDict";
-            }
-        }
 
-        if (Configs.misc.showHarvestLevel) {
-            boolean added = false;
-            for (String harv: Configs.misc.harvestTypes) {
-                int harvestLevel = event.getItemStack().getItem().getHarvestLevel(event.getItemStack(), harv, null, null);
-                if (harvestLevel > -1) {
-                    event.getToolTip().add(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")");
-                    if (!added) {
-                        part += (!part.isEmpty() ? " and " : "") + "HarvestLevel";
-                        added = true;
+            if (Configs.misc.showHarvestLevel) {
+                boolean added = false;
+                for (String harv : Configs.misc.harvestTypes) {
+                    int harvestLevel = event.getItemStack().getItem().getHarvestLevel(event.getItemStack(), harv, null, null);
+                    if (harvestLevel > -1) {
+                        event.getToolTip().add(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")");
+                        if (!added) {
+                            part += (!part.isEmpty() ? " and " : "") + "HarvestLevel";
+                            added = true;
+                        }
                     }
                 }
             }
-        }
 
-        if (!part.isEmpty()) {
-            event.getToolTip().add(Colors.LIGHTGRAY + "The " + part + " tooltip was added by HorsePower, to disabled check the config.");
+            if (!part.isEmpty()) {
+                event.getToolTip().add(Colors.LIGHTGRAY + "The " + part + " tooltip was added by HorsePower, to disabled check the config.");
+            }
         }
     }
 }
