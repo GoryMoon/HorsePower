@@ -20,7 +20,7 @@ public class ComparableItemStack {
         ComparableItemStack that = (ComparableItemStack) o;
 
         return ItemStack.areItemStackTagsEqual(stack, that.stack) &&
-                (stack.getMetadata() == OreDictionary.WILDCARD_VALUE ? stack.isItemEqualIgnoreDurability(that.stack): stack.isItemEqual(that.stack));
+                (stack.getMetadata() == OreDictionary.WILDCARD_VALUE ? stack.getItem() == that.stack.getItem(): stack.isItemEqual(that.stack));
     }
 
     @Override
