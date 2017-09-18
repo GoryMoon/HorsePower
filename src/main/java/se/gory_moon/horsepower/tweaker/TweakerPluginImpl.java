@@ -138,7 +138,7 @@ public class TweakerPluginImpl implements ITweakerPlugin {
             this.ore = ore;
             this.output = output;
             this.ingredients = ingredients;
-            this.name = calculateName(output, ingredients);
+            this.name = calculateName();
         }
 
         public AddShapedChoppingRecipe(String name, IIngredient ore, IItemStack output, IIngredient[][] ingredients) {
@@ -148,7 +148,22 @@ public class TweakerPluginImpl implements ITweakerPlugin {
             this.ingredients = ingredients;
         }
 
-        public static String calculateName(IItemStack output, IIngredient[][] ingredients) {
+        @Override
+        public void apply() {
+            CTShapedChoppingRecipe recipe = new CTShapedChoppingRecipe(ore, name, output, ingredients);
+            IRecipe irecipe = convert(recipe, new ResourceLocation("horsepower", name));
+
+            irecipe.setRegistryName(new ResourceLocation("horsepower", this.name));
+            ForgeRegistries.RECIPES.register(irecipe);
+        }
+
+        @Override
+        public String describe() {
+            return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(output);
+        }
+
+        @Override
+        protected String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(MCRecipeManager.saveToString(output));
 
@@ -165,20 +180,6 @@ public class TweakerPluginImpl implements ITweakerPlugin {
 
             return "hp_shaped" + hash;
         }
-
-        @Override
-        public void apply() {
-            CTShapedChoppingRecipe recipe = new CTShapedChoppingRecipe(ore, name, output, ingredients);
-            IRecipe irecipe = convert(recipe, new ResourceLocation("horsepower", name));
-
-            irecipe.setRegistryName(new ResourceLocation("horsepower", this.name));
-            ForgeRegistries.RECIPES.register(irecipe);
-        }
-
-        @Override
-        public String describe() {
-            return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(output);
-        }
     }
 
     private static class AddShapelessChoppingRecipe extends MCRecipeManager.ActionBaseAddRecipe {
@@ -192,7 +193,7 @@ public class TweakerPluginImpl implements ITweakerPlugin {
             this.ore = ore;
             this.output = output;
             this.ingredients = ingredients;
-            this.name = calculateName(output, ingredients);
+            this.name = calculateName();
         }
 
         public AddShapelessChoppingRecipe(String name, IIngredient ore, IItemStack output, IIngredient[] ingredients) {
@@ -200,22 +201,6 @@ public class TweakerPluginImpl implements ITweakerPlugin {
             this.name = MCRecipeManager.cleanRecipeName(name);
             this.output = output;
             this.ingredients = ingredients;
-        }
-
-        public static String calculateName(IItemStack output, IIngredient[] ingredients) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(MCRecipeManager.saveToString(output));
-
-            for(IIngredient iIngredient : ingredients) {
-                sb.append(MCRecipeManager.saveToString(iIngredient));
-            }
-
-            int hash = sb.toString().hashCode();
-            while(usedHashes.contains(hash))
-                ++hash;
-            usedHashes.add(hash);
-
-            return "hp_shapeless" + hash;
         }
 
         @Override
@@ -230,6 +215,23 @@ public class TweakerPluginImpl implements ITweakerPlugin {
         @Override
         public String describe() {
             return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(output);
+        }
+
+        @Override
+        protected String calculateName() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(MCRecipeManager.saveToString(output));
+
+            for(IIngredient iIngredient : ingredients) {
+                sb.append(MCRecipeManager.saveToString(iIngredient));
+            }
+
+            int hash = sb.toString().hashCode();
+            while(usedHashes.contains(hash))
+                ++hash;
+            usedHashes.add(hash);
+
+            return "hp_shapeless" + hash;
         }
     }
 }

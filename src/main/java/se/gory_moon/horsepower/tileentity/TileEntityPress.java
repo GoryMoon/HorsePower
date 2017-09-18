@@ -155,7 +155,10 @@ public class TileEntityPress extends TileEntityHPHorseBase {
 
     @Override
     public int getInventoryStackLimit() {
-        return 64;
+        PressRecipe recipe = HPRecipes.instance().getPressRecipe(getStackInSlot(0));
+        if (recipe == null)
+            return 64;
+        return recipe.getInput().getCount();
     }
 
     @Override
