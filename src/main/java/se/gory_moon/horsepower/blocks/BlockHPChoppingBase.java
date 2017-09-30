@@ -172,12 +172,13 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
 
         if (side_texture.isEmpty() || top_texture.isEmpty()) {
             ItemStack stack = new ItemStack(te.getTileData().getCompoundTag("textureBlock"));
-            if (!stack.isEmpty()) {
+            if (!stack.isEmpty() && te.getWorld().isRemote) {
                 Block block = Block.getBlockFromItem(stack.getItem());
                 IBlockState state1 = block.getStateFromMeta(stack.getMetadata());
                 side_texture = Utils.getTextureFromBlockstate(state1).getIconName();
                 top_texture = Utils.getTopTextureFromBlockstate(state1).getIconName();
                 te.getTileData().setString("side_texture", side_texture);
+                te.getTileData().setString("top_texture", top_texture);
             }
         }
 
