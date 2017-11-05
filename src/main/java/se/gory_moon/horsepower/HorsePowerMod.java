@@ -11,8 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.items.ModItems;
-import se.gory_moon.horsepower.jei.DummyJeiPlugin;
-import se.gory_moon.horsepower.jei.IJeiPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.proxy.CommonProxy;
@@ -34,7 +32,6 @@ public class HorsePowerMod {
 
     public static HorsePowerCreativeTab creativeTab = new HorsePowerCreativeTab();
     public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
-    public static IJeiPlugin jeiPlugin = new DummyJeiPlugin();
     public static Logger logger = LogManager.getLogger("HorsePower");
 
     @EventHandler

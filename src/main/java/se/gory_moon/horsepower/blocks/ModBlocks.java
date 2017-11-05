@@ -42,7 +42,10 @@ public class ModBlocks {
             final IForgeRegistry<Block> registry = event.getRegistry();
 
             BLOCK_PRESS_FILLER.setHarvestLevel("axe", 1);
-            final Block[] blocks = {BLOCK_HAND_GRINDSTONE, BLOCK_GRINDSTONE, BLOCK_MANUAL_CHOPPER, BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER, BLOCK_PRESS, BLOCK_PRESS_FILLER};
+            final Block[] blocks = {BLOCK_HAND_GRINDSTONE, BLOCK_GRINDSTONE,
+                    BLOCK_MANUAL_CHOPPER, BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER,
+                    BLOCK_PRESS, BLOCK_PRESS_FILLER,
+            };
 
             registry.registerAll(blocks);
         }

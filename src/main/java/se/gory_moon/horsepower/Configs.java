@@ -22,7 +22,7 @@ public class Configs {
     @Config.LangKey("config.gui.general")
     public static General general = new General();
 
-    @Comment("Contains the customizable recipes")
+    @Comment({"Contains the customizable recipes", "For the recipes to show in JEI the resources needs to be reloaded, F3+T"})
     @Config.LangKey("config.gui.recipes")
     public static Recipes recipes = new Recipes();
 

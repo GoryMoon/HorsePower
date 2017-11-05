@@ -42,7 +42,6 @@ public class HPRecipes {
     }
 
     public void reloadRecipes(List<String> grindstone, List<String> handGrindstone, List<String> chopping, List<String> manualChopping, List<String> press) {
-        HorsePowerMod.jeiPlugin.removeRecipe();
         grindstoneRecipes.clear();
         handgrindstoneRecipes.clear();
         choppingBlockRecipes.clear();
@@ -56,7 +55,6 @@ public class HPRecipes {
         createRecipes(PressRecipe.class, press, false).forEach(this::addPressRecipe);
 
         HorsePowerMod.tweakerPlugin.applyTweaker();
-        HorsePowerMod.jeiPlugin.addRecipes();
     }
 
     private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, List<String> data, boolean requireTime) {

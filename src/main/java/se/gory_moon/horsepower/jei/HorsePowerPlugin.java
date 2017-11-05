@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.jei.chopping.ChoppingRecipeMaker;
 import se.gory_moon.horsepower.jei.chopping.ChoppingRecipeWrapper;
@@ -24,7 +23,7 @@ import se.gory_moon.horsepower.jei.press.PressRecipeWrapper;
 import se.gory_moon.horsepower.recipes.*;
 
 @JEIPlugin
-public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
+public class HorsePowerPlugin implements IModPlugin {
 
     public static final String HAND_GRINDING = "horsepower.hand_grinding";
     public static final String GRINDING = "horsepower.grinding";
@@ -40,7 +39,7 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
 
     @Override
     public void register(IModRegistry registry) {
-        HorsePowerMod.jeiPlugin = this;
+
         jeiHelpers = registry.getJeiHelpers();
         guiHelper = jeiHelpers.getGuiHelper();
         craftingGridHelper = guiHelper.createCraftingGridHelper(1, 0);
@@ -125,57 +124,4 @@ public class HorsePowerPlugin implements IModPlugin, IJeiPlugin {
         registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
-    @Override
-    public void removeRecipe() {
-        if (Configs.recipes.useSeperateGrindstoneRecipes) {
-            for (GrindstoneRecipeWrapper recipe : GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, true)) {
-                jeiRuntime.getRecipeRegistry().removeRecipe(recipe, HAND_GRINDING);
-            }
-        }
-
-        for (GrindstoneRecipeWrapper recipe: GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, false)) {
-            jeiRuntime.getRecipeRegistry().removeRecipe(recipe, GRINDING);
-        }
-
-        if (Configs.recipes.useSeperateChoppingRecipes && Configs.general.enableHandChoppingBlock) {
-            for (ChoppingRecipeWrapper recipe : ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, true)) {
-                jeiRuntime.getRecipeRegistry().removeRecipe(recipe, MANUAL_CHOPPING);
-            }
-        }
-
-        for (ChoppingRecipeWrapper recipe: ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false)) {
-            jeiRuntime.getRecipeRegistry().removeRecipe(recipe, CHOPPING);
-        }
-
-        for (PressRecipeWrapper recipe: PressRecipeMaker.getPressRecipes(jeiHelpers)) {
-            jeiRuntime.getRecipeRegistry().removeRecipe(recipe, PRESS);
-        }
-    }
-
-    @Override
-    public void addRecipes() {
-        if (Configs.recipes.useSeperateGrindstoneRecipes) {
-            for (GrindstoneRecipeWrapper recipe : GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, true)) {
-                jeiRuntime.getRecipeRegistry().addRecipe(recipe, HAND_GRINDING);
-            }
-        }
-
-        for (GrindstoneRecipeWrapper recipe: GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, false)) {
-            jeiRuntime.getRecipeRegistry().addRecipe(recipe, GRINDING);
-        }
-
-        if (Configs.recipes.useSeperateChoppingRecipes && Configs.general.enableHandChoppingBlock) {
-            for (ChoppingRecipeWrapper recipe : ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, true)) {
-                jeiRuntime.getRecipeRegistry().addRecipe(recipe, MANUAL_CHOPPING);
-            }
-        }
-
-        for (ChoppingRecipeWrapper recipe: ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false)) {
-            jeiRuntime.getRecipeRegistry().addRecipe(recipe, CHOPPING);
-        }
-
-        for (PressRecipeWrapper recipe: PressRecipeMaker.getPressRecipes(jeiHelpers)) {
-            jeiRuntime.getRecipeRegistry().addRecipe(recipe, PRESS);
-        }
-    }
 }

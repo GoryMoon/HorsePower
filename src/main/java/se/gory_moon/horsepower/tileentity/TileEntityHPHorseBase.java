@@ -96,7 +96,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         if (hasWorker() && worker.canBeLeashedTo(player)) {
             hasWorker = false;
             worker.detachHome();
-            worker.setLeashedToEntity(player, true);
+            worker.setLeashHolder(player, true);
             worker = null;
             nbtWorker = null;
         }

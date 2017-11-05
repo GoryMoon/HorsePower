@@ -143,7 +143,7 @@ public abstract class BlockHPBase extends Block {
                 for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
                     if (entity instanceof EntityCreature) {
                         EntityCreature tmp = (EntityCreature) entity;
-                        if ((tmp.getLeashed() && tmp.getLeashedToEntity() == playerIn)) {
+                        if ((tmp.getLeashed() && tmp.getLeashHolder() == playerIn)) {
                             creature = tmp;
                             break search;
                         }
