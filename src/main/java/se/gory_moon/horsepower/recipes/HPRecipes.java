@@ -42,6 +42,7 @@ public class HPRecipes {
     }
 
     public void reloadRecipes(List<String> grindstone, List<String> handGrindstone, List<String> chopping, List<String> manualChopping, List<String> press) {
+        ERRORS.clear();
         grindstoneRecipes.clear();
         handgrindstoneRecipes.clear();
         choppingBlockRecipes.clear();
@@ -59,6 +60,7 @@ public class HPRecipes {
 
     private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, List<String> data, boolean requireTime) {
         List<T> recipes = new ArrayList<>();
+        int index = 0;
         for (String aData : data) {
             String[] comp = aData.split("-");
             if (aData.isEmpty()) continue;
@@ -72,7 +74,7 @@ public class HPRecipes {
                     try {
                         stack = Utils.parseItemStack(item, true, true);
                     } catch (Exception e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ".");
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ", index: " + index);
                         break;
                     }
                     if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
@@ -81,14 +83,14 @@ public class HPRecipes {
                     try {
                         time = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ".");
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ", index: " + index);
                         time = -1;
                     }
                 } else if (stacks.size() == 3) {
                     try {
                         secondaryChance = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2));
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2) + ", index: " + index);
                     }
                 }
             }
@@ -114,8 +116,9 @@ public class HPRecipes {
                 }
             }
             if (!flag) {
-                Utils.errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + ")");
+                Utils.errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + "), index: " + index);
             }
+            index++;
         }
         return recipes;
     }
