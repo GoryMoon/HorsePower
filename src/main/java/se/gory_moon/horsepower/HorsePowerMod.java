@@ -20,7 +20,7 @@ import se.gory_moon.horsepower.tweaker.IHPAction;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
 
-@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.12]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;")
+@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.12]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;", certificateFingerprint = Reference.FINGERPRINT)
 @EventBusSubscriber
 public class HorsePowerMod {
 
@@ -66,6 +66,11 @@ public class HorsePowerMod {
     @EventHandler
     public void serverLoad(FMLServerAboutToStartEvent event) {
         HPRecipes.instance().reloadRecipes();
+    }
+
+    @EventHandler
+    public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+        logger.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
 
 }

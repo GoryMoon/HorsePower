@@ -52,9 +52,7 @@ minecraft {
 
     replaceIn "Reference.java"
     replace "@MOD_VERSION@", config.mod_version
-    if (project.hasProperty("ms_sha1_signature")) {
-        replace "@FINGERPRINT@", project.ms_sha1_signature
-    }
+    replace "@FINGERPRINT@", project.findProperty('signSHA1')
 }
 
 repositories {
@@ -140,6 +138,25 @@ jar {
         attributes 'FMLAT': 'horsepower_at.cfg'
     }
 }
+
+task signJar(type: SignJar, dependsOn: ["jar", "devJar"]) {
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+
+    // findProperty allows us to reference the property without it existing.
+    // Using project.propName would cause the script to fail validation if
+    // the property did not exist.
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStorePass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+// Runs this task automatically when build is ran.
+build.dependsOn signJar
 
 uploadArchives {
     repositories {
