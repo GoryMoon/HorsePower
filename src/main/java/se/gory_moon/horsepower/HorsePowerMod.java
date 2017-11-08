@@ -19,6 +19,7 @@ import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
 import se.gory_moon.horsepower.tweaker.IHPAction;
 import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
+import se.gory_moon.horsepower.util.Utils;
 
 @Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.12]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;", certificateFingerprint = Reference.FINGERPRINT)
 @EventBusSubscriber
@@ -66,6 +67,7 @@ public class HorsePowerMod {
     @EventHandler
     public void serverLoad(FMLServerAboutToStartEvent event) {
         HPRecipes.instance().reloadRecipes();
+        Utils.sendSavedErrors();
     }
 
     @EventHandler

@@ -74,7 +74,7 @@ public class HPRecipes {
                     try {
                         stack = Utils.parseItemStack(item, true, true);
                     } catch (Exception e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ", index: " + index);
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ", index: " + index, false);
                         break;
                     }
                     if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
@@ -83,14 +83,14 @@ public class HPRecipes {
                     try {
                         time = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ", index: " + index);
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ", index: " + index, false);
                         time = -1;
                     }
                 } else if (stacks.size() == 3) {
                     try {
                         secondaryChance = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2) + ", index: " + index);
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2) + ", index: " + index, false);
                     }
                 }
             }
@@ -116,7 +116,7 @@ public class HPRecipes {
                 }
             }
             if (!flag) {
-                Utils.errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + "), index: " + index);
+                Utils.errorMessage("Couldn't load " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe (" + Joiner.on("-").join(comp) + "), index: " + index, false);
             }
             index++;
         }

@@ -5,11 +5,6 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -18,7 +13,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -49,6 +43,7 @@ public class HPEventHandler {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(Reference.MODID)) {
             reloadConfig();
+            Utils.sendSavedErrors();
         }
     }
 
@@ -65,7 +60,7 @@ public class HPEventHandler {
             try {
                 stack = (ItemStack) Utils.parseItemStack(data[0], false, false);
             } catch (Exception e) {
-                Utils.errorMessage("Parse error with item for custom axes for the chopping block");
+                Utils.errorMessage("Parse error with item for custom axes for the chopping block", false);
             }
 
             if (!stack.isEmpty())
@@ -82,7 +77,7 @@ public class HPEventHandler {
 
                 harvestPercentages.put(harvestLevel, Pair.of(base, chance));
             } catch (NumberFormatException e) {
-                Utils.errorMessage("HarvestLevel config is malformed, make sure only numbers are used as values, (" + s + ")");
+                Utils.errorMessage("HarvestLevel config is malformed, make sure only numbers are used as values, (" + s + ")", false);
             }
         });
     }
@@ -90,13 +85,7 @@ public class HPEventHandler {
     @SubscribeEvent
     public static void onWorldJoin(EntityJoinWorldEvent event) {
         if (FMLCommonHandler.instance().getSide().isClient() && event.getEntity() instanceof EntityPlayerSP && event.getWorld() instanceof WorldClient && FMLClientHandler.instance().getClientPlayerEntity() != null) {
-            if (HPRecipes.ERRORS.size() > 0) {
-                FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower errors"));
-                FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
-                HPRecipes.ERRORS.forEach(s -> FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Loader.instance().getConfigDir() + "/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Changed in in-game config or click to open the config file to fix this"))))));
-                FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
-                HPRecipes.ERRORS.clear();
-            }
+            Utils.sendSavedErrors();
             //HPEventHandler.reloadConfig();
         }
     }

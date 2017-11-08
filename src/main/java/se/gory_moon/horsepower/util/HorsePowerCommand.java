@@ -11,10 +11,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.IClientCommand;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import se.gory_moon.horsepower.HPEventHandler;
+import se.gory_moon.horsepower.recipes.HPRecipes;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -65,8 +69,16 @@ public class HorsePowerCommand extends CommandBase implements IClientCommand {
                 } else
                     throw new CommandException("commands.horsepower.entity.invalid");
                 return;
-            } else if ("reload".equals(args[0])) {
-                throw new CommandException("commands.horsepower.reload");
+            } if ("reload".equals(args[0])) {
+                sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload").setStyle(new Style().setColor(TextFormatting.YELLOW).setBold(true)));
+                HPEventHandler.reloadConfig();
+                boolean hasErrors = HPRecipes.ERRORS.size() > 0;
+                Utils.sendSavedErrors();
+                if (hasErrors)
+                    sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload.error").setStyle(new Style().setColor(TextFormatting.DARK_RED).setBold(true)));
+                else
+                    sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload.noerror").setStyle(new Style().setColor(TextFormatting.GREEN).setBold(true)));
+                return;
             }
         }
         throw new WrongUsageException(getUsage(sender));
@@ -74,7 +86,7 @@ public class HorsePowerCommand extends CommandBase implements IClientCommand {
 
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, "entity"): Collections.emptyList();
+        return args.length == 1 ? getListOfStringsMatchingLastWord(args, "entity", "reload"): Collections.emptyList();
     }
 
     @Override

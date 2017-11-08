@@ -120,7 +120,7 @@ public class Utils {
         try {
             return Integer.parseInt(in.split("-")[0]);
         } catch (NumberFormatException e) {
-            errorMessage("Base amount for chopping axe is malformed, (" + in + ")");
+            errorMessage("Base amount for chopping axe is malformed, (" + in + ")", false);
         }
         return 0;
     }
@@ -129,19 +129,29 @@ public class Utils {
         try {
             return Integer.parseInt(in.split("-")[1]);
         } catch (NumberFormatException e) {
-            errorMessage("Chance for chopping axe is malformed, (" + in + ")");
+            errorMessage("Chance for chopping axe is malformed, (" + in + ")", false);
         }
         return 0;
     }
 
-    public static void errorMessage(String message) {
+    public static void errorMessage(String message, boolean showDirectly) {
         if (FMLCommonHandler.instance().getSide().isClient()) {
-            if (FMLClientHandler.instance().getClientPlayerEntity() != null)
+            if (FMLClientHandler.instance().getClientPlayerEntity() != null && showDirectly)
                 FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + message).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Loader.instance().getConfigDir() + "/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Change in in-game config or click to open the config file to fix this")))));
             else
                 HPRecipes.ERRORS.add(message);
         }
         HorsePowerMod.logger.warn(message);
+    }
+
+    public static void sendSavedErrors() {
+        if (FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().getClientPlayerEntity() != null && HPRecipes.ERRORS.size() > 0) {
+            FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower config errors"));
+            FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
+            HPRecipes.ERRORS.forEach(s -> FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Loader.instance().getConfigDir() + "/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Changed in in-game config or click to open the config file to fix this"))))));
+            FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
+            HPRecipes.ERRORS.clear();
+        }
     }
 
     public static Object parseItemStack(String item, boolean acceptOre, boolean acceptAmount) throws Exception {

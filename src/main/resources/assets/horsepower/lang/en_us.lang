@@ -31,11 +31,13 @@ info.horsepower:grindstone.info2=In the middle of the 7x7 place a block of your 
 info.horsepower:grindstone.info3=With the animal attached with the lead right click the grindstone and the animal should now be connected to that. Now simply right click the grindstone with a item that can be grinded to start the process or attach any automatic input/output on the top or bottom.
 
 # Command
-commands.horsepower.reload=Don't need to use this command anymore, everything reloads automatically
 commands.horsepower.usage=/horsepower entity
 commands.horsepower.entity.invalid=Can only do this command as a player
 commands.horsepower.entity.no=Not looking at an entity
 commands.horsepower.entity.has=Entity copied to clipboard: %s
+commands.horsepower.reload=Reloading in-game changed HorsePower configs
+commands.horsepower.reload.error=Reload finished with errors
+commands.horsepower.reload.noerror=Reload finished without errors
 
 # Gui
 gui.horsepower.jei.category.hand.grinding=Hand Grindstone
