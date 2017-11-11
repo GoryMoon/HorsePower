@@ -12,10 +12,7 @@ import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.util.Utils;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HPRecipes {
 
@@ -286,24 +283,24 @@ public class HPRecipes {
         return getPressRecipe(stack) != null;
     }
 
-    public ArrayList<GrindstoneRecipe> getGrindstoneRecipes() {
-        return new ArrayList<>(grindstoneRecipes.values());
+    public Collection<GrindstoneRecipe> getGrindstoneRecipes() {
+        return grindstoneRecipes.values();
     }
 
-    public ArrayList<GrindstoneRecipe> getHandGrindstoneRecipes() {
-        return new ArrayList<>(handgrindstoneRecipes.values());
+    public Collection<GrindstoneRecipe> getHandGrindstoneRecipes() {
+        return handgrindstoneRecipes.values();
     }
 
-    public ArrayList<ChoppingBlockRecipe> getChoppingRecipes() {
-        return new ArrayList<>(choppingBlockRecipes.values());
+    public Collection<ChoppingBlockRecipe> getChoppingRecipes() {
+        return choppingBlockRecipes.values();
     }
 
-    public ArrayList<ChoppingBlockRecipe> getManualChoppingRecipes() {
-        return new ArrayList<>(manualChoppingBlockRecipes.values());
+    public Collection<ChoppingBlockRecipe> getManualChoppingRecipes() {
+        return manualChoppingBlockRecipes.values();
     }
 
-    public ArrayList<PressRecipe> getPressRecipes() {
-        return new ArrayList<>(pressRecipes.values());
+    public Collection<PressRecipe> getPressRecipes() {
+        return pressRecipes.values();
     }
 
     public int getGrindstoneTime(ItemStack stack, boolean hand) {

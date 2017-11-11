@@ -7,13 +7,14 @@ import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.PressRecipe;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PressRecipeMaker {
 
     public static List<PressRecipeWrapper> getPressRecipes(IJeiHelpers helpers) {
         IStackHelper stackHelper = helpers.getStackHelper();
-        ArrayList<PressRecipe> grindingRecipes = HPRecipes.instance().getPressRecipes();
+        Collection<PressRecipe> grindingRecipes = HPRecipes.instance().getPressRecipes();
 
         List<PressRecipeWrapper> recipes = new ArrayList<>();
 

@@ -1,6 +1,5 @@
 package se.gory_moon.horsepower.tweaker.recipes;
 
-import com.google.common.collect.Lists;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -18,6 +17,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
@@ -93,18 +93,18 @@ public class ChoppingRecipeTweaker {
 
         @Override
         public void apply() {
-            List<Integer> removeIndex = Lists.newArrayList();
+            ArrayList<ChoppingBlockRecipe> toRemove = new ArrayList<>();
 
-            for (int i = 0; i < HPRecipes.instance().getGrindstoneRecipes().size(); i++) {
-                ChoppingBlockRecipe recipe = HPRecipes.instance().getChoppingRecipes().get(i);
+            Collection<ChoppingBlockRecipe> recipeList = hand && Configs.recipes.useSeperateChoppingRecipes ? HPRecipes.instance().getManualChoppingRecipes(): HPRecipes.instance().getChoppingRecipes();
+
+            for (ChoppingBlockRecipe recipe: recipeList) {
                 if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
-                    removeIndex.add(i);
+                    toRemove.add(recipe);
                 }
             }
 
-            ArrayList<ChoppingBlockRecipe> recipeList = hand && Configs.recipes.useSeperateChoppingRecipes ? HPRecipes.instance().getManualChoppingRecipes(): HPRecipes.instance().getChoppingRecipes();
-            for(int i = removeIndex.size() - 1; i >= 0; --i) {
-                recipeList.remove(removeIndex.get(i).intValue());
+            for(int i = toRemove.size() - 1; i >= 0; --i) {
+                recipeList.remove(toRemove.get(i));
             }
         }
 

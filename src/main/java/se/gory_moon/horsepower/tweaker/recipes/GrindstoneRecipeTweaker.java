@@ -1,6 +1,5 @@
 package se.gory_moon.horsepower.tweaker.recipes;
 
-import com.google.common.collect.Lists;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -18,6 +17,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
@@ -95,18 +95,18 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void apply() {
-            List<Integer> removeIndex = Lists.newArrayList();
+            ArrayList<GrindstoneRecipe> toRemove = new ArrayList<>();
+            Collection<GrindstoneRecipe> recipeList = hand && Configs.recipes.useSeperateGrindstoneRecipes ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
 
-            for (int i = 0; i < HPRecipes.instance().getGrindstoneRecipes().size(); i++) {
-                GrindstoneRecipe recipe = HPRecipes.instance().getGrindstoneRecipes().get(i);
+            for (GrindstoneRecipe recipe: recipeList) {
                 if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
-                    removeIndex.add(i);
+                    toRemove.add(recipe);
                 }
             }
 
-            ArrayList<GrindstoneRecipe> grindRecipe = hand && Configs.recipes.useSeperateGrindstoneRecipes ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
-            for(int i = removeIndex.size() - 1; i >= 0; --i) {
-                grindRecipe.remove(removeIndex.get(i).intValue());
+
+            for(int i = toRemove.size() - 1; i >= 0; --i) {
+                recipeList.remove(toRemove.get(i));
             }
         }
 

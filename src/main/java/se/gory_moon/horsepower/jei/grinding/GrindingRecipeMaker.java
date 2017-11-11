@@ -7,6 +7,7 @@ import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class GrindingRecipeMaker {
@@ -16,7 +17,7 @@ public class GrindingRecipeMaker {
 
     public static List<GrindstoneRecipeWrapper> getGrindstoneRecipes(IJeiHelpers helpers, boolean hand) {
         IStackHelper stackHelper = helpers.getStackHelper();
-        ArrayList<GrindstoneRecipe> grindingRecipes = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
+        Collection<GrindstoneRecipe> grindingRecipes = hand ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
 
         List<GrindstoneRecipeWrapper> recipes = new ArrayList<>();
 
