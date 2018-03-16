@@ -29,7 +29,7 @@ public class ItemBlockPress extends ItemBlock {
             pos = pos.offset(facing);
         }
 
-        if (facing == EnumFacing.DOWN || (facing != EnumFacing.UP && !worldIn.getBlockState(pos.up()).getBlock().isReplaceable(worldIn, pos.up())))
+        if (facing == EnumFacing.DOWN || (!worldIn.getBlockState(pos.up()).getBlock().isReplaceable(worldIn, pos.up())))
             pos = pos.down();
 
         BlockPos posUp = pos.up();
