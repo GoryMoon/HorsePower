@@ -24,9 +24,9 @@ public class ModBlocks {
     public static final BlockGrindstone BLOCK_GRINDSTONE = new BlockGrindstone();
     public static final BlockChoppingBlock BLOCK_MANUAL_CHOPPER = new BlockChoppingBlock();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
-    public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHardness(5F).setResistance(5F);
+    public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0).setHardness(5F).setResistance(5F);
     public static final BlockPress BLOCK_PRESS = new BlockPress();
-    public static final BlockFiller BLOCK_PRESS_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "press_", true).setHardness(5F).setResistance(5F);
+    public static final BlockFiller BLOCK_PRESS_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "press_", true).setHarvestLevel1("axe", 1).setHardness(5F).setResistance(5F);
 
     @Mod.EventBusSubscriber(modid = Reference.MODID)
     public static class RegistrationHandler {

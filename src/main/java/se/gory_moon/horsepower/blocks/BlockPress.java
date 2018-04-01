@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -26,7 +27,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.advancements.Manager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.lib.Constants;
@@ -50,14 +50,13 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D + 3D/16D, 1.0D);
 
     public BlockPress() {
-        super(Material.ROCK);
-        setHardness(5F);
-        setResistance(5F);
+        super(Material.WOOD);
+        setHardness(5.0F);
+        setResistance(5.0F);
         setHarvestLevel("axe", 1);
         setSoundType(SoundType.WOOD);
         setRegistryName(Constants.PRESS_BLOCK);
         setUnlocalizedName(Constants.PRESS_BLOCK);
-        setCreativeTab(HorsePowerMod.creativeTab);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -68,6 +67,13 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return COLLISION_AABB;
+    }
+
+    @Override
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+        if (!((World) world).isRemote && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
+            ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
     }
 
     @Override
