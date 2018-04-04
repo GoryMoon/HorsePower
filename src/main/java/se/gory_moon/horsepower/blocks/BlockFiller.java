@@ -127,7 +127,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
         IBlockState state = world.getBlockState(pos);
-        if (!((World) world).isRemote && pos.offset(state.getValue(FACING)).equals(neighbor)) {
+        if (world instanceof World && !((World) world).isRemote && pos.offset(state.getValue(FACING)).equals(neighbor)) {
             validateFilled((World) world, world.getBlockState(neighbor), pos);
         }
     }
