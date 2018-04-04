@@ -121,6 +121,10 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         return worker;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
     private Vec3d getPathPosition(int i) {
         double x = pos.getX() + path[i][0] * 2;
         double y = pos.getY() + getPositionOffset();

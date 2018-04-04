@@ -26,6 +26,7 @@ tile.press.name=Horse Press
 info.horsepower:chopping.invalid=INVALID 7x7x2 AREA
 info.horsepower:grindstone.invalid=INVALID 7x7x2 AREA
 info.horsepower:press.invalid=INVALID 7x7x2 AREA
+info.horsepower:item.reveal=Hold a lead to reveal area needed
 info.horsepower:grindstone.info1=The grindstone will grind down items to their base components. When setting up a grindstone make sure you have a 7x7 and 2 blocks high area cleared before starting, there needs to be solid ground under the 7x7 area.
 info.horsepower:grindstone.info2=In the middle of the 7x7 place a block of your choice and then place the grindstone above that. If the area isn't cleared to grindstone will say that when looking at it. Next, use a lead to get a Horse/Donkey/Mule/Llama of your choice to be working the grinder.
 info.horsepower:grindstone.info3=With the animal attached with the lead right click the grindstone and the animal should now be connected to that. Now simply right click the grindstone with a item that can be grinded to start the process or attach any automatic input/output on the top or bottom.

@@ -74,6 +74,12 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
         }
         GlStateManager.popMatrix();
 
-        super.render(te, x, y + 1, z, partialTicks, destroyStage, alpha);
-    }
+        GlStateManager.pushMatrix();
+
+        drawDisplayText(te, x, y + 1, z);
+
+        if (!te.isValid())
+            renderInvalidArea(te.getWorld(), te.getPos(), -1);
+        GlStateManager.popMatrix();
+        }
 }

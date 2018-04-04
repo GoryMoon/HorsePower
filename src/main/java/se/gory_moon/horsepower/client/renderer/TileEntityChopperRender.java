@@ -71,7 +71,13 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
             renderStillItem(te, te.getStackInSlot(1), 0.5F, 0.54F, 0.5F, 1.3F);
         GlStateManager.popMatrix();
 
-        super.render(te, x, y + 1, z, partialTicks, destroyStage, alpha);
+        GlStateManager.pushMatrix();
+
+        drawDisplayText(te, x, y + 1, z);
+
+        if (!te.isValid())
+            renderInvalidArea(te.getWorld(), te.getPos(), 0);
+        GlStateManager.popMatrix();
     }
 
 }

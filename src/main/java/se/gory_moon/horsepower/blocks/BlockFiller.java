@@ -155,7 +155,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos0) {
         BlockPos pos = pos0.offset(state.getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
-        if (validateFilled((World) world, state1, pos0))
+        if (world instanceof World && validateFilled((World) world, state1, pos0))
             return state1.getBlock().getBoundingBox(state1, world, pos);
         else
             return super.getBoundingBox(state, world, pos0);
@@ -205,7 +205,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     public boolean shouldCheckWeakPower(IBlockState state, IBlockAccess world, BlockPos pos0, EnumFacing side) {
         BlockPos pos = pos0.offset(state.getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
-        if (validateFilled((World) world, state1, pos0))
+        if (world instanceof World && validateFilled((World) world, state1, pos0))
             return state1.getBlock().shouldCheckWeakPower(state1, world, pos, side);
         else
             return super.shouldCheckWeakPower(state, world, pos0, side);
@@ -215,7 +215,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos0, EnumFacing side) {
         BlockPos pos = pos0.offset(state.getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
-        if (validateFilled((World) world, state1, pos0))
+        if (world instanceof World && validateFilled((World) world, state1, pos0))
             return state1.getBlock().getStrongPower(state1, world, pos, side);
         else
             return super.getStrongPower(state, world, pos0, side);
@@ -230,7 +230,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos0, @Nullable EnumFacing side) {
         BlockPos pos = pos0.offset(state.getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
-        if (validateFilled((World) world, state1, pos0))
+        if (world instanceof World && validateFilled((World) world, state1, pos0))
             return state1.getBlock().canConnectRedstone(state1, world, pos, side);
         else
             return super.canConnectRedstone(state, world, pos0, side);
@@ -240,7 +240,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos0, EnumFacing side) {
         BlockPos pos = pos0.offset(state.getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
-        if (validateFilled((World) world, state1, pos0))
+        if (world instanceof World && validateFilled((World) world, state1, pos0))
             return state1.getBlock().getWeakPower(state1, world, pos, side);
         else
             return super.getWeakPower(state, world, pos0, side);

@@ -70,6 +70,12 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
         }
         GlStateManager.popMatrix();
 
-        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+        GlStateManager.pushMatrix();
+
+        drawDisplayText(te, x, y, z);
+
+        if (!te.isValid())
+            renderInvalidArea(te.getWorld(), te.getPos(), -1);
+        GlStateManager.popMatrix();
     }
 }

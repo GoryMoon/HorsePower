@@ -78,7 +78,8 @@ public final class Localization {
     public enum  INFO {
         GRINDSTONE_INVALID,
         CHOPPING_INVALID,
-        PRESS_INVALID,;
+        PRESS_INVALID,
+        ITEM_REVEAL;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
