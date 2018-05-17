@@ -5,11 +5,13 @@ import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.jei.chopping.ChoppingRecipeMaker;
 import se.gory_moon.horsepower.jei.chopping.ChoppingRecipeWrapper;
@@ -71,13 +73,16 @@ public class HorsePowerPlugin implements IModPlugin {
         else
             registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE), GRINDING);
         if (Configs.general.enableHandChoppingBlock) {
+            ItemStack itemStackManualChopper = BlockHPChoppingBase.createItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER, 1, new ItemStack(Item.getItemFromBlock(Blocks.LOG)));
             if (Configs.recipes.useSeperateChoppingRecipes)
-                registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER), MANUAL_CHOPPING);
+                registry.addRecipeCatalyst(itemStackManualChopper, MANUAL_CHOPPING);
             else
-                registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER), CHOPPING);
+                registry.addRecipeCatalyst(itemStackManualChopper, CHOPPING);
         }
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_CHOPPER), CHOPPING);
+
+        ItemStack itemStackChopper = BlockHPChoppingBase.createItemStack(ModBlocks.BLOCK_CHOPPER, 1, new ItemStack(Item.getItemFromBlock(Blocks.LOG)));
+        registry.addRecipeCatalyst(itemStackChopper, CHOPPING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS);
 
         registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
