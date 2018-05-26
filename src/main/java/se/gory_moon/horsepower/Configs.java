@@ -39,6 +39,10 @@ public class Configs {
         @Comment("Must look at the block to show the amount in it")
         @Name("Must Look For Amount ")
         public boolean mustLookAtBlock = true;
+
+        @Comment("If true will show the area needed when placing a HP block")
+        @Name("Show Obstructed Area")
+        public boolean showObstructedPlace = true;
     }
 
     public static class Recipes {
@@ -206,9 +210,7 @@ public class Configs {
                 "Must be edited with in-game editor for live changes."})
         @Config.LangKey("config.gui.mobs")
         @Name("Mob List")
-        public String[] grindstoneMobList = {
-                "com.animania.common.entities.rodents.EntityHedgehog"
-        };
+        public String[] grindstoneMobList = {};
 
         @Comment("The amount of points that is needed for a full press")
         @Name("Points For Press")

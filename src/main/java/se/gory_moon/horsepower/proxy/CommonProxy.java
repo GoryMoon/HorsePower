@@ -8,6 +8,8 @@ public class CommonProxy {
         Manager.register();
     }
 
+    public void init() {}
+
     public void loadComplete() {
 
     }

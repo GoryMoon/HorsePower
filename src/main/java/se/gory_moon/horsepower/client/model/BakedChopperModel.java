@@ -29,7 +29,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
-import se.gory_moon.horsepower.util.Utils;
+import se.gory_moon.horsepower.util.RenderUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class BakedChopperModel implements IBakedModel {
         this.standard = standard;
         this.choppingModel = choppingModel;
         this.format = format;
-        this.transforms = Utils.getTransforms(standard);
+        this.transforms = RenderUtils.getTransforms(standard);
 
         textureGetter = location -> {
             assert location != null;
@@ -181,8 +181,8 @@ public class BakedChopperModel implements IBakedModel {
                     // get model from data
                     Block block = Block.getBlockFromItem(blockStack.getItem());
                     IBlockState state = block.getStateFromMeta(blockStack.getItemDamage());
-                    String side_texture = Utils.getTextureFromBlockstate(state).getIconName();
-                    String top_texture = Utils.getTopTextureFromBlockstate(state).getIconName();
+                    String side_texture = RenderUtils.getTextureFromBlockstate(state).getIconName();
+                    String top_texture = RenderUtils.getTopTextureFromBlockstate(state).getIconName();
                     return ((BakedChopperModel) originalModel).getActualModel(side_texture, top_texture, null);
                 }
             }

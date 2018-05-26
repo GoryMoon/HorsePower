@@ -11,6 +11,7 @@ import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.BlockPress;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
+import se.gory_moon.horsepower.util.RenderUtils;
 
 public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPress> {
 
@@ -79,7 +80,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
         drawDisplayText(te, x, y + 1, z);
 
         if (!te.isValid())
-            renderInvalidArea(te.getWorld(), te.getPos(), -1);
+            RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), 0);
         GlStateManager.popMatrix();
         }
 }

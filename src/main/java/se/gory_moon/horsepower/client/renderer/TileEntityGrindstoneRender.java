@@ -11,6 +11,7 @@ import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.client.model.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
+import se.gory_moon.horsepower.util.RenderUtils;
 
 public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityGrindstone> {
 
@@ -75,7 +76,7 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
         drawDisplayText(te, x, y, z);
 
         if (!te.isValid())
-            renderInvalidArea(te.getWorld(), te.getPos(), -1);
+            RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), -1);
         GlStateManager.popMatrix();
     }
 }

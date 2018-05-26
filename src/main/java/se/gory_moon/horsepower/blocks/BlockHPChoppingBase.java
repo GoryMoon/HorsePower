@@ -25,6 +25,7 @@ import se.gory_moon.horsepower.blocks.property.PropertyUnlistedString;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
+import se.gory_moon.horsepower.util.RenderUtils;
 import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nonnull;
@@ -175,8 +176,8 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
             if (!stack.isEmpty() && te.getWorld().isRemote) {
                 Block block = Block.getBlockFromItem(stack.getItem());
                 IBlockState state1 = block.getStateFromMeta(stack.getMetadata());
-                side_texture = Utils.getTextureFromBlockstate(state1).getIconName();
-                top_texture = Utils.getTopTextureFromBlockstate(state1).getIconName();
+                side_texture = RenderUtils.getTextureFromBlockstate(state1).getIconName();
+                top_texture = RenderUtils.getTopTextureFromBlockstate(state1).getIconName();
                 te.getTileData().setString("side_texture", side_texture);
                 te.getTileData().setString("top_texture", top_texture);
             }

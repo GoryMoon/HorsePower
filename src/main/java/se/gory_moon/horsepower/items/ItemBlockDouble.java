@@ -12,12 +12,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.blocks.ModBlocks;
 
-public class ItemBlockPress extends ItemBlock {
+public class ItemBlockDouble extends ItemBlock {
 
-    public ItemBlockPress(Block block) {
+    private static Block fillerBlock = null;
+    public ItemBlockDouble(Block block, Block filler) {
         super(block);
+        fillerBlock = filler;
     }
 
     @Override
@@ -37,11 +38,11 @@ public class ItemBlockPress extends ItemBlock {
 
         if (!itemstack.isEmpty()
                 && player.canPlayerEdit(pos, facing, itemstack) && worldIn.mayPlace(this.block, pos, false, facing, null)
-                && player.canPlayerEdit(posUp, facing, itemstack) && worldIn.mayPlace(ModBlocks.BLOCK_PRESS_FILLER, pos, false, facing, null))
+                && player.canPlayerEdit(posUp, facing, itemstack) && worldIn.mayPlace(fillerBlock, pos, false, facing, null))
         {
             int i = this.getMetadata(itemstack.getMetadata());
             IBlockState blockState = this.block.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, i, player, hand);
-            IBlockState blockStateUp = ModBlocks.BLOCK_PRESS_FILLER.getStateForPlacement(worldIn, posUp, facing, hitX, hitY, hitZ, EnumFacing.DOWN.getIndex(), player, hand);
+            IBlockState blockStateUp = fillerBlock.getStateForPlacement(worldIn, posUp, facing, hitX, hitY, hitZ, EnumFacing.DOWN.getIndex(), player, hand);
 
             if (placeBlockAt(itemstack, player, worldIn, pos, facing, hitX, hitY, hitZ, blockState)) {
                 placeBlockAt(itemstack, player, worldIn, posUp, facing, hitX, hitY, hitZ, blockStateUp);

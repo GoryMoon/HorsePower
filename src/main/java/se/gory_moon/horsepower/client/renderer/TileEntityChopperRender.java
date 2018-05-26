@@ -10,6 +10,7 @@ import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
+import se.gory_moon.horsepower.util.RenderUtils;
 
 public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntityChopper> {
 
@@ -76,7 +77,7 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntity
         drawDisplayText(te, x, y + 1, z);
 
         if (!te.isValid())
-            renderInvalidArea(te.getWorld(), te.getPos(), 0);
+            RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), 0);
         GlStateManager.popMatrix();
     }
 

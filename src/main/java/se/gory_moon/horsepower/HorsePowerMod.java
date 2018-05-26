@@ -52,6 +52,7 @@ public class HorsePowerMod {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        proxy.init();
         ModItems.registerRecipes();
     }
 

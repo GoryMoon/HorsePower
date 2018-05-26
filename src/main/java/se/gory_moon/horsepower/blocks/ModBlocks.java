@@ -10,8 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
-import se.gory_moon.horsepower.items.ItemBlockChopper;
-import se.gory_moon.horsepower.items.ItemBlockPress;
+import se.gory_moon.horsepower.items.ItemBlockDouble;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.*;
 
@@ -61,8 +60,8 @@ public class ModBlocks {
                 new ItemBlock(BLOCK_HAND_GRINDSTONE),
                 new ItemBlock(BLOCK_GRINDSTONE),
                 new ItemBlock(BLOCK_MANUAL_CHOPPER),
-                new ItemBlockChopper(BLOCK_CHOPPER),
-                new ItemBlockPress(BLOCK_PRESS)
+                new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),
+                new ItemBlockDouble(BLOCK_PRESS, BLOCK_PRESS_FILLER)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

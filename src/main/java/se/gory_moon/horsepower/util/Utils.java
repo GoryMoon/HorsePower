@@ -1,14 +1,7 @@
 package se.gory_moon.horsepower.util;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.item.ItemBlock;
@@ -16,14 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -80,40 +71,6 @@ public class Utils {
         tag.removeTag("Damage");
         return tag.hashCode();
 
-    }
-
-    public static TextureAtlasSprite getTopTextureFromBlock(Block block, int meta) {
-        IBlockState state = block.getStateFromMeta(meta);
-        return getTopTextureFromBlockstate(state);
-    }
-
-    public static TextureAtlasSprite getTopTextureFromBlockstate(IBlockState state) {
-        IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(state);
-        if (model != Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getMissingModel()) {
-            List<BakedQuad> quads = model.getQuads(state, EnumFacing.UP, 0);
-            return quads.size() >= 1 ? quads.get(0).getSprite(): Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
-        }
-        return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
-    }
-
-    public static TextureAtlasSprite getTextureFromBlock(Block block, int meta) {
-        IBlockState state = block.getStateFromMeta(meta);
-        return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
-    }
-
-    public static TextureAtlasSprite getTextureFromBlockstate(IBlockState state) {
-        return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
-    }
-
-    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getTransforms(IBakedModel model) {
-        ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-        for(ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
-            TRSRTransformation transformation = new TRSRTransformation(model.handlePerspective(type).getRight());
-            if(!transformation.equals(TRSRTransformation.identity())) {
-                builder.put(type, TRSRTransformation.blockCenterToCorner(transformation));
-            }
-        }
-        return builder.build();
     }
 
     public static int getBaseAmount(String in) {
