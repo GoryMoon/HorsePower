@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.jei.chopping;
+package se.gory_moon.horsepower.jei.press;
 
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -9,25 +9,22 @@ import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.util.Localization;
 
-public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipeWrapper> {
-
-    private boolean handHandler;
+public class HorsePowerPressItemCategory extends HorsePowerCategory<PressRecipeWrapper> {
 
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
 
     private final String localizedName;
 
-    public HorsePowerChoppingCategory(IGuiHelper guiHelper, boolean hand) {
+    public HorsePowerPressItemCategory(IGuiHelper guiHelper) {
         super(guiHelper, 0);
-        this.handHandler = hand;
 
-        localizedName = handHandler ? Localization.GUI.CATEGORY_MANUAL_CHOPPING.translate(): Localization.GUI.CATEGORY_CHOPPING.translate();
+        localizedName = Localization.GUI.CATEGORY_PRESS_ITEM.translate();
     }
 
     @Override
     public String getUid() {
-        return handHandler ? HorsePowerPlugin.MANUAL_CHOPPING: HorsePowerPlugin.CHOPPING;
+        return HorsePowerPlugin.PRESS_ITEM;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, ChoppingRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, PressRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
         guiItemStacks.init(inputSlot, true, 34, 32);

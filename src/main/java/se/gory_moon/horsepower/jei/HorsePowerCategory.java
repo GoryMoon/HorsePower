@@ -22,8 +22,8 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
     protected HorseDrawable hedgehog;
     protected HorseDrawable character;
 
-    public HorsePowerCategory(IGuiHelper guiHelper, int offset, boolean grinding) {
-        this(guiHelper, offset, grinding, 146, 74, new ResourceLocation("horsepower", "textures/gui/jei.png"));
+    public HorsePowerCategory(IGuiHelper guiHelper, int offset) {
+        this(guiHelper, offset, false, 146, 74, new ResourceLocation("horsepower", "textures/gui/jei.png"));
     }
 
     public HorsePowerCategory(IGuiHelper guiHelper, int offset, boolean grinding, int width, int height, ResourceLocation location) {
@@ -33,6 +33,7 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
         character = getHorseDrawable(guiHelper, location, 154 + offset, 10, 100, grinding, Colors.PURPLE + "It's mini you, Darkosto!\n" + Colors.LIGHTBLUE + "Happy birthday!");
     }
 
+    //TODO use general components
     private static HorseDrawable getHorseDrawable(IGuiHelper guiHelper, ResourceLocation location, int y, int animCycle, int pathCycle, boolean grinding, String hovering) {
         IDrawableStatic horseAnim1 = guiHelper.createDrawable(location, 0, y, 30, 20);
         IDrawableStatic horseAnim2 = guiHelper.createDrawable(location, 0, y + 20, 30, 20);

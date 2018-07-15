@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
@@ -19,7 +20,7 @@ public class HPRecipes {
     private static HPRecipes INSTANCE = new HPRecipes();
 
     private final Map<ComparableItemStack, GrindstoneRecipe> grindstoneRecipes = Maps.newHashMap();
-    private final Map<ComparableItemStack, GrindstoneRecipe> handgrindstoneRecipes = Maps.newHashMap();
+    private final Map<ComparableItemStack, GrindstoneRecipe> handGrindstoneRecipes = Maps.newHashMap();
     private final Map<ComparableItemStack, ChoppingBlockRecipe> choppingBlockRecipes = Maps.newHashMap();
     private final Map<ComparableItemStack, ChoppingBlockRecipe> manualChoppingBlockRecipes = Maps.newHashMap();
     private final Map<ComparableItemStack, PressRecipe> pressRecipes = Maps.newHashMap();
@@ -41,7 +42,7 @@ public class HPRecipes {
     public void reloadRecipes(List<String> grindstone, List<String> handGrindstone, List<String> chopping, List<String> manualChopping, List<String> press) {
         ERRORS.clear();
         grindstoneRecipes.clear();
-        handgrindstoneRecipes.clear();
+        handGrindstoneRecipes.clear();
         choppingBlockRecipes.clear();
         manualChoppingBlockRecipes.clear();
         pressRecipes.clear();
@@ -95,20 +96,26 @@ public class HPRecipes {
             if (stacks.size() >= 2 && ((requireTime && time > -1) || (!requireTime && time == -1))) {
                 if (!(stacks.size() == 3 && secondaryChance == 0)) {
                     try {
+                        List<ItemStack> items;
                         if (stacks.get(0) instanceof List) {
-                            for (Object stack : (List) stacks.get(0)) {
-                                ItemStack in = ((ItemStack) stack);
-                                ItemStack secondary = stacks.size() == 3 ? (ItemStack) stacks.get(2) : ItemStack.EMPTY;
-                                recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, ItemStack.class, int.class, int.class).newInstance(in, stacks.get(1), secondary, secondaryChance, time));
-                            }
+                            items = (List<ItemStack>) stacks.get(0);
                         } else {
-                            ItemStack in = ((ItemStack) stacks.get(0));
-                            ItemStack secondary = stacks.size() == 3 ? (ItemStack) stacks.get(2) : ItemStack.EMPTY;
-                            recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, ItemStack.class, int.class, int.class).newInstance(in, stacks.get(1), secondary, secondaryChance, time));
+                            items = Collections.singletonList((ItemStack) stacks.get(0));
+                        }
+                        for (ItemStack stack : items) {
+                            if (stacks.get(1) instanceof FluidStack) {
+                                FluidStack fluid = (FluidStack) stacks.get(1);
+                                recipes.add(clazz.getConstructor(ItemStack.class, FluidStack.class).newInstance(stack, fluid));
+                            } else {
+                                ItemStack secondary = stacks.size() == 3 ? (ItemStack) stacks.get(2) : ItemStack.EMPTY;
+                                recipes.add(clazz.getConstructor(ItemStack.class, ItemStack.class, ItemStack.class, int.class, int.class).newInstance(stack, stacks.get(1), secondary, secondaryChance, time));
+                            }
                         }
                         flag = true;
-                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                    } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
                         e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        Utils.errorMessage("This recipe don't accept any fluids", false);
                     }
                 }
             }
@@ -151,7 +158,7 @@ public class HPRecipes {
     }
 
     private void addHandGrindstoneRecipe(GrindstoneRecipe recipe) {
-        handgrindstoneRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
+        handGrindstoneRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
     }
 
     public void addChoppingRecipe(Block input, ItemStack output, int time, boolean hand) {
@@ -198,6 +205,18 @@ public class HPRecipes {
         addPressRecipe(new PressRecipe(input, output, ItemStack.EMPTY, 0, 0));
     }
 
+    public void addPressRecipe(Block input, FluidStack output) {
+        addPressRecipe(Item.getItemFromBlock(input), output);
+    }
+
+    public void addPressRecipe(Item input, FluidStack output) {
+        addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
+    }
+
+    public void addPressRecipe(ItemStack input, FluidStack output) {
+        addPressRecipe(new PressRecipe(input, output));
+    }
+
     public void addPressRecipe(PressRecipe recipe) {
         if (getPressResult(recipe.getInput()) != ItemStack.EMPTY) return;
         pressRecipes.put(new ComparableItemStack(recipe.getInput()), recipe);
@@ -209,7 +228,7 @@ public class HPRecipes {
 
     public void removeGrindstoneRecipe(ItemStack input, boolean hand) {
         if (hand && Configs.recipes.useSeperateGrindstoneRecipes)
-            handgrindstoneRecipes.remove(new ComparableItemStack(input));
+            handGrindstoneRecipes.remove(new ComparableItemStack(input));
         else
             grindstoneRecipes.remove(new ComparableItemStack(input));
     }
@@ -236,7 +255,7 @@ public class HPRecipes {
     public GrindstoneRecipe getGrindstoneRecipe(ItemStack stack, boolean hand) {
         if (stack.isEmpty())
             return null;
-        return hand && Configs.recipes.useSeperateGrindstoneRecipes ? handgrindstoneRecipes.get(new ComparableItemStack(stack)): grindstoneRecipes.get(new ComparableItemStack(stack));
+        return hand && Configs.recipes.useSeperateGrindstoneRecipes ? handGrindstoneRecipes.get(new ComparableItemStack(stack)): grindstoneRecipes.get(new ComparableItemStack(stack));
     }
 
     public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack, boolean hand) {
@@ -288,7 +307,7 @@ public class HPRecipes {
     }
 
     public Collection<GrindstoneRecipe> getHandGrindstoneRecipes() {
-        return handgrindstoneRecipes.values();
+        return handGrindstoneRecipes.values();
     }
 
     public Collection<ChoppingBlockRecipe> getChoppingRecipes() {

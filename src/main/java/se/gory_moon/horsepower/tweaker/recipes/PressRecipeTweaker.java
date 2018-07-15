@@ -2,8 +2,10 @@ package se.gory_moon.horsepower.tweaker.recipes;
 
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.liquid.ILiquidStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -17,15 +19,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStack;
-import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStacks;
+import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 
 @ZenClass("mods.horsepower.Press")
 public class PressRecipeTweaker {
 
     @ZenMethod
     public static void add(IIngredient input, IItemStack output) {
-        AddPressRecipe recipe = new AddPressRecipe(input, output, ItemStack.EMPTY, 0, 0);
+        AddPressRecipe recipe = new AddPressRecipe(input, output);
+        TweakerPluginImpl.toAdd.add(recipe);
+        TweakerPluginImpl.actions.add(recipe);
+    }
+
+    @ZenMethod
+    public static void add(IIngredient input, ILiquidStack output) {
+        AddPressRecipe recipe = new AddPressRecipe(input, output);
         TweakerPluginImpl.toAdd.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
@@ -41,16 +49,18 @@ public class PressRecipeTweaker {
 
         private final IIngredient input;
         private final IItemStack output;
-        private final ItemStack secondary;
-        private final int secondaryChance;
-        private final int time;
+        private final ILiquidStack fluidOuput;
 
-        public AddPressRecipe(IIngredient input, IItemStack output2, ItemStack secondary, int secondaryChance, int time) {
+        public AddPressRecipe(IIngredient input, IItemStack output) {
             this.input = input;
-            this.output = output2;
-            this.secondary = secondary;
-            this.secondaryChance = secondaryChance;
-            this.time = time;
+            this.output = output;
+            this.fluidOuput = null;
+        }
+
+        public AddPressRecipe(IIngredient input, ILiquidStack output) {
+            this.input = input;
+            this.fluidOuput = output;
+            this.output = null;
         }
 
         @Override
@@ -62,9 +72,14 @@ public class PressRecipeTweaker {
 
             ItemStack[] items2 = getItemStacks(items);
             ItemStack output2 = getItemStack(output);
+            FluidStack fluidStack = getLiquidStack(fluidOuput);
 
             for (ItemStack stack: items2) {
-                PressRecipe recipe = new PressRecipe(stack, output2, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
+                PressRecipe recipe;
+                if (fluidStack == null)
+                    recipe = new PressRecipe(stack, output2, ItemStack.EMPTY, 0, 0);
+                else
+                    recipe = new PressRecipe(stack, fluidStack);
                 HPRecipes.instance().addPressRecipe(recipe);
             }
         }

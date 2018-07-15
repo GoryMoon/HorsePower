@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -24,18 +25,24 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
     private final ItemStack output;
+    private final FluidStack fluidOutput;
+
     private final double printLaps;
     private final IDrawableAnimated arrow;
+    public final boolean isFluid;
 
     public PressRecipeWrapper(PressRecipe recipe) {
-        this(Collections.singletonList(recipe.getInput()), recipe.getOutput());
+        this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getOutputFluid());
     }
 
-    public PressRecipeWrapper(List<ItemStack> inputs, ItemStack output) {
+    public PressRecipeWrapper(List<ItemStack> inputs, ItemStack output, FluidStack fluidOutput) {
         this.inputs = Collections.singletonList(inputs);
         this.output = output;
+        this.fluidOutput = fluidOutput;
+        this.isFluid = fluidOutput != null;
 
         IGuiHelper guiHelper = HorsePowerPlugin.guiHelper;
+        //TODO replace with general components
         ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei.png");
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 146, 0, 24, 17);
         double time = (double)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1);
@@ -47,7 +54,10 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputLists(ItemStack.class, inputs);
-        ingredients.setOutput(ItemStack.class, output);
+        if (isFluid)
+            ingredients.setOutput(FluidStack.class, fluidOutput);
+        else
+            ingredients.setOutput(ItemStack.class, output);
     }
 
     @Override
@@ -62,7 +72,7 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
     @Override
     @SideOnly(Side.CLIENT)
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        arrow.draw(minecraft, 57, 32);
+        arrow.draw(minecraft, isFluid ? 62: 57, 32);
         minecraft.fontRenderer.drawStringWithShadow("x" + printLaps, 58, 23, Colors.WHITE.getRGB());
     }
 
@@ -80,7 +90,7 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
             }
         }
 
-        return flag && output.equals(that.output);
+        return flag && (output != null && that.output != null && output.equals(that.output) || (fluidOutput != null && that.fluidOutput != null && fluidOutput.equals(that.fluidOutput)));
     }
 
     @Override

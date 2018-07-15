@@ -19,7 +19,8 @@ import se.gory_moon.horsepower.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.jei.grinding.GrindingRecipeMaker;
 import se.gory_moon.horsepower.jei.grinding.GrindstoneRecipeWrapper;
 import se.gory_moon.horsepower.jei.grinding.HorsePowerGrindingCategory;
-import se.gory_moon.horsepower.jei.press.HorsePowerPressCategory;
+import se.gory_moon.horsepower.jei.press.HorsePowerPressFluidCategory;
+import se.gory_moon.horsepower.jei.press.HorsePowerPressItemCategory;
 import se.gory_moon.horsepower.jei.press.PressRecipeMaker;
 import se.gory_moon.horsepower.jei.press.PressRecipeWrapper;
 import se.gory_moon.horsepower.recipes.*;
@@ -31,7 +32,8 @@ public class HorsePowerPlugin implements IModPlugin {
     public static final String GRINDING = "horsepower.grinding";
     public static final String MANUAL_CHOPPING = "horsepower.manual_chopping";
     public static final String CHOPPING = "horsepower.chopping";
-    public static final String PRESS = "horsepower.press";
+    public static final String PRESS_ITEM = "horsepower.press";
+    public static final String PRESS_FLUID = "horsepower.press_fluid";
 
     public static IJeiHelpers jeiHelpers;
     public static IGuiHelper guiHelper;
@@ -62,8 +64,10 @@ public class HorsePowerPlugin implements IModPlugin {
         registry.handleRecipes(ChoppingBlockRecipe.class, ChoppingRecipeWrapper::new, CHOPPING);
         registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false), CHOPPING);
 
-        registry.handleRecipes(PressRecipe.class, PressRecipeWrapper::new, PRESS);
-        registry.addRecipes(PressRecipeMaker.getPressRecipes(jeiHelpers), PRESS);
+        registry.handleRecipes(PressRecipe.class, PressRecipeWrapper::new, PRESS_ITEM);
+        registry.handleRecipes(PressRecipe.class, PressRecipeWrapper::new, PRESS_FLUID);
+        registry.addRecipes(PressRecipeMaker.getPressItemRecipes(jeiHelpers), PRESS_ITEM);
+        registry.addRecipes(PressRecipeMaker.getPressFluidRecipes(jeiHelpers), PRESS_FLUID);
 
         registry.handleRecipes(ShapedChoppingRecipe.class, ShapedChoppingCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
         registry.handleRecipes(ShapelessChoppingRecipe.class, ShapelessChoppingCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
@@ -83,7 +87,8 @@ public class HorsePowerPlugin implements IModPlugin {
 
         ItemStack itemStackChopper = BlockHPChoppingBase.createItemStack(ModBlocks.BLOCK_CHOPPER, 1, new ItemStack(Item.getItemFromBlock(Blocks.LOG)));
         registry.addRecipeCatalyst(itemStackChopper, CHOPPING);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS_ITEM);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS_FLUID);
 
         registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
@@ -126,7 +131,8 @@ public class HorsePowerPlugin implements IModPlugin {
             registry.addRecipeCategories(new HorsePowerChoppingCategory(registry.getJeiHelpers().getGuiHelper(), true));
         registry.addRecipeCategories(new HorsePowerChoppingCategory(registry.getJeiHelpers().getGuiHelper(), false));
 
-        registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new HorsePowerPressItemCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new HorsePowerPressFluidCategory(registry.getJeiHelpers().getGuiHelper()));
     }
 
 }

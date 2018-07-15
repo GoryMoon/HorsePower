@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.common.crafting.IConditionFactory;
 import net.minecraftforge.common.crafting.JsonContext;
+import net.minecraftforge.fluids.Fluid;
 import se.gory_moon.horsepower.lib.Reference;
 
 import java.util.function.BooleanSupplier;
@@ -120,14 +121,16 @@ public class Configs {
                 "minecraft:log2:1-minecraft:planks:5@4-4"
         };
 
-        @Comment({"Add recipes to the Press Block here, the format of the recipes are: modid:input:meta@amount${nbt}-modid:output:meta@amount${nbt}",
+        @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:meta@amount${nbt}-modid:output:meta@amount${nbt}",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
                 "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
+                "The 'modid' for the output can be 'fluid' for fluid outputs",
                 "The time is same for all recipes, it uses the \"Points For Press\"",
                 "Must be edited with in-game editor for live changes."})
         @Name("Press Recipes")
         public String[] pressRecipes = {
-                "minecraft:wheat_seeds@12-minecraft:dirt"
+                "minecraft:wheat_seeds@12-minecraft:dirt",
+                "ore:treeLeaves@8-fluid:water@1000"
         };
     }
 
@@ -215,6 +218,11 @@ public class Configs {
         @Comment("The amount of points that is needed for a full press")
         @Name("Points For Press")
         public int pointsForPress = 16;
+
+        @Comment("The tank size of the press in mb, 1000mb = 1 bucket")
+        @Config.RequiresMcRestart
+        @Name("Press Tank Size")
+        public int pressFluidTankSize = Fluid.BUCKET_VOLUME * 3;
 
         @Comment({"If true the chopping blocks will use all logs types in the game when crafted", "If false the chopping blocks will only use the vanilla logs", "If only vanilla logs are used other logs in recipe will yield oak texture"})
         @Name("Use Dynamic Chopping Crafting")

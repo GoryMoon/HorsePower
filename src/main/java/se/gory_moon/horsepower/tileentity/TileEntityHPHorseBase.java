@@ -56,6 +56,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
         if (hasWorker && compound.hasKey("leash", 10)) {
             nbtWorker = compound.getCompoundTag("leash");
+            findWorker();
         }
     }
 
@@ -79,6 +80,29 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         return super.writeToNBT(compound);
     }
 
+    private boolean findWorker() {
+        UUID uuid = nbtWorker.getUniqueId("UUID");
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+
+        if (world != null) {
+            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            for (Class<? extends Entity> clazz : clazzes) {
+                for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
+                    if (entity instanceof EntityCreature) {
+                        EntityCreature creature = (EntityCreature) entity;
+                        if (creature.getUniqueID().equals(uuid)) {
+                            setWorker(creature);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public void setWorker(EntityCreature newWorker) {
         hasWorker = true;
         worker = newWorker;
@@ -90,6 +114,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
             nbtTagCompound.setUniqueId("UUID", uuid);
             nbtWorker = nbtTagCompound;
         }
+        markDirty();
     }
 
     public void setWorkerToPlayer(EntityPlayer player) {
@@ -170,27 +195,10 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         if (!hasWorker())
             locateHorseTimer--;
         if (!hasWorker() && nbtWorker != null && locateHorseTimer <= 0) {
-            UUID uuid = nbtWorker.getUniqueId("UUID");
-            int x = pos.getX();
-            int y = pos.getY();
-            int z = pos.getZ();
-
-            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
-            search: for (Class<? extends Entity> clazz: clazzes) {
-                for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double)x - 7.0D, (double)y - 7.0D, (double)z - 7.0D, (double)x + 7.0D, (double)y + 7.0D, (double)z + 7.0D))){
-                    if (entity instanceof EntityCreature) {
-                        EntityCreature creature = (EntityCreature) entity;
-                        if (creature.getUniqueID().equals(uuid)) {
-                            setWorker(creature);
-                            flag = true;
-                            break search;
-                        }
-                    }
-                }
-            }
+            flag = findWorker();
         }
         if (locateHorseTimer <= 0)
-            locateHorseTimer = 220;
+            locateHorseTimer = 120;
 
         if (!world.isRemote && valid) {
             if (!running && canWork()) {

@@ -15,6 +15,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -136,6 +139,9 @@ public class Utils {
                 }).collect(Collectors.toList());
             } else
                 return OreDictionary.getOres(item.substring(4));
+        } else if (item.startsWith("fluid:")) {
+            Fluid fluid = FluidRegistry.getFluid(item.substring(6));
+            return new FluidStack(fluid, amount, nbt);
         } else {
             NBTTagCompound compound = new NBTTagCompound();
             compound.setString("id", data[0] + ":" + data[1]);

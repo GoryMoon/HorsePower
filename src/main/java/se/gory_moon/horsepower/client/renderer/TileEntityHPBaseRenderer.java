@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.blocks.BlockFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.util.Localization;
 
@@ -94,7 +95,6 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             GlStateManager.rotate(f1, 1.0F, 0.0F, 0.0F);
             GlStateManager.scale(-0.015F, -0.015F, 0.015F);
             GlStateManager.disableLighting();
-            GlStateManager.depthMask(false);
             GlStateManager.disableDepth();
             GlStateManager.enableBlend();
 
@@ -111,7 +111,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     public boolean canShowAmount(TileEntityHPBase te) {
-        return Configs.client.renderItemAmount && (!Configs.client.mustLookAtBlock || this.rendererDispatcher.cameraHitResult != null && te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()));
+        return Configs.client.renderItemAmount && (!Configs.client.mustLookAtBlock || this.rendererDispatcher.cameraHitResult != null && (te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()) || (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))));
     }
 
     protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {

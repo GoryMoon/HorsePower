@@ -7,16 +7,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.*;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.*;
 import se.gory_moon.horsepower.util.Localization;
 
-import java.nio.charset.Charset;
-import java.util.Base64;
 import java.util.List;
 
 public class Provider implements IWailaDataProvider {
@@ -37,7 +37,6 @@ public class Provider implements IWailaDataProvider {
         registrar.registerNBTProvider(provider, BlockPress.class);
         registrar.registerNBTProvider(provider, BlockFiller.class);
         registrar.addConfig(Reference.NAME, "horsepower:showItems", Localization.WAILA.SHOW_ITEMS.translate());
-        registrar.registerTooltipRenderer("horsepower.stack", new TTRenderStack());
     }
 
     @Override
@@ -87,23 +86,28 @@ public class Provider implements IWailaDataProvider {
 
         if (config.getConfig("horsepower:showItems") && (accessor.getTileEntity() instanceof TileEntityHPBase || accessor.getTileEntity() instanceof TileEntityFiller) && accessor.getPlayer().isSneaking()) {
             TileEntity te = accessor.getTileEntity();
-            {
-                final ItemStack stack = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP).getStackInSlot(0);
-                final String name = String.valueOf(stack.getItem().getRegistryName().toString());
-                if (!stack.isEmpty())
-                    currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
-            }
-            {
-                final ItemStack stack = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP).getStackInSlot(1);
-                final String name = String.valueOf(stack.getItem().getRegistryName().toString());
-                if (!stack.isEmpty())
-                    currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
-            }
-            {
-                final ItemStack stack = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP).getStackInSlot(2);
-                final String name = String.valueOf(stack.getItem().getRegistryName().toString());
-                if (!stack.isEmpty())
-                    currenttip.add(SpecialChars.getRenderString("horsepower.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(Base64.getEncoder().encodeToString(stack.serializeNBT().toString().getBytes(Charset.forName("UTF-8"))))) + SpecialChars.TAB + SpecialChars.WHITE + stack.getDisplayName());
+            if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP)) {
+                IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+                if (itemHandler != null) {
+                    {
+                        final ItemStack stack = itemHandler.getStackInSlot(0);
+                        final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                        if (!stack.isEmpty())
+                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(stack.serializeNBT().toString())) + TextFormatting.WHITE + stack.getDisplayName());
+                    }
+                    {
+                        final ItemStack stack = itemHandler.getStackInSlot(1);
+                        final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                        if (!stack.isEmpty())
+                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(stack.serializeNBT().toString())) + TextFormatting.WHITE + stack.getDisplayName());
+                    }
+                    {
+                        final ItemStack stack = itemHandler.getStackInSlot(2);
+                        final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                        if (!stack.isEmpty())
+                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(stack.serializeNBT().toString())) + TextFormatting.WHITE + stack.getDisplayName());
+                    }
+                }
             }
         }
         return currenttip;

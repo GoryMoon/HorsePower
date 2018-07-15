@@ -2,12 +2,14 @@ package se.gory_moon.horsepower.recipes;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.util.Utils;
 
 public abstract class HPRecipeBase {
 
     private ItemStack input;
     private ItemStack output;
+    private FluidStack outputFluid;
     private ItemStack secondary;
     private int time;
     private int secondaryChance;
@@ -20,12 +22,24 @@ public abstract class HPRecipeBase {
         this.secondaryChance = MathHelper.clamp(secondaryChance, 0, 100);
     }
 
+    public HPRecipeBase(ItemStack input, FluidStack output, int time) {
+        this.input = input;
+        this.output = ItemStack.EMPTY;
+        this.outputFluid = output;
+        this.secondary = ItemStack.EMPTY;
+        this.time = time;
+    }
+
     public ItemStack getInput() {
         return input;
     }
 
     public ItemStack getOutput() {
         return output;
+    }
+
+    public FluidStack getOutputFluid() {
+        return outputFluid;
     }
 
     public ItemStack getSecondary() {

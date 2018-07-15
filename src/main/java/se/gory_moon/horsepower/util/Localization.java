@@ -95,7 +95,8 @@ public final class Localization {
         CATEGORY_HAND_GRINDING,
         CATEGORY_CHOPPING,
         CATEGORY_MANUAL_CHOPPING,
-        CATEGORY_PRESS;
+        CATEGORY_PRESS_ITEM,
+        CATEGORY_PRESS_FLUID;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);

@@ -25,6 +25,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.advancements.Manager;
@@ -83,7 +86,7 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
             worldIn.setBlockState(pos, state.withProperty(FACING, filled).withProperty(PART, PressModels.BASE), 2);
         }
     }
-    
+
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
@@ -108,6 +111,22 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(PART, PressModels.BASE);
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (worldIn.isRemote)
+            return true;
+
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (!worldIn.isRemote && tileentity != null) {
+            final IFluidHandler fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+            if (fluidHandler != null && FluidUtil.interactWithFluidHandler(playerIn, hand, fluidHandler)) {
+                tileentity.markDirty();
+                return false;
+            }
+        }
+        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
     }
 
     @Override
