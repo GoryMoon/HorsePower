@@ -8,12 +8,12 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.PressRecipe;
 import se.gory_moon.horsepower.util.color.Colors;
@@ -42,9 +42,7 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
         this.isFluid = fluidOutput != null;
 
         IGuiHelper guiHelper = HorsePowerPlugin.guiHelper;
-        //TODO replace with general components
-        ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei.png");
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 146, 0, 24, 17);
+        IDrawableStatic arrowDrawable = guiHelper.createDrawable(HorsePowerCategory.COMPONENTS, 60, 0, 24, 17);
         double time = (double)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1);
         int laps = (int)((time / 8D) * 100);
         printLaps = (double) Math.round((time / 8D) * 100.0D) / 100.0D;

@@ -22,7 +22,7 @@ public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRec
     private final String localizedName;
 
     public HorsePowerGrindingCategory(IGuiHelper guiHelper, boolean hand) {
-        super(guiHelper, 16, true, 146, 85, new ResourceLocation("horsepower", "textures/gui/jei_grindstone.png"));
+        super(guiHelper, true, 146, 85, new ResourceLocation("horsepower", "textures/gui/jei_grindstone.png"));
         this.handHandler = hand;
 
         localizedName = handHandler ? Localization.GUI.CATEGORY_HAND_GRINDING.translate(): Localization.GUI.CATEGORY_GRINDING.translate();
@@ -42,7 +42,6 @@ public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRec
     public String getModName() {
         return Reference.NAME;
     }
-
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, GrindstoneRecipeWrapper recipeWrapper, IIngredients ingredients) {

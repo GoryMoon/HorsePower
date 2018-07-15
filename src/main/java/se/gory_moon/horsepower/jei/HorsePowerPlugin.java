@@ -19,8 +19,7 @@ import se.gory_moon.horsepower.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.jei.grinding.GrindingRecipeMaker;
 import se.gory_moon.horsepower.jei.grinding.GrindstoneRecipeWrapper;
 import se.gory_moon.horsepower.jei.grinding.HorsePowerGrindingCategory;
-import se.gory_moon.horsepower.jei.press.HorsePowerPressFluidCategory;
-import se.gory_moon.horsepower.jei.press.HorsePowerPressItemCategory;
+import se.gory_moon.horsepower.jei.press.HorsePowerPressCategory;
 import se.gory_moon.horsepower.jei.press.PressRecipeMaker;
 import se.gory_moon.horsepower.jei.press.PressRecipeWrapper;
 import se.gory_moon.horsepower.recipes.*;
@@ -131,8 +130,8 @@ public class HorsePowerPlugin implements IModPlugin {
             registry.addRecipeCategories(new HorsePowerChoppingCategory(registry.getJeiHelpers().getGuiHelper(), true));
         registry.addRecipeCategories(new HorsePowerChoppingCategory(registry.getJeiHelpers().getGuiHelper(), false));
 
-        registry.addRecipeCategories(new HorsePowerPressItemCategory(registry.getJeiHelpers().getGuiHelper()));
-        registry.addRecipeCategories(new HorsePowerPressFluidCategory(registry.getJeiHelpers().getGuiHelper()));
+        registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper(), false));
+        registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper(), true));
     }
 
 }

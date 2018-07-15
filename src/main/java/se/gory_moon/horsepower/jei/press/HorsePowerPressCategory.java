@@ -12,22 +12,25 @@ import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.util.Localization;
 
-public class HorsePowerPressFluidCategory extends HorsePowerCategory<PressRecipeWrapper> {
+public class HorsePowerPressCategory extends HorsePowerCategory<PressRecipeWrapper> {
 
     private static final int inputSlot = 0;
-    private static final int outputSlot = 0;
+    private static final int outputSlot = 1;
 
     private final String localizedName;
+    private boolean isLiquid;
 
-    public HorsePowerPressFluidCategory(IGuiHelper guiHelper) {
-        super(guiHelper, 0, false, 146, 74, new ResourceLocation("horsepower", "textures/gui/jei_fluid.png"));
-
-        localizedName = Localization.GUI.CATEGORY_PRESS_FLUID.translate();
+    public HorsePowerPressCategory(IGuiHelper guiHelper, boolean isLiquid) {
+        super(guiHelper);
+        this.isLiquid = isLiquid;
+        if (isLiquid)
+            background = guiHelper.createDrawable(new ResourceLocation("horsepower", "textures/gui/jei_fluid.png"), 0, 0, 146, 74);
+        localizedName = isLiquid ? Localization.GUI.CATEGORY_PRESS_FLUID.translate(): Localization.GUI.CATEGORY_PRESS_ITEM.translate();
     }
 
     @Override
     public String getUid() {
-        return HorsePowerPlugin.PRESS_FLUID;
+        return isLiquid ? HorsePowerPlugin.PRESS_FLUID: HorsePowerPlugin.PRESS_ITEM;
     }
 
     @Override
@@ -40,17 +43,20 @@ public class HorsePowerPressFluidCategory extends HorsePowerCategory<PressRecipe
         return Reference.NAME;
     }
 
-
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, PressRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
         IGuiFluidStackGroup guiFluidStack = recipeLayout.getFluidStacks();
 
-        guiItemStacks.init(inputSlot, true, 34, 33);
-        guiFluidStack.init(outputSlot, false, 95, 23, 16, 27, Configs.general.pressFluidTankSize, true, null);
+        guiItemStacks.init(inputSlot, true, 34, 32);
+        if (isLiquid)
+            guiFluidStack.init(outputSlot, false, 95, 23, 16, 27, Configs.general.pressFluidTankSize, true, null);
+        else
+            guiItemStacks.init(outputSlot, false, 90, 32);
 
         guiItemStacks.set(ingredients);
-        guiFluidStack.set(ingredients);
+        if (isLiquid)
+            guiFluidStack.set(ingredients);
         super.openRecipe();
     }
 }

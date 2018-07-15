@@ -13,6 +13,7 @@ import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends BlankRecipeCategory<T> {
 
@@ -22,23 +23,24 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
     protected HorseDrawable hedgehog;
     protected HorseDrawable character;
 
-    public HorsePowerCategory(IGuiHelper guiHelper, int offset) {
-        this(guiHelper, offset, false, 146, 74, new ResourceLocation("horsepower", "textures/gui/jei.png"));
+    public static final ResourceLocation COMPONENTS = new ResourceLocation("horsepower", "textures/gui/COMPONENTS.png");
+
+    public HorsePowerCategory(IGuiHelper guiHelper) {
+        this(guiHelper, false, 146, 74, new ResourceLocation("horsepower", "textures/gui/jei.png"));
     }
 
-    public HorsePowerCategory(IGuiHelper guiHelper, int offset, boolean grinding, int width, int height, ResourceLocation location) {
+    public HorsePowerCategory(IGuiHelper guiHelper, boolean grinding, int width, int height, ResourceLocation location) {
         background = guiHelper.createDrawable(location, 0, 0, width, height);
-        horse = getHorseDrawable(guiHelper, location,74 + offset, 20, 100, grinding, null);
-        hedgehog = getHorseDrawable(guiHelper, location, 114 + offset, 5, 35, grinding, Colors.LIGHTBLUE + "Sonic!");
-        character = getHorseDrawable(guiHelper, location, 154 + offset, 10, 100, grinding, Colors.PURPLE + "It's mini you, Darkosto!\n" + Colors.LIGHTBLUE + "Happy birthday!");
+        horse = getHorseDrawable(guiHelper, 0, 20, 100, grinding, null);
+        hedgehog = getHorseDrawable(guiHelper, 40, 5, 35, grinding, Colors.LIGHTBLUE + "Sonic!");
+        character = getHorseDrawable(guiHelper, 80, 10, 100, grinding, Colors.PURPLE + "It's mini you, Darkosto!\n" + Colors.LIGHTBLUE + "Happy birthday!");
     }
 
-    //TODO use general components
-    private static HorseDrawable getHorseDrawable(IGuiHelper guiHelper, ResourceLocation location, int y, int animCycle, int pathCycle, boolean grinding, String hovering) {
-        IDrawableStatic horseAnim1 = guiHelper.createDrawable(location, 0, y, 30, 20);
-        IDrawableStatic horseAnim2 = guiHelper.createDrawable(location, 0, y + 20, 30, 20);
-        IDrawableStatic horseAnim3 = guiHelper.createDrawable(location, 30, y, 30, 20);
-        IDrawableStatic horseAnim4 = guiHelper.createDrawable(location, 30, y + 20, 30, 20);
+    private static HorseDrawable getHorseDrawable(IGuiHelper guiHelper, int y, int animCycle, int pathCycle, boolean grinding, String hovering) {
+        IDrawableStatic horseAnim1 = guiHelper.createDrawable(COMPONENTS, 0, y, 30, 20);
+        IDrawableStatic horseAnim2 = guiHelper.createDrawable(COMPONENTS, 0, y + 20, 30, 20);
+        IDrawableStatic horseAnim3 = guiHelper.createDrawable(COMPONENTS, 30, y, 30, 20);
+        IDrawableStatic horseAnim4 = guiHelper.createDrawable(COMPONENTS, 30, y + 20, 30, 20);
         ITickTimer animTimer = guiHelper.createTickTimer(animCycle, 1, false);
         ITickTimer pathTimer = guiHelper.createTickTimer(pathCycle, grinding ? 352: 324, false);
         return new HorseDrawable(guiHelper, horseAnim1, horseAnim2, horseAnim3, horseAnim4, animTimer, pathTimer, grinding, hovering);
@@ -63,7 +65,8 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
         currentDrawable = horse;
         Random rand = Minecraft.getMinecraft().world.rand;
 
-        if (rand.nextInt(100) <= 10 && "darkosto".equalsIgnoreCase(Minecraft.getMinecraft().player.getGameProfile().getName()))
+
+        if (rand.nextInt(100) <= 10 && UUID.fromString("10755ea6-9721-467a-8b5c-92adf689072c").equals(Minecraft.getMinecraft().player.getGameProfile().getId()))
             currentDrawable = character;
         else if (rand.nextInt(3000) <= 50 && Loader.isModLoaded("animania"))
             currentDrawable = hedgehog;

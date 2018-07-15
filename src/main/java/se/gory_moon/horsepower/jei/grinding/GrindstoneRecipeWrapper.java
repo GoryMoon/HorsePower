@@ -8,10 +8,10 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
 import se.gory_moon.horsepower.util.Utils;
@@ -43,8 +43,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
         this.time = time;
 
         IGuiHelper guiHelper = HorsePowerPlugin.guiHelper;
-        ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei_grindstone.png");
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 146, 0, 24, 17);
+        IDrawableStatic arrowDrawable = guiHelper.createDrawable(HorsePowerCategory.COMPONENTS, 60, 0, 24, 17);
         int laps = (int)((time / 8D) * 100);
         printLaps = (double) Math.round((time / 8D) * 100.0D) / 100.0D;
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, laps, IDrawableAnimated.StartDirection.LEFT, false);

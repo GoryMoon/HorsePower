@@ -8,11 +8,11 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChoppingBlockRecipe;
 import se.gory_moon.horsepower.recipes.ManualChoppingBlockRecipe;
@@ -41,8 +41,7 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
         this.hand = hand;
 
         IGuiHelper guiHelper = HorsePowerPlugin.guiHelper;
-        ResourceLocation location = new ResourceLocation("horsepower", "textures/gui/jei.png");
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 146, 0, 24, 17);
+        IDrawableStatic arrowDrawable = guiHelper.createDrawable(HorsePowerCategory.COMPONENTS, 60, 0, 24, 17);
         double totalWindup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup: 1;
         int laps = (int)(((time * totalWindup) / 8D) * 100);
         printLaps = (double) Math.round(((time * totalWindup) / 8D) * 100.0D) / 100.0D;
