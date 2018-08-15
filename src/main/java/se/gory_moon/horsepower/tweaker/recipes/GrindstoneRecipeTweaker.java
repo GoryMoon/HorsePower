@@ -1,5 +1,6 @@
 package se.gory_moon.horsepower.tweaker.recipes;
 
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -61,6 +62,10 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void apply() {
+            if (input == null) {
+                CraftTweakerAPI.logError("Input item is null");
+                return;
+            }
             List<IItemStack> inputs = input.getItems();
             if(inputs == null) {
                 HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a grinding recipe");

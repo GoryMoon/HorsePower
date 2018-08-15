@@ -25,7 +25,7 @@ public class ClientHandler {
         if (Configs.client.showObstructedPlace) {
             if (StreamSupport.stream(Minecraft.getMinecraft().player.getHeldEquipment().spliterator(), false).anyMatch(stack -> !stack.isEmpty() && isHPBlock((itemStack[0] = stack).getItem()))) {
                 Minecraft mc = Minecraft.getMinecraft();
-                if (mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK)
+                if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK)
                     return;
 
                 int offset = 0;

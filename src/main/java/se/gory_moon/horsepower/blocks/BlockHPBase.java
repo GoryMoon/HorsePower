@@ -107,7 +107,6 @@ public abstract class BlockHPBase extends Block {
 
         world.setBlockToAir(pos);
         // return false to prevent the above called functions to be called again
-        // side effect of this is that no xp will be dropped. but it shoudln't anyway from a table :P
         return false;
     }
 
@@ -125,7 +124,7 @@ public abstract class BlockHPBase extends Block {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = playerIn.getHeldItem(hand);
+        ItemStack stack = hand == EnumHand.MAIN_HAND ? playerIn.getHeldItem(hand): ItemStack.EMPTY;
         TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
         TileEntityHPHorseBase teH = null;
         if (te == null) return false;

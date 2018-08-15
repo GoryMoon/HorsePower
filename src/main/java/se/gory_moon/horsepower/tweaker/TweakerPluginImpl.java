@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import se.gory_moon.horsepower.recipes.ShapedChoppingRecipe;
 import se.gory_moon.horsepower.recipes.ShapelessChoppingRecipe;
 import se.gory_moon.horsepower.tweaker.recipes.ChoppingRecipeTweaker;
 import se.gory_moon.horsepower.tweaker.recipes.GrindstoneRecipeTweaker;
@@ -115,7 +116,7 @@ public class TweakerPluginImpl implements ITweakerPlugin {
         }
 
         rarguments.addAll(0, Arrays.asList(parts));
-        return new se.gory_moon.horsepower.recipes.ShapedChoppingRecipe(name, Lists.newArrayList(getItemStacks(recipe.getOre().getItems())), (ItemStack) recipe.getOutput().getInternal(), rarguments.toArray());
+        return new ShapedChoppingRecipe(name, Lists.newArrayList(getItemStacks(recipe.getOre().getItems())), (ItemStack) recipe.getOutput().getInternal(), rarguments.toArray());
     }
 
     public static IRecipe convert(CTShapelessChoppingRecipe recipe, ResourceLocation name) {
@@ -163,7 +164,7 @@ public class TweakerPluginImpl implements ITweakerPlugin {
         }
 
         @Override
-        protected String calculateName() {
+        public String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(MCRecipeManager.saveToString(output));
 
@@ -218,7 +219,7 @@ public class TweakerPluginImpl implements ITweakerPlugin {
         }
 
         @Override
-        protected String calculateName() {
+        public String calculateName() {
             StringBuilder sb = new StringBuilder();
             sb.append(MCRecipeManager.saveToString(output));
 
