@@ -1,33 +1,35 @@
 package se.gory_moon.horsepower.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.client.renderer.*;
-import se.gory_moon.horsepower.tileentity.*;
-import se.gory_moon.horsepower.util.HorsePowerCommand;
-import se.gory_moon.horsepower.util.color.ColorGetter;
+import se.gory_moon.horsepower.client.renderer.ClientHandler;
+import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityGrindstoneRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityHandGrindstoneRender;
+import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
+import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 
-@SideOnly(Side.CLIENT)
+import java.awt.*;
+
+@OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
 
     @Override
     public void preInit() {
         super.preInit();
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindstone.class, new TileEntityGrindstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new TileEntityFillerRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandGrindstone.class, new TileEntityHandGrindstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPress.class, new TileEntityPressRender());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
+        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPress.class, new TileEntityPressRender());
     }
 
     @Override
@@ -37,13 +39,13 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void loadComplete() {
-        ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
+        //ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
 
-        ((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> {
+        /*((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> {
             TileEntityHPBaseRenderer.clearDestroyStageicons();
-        });
+        });*/
 
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+        Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (worldIn != null && pos != null) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
                 if (tileEntity instanceof TileEntityGrindstone) {
@@ -52,14 +54,16 @@ public class ClientProxy extends CommonProxy {
                     ItemStack secondaryStack = te.getStackInSlot(2);
                     if (outputStack.getCount() < secondaryStack.getCount())
                         outputStack = secondaryStack;
-                    if (!OreDictionary.itemMatches(te.renderStack, outputStack, true)) {
+                    te.renderStack = outputStack;
+                    te.grindColor = Color.GRAY;
+                    /*if (!OreDictionary.itemMatches(te.renderStack, outputStack, true)) {
                         te.renderStack = outputStack;
                         if (!outputStack.isEmpty())
                             te.grindColor = ColorGetter.getColors(outputStack, 2).get(0);
                         else
                             te.grindColor = null;
                         te.renderStack = outputStack;
-                    }
+                    }*/
 
                     if (te.grindColor != null)
                         return te.grindColor.getRGB();

@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower.util;
 
-import net.minecraft.util.text.translation.I18n;
+
+import net.minecraft.client.resources.I18n;
 
 public final class Localization {
 
@@ -32,11 +33,7 @@ public final class Localization {
     }
 
     private static String translateToLocal(String key) {
-        if (I18n.canTranslate(key)) {
-            return I18n.translateToLocal(key);
-        } else {
-            return I18n.translateToFallback(key);
-        }
+        return I18n.format(key);
     }
 
     public static class ITEM {
@@ -45,7 +42,11 @@ public final class Localization {
             SIZE, LOCATION, USE;
 
             public String translate(String... vars) {
-                return Localization.translateString("item.horsepower:grindstone.description." + toString().toLowerCase(), vars);
+                return Localization.translateString(toString(), vars);
+            }
+
+            public String toString() {
+                return "item.horsepower:grindstone.description." + super.toString().toLowerCase();
             }
         }
 
@@ -53,7 +54,12 @@ public final class Localization {
             INFO;
 
             public String translate(String... vars) {
-                return Localization.translateString("item.horsepower:hand_grindstone.description." + toString().toLowerCase(), vars);
+                return Localization.translateString(toString(), vars);
+            }
+
+            @Override
+            public String toString() {
+                return "item.horsepower:hand_grindstone.description." + super.toString().toLowerCase();
             }
         }
 
@@ -61,7 +67,12 @@ public final class Localization {
             SIZE, LOCATION, USE;
 
             public String translate(String... vars) {
-                return Localization.translateString("item.horsepower:chopping.description." + toString().toLowerCase(), vars);
+                return Localization.translateString(toString(), vars);
+            }
+
+            @Override
+            public String toString() {
+                return "item.horsepower:chopping.description." + super.toString().toLowerCase();
             }
         }
 
@@ -69,7 +80,12 @@ public final class Localization {
             SIZE, LOCATION, USE;
 
             public String translate(String... vars) {
-                return Localization.translateString("item.horsepower:press.description." + toString().toLowerCase(), vars);
+                return Localization.translateString(toString(), vars);
+            }
+
+            @Override
+            public String toString() {
+                return "item.horsepower:press.description." + super.toString().toLowerCase();
             }
         }
 

@@ -1,9 +1,9 @@
 {
-  "parent": "block/block",
+  "parent": "minecraft:block/block",
   "credit": "Made with Blockbench, a free, modern block model editor by JannisX11",
   "textures": {
-    "0": "horsepower:blocks/flour",
-    "particle": "minecraft:blocks/stone"
+    "0": "horsepower:block/flour",
+    "particle": "minecraft:block/stone"
   },
   "elements": [
     {

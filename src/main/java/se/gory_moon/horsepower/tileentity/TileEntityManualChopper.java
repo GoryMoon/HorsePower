@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.tileentity;
-
+/*
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
@@ -215,3 +215,4 @@ public class TileEntityManualChopper extends TileEntityHPBase {
         return cap != null ? cap: (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ? (T) handlerSide : null;
     }
 }
+*/

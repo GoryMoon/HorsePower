@@ -16,7 +16,7 @@ import se.gory_moon.horsepower.util.RenderUtils;
 public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityGrindstone> {
 
     @Override
-    public void render(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         ItemStack outputStack = te.getStackInSlot(1);
@@ -24,31 +24,31 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
         if (outputStack.getCount() < secondaryStack.getCount())
             outputStack = secondaryStack;
 
-        if (blockState.getValue(BlockGrindstone.FILLED)) {
-            IBlockState filledState = blockState.withProperty(BlockGrindstone.PART, GrindStoneModels.FILLED);
+        if (blockState.get(BlockGrindstone.FILLED)) {
+            IBlockState filledState = blockState.with(BlockGrindstone.PART, GrindStoneModels.FILLED);
             if (!(filledState.getBlock() instanceof BlockHPBase)) return;
 
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
-            BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+            BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
 
-            IBakedModel filledModel = dispatcher.getBlockModelShapes().getModelForState(filledState);
+            IBakedModel filledModel = dispatcher.getBlockModelShapes().getModel(filledState);
 
             setRenderSettings();
 
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
             buffer.setTranslation(-te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ());
 
-            dispatcher.getBlockModelRenderer().renderModel(te.getWorld(), filledModel, filledState, te.getPos(), buffer, false);
+            dispatcher.getBlockModelRenderer().renderModel(te.getWorld(), filledModel, filledState, te.getPos(), buffer, false, te.getWorld().rand, blockState.getPositionRandom(te.getPos()));
 
             GlStateManager.pushMatrix();
-            GlStateManager.translate(x, y, z);
+            GlStateManager.translated(x, y, z);
 
-            GlStateManager.translate( 0.5, 0.5, 0.5 );
+            GlStateManager.translated( 0.5, 0.5, 0.5 );
             float maxStackSize = outputStack.getMaxStackSize() > 0 ? outputStack.getMaxStackSize(): 1F;
             float fillState = 0.23F * (((float)outputStack.getCount()) / maxStackSize);
-            GlStateManager.translate( 0, -0.187 + fillState, 0 );
-            GlStateManager.translate( -0.5, -0.5, -0.5 );
+            GlStateManager.translated( 0, -0.187 + fillState, 0 );
+            GlStateManager.translated( -0.5, -0.5, -0.5 );
 
             tessellator.draw();
             GlStateManager.popMatrix();
@@ -63,7 +63,7 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
             renderLeash(te.getWorker(), x, y, z, 0D, 0D, 0D, partialTicks, te.getPos());
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+        GlStateManager.translated(x, y, z);
         if (!te.getStackInSlot(0).isEmpty()) {
             renderItem(te, te.getStackInSlot(0), 0.5F, 1F, 0.5F, 1F);
             if (getWorld().isAirBlock(te.getPos().up()))

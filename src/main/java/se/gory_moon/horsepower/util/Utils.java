@@ -1,39 +1,16 @@
 package se.gory_moon.horsepower.util;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.passive.AbstractHorse;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
-import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
-import se.gory_moon.horsepower.recipes.HPRecipes;
-import se.gory_moon.horsepower.recipes.ShapedChoppingRecipe;
-import se.gory_moon.horsepower.recipes.ShapelessChoppingRecipe;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
+//import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
 
 public class Utils {
 
@@ -61,17 +38,17 @@ public class Utils {
     public static int getItemStackHashCode(ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
-        NBTTagCompound tag = stack.writeToNBT(new NBTTagCompound());
-        tag.removeTag("Count");
-        tag.removeTag("Damage");
+        NBTTagCompound tag = stack.write(new NBTTagCompound());
+        tag.remove("Count");
+        tag.remove("Damage");
         return tag.hashCode();
     }
 
     public static int getItemStackCountHashCode(ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
-        NBTTagCompound tag = stack.writeToNBT(new NBTTagCompound());
-        tag.removeTag("Damage");
+        NBTTagCompound tag = stack.write(new NBTTagCompound());
+        tag.remove("Damage");
         return tag.hashCode();
 
     }
@@ -95,26 +72,26 @@ public class Utils {
     }
 
     public static void errorMessage(String message, boolean showDirectly) {
-        if (FMLCommonHandler.instance().getSide().isClient()) {
+        /*if (FMLCommonHandler.instance().getSide().isClient()) {
             if (FMLClientHandler.instance().getClientPlayerEntity() != null && showDirectly)
                 FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + message).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Loader.instance().getConfigDir() + "/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Change in in-game config or click to open the config file to fix this")))));
             else
                 HPRecipes.ERRORS.add(message);
-        }
+        }*/
         HorsePowerMod.logger.warn(message);
     }
 
     public static void sendSavedErrors() {
-        if (FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().getClientPlayerEntity() != null && HPRecipes.ERRORS.size() > 0) {
+        /*if (FMLCommonHandler.instance().getSide().isClient() && FMLClientHandler.instance().getClientPlayerEntity() != null && HPRecipes.ERRORS.size() > 0) {
             FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower config errors"));
             FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
             HPRecipes.ERRORS.forEach(s -> FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Loader.instance().getConfigDir() + "/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Changed in in-game config or click to open the config file to fix this"))))));
             FMLClientHandler.instance().getClientPlayerEntity().sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
             HPRecipes.ERRORS.clear();
-        }
+        }*/
     }
 
-    public static Object parseItemStack(String item, boolean acceptOre, boolean acceptAmount) throws Exception {
+    /*public static Object parseItemStack(String item, boolean acceptOre, boolean acceptAmount) throws Exception {
         String[] data = item.split("\\$");
         NBTTagCompound nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
         if (data.length == 2)
@@ -151,8 +128,8 @@ public class Utils {
                 compound.setTag("tag", nbt);
             return new ItemStack(compound);
         }
-    }
-
+    }*/
+/*
     public static List<ItemStack> getCraftingItems(BlockHPChoppingBase block) {
         NonNullList<ItemStack> stacks = NonNullList.create();
         main: for (IRecipe recipe : ForgeRegistries.RECIPES) {
@@ -179,5 +156,5 @@ public class Utils {
             }
         }
         return stacks;
-    }
+    }*/
 }

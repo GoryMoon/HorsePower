@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei;
-
+/*
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import mezz.jei.api.IGuiHelper;
@@ -117,3 +117,4 @@ public class HorseDrawable implements IDrawableAnimated {
         return isHovering(mouseX, mouseY) && hovering != null ? Lists.newArrayList(Splitter.on('\n').split(hovering)): Collections.emptyList();
     }
 }
+*/

@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.blocks;
-
+/*
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -17,6 +17,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.oredict.OreDictionary;
@@ -37,14 +38,12 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
     public static final PropertyUnlistedString SIDE_TEXTURE = new PropertyUnlistedString("side_texture");
     public static final PropertyUnlistedString TOP_TEXTURE = new PropertyUnlistedString("top_texture");
 
-    public BlockHPChoppingBase() {
-        super(Material.WOOD);
-        setHarvestLevel("axe", 0);
-        setSoundType(SoundType.WOOD);
+    public BlockHPChoppingBase(Builder builder) {
+        super(builder);
     }
 
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public IBlockState getExtendedState(IBlockState state, IBlockReader world, BlockPos pos) {
         IExtendedBlockState extendedState = (IExtendedBlockState) state;
 
         TileEntityHPBase tile = getTileEntity(world, pos);
@@ -55,21 +54,21 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
         return super.getExtendedState(state, world, pos);
     }
 
-    private void writeDataOntoItemstack(@Nonnull ItemStack item, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull IBlockState state, boolean inventorySave) {
+    private void writeDataOntoItemstack(@Nonnull ItemStack item, @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nonnull IBlockState state, boolean inventorySave) {
         // get block data from the block
         TileEntity te = world.getTileEntity(pos);
         if(te != null && (te instanceof TileEntityChopper || te instanceof TileEntityManualChopper)) {
-            NBTTagCompound tag = item.hasTagCompound() ? item.getTagCompound(): new NBTTagCompound();
+            NBTTagCompound tag = item.hasTag() ? item.getTag(): new NBTTagCompound();
 
             // texture
-            NBTTagCompound data = te.getTileData().getCompoundTag("textureBlock");
+            NBTTagCompound data = te.getTileData().getCompound("textureBlock");
 
-            if (!data.hasNoTags()) {
-                tag.setTag("textureBlock", data);
+            if (!data.isEmpty()) {
+                tag.put("textureBlock", data);
             }
 
-            if (!tag.hasNoTags()) {
-                item.setTagCompound(tag);
+            if (!tag.isEmpty()) {
+                item.setTag(tag);
             }
         }
     }
@@ -191,3 +190,4 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
         return state;
     }
 }
+*/

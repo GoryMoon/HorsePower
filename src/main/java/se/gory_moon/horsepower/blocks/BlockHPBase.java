@@ -1,11 +1,13 @@
 package se.gory_moon.horsepower.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.fluid.IFluidState;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.InventoryHelper;
@@ -16,10 +18,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
-import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
 import se.gory_moon.horsepower.util.Utils;
@@ -28,14 +29,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public abstract class BlockHPBase extends Block {
+public abstract class BlockHPBase extends Block implements ITileEntityProvider {
 
     protected static boolean keepInventory = false;
     public static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
-    public BlockHPBase(Material materialIn) {
-        super(materialIn);
-        setCreativeTab(HorsePowerMod.creativeTab);
+    public BlockHPBase(Builder builder) {
+        super(builder);
     }
 
     public abstract void emptiedOutput(World world, BlockPos pos);
@@ -52,11 +52,6 @@ public abstract class BlockHPBase extends Block {
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
     public boolean isFullCube(IBlockState state) {
         return false;
     }
@@ -65,7 +60,7 @@ public abstract class BlockHPBase extends Block {
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
         super.onBlockHarvested(worldIn, pos, state, player);
 
-        if (!player.capabilities.isCreativeMode && !worldIn.isRemote) {
+        if (!player.abilities.isCreativeMode && !worldIn.isRemote) {
             TileEntityHPBase te = getTileEntity(worldIn, pos);
 
             if (te != null) {
@@ -79,14 +74,20 @@ public abstract class BlockHPBase extends Block {
     @Nonnull
     public abstract Class<?> getTileClass();
 
-    protected <T extends TileEntityHPBase> T getTileEntity(IBlockAccess worldIn, BlockPos pos) {
+    protected <T extends TileEntityHPBase> T getTileEntity(IBlockReader worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity : null;
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
+    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
+        return createNewTileEntity(world);
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
         try {
             return (TileEntity) getTileClass().newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -96,21 +97,21 @@ public abstract class BlockHPBase extends Block {
     }
 
     @Override
-    public boolean removedByPlayer(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
+    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest, IFluidState fluid) {
         // we pull up a few calls to this point in time because we still have the TE here
         // the execution otherwise is equivalent to vanilla order
-        this.onBlockDestroyedByPlayer(world, pos, state);
+        this.onPlayerDestroy(world, pos, state);
         onBlockHarvested(world, pos, state, player);
         if(willHarvest) {
             this.harvestBlock(world, player, pos, state, world.getTileEntity(pos), player.getHeldItemMainhand());
         }
 
-        world.setBlockToAir(pos);
+        world.setBlockState(pos, Blocks.AIR.getDefaultState());
         // return false to prevent the above called functions to be called again
         return false;
     }
 
-    @Override
+    /*@Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!keepInventory && !worldIn.isRemote) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -120,11 +121,11 @@ public abstract class BlockHPBase extends Block {
             }
         }
         super.breakBlock(worldIn, pos, state);
-    }
+    }*/
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = hand == EnumHand.MAIN_HAND ? playerIn.getHeldItem(hand): ItemStack.EMPTY;
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack stack = hand == EnumHand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
         TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
         TileEntityHPHorseBase teH = null;
         if (te == null) return false;
@@ -142,7 +143,7 @@ public abstract class BlockHPBase extends Block {
                 for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
                     if (entity instanceof EntityCreature) {
                         EntityCreature tmp = (EntityCreature) entity;
-                        if ((tmp.getLeashed() && tmp.getLeashHolder() == playerIn)) {
+                        if ((tmp.getLeashed() && tmp.getLeashHolder() == player)) {
                             creature = tmp;
                             break search;
                         }
@@ -154,7 +155,7 @@ public abstract class BlockHPBase extends Block {
             if (!teH.hasWorker()) {
                 creature.clearLeashed(true, false);
                 teH.setWorker(creature);
-                onWorkerAttached(playerIn, creature);
+                onWorkerAttached(player, creature);
                 return true;
             } else {
                 return false;
@@ -199,11 +200,11 @@ public abstract class BlockHPBase extends Block {
             if (!stack.isEmpty())
                 return false;
             if (teH != null)
-                teH.setWorkerToPlayer(playerIn);
+                teH.setWorkerToPlayer(player);
         }
 
         if (!result.isEmpty())
-            ItemHandlerHelper.giveItemToPlayer(playerIn, result, EntityEquipmentSlot.MAINHAND.getSlotIndex());
+            ItemHandlerHelper.giveItemToPlayer(player, result, EntityEquipmentSlot.MAINHAND.getSlotIndex());
 
         te.markDirty();
         return true;

@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei.press;
-
+/*
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IGuiFluidStackGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -60,3 +60,4 @@ public class HorsePowerPressCategory extends HorsePowerCategory<PressRecipeWrapp
         super.openRecipe();
     }
 }
+*/

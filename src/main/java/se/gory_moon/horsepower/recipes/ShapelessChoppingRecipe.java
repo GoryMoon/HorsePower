@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.recipes;
-
+/*
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
@@ -84,3 +84,4 @@ public class ShapelessChoppingRecipe extends ShapelessOreRecipe {
         return output;
     }
 }
+*/

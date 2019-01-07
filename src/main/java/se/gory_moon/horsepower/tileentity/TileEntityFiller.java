@@ -4,15 +4,23 @@ import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
 import se.gory_moon.horsepower.blocks.BlockFiller;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityFiller extends TileEntity {
+public class TileEntityFiller extends TileEntity implements INameable {
+
+    public TileEntityFiller() {
+        super(ModBlocks.FILLER_TILE);
+    }
 
     public TileEntityHPBase getFilledTileEntity() {
         BlockPos pos = getFilledPos();
@@ -26,7 +34,7 @@ public class TileEntityFiller extends TileEntity {
     public BlockPos getFilledPos() {
         IBlockState state = getWorld().getBlockState(getPos());
         if (!(state.getBlock() instanceof BlockFiller)) return getPos();
-        EnumFacing facing = state.getValue(BlockDirectional.FACING);
+        EnumFacing facing = state.get(BlockDirectional.FACING);
         IBlockState state1 = getWorld().getBlockState(pos.offset(facing));
         if (!(state1.getBlock() instanceof BlockHPBase)) return getPos();
         return pos.offset(facing);
@@ -41,6 +49,22 @@ public class TileEntityFiller extends TileEntity {
     }
 
     @Override
+    public ITextComponent getName() {
+        TileEntityHPBase te = getFilledTileEntity();
+        if (te != null)
+            return te.getName();
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        TileEntityHPBase te = getFilledTileEntity();
+        if (te != null)
+            return te.hasCustomName();
+        return false;
+    }
+
+    @Override
     public ITextComponent getDisplayName() {
         TileEntityHPBase te = getFilledTileEntity();
         if (te != null)
@@ -48,20 +72,21 @@ public class TileEntityFiller extends TileEntity {
         return null;
     }
 
+    @Nullable
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public ITextComponent getCustomName() {
         TileEntityHPBase te = getFilledTileEntity();
         if (te != null)
-            return te.hasCapability(capability, facing);
-        return super.hasCapability(capability, facing);
+            return te.getCustomName();
+        return null;
     }
 
-    @SuppressWarnings("unchecked")
+    @Nonnull
     @Override
-    public <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, @javax.annotation.Nullable net.minecraft.util.EnumFacing facing) {
+    public <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
         TileEntityHPBase te = getFilledTileEntity();
         if (te != null)
-            return te.getCapability(capability, facing);
-        return super.getCapability(capability, facing);
+            return te.getCapability(cap, side);
+        return super.getCapability(cap, side);
     }
 }

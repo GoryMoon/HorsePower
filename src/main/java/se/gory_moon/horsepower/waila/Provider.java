@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.waila;
-
+/*
 import mcp.mobius.waila.api.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -134,3 +134,4 @@ public class Provider implements IWailaDataProvider {
         return tag;
     }
 }
+*/

@@ -7,10 +7,6 @@
     "part": {
       "base": { "model": "horsepower:hand_grindstone" },
       "center": { "model": "horsepower:hand_grindstone_center" }
-    },
-    "inventory": {
-      "model": "horsepower:hand_grindstone",
-      "submodel": "horsepower:hand_grindstone_center"
     }
   }
 }

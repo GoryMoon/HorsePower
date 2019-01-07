@@ -1,62 +1,76 @@
 buildscript {
     repositories {
-        mavenCentral()
+        mavenLocal()
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        mavenCentral()
+    }
+    // This is only here while i'm activly developing FG, Remind me to remove when we publically release
+    configurations {
+        classpath.resolutionStrategy {
+            cacheDynamicVersionsFor 10, 'seconds'
+            cacheChangingModulesFor 0, 'seconds'
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-
-configurations {
-    deployerJars
-}
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
-
-// Define properties file
-ext.configFile = file "build.properties"
-
-configFile.withReader {
-    // Load config.  It shall from now be referenced as simply config or project.config
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-version = "${config.mc_version}-${config.mod_version}.${System.getenv("BUILD_NUMBER") ?: config.local_build}"
+version = mod_version
 group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "HorsePower"
+archivesBaseName = "HorsePower-" + mc_version
+
+if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of the version string if on a build server
+    version += ".${System.getenv().BUILD_NUMBER}"
+}
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
-    runDir = "run"
-    
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20180617"
+    mappings channel: 'snapshot', version: '20181008-1.13'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    replaceIn "Reference.java"
-    replace "@MOD_VERSION@", config.mod_version
-    replace "@FINGERPRINT@", project.findProperty('signSHA1')
+    accessTransformer = file('horsepower_at.cfg')
+
+    // default run configurations.
+    // these can be tweaked, removed, or duplicated as needed.
+    runConfig {
+        name= "Minecraft Client"
+        main= "net.minecraftforge.userdev.UserdevLauncher"
+        ideaModuleName = "${project.name}_main"
+        workingDirectory = project.file("run").canonicalPath
+        environment "target", "fmluserdevclient"
+        environment "assetDirectory", downloadAssets.output.absolutePath
+        environment "FORGE_VERSION", forge_version
+        environment "FORGE_GROUP", "net.minecraftforge.test"
+        environment "MCP_VERSION", "20181008-1.13"
+        environment "MC_VERSION", "1.13"
+        environment "MOD_CLASSES", "${sourceSets.main.output.resourcesDir}${File.pathSeparator}${sourceSets.main.output.classesDirs.join(File.pathSeparator)}"
+    }
+
+    runConfig {
+        name= "Minecraft Server"
+        main= "net.minecraftforge.userdev.UserdevLauncher"
+        ideaModuleName = "${project.name}_main"
+        workingDirectory = project.file("run").canonicalPath
+        environment "target", "fmldevserver"
+        environment "assetDirectory", downloadAssets.output.absolutePath
+    }
 }
 
 repositories {
-    maven {
+    /*maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
         url = "http://dvs1.progwml6.com/files/maven"
@@ -82,43 +96,48 @@ repositories {
     maven {
         name = "CoFH Maven"
         url = "http://maven.covers1624.net"
-    }
+    }*/
 }
 
 dependencies {
-    deployerJars "org.apache.maven.wagon:wagon-ftp:2.10"
+    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft "net.minecraftforge.test:userdev:1.13-${forge_version}"
+    compile "net.minecraftforge.test:forge:1.13-${forge_version}:launcher"
+
+
     // compile against the JEI API
-    deobfCompile "mezz.jei:jei_${config.mc_version}:${config.jei_version}:api"
+    //deobfCompile "mezz.jei:jei_${config.mc_version}:${config.jei_version}:api"
     // at runtime, use the full JEI jar
-    runtime "mezz.jei:jei_${config.mc_version}:${config.jei_version}"
+    //runtime "mezz.jei:jei_${config.mc_version}:${config.jei_version}"
 
-    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-${config.top_version}"
+    //deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486"
+    //deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-${config.top_version}"
 
-    //deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}:dev"
-    deobfCompile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
+    //deobfCompile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
 }
+
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", "${config.mob_version}.${System.getenv("BUILD_NUMBER") ?: config.local_build}"
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', '1.13'
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version': config.mod_version + ".${System.getenv("BUILD_NUMBER") ?: config.local_build}", 'mcversion': project.minecraft.version
-    }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-    rename '(.+_at.cfg)', 'META-INF/$1'
-}
+        include 'META_INF/mods.toml'
 
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion': '1.13'
+    }
+
+    // copy everything else except the mods.toml
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META_INF/mods.toml'
+    }
+}
+/*
 task devJar(type: Jar, dependsOn: 'classes') {
     from(sourceSets.main.output) {
         include '**'
@@ -132,15 +151,8 @@ artifacts {
     archives devJar
     archives sourceJar
 }
-
-jar {
-
-    manifest {
-        attributes 'FMLAT': 'horsepower_at.cfg'
-    }
-}
-
-task signJar(type: SignJar, dependsOn: ["jar", "devJar"]) {
+*/
+/*task signJar(type: SignJar, dependsOn: ["jar", "devJar"]) {
     onlyIf {
         project.hasProperty('keyStore')
     }
@@ -154,64 +166,21 @@ task signJar(type: SignJar, dependsOn: ["jar", "devJar"]) {
     keyPass = project.findProperty('keyStorePass')
     inputFile = jar.archivePath
     outputFile = jar.archivePath
-}
+}*/
 
 // Runs this task automatically when build is ran.
-build.dependsOn signJar
+//build.dependsOn signJar
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            if (project.hasProperty("maven_url")) {
-                logger.info('Publishing to files server')
-                configuration = configurations.deployerJars
-
-                repository(url: project.maven_url) {
-                    authentication(userName: project.maven_username ?: "", password: project.maven_password ?: "")
-                }
-            } else if (project.hasProperty("local_maven")) {
-                repository(url: "file://${project.getProperty('local_maven')}")
-            }
-
-            pom {
-                groupId = project.group
-                version = project.version
-                artifactId = project.archivesBaseName
-            }
-
-            pom.project {
-                name project.archivesBaseName
-                packaging 'jar'
-                description 'HorsePower'
-                url 'https://github.com/GoryMoon/HorsePower/'
-
-                scm {
-                    url 'https://github.com/GoryMoon/HorsePower/'
-                    connection 'scm:git:git://github.com/GoryMoon/HorsePower.git'
-                    developerConnection 'scm:git:git@github.com/GoryMoon/HorsePower.git'
-                }
-
-                issueManagement {
-                    system 'github'
-                    url 'https://github.com/GoryMoon/HorsePower/issues'
-                }
-
-                licenses {
-                    license {
-                        name 'GNU Lesser General Public License 3.0'
-                        url 'https://www.gnu.org/licenses/lgpl-3.0.txt'
-                        distribution 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'Gory_Moon'
-                        name 'Gory_Moon'
-                        roles {
-                            role 'developer'
-                        }
-                    }
+task("uploadJars", dependsOn: "build") {
+    description = "uploads JARs"
+    if (project.hasProperty("local_maven")) {
+        apply plugin: 'maven'
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    repository(url: "file://${local_maven}")
+                    pom.artifactId = "HorsePower"
+                    pom.version = mc_version + "-" + project.version
                 }
             }
         }

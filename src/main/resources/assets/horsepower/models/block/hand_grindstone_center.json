@@ -1,10 +1,10 @@
 {
-    "parent": "block/block",
+    "parent": "minecraft:block/block",
     "credit": "Made with Blockbench, a free, modern block model editor by JannisX11",
     "textures": {
-        "0": "minecraft:blocks/planks_oak",
-        "1": "minecraft:blocks/stone",
-        "particle": "minecraft:blocks/stone"
+        "0": "minecraft:block/oak_planks",
+        "1": "minecraft:block/stone",
+        "particle": "minecraft:block/stone"
     },
     "elements": [
         {

@@ -8,7 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
@@ -23,9 +23,9 @@ public class ClientHandler {
     public static void renderWorld(RenderWorldLastEvent event) {
         final ItemStack[] itemStack = {ItemStack.EMPTY};
         if (Configs.client.showObstructedPlace) {
-            if (StreamSupport.stream(Minecraft.getMinecraft().player.getHeldEquipment().spliterator(), false).anyMatch(stack -> !stack.isEmpty() && isHPBlock((itemStack[0] = stack).getItem()))) {
-                Minecraft mc = Minecraft.getMinecraft();
-                if (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK)
+            if (StreamSupport.stream(Minecraft.getInstance().player.getHeldEquipment().spliterator(), false).anyMatch(stack -> !stack.isEmpty() && isHPBlock((itemStack[0] = stack).getItem()))) {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.objectMouseOver == null || mc.objectMouseOver.type != RayTraceResult.Type.BLOCK)
                     return;
 
                 int offset = 0;
@@ -34,9 +34,9 @@ public class ClientHandler {
 
                 EnumFacing enumFacing = mc.objectMouseOver.sideHit;
                 BlockPos pos = mc.objectMouseOver.getBlockPos();
-                if (!mc.world.getBlockState(pos).getBlock().isReplaceable(mc.world, pos))
+                if (!mc.world.getBlockState(pos).getMaterial().isReplaceable())
                     pos = pos.offset(enumFacing);
-                if (offset == 0 && !mc.world.getBlockState(pos.up()).getBlock().isReplaceable(mc.world, pos.up()))
+                if (offset == 0 && !mc.world.getBlockState(pos.up()).getMaterial().isReplaceable())
                     pos = pos.down();
 
                 RenderUtils.renderUsedArea(mc.world, pos, offset, 0.15F, 0.05F);

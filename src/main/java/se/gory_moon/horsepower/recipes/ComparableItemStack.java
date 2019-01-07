@@ -1,7 +1,6 @@
 package se.gory_moon.horsepower.recipes;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.util.Utils;
 
 public class ComparableItemStack {
@@ -19,8 +18,7 @@ public class ComparableItemStack {
 
         ComparableItemStack that = (ComparableItemStack) o;
 
-        return ItemStack.areItemStackTagsEqual(stack, that.stack) &&
-                (that.stack.getMetadata() == OreDictionary.WILDCARD_VALUE ? stack.getItem() == that.stack.getItem(): stack.isItemEqual(that.stack));
+        return ItemStack.areItemStackTagsEqual(stack, that.stack) && stack.isItemEqual(that.stack);
     }
 
     @Override

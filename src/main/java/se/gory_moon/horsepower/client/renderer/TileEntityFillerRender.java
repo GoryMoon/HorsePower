@@ -1,21 +1,22 @@
 package se.gory_moon.horsepower.client.renderer;
 
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 
-public class TileEntityFillerRender extends TileEntitySpecialRenderer<TileEntityFiller> {
+public class TileEntityFillerRender extends TileEntityRenderer<TileEntityFiller> {
+
 
     @Override
-    public void render(TileEntityFiller te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileEntityFiller te, double x, double y, double z, float partialTicks, int destroyStage) {
         drawDisplayText(te, x, y, z);
-        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+        super.render(te, x, y, z, partialTicks, destroyStage);
     }
 
-    public void drawDisplayText(TileEntity te, double x, double y, double z) {
+    public void drawDisplayText(TileEntityFiller te, double x, double y, double z) {
         ITextComponent itextcomponent = te.getDisplayName();
 
         if (itextcomponent != null && this.rendererDispatcher.cameraHitResult != null && te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))

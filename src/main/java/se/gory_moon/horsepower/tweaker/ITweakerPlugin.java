@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.tweaker;
-
+/*
 import java.util.List;
 
 public interface ITweakerPlugin {
@@ -12,3 +12,4 @@ public interface ITweakerPlugin {
 
     List<IHPAction> getRemove();
 }
+*/

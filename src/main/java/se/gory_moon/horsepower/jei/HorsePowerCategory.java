@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei;
-
+/*
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
@@ -65,10 +65,10 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
         currentDrawable = horse;
         Random rand = Minecraft.getMinecraft().world.rand;
 
-
         if (rand.nextInt(100) <= 10 && UUID.fromString("10755ea6-9721-467a-8b5c-92adf689072c").equals(Minecraft.getMinecraft().player.getGameProfile().getId()))
             currentDrawable = character;
         else if (rand.nextInt(3000) <= 50 && Loader.isModLoaded("animania"))
             currentDrawable = hedgehog;
     }
 }
+*/

@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei.grinding;
-
+/*
 import com.google.common.collect.Lists;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;
@@ -104,3 +104,4 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
         return result;
     }
 }
+*/

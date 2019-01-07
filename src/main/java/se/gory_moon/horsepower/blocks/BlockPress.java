@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.blocks;
-
+/*
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
@@ -172,3 +172,4 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
         return TileEntityPress.class;
     }
 }
+*/

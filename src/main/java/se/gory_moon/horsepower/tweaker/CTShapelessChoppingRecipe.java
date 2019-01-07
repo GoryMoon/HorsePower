@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.tweaker;
-
+/*
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 
@@ -38,3 +38,4 @@ public class CTShapelessChoppingRecipe {
     }
 
 }
+*/

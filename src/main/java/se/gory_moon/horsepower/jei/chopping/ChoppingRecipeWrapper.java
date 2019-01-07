@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei.chopping;
-
+/*
 import com.google.common.collect.Lists;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;
@@ -95,3 +95,4 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
         return result;
     }
 }
+*/

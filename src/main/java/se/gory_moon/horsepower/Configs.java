@@ -1,16 +1,10 @@
 package se.gory_moon.horsepower;
 
-import com.google.gson.JsonObject;
-import net.minecraft.util.JsonUtils;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.Name;
-import net.minecraftforge.common.crafting.IConditionFactory;
-import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fluids.Fluid;
 import se.gory_moon.horsepower.lib.Reference;
-
-import java.util.function.BooleanSupplier;
 
 @Config(modid = Reference.MODID, category = "all")
 public class Configs {
@@ -233,14 +227,14 @@ public class Configs {
         public boolean useDynamicDisplay = true;
     }
 
-    public static class ConfigFactory implements IConditionFactory {
+    /*public static class ConfigFactory implements IConditionFactory {
 
         @Override
         public BooleanSupplier parse(JsonContext context, JsonObject json) {
             String item = JsonUtils.getString(json, "enabled");
             return () -> "flour".equals(item) ? general.enableFlour: "dough".equals(item) && general.enableDough;
         }
-    }
+    }*/
 
     public static class Misc {
 

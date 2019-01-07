@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei;
-
+/*
 import mezz.jei.api.*;
 import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
@@ -135,3 +135,4 @@ public class HorsePowerPlugin implements IModPlugin {
     }
 
 }
+*/

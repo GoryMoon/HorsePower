@@ -8,6 +8,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -36,8 +37,8 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     protected boolean running = true;
     protected boolean wasRunning = false;
 
-    public TileEntityHPHorseBase(int inventorySize) {
-        super(inventorySize);
+    public TileEntityHPHorseBase(int inventorySize, TileEntityType type) {
+        super(inventorySize, type);
     }
 
     public abstract boolean validateArea();
@@ -47,37 +48,37 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     public abstract int getPositionOffset();
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
 
-        target = compound.getInteger("target");
-        origin = compound.getInteger("origin");
+        target = compound.getInt("target");
+        origin = compound.getInt("origin");
         hasWorker = compound.getBoolean("hasWorker");
 
-        if (hasWorker && compound.hasKey("leash", 10)) {
-            nbtWorker = compound.getCompoundTag("leash");
+        if (hasWorker && compound.contains("leash", 10)) {
+            nbtWorker = compound.getCompound("leash");
             findWorker();
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("target", target);
-        compound.setInteger("origin", origin);
-        compound.setBoolean("hasWorker", hasWorker);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        compound.putInt("target", target);
+        compound.putInt("origin", origin);
+        compound.putBoolean("hasWorker", hasWorker);
 
         if (this.worker != null) {
             if (nbtWorker == null) {
                 NBTTagCompound nbtTagCompound = new NBTTagCompound();
                 UUID uuid = worker.getUniqueID();
-                nbtTagCompound.setUniqueId("UUID", uuid);
+                nbtTagCompound.putUniqueId("UUID", uuid);
                 nbtWorker = nbtTagCompound;
             }
 
-            compound.setTag("leash", nbtWorker);
+            compound.put("leash", nbtWorker);
         }
 
-        return super.writeToNBT(compound);
+        return super.write(compound);
     }
 
     private boolean findWorker() {
@@ -111,7 +112,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         if (worker != null) {
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
             UUID uuid = worker.getUniqueID();
-            nbtTagCompound.setUniqueId("UUID", uuid);
+            nbtTagCompound.putUniqueId("UUID", uuid);
             nbtWorker = nbtTagCompound;
         }
         markDirty();
@@ -128,7 +129,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     }
 
     public boolean hasWorker() {
-        if (worker != null && !worker.isDead && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
+        if (worker != null && !worker.isAlive() && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
             return true;
         } else {
             if (worker != null) {
@@ -181,7 +182,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     }
 
     @Override
-    public void update() {
+    public void tick() {
         validationTimer--;
         if (validationTimer <= 0) {
             valid = validateArea();
@@ -223,7 +224,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
                     if (searchAreas[target] == null)
                         searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D);
 
-                    if (worker.getEntityBoundingBox().intersects(searchAreas[target])) {
+                    if (worker.getBoundingBox().intersects(searchAreas[target])) {
                         int next = target + 1;
                         int previous = target -1;
                         if (next >= path.length)

@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.tweaker;
-
+/*
 import java.util.Collections;
 import java.util.List;
 
@@ -25,3 +25,4 @@ public class DummyTweakPluginImpl implements ITweakerPlugin {
         return Collections.emptyList();
     }
 }
+*/

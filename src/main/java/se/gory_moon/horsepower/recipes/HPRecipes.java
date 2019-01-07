@@ -4,12 +4,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.util.Utils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -53,7 +52,8 @@ public class HPRecipes {
         createRecipes(ManualChoppingBlockRecipe.class, manualChopping, true).forEach(this::addManualChoppingRecipe);
         createRecipes(PressRecipe.class, press, false).forEach(this::addPressRecipe);
 
-        HorsePowerMod.tweakerPlugin.applyTweaker();
+        addGrindstoneRecipe(Items.BONE, new ItemStack(Items.BONE_MEAL, 3), 5, false);
+        //HorsePowerMod.tweakerPlugin.applyTweaker();
     }
 
     private <T extends HPRecipeBase> List<T> createRecipes(Class<T> clazz, List<String> data, boolean requireTime) {
@@ -68,13 +68,13 @@ public class HPRecipes {
             int secondaryChance = 0;
             for (String item : comp) {
                 if (item.contains(":")) {
-                    Object stack;
-                    try {
+                    Object stack = null;
+                    /*try {
                         stack = Utils.parseItemStack(item, true, true);
                     } catch (Exception e) {
                         Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ", index: " + index, false);
                         break;
-                    }
+                    }*/
                     if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
                         stacks.add(stack);
                 } else if (stacks.size() == 2) {
@@ -132,7 +132,7 @@ public class HPRecipes {
     }
 
     public void addGrindstoneRecipe(Item input, ItemStack output, int time, boolean hand) {
-        addGrindstoneRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output, time, hand);
+        addGrindstoneRecipe(new ItemStack(input, 1), output, time, hand);
     }
 
     public void addGrindstoneRecipe(ItemStack input, ItemStack output, int time, boolean hand) {
@@ -166,7 +166,7 @@ public class HPRecipes {
     }
 
     public void addChoppingRecipe(Item input, ItemStack output, int time, boolean hand) {
-        addChoppingRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output, time, hand);
+        //addChoppingRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output, time, hand);
     }
 
     public void addChoppingRecipe(ItemStack input, ItemStack output, int time, boolean hand) {
@@ -198,7 +198,7 @@ public class HPRecipes {
     }
 
     public void addPressRecipe(Item input, ItemStack output) {
-        addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
+        //addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
     }
 
     public void addPressRecipe(ItemStack input, ItemStack output) {
@@ -210,7 +210,7 @@ public class HPRecipes {
     }
 
     public void addPressRecipe(Item input, FluidStack output) {
-        addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
+        //addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
     }
 
     public void addPressRecipe(ItemStack input, FluidStack output) {

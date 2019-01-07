@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei;
-
+/*
 import com.google.common.collect.ImmutableList;
 import mezz.jei.api.gui.IGuiIngredientGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -154,3 +154,4 @@ public class ShapedChoppingCraftingWrapper implements IShapedCraftingRecipeWrapp
         recipeLayout.getItemStacks().set(0, outputs);
     }
 }
+*/

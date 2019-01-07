@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -21,9 +21,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockFiller;
@@ -32,7 +30,7 @@ import se.gory_moon.horsepower.util.Localization;
 
 import java.util.Arrays;
 
-public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> extends TileEntitySpecialRenderer<T> {
+public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> extends TileEntityRenderer<T> {
 
     private static TextureAtlasSprite[] destroyBlockIcons = new TextureAtlasSprite[10];
     public static ITextComponent LEAD_LOOKUP = new TextComponentTranslation(Localization.INFO.ITEM_REVEAL.key()).setStyle(new Style().setColor(TextFormatting.RED));
@@ -46,9 +44,9 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     private void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale, boolean rotate) {
-        RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         if (stack != null) {
-            GlStateManager.translate(x, y, z);
+            GlStateManager.translated(x, y, z);
             EntityItem entityitem = new EntityItem(te.getWorld(), 0.0D, 0.0D, 0.0D, stack.copy());
             entityitem.hoverStart = 0.0F;
             GlStateManager.pushMatrix();
@@ -57,9 +55,9 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             float rotation = (float) (720.0 * (System.currentTimeMillis() & 0x3FFFL) / 0x3FFFL);
 
             if (rotate)
-                GlStateManager.rotate(rotation, 0.0F, 1.0F, 0);
-            GlStateManager.scale(0.5F * scale, 0.5F * scale, 0.5F * scale);
-            GlStateManager.pushAttrib();
+                GlStateManager.rotatef(rotation, 0.0F, 1.0F, 0);
+            GlStateManager.scalef(0.5F * scale, 0.5F * scale, 0.5F * scale);
+            GlStateManager.pushLightingAttrib();
             RenderHelper.enableStandardItemLighting();
             itemRenderer.renderItem(entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED);
             RenderHelper.disableStandardItemLighting();
@@ -83,28 +81,28 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             FontRenderer fontRenderer = getFontRenderer();
             GlStateManager.pushMatrix();
 
-            GlStateManager.translate(x, y, z);
-            GlStateManager.glNormal3f(0.0F, 1.0F, 0.0F);
+            GlStateManager.translated(x, y, z);
+            GlStateManager.normal3f(0.0F, 1.0F, 0.0F);
             if (te.getForward() == EnumFacing.EAST || te.getForward() == EnumFacing.WEST)
                 FacingToRotation.get( te.getForward().getOpposite()).glRotateCurrentMat();
             else
                 FacingToRotation.get( te.getForward()).glRotateCurrentMat();
 
 
-            GlStateManager.rotate(-f, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(f1, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(-0.015F, -0.015F, 0.015F);
+            GlStateManager.rotatef(-f, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotatef(f1, 1.0F, 0.0F, 0.0F);
+            GlStateManager.scalef(-0.015F, -0.015F, 0.015F);
             GlStateManager.disableLighting();
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             GlStateManager.enableBlend();
 
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             GlStateManager.depthMask(true);
             fontRenderer.drawString(str, -fontRenderer.getStringWidth(str) / 2, 0, -1);
 
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.popMatrix();
         }
         setLightmapDisabled(false);
@@ -118,18 +116,18 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         if (stack.isEmpty())
             return;
         GlStateManager.pushMatrix();
-        GlStateManager.translate(ox, oy, oz);
-        GlStateManager.translate( 0.5, 0.5, 0.5 );
+        GlStateManager.translated(ox, oy, oz);
+        GlStateManager.translated( 0.5, 0.5, 0.5 );
         FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
-        GlStateManager.translate( -0.5, -0.5, -0.5 );
+        GlStateManager.translated( -0.5, -0.5, -0.5 );
         renderItem(tile, stack, x, y, z, scale);
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(ox , oy, oz);
-        GlStateManager.translate( 0.5, 0.5, 0.5 );
+        GlStateManager.translated(ox , oy, oz);
+        GlStateManager.translated( 0.5, 0.5, 0.5 );
         FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
-        GlStateManager.translate( -0.5, -0.5, -0.5 );
+        GlStateManager.translated( -0.5, -0.5, -0.5 );
 
         drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3,  z);
         GlStateManager.popMatrix();
@@ -140,15 +138,15 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         setRenderSettings();
 
         IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
-        BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+        BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         IBakedModel model = dispatcher.getModelForState( blockState );
 
         buffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
         buffer.setTranslation( -te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ() );
-        dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), model, blockState, te.getPos(), buffer, false );
+        dispatcher.getBlockModelRenderer().renderModel(getWorld(), model, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
         buffer.setTranslation( 0, 0, 0 );
         GlStateManager.pushMatrix();
-        GlStateManager.translate( x, y, z );
+        GlStateManager.translated( x, y, z );
         tessellator.draw();
         GlStateManager.popMatrix();
     }
@@ -158,7 +156,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         preDestroyRender(destroyStage);
         setRenderSettings();
 
-        BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+        BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         IBakedModel model = dispatcher.getModelForState( blockState );
 
         buffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
@@ -168,22 +166,22 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             buffer.noColor();
             renderBlockDamage(blockState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
         } else
-            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), model, blockState, te.getPos(), buffer, false );
+            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), model, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
 
         buffer.setTranslation( 0, 0, 0 );
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate( x, y, z );
+        GlStateManager.translated( x, y, z );
 
-        GlStateManager.translate( 0.5, 0.5, 0.5 );
+        GlStateManager.translated( 0.5, 0.5, 0.5 );
         FacingToRotation.get( te.getForward()).glRotateCurrentMat();
-        GlStateManager.translate( -0.5, -0.5, -0.5 );
+        GlStateManager.translated( -0.5, -0.5, -0.5 );
 
         tessellator.draw();
         buffer.setTranslation(0.0D, 0.0D, 0.0D);
         GlStateManager.popMatrix();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         postDestroyRender(destroyStage);
         RenderHelper.enableStandardItemLighting();
     }
@@ -206,7 +204,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     protected void preDestroyRender(int destroyStage) {
-        if (destroyStage >= 0) {
+        /*if (destroyStage >= 0) {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
@@ -219,11 +217,11 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             GlStateManager.alphaFunc(516, 0.1F);
             GlStateManager.enableAlpha();
             GlStateManager.pushMatrix();
-        }
+        }*/
     }
 
     protected void postDestroyRender(int destroyStage) {
-        if (destroyStage >= 0) {
+        /*if (destroyStage >= 0) {
 
             GlStateManager.disableAlpha();
             GlStateManager.doPolygonOffset(0.0F, 0.0F);
@@ -234,7 +232,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
 
             Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
             GlStateManager.disableBlend();
-        }
+        }*/
     }
 
     /**
@@ -331,17 +329,17 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.enableCull();
     }
 
-    public void renderBlockDamage(IBlockState state, BlockPos pos, TextureAtlasSprite texture, IBlockAccess blockAccess)
+    public void renderBlockDamage(IBlockState state, BlockPos pos, TextureAtlasSprite texture, World world)
     {
-        state = state.getActualState(blockAccess, pos);
-        IBakedModel ibakedmodel = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(state);
-        IBakedModel ibakedmodel1 = net.minecraftforge.client.ForgeHooksClient.getDamageModel(ibakedmodel, texture, state, blockAccess, pos);
-        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(blockAccess, ibakedmodel1, state, pos, Tessellator.getInstance().getBuffer(), true);
+        state = state.getExtendedState(world, pos);
+        IBakedModel ibakedmodel = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(state);
+        IBakedModel ibakedmodel1 = net.minecraftforge.client.ForgeHooksClient.getDamageModel(ibakedmodel, texture, state, world, pos);
+        Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(world, ibakedmodel1, state, pos, Tessellator.getInstance().getBuffer(), true, world.rand, state.getPositionRandom(pos));
     }
 
     public static TextureAtlasSprite getDestroyBlockIcon(int destroyState) {
         if (destroyBlockIcons[destroyState] == null) {
-            destroyBlockIcons = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, Minecraft.getMinecraft().renderGlobal, "destroyBlockIcons", "field_94141_F");
+           // destroyBlockIcons = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, Minecraft.getMinecraft().renderGlobal, "destroyBlockIcons", "field_94141_F");
         }
         return destroyBlockIcons[destroyState];
     }
@@ -350,7 +348,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         Arrays.stream(destroyBlockIcons).forEach(textureAtlasSprite -> textureAtlasSprite = null);
     }
 
-    public void drawDisplayText(TileEntity te, double x, double y, double z) {
+    public void drawDisplayText(TileEntityHPBase te, double x, double y, double z) {
         ITextComponent itextcomponent = te.getDisplayName();
 
         if (itextcomponent != null && this.rendererDispatcher.cameraHitResult != null && te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))

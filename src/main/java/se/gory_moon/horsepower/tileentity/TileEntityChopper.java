@@ -1,13 +1,10 @@
 package se.gory_moon.horsepower.tileentity;
-
+/*
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockChopper;
@@ -30,22 +27,22 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("currentWindup", currentWindup);
-        compound.setInteger("chopTime", currentItemChopTime);
-        compound.setInteger("totalChopTime", totalItemChopTime);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        compound.putInt("currentWindup", currentWindup);
+        compound.putInt("chopTime", currentItemChopTime);
+        compound.putInt("totalChopTime", totalItemChopTime);
 
-        return super.writeToNBT(compound);
+        return super.write(compound);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        currentWindup = compound.getInteger("currentWindup");
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
+        currentWindup = compound.getInt("currentWindup");
 
         if (getStackInSlot(0).getCount() > 0) {
-            currentItemChopTime = compound.getInteger("chopTime");
-            totalItemChopTime = compound.getInteger("totalChopTime");
+            currentItemChopTime = compound.getInt("chopTime");
+            totalItemChopTime = compound.getInt("totalChopTime");
         } else {
             currentItemChopTime = 0;
             totalItemChopTime = 1;
@@ -60,11 +57,11 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     public void setTextureBlock(NBTTagCompound textureBlock) {
-        getTileData().setTag("textureBlock", textureBlock);
+        getTileData().put("textureBlock", textureBlock);
     }
 
     public NBTTagCompound getTextureBlock() {
-        return getTileData().getCompoundTag("textureBlock");
+        return getTileData().getCompound("textureBlock");
     }
 
     @Override
@@ -93,15 +90,15 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         }
 
         for (BlockPos pos: searchPos) {
-            if (!getWorld().getBlockState(pos).getBlock().isReplaceable(world, pos))
+            if (!getWorld().getBlockState(pos).getMaterial().isReplaceable())
                 return false;
         }
         return true;
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void tick() {
+        super.tick();
 
         float windup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup: 1;
         visualWindup = -0.74F + (0.74F * (((float)currentWindup) / (windup - 1)));
@@ -215,8 +212,13 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
     }
 
     @Override
-    public String getName() {
-        return "container.chopper";
+    public ITextComponent getName() {
+        return new TextComponentString("container.chopper");
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return false;
     }
 
     @Override
@@ -240,4 +242,11 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         else
             return new TextComponentTranslation(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return null;
+    }
 }
+*/

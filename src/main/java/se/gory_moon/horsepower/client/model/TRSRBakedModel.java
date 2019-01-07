@@ -2,7 +2,10 @@ package se.gory_moon.horsepower.client.model;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
@@ -15,11 +18,13 @@ import net.minecraftforge.client.model.pipeline.VertexTransformer;
 import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.List;
+import java.util.Random;
 
 // for those wondering TRSR stands for Translation Rotation Scale Rotation
 public class TRSRBakedModel implements IBakedModel {
@@ -65,7 +70,7 @@ public class TRSRBakedModel implements IBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, Random rand) {
         // transform quads obtained from parent
 
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
@@ -74,10 +79,10 @@ public class TRSRBakedModel implements IBakedModel {
             try {
                 // adjust side to facing-rotation
                 if(side != null && side.getHorizontalIndex() > -1) {
-                    side = EnumFacing.getHorizontal((side.getHorizontalIndex() + faceOffset) % 4);
+                    side = EnumFacing.byHorizontalIndex((side.getHorizontalIndex() + faceOffset) % 4);
                 }
                 for(BakedQuad quad : original.getQuads(state, side, rand)) {
-                    Transformer transformer = new Transformer(transformation, quad.getFormat());
+                    Transformer transformer = new Transformer(transformation, side, quad.getFormat());
                     quad.pipe(transformer);
                     builder.add(transformer.build());
                 }
@@ -127,15 +132,15 @@ public class TRSRBakedModel implements IBakedModel {
         private final TRSRBakedModel model;
 
         public TRSROverride(TRSRBakedModel model) {
-            super(ImmutableList.<ItemOverride>of());
+            super();
 
             this.model = model;
         }
 
         @Nonnull
         @Override
-        public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, ItemStack stack, @Nonnull World world, @Nonnull EntityLivingBase entity) {
-            IBakedModel baked = model.original.getOverrides().handleItemState(originalModel, stack, world, entity);
+        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn) {
+            IBakedModel baked = model.original.getOverrides().getModelWithOverrides(originalModel, stack, worldIn, entityIn);
 
             return new TRSRBakedModel(baked, model.transformation);
         }
@@ -146,10 +151,10 @@ public class TRSRBakedModel implements IBakedModel {
         protected Matrix4f transformation;
         protected Matrix3f normalTransformation;
 
-        public Transformer(TRSRTransformation transformation, VertexFormat format) {
+        public Transformer(TRSRTransformation transformation, EnumFacing side, VertexFormat format) {
             super(new UnpackedBakedQuad.Builder(format));
             // position transform
-            this.transformation = transformation.getMatrix();
+            this.transformation = transformation.getMatrix(side);
             // normal transform
             this.normalTransformation = new Matrix3f();
             this.transformation.getRotationScale(this.normalTransformation);

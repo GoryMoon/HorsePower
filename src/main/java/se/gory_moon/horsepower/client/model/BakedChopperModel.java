@@ -1,9 +1,8 @@
 package se.gory_moon.horsepower.client.model;
-
+/*
 import com.google.common.base.Function;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
@@ -22,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class BakedChopperModel implements IBakedModel {
@@ -58,7 +59,7 @@ public class BakedChopperModel implements IBakedModel {
 
         textureGetter = location -> {
             assert location != null;
-            return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+            return Minecraft.getInstance().getTextureMap().getAtlasSprite(location.toString());
         };
     }
 
@@ -76,7 +77,7 @@ public class BakedChopperModel implements IBakedModel {
                 IModel retexturedModel = choppingModel.retexture(builder.build());
                 IModelState modelState = new SimpleModelState(transforms);
 
-                bakedModel = retexturedModel.bake(modelState, format, textureGetter);
+                bakedModel = retexturedModel.bake(ModelLoader.defaultModelGetter(), textureGetter, modelState, true, format);
                 cache.put(texture, bakedModel);
             }
         }
@@ -100,7 +101,7 @@ public class BakedChopperModel implements IBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, Random rand) {
         // get texture from state
         String side_texture = null;
         String top_texture = null;
@@ -113,7 +114,7 @@ public class BakedChopperModel implements IBakedModel {
             if (extendedState.getUnlistedNames().contains(BlockHPChoppingBase.TOP_TEXTURE))
                 top_texture = extendedState.getValue(BlockHPChoppingBase.TOP_TEXTURE);
 
-            if(extendedState.getPropertyKeys().contains(BlockChopper.FACING)) {
+            if(extendedState.has(BlockChopper.FACING)) {
                 face = extendedState.getValue(BlockChopper.FACING);
             }
         }
@@ -168,21 +169,21 @@ public class BakedChopperModel implements IBakedModel {
         static ChopperItemOverrideList INSTANCE = new ChopperItemOverrideList();
 
         private ChopperItemOverrideList() {
-            super(ImmutableList.of());
+            super();
         }
 
         @Nonnull
         @Override
-        public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+        public IBakedModel getModelWithOverrides(@Nonnull IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
             if(originalModel instanceof BakedChopperModel) {
                 // read out the data on the itemstack
-                ItemStack blockStack = new ItemStack(stack.hasTagCompound() ? stack.getTagCompound().getCompoundTag("textureBlock"): new NBTTagCompound());
+                ItemStack blockStack = ItemStack.read(stack.hasTag() ? stack.getTag().getCompound("textureBlock"): new NBTTagCompound());
                 if(!blockStack.isEmpty()) {
                     // get model from data
                     Block block = Block.getBlockFromItem(blockStack.getItem());
-                    IBlockState state = block.getStateFromMeta(blockStack.getItemDamage());
-                    String side_texture = RenderUtils.getTextureFromBlockstate(state).getIconName();
-                    String top_texture = RenderUtils.getTopTextureFromBlockstate(state).getIconName();
+                    IBlockState state = block.getDefaultState();
+                    String side_texture = RenderUtils.getTextureFromBlockstate(state).getName().toString();
+                    String top_texture = RenderUtils.getTopTextureFromBlockstate(state).getName().toString();
                     return ((BakedChopperModel) originalModel).getActualModel(side_texture, top_texture, null);
                 }
             }
@@ -222,3 +223,4 @@ public class BakedChopperModel implements IBakedModel {
         }
     }
 }
+*/

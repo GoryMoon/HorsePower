@@ -1,77 +1,75 @@
 package se.gory_moon.horsepower;
 
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.javafmlmod.FMLModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.client.ModModelManager;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
+import se.gory_moon.horsepower.proxy.ClientProxy;
 import se.gory_moon.horsepower.proxy.CommonProxy;
 import se.gory_moon.horsepower.recipes.HPRecipes;
-import se.gory_moon.horsepower.tweaker.DummyTweakPluginImpl;
-import se.gory_moon.horsepower.tweaker.IHPAction;
-import se.gory_moon.horsepower.tweaker.ITweakerPlugin;
-import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
 import se.gory_moon.horsepower.util.Utils;
 
-@Mod(modid = Reference.MODID, version = Reference.VERSION, name = Reference.NAME, acceptedMinecraftVersions = "[1.12]", dependencies = "after:crafttweaker;after:jei;after:waila;after:theoneprobe;", certificateFingerprint = Reference.FINGERPRINT)
-@EventBusSubscriber
+//"after:crafttweaker;after:jei;after:waila;after:theoneprobe;"
+@Mod(Reference.MODID)
 public class HorsePowerMod {
 
-    @Instance(Reference.MODID)
-    public static HorsePowerMod instance;
-
-    @SidedProxy(clientSide = Reference.CLIENT_PROXY, serverSide = Reference.COMMON_PROXY)
-    public static CommonProxy proxy;
+    public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public static HorsePowerCreativeTab creativeTab = new HorsePowerCreativeTab();
-    public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
+    //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
     public static Logger logger = LogManager.getLogger("HorsePower");
 
-    @EventHandler
+    public HorsePowerMod() {
+        FMLModLoadingContext.get().getModEventBus().addListener(this::preInit);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::init);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::serverLoad);
+        FMLModLoadingContext.get().getModEventBus().addListener(this::onFingerprintViolation);
+
+        MinecraftForge.EVENT_BUS.register(ModItems.RegistrationHandler.class);
+        MinecraftForge.EVENT_BUS.register(ModBlocks.RegistrationHandler.class);
+        MinecraftForge.EVENT_BUS.register(HPEventHandler.class);
+        MinecraftForge.EVENT_BUS.register(ModModelManager.class);
+    }
+
     public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit();
         PacketHandler.init();
 
-        FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER);
+        //FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER);
 
-        ModBlocks.registerTileEntities();
-
-        if (Loader.isModLoaded("crafttweaker"))
+        /*if (Loader.isModLoaded("crafttweaker"))
             tweakerPlugin = new TweakerPluginImpl();
 
-        tweakerPlugin.register();
+        tweakerPlugin.register();*/
     }
 
-    @EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.init();
         ModItems.registerRecipes();
     }
 
-    @EventHandler
     public void loadComplete(FMLPostInitializationEvent event) {
-        tweakerPlugin.getRemove().forEach(IHPAction::run);
-        tweakerPlugin.getAdd().forEach(IHPAction::run);
+        //tweakerPlugin.getRemove().forEach(IHPAction::run);
+        //tweakerPlugin.getAdd().forEach(IHPAction::run);
 
         HPEventHandler.reloadConfig();
         proxy.loadComplete();
     }
 
-    @EventHandler
     public void serverLoad(FMLServerAboutToStartEvent event) {
         HPRecipes.instance().reloadRecipes();
         Utils.sendSavedErrors();
     }
 
-    @EventHandler
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
         logger.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }

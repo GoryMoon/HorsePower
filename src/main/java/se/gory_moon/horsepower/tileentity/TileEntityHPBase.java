@@ -8,31 +8,36 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.INameable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileEntityHPBase extends TileEntity {
+public abstract class TileEntityHPBase extends TileEntity implements INameable {
 
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     protected IHPInventory inventory;
 
     private EnumFacing forward = null;
 
-    public TileEntityHPBase(int inventorySize) {
+    public TileEntityHPBase(int inventorySize, TileEntityType type) {
+        super(type);
         itemStacks = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
 
         inventory = new IHPInventory() {
@@ -135,7 +140,7 @@ public abstract class TileEntityHPBase extends TileEntity {
             }
 
             @Override
-            public String getName() {
+            public ITextComponent getName() {
                 return TileEntityHPBase.this.getName();
             }
 
@@ -148,10 +153,16 @@ public abstract class TileEntityHPBase extends TileEntity {
             public ITextComponent getDisplayName() {
                 return TileEntityHPBase.this.getDisplayName();
             }
+
+            @Nullable
+            @Override
+            public ITextComponent getCustomName() {
+                return null;
+            }
         };
-        handlerIn = new RangedWrapper(new InvWrapper(inventory), 0, 1);
-        handlerBottom = new RangedWrapper(new InvWrapper(inventory), 1, getOutputSlot() + 1);
-        handlerNull = new InvWrapper(inventory);
+        handlerIn = OptionalCapabilityInstance.of(() -> new RangedWrapper(new InvWrapper(inventory), 0, 1));
+        handlerBottom = OptionalCapabilityInstance.of(() -> new RangedWrapper(new InvWrapper(inventory), 1, getOutputSlot() + 1));
+        handlerNull = OptionalCapabilityInstance.of(() -> new InvWrapper(inventory));
     }
 
     public abstract HPRecipeBase getRecipe();
@@ -171,8 +182,6 @@ public abstract class TileEntityHPBase extends TileEntity {
     public int getFieldCount() {
         return 0;
     }
-
-    public abstract String getName();
 
     public abstract int getOutputSlot();
 
@@ -201,8 +210,8 @@ public abstract class TileEntityHPBase extends TileEntity {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
 
         itemStacks = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, itemStacks);
@@ -213,12 +222,12 @@ public abstract class TileEntityHPBase extends TileEntity {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        super.write(compound);
         ItemStackHelper.saveAllItems(compound, itemStacks);
 
         if (canBeRotated()) {
-            compound.setString("forward", getForward().getName());
+            compound.putString("forward", getForward().getName());
         }
         return compound;
     }
@@ -257,7 +266,7 @@ public abstract class TileEntityHPBase extends TileEntity {
     }
 
     public static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && (stack1.getMetadata() == stack2.getMetadata() && (stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2)));
+        return stack1.getItem() == stack2.getItem() && (stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2));
     }
 
     public boolean canBeRotated() {
@@ -274,7 +283,6 @@ public abstract class TileEntityHPBase extends TileEntity {
         this.forward = forward;
     }
 
-    @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
         return oldState.getBlock() != newState.getBlock();
     }
@@ -286,42 +294,47 @@ public abstract class TileEntityHPBase extends TileEntity {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override
     public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
+        return write(new NBTTagCompound());
     }
 
     @Override
     public void handleUpdateTag(NBTTagCompound tag) {
-        readFromNBT(tag);
+        read(tag);
         markDirty();
     }
 
-    private IItemHandler handlerNull = null;
-    private IItemHandler handlerBottom;
-    private IItemHandler handlerIn = null;
-
+    private OptionalCapabilityInstance<IItemHandler> handlerNull;
+    private OptionalCapabilityInstance<IItemHandler> handlerBottom;
+    private OptionalCapabilityInstance<IItemHandler> handlerIn;
+    @Nonnull
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing));
+    public <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (side == null)
+                return handlerNull.cast();
+            else if (side == EnumFacing.DOWN)
+                return handlerBottom.cast();
+            else
+                return handlerIn.cast();
+        }
+        return super.getCapability(cap);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> T getCapability(Capability<T> capability, @javax.annotation.Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (facing == null)
-                return (T) handlerNull;
-            else if (facing == EnumFacing.DOWN)
-                return (T) handlerBottom;
-            else
-                return (T) handlerIn;
-        }
-        return super.getCapability(capability, facing);
+    public boolean hasCustomName() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return null;
     }
 }

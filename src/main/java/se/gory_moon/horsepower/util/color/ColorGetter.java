@@ -1,27 +1,8 @@
 package se.gory_moon.horsepower.util.color;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +10,6 @@ import java.util.List;
  * Copied and modified from JEI (JustEnoughItems)
  * @author Mezz
  */
-@SideOnly(Side.CLIENT)
 public final class ColorGetter {
 
     private ColorGetter() {
@@ -37,15 +17,16 @@ public final class ColorGetter {
     }
 
     public static List<Color> getColors(ItemStack itemStack, int colorCount) {
-        try {
+        /*try {
             return unsafeGetColors(itemStack, colorCount);
         } catch (RuntimeException ignored) {
             return Collections.emptyList();
         } catch (LinkageError ignored) {
             return Collections.emptyList();
-        }
+        }*/
+        return Collections.emptyList();
     }
-
+/*
     private static List<Color> unsafeGetColors(ItemStack itemStack, int colorCount) {
         final Item item = itemStack.getItem();
         if (itemStack.isEmpty()) {
@@ -64,8 +45,8 @@ public final class ColorGetter {
     }
 
     private static List<Color> getItemColors(ItemStack itemStack, int colorCount) {
-        final ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-        final int renderColor = itemColors.colorMultiplier(itemStack, 0);
+        final ItemColors itemColors = Minecraft.getInstance().getItemColors();
+        final int renderColor = itemColors.getColor(itemStack, 0);
         final TextureAtlasSprite textureAtlasSprite = getTextureAtlasSprite(itemStack);
         if (textureAtlasSprite == null) {
             return Collections.emptyList();
@@ -152,5 +133,5 @@ public final class ColorGetter {
         ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
         IBakedModel itemModel = itemModelMesher.getItemModel(itemStack);
         return itemModel.getParticleTexture();
-    }
+    }*/
 }

@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.util;
-
+/*
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -94,3 +94,4 @@ public class HorsePowerCommand extends CommandBase implements IClientCommand {
         return false;
     }
 }
+*/

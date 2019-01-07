@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.tileentity;
-
+/*
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -263,3 +263,4 @@ public class TileEntityPress extends TileEntityHPHorseBase {
         return super.getCapability(capability, facing);
     }
 }
+*/

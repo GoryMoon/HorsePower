@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.jei.chopping;
-
+/*
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
@@ -30,3 +30,4 @@ public class ChoppingRecipeMaker {
         return recipes;
     }
 }
+*/

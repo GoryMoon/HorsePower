@@ -4,11 +4,9 @@ import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Localization;
@@ -25,24 +23,24 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     public Color grindColor;
 
     public TileEntityGrindstone() {
-        super(3);
+        super(3, ModBlocks.GRINDSTONE_TILE);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("millTime", currentItemMillTime);
-        compound.setInteger("totalMillTime", totalItemMillTime);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        compound.putInt("millTime", currentItemMillTime);
+        compound.putInt("totalMillTime", totalItemMillTime);
 
-        return super.writeToNBT(compound);
+        return super.write(compound);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
 
         if (getStackInSlot(0).getCount() > 0) {
-            currentItemMillTime = compound.getInteger("millTime");
-            totalItemMillTime = compound.getInteger("totalMillTime");
+            currentItemMillTime = compound.getInt("millTime");
+            totalItemMillTime = compound.getInt("totalMillTime");
         } else {
             currentItemMillTime = 0;
             totalItemMillTime = 1;
@@ -76,7 +74,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
         }
 
         for (BlockPos pos: searchPos) {
-            if (!getWorld().getBlockState(pos).getBlock().isReplaceable(world, pos))
+            if (!getWorld().getBlockState(pos).getMaterial().isReplaceable())
                 return false;
         }
         return true;
@@ -188,8 +186,8 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     }
 
     @Override
-    public String getName() {
-        return "container.mill";
+    public ITextComponent getName() {
+        return new TextComponentString("container.mill");
     }
 
     @Override
