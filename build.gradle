@@ -1,16 +1,8 @@
 buildscript {
     repositories {
-        mavenLocal()
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
-    }
-    // This is only here while i'm activly developing FG, Remind me to remove when we publically release
-    configurations {
-        classpath.resolutionStrategy {
-            cacheDynamicVersionsFor 10, 'seconds'
-            cacheChangingModulesFor 0, 'seconds'
-        }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
@@ -20,14 +12,11 @@ apply plugin: 'net.minecraftforge.gradle'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8 // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-}
-
 version = mod_version
 group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "HorsePower-" + mc_version
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of the version string if on a build server
     version += ".${System.getenv().BUILD_NUMBER}"
@@ -48,32 +37,14 @@ minecraft {
 
     // default run configurations.
     // these can be tweaked, removed, or duplicated as needed.
-    runConfig {
-        name= "Minecraft Client"
-        main= "net.minecraftforge.userdev.UserdevLauncher"
-        ideaModuleName = "${project.name}_main"
-        workingDirectory = project.file("run").canonicalPath
-        environment "target", "fmluserdevclient"
-        environment "assetDirectory", downloadAssets.output.absolutePath
-        environment "FORGE_VERSION", forge_version
-        environment "FORGE_GROUP", FORGE_GROUP
-        environment "MCP_VERSION", mcp_mappings
-        environment "MC_VERSION", mc_version
-        environment "MOD_CLASSES", "${sourceSets.main.output.resourcesDir}${File.pathSeparator}${sourceSets.main.output.classesDirs.join(File.pathSeparator)}"
-    }
-
-    runConfig {
-        name= "Minecraft Server"
-        main= "net.minecraftforge.userdev.UserdevLauncher"
-        ideaModuleName = "${project.name}_main"
-        workingDirectory = project.file("run").canonicalPath
-        environment "target", "fmldevserver"
-        environment "assetDirectory", downloadAssets.output.absolutePath
-        environment "FORGE_VERSION", forge_version
-        environment "FORGE_GROUP", FORGE_GROUP
-        environment "MCP_VERSION", mcp_mappings
-        environment "MC_VERSION", mc_version
-        environment "MOD_CLASSES", "${sourceSets.main.output.resourcesDir}${File.pathSeparator}${sourceSets.main.output.classesDirs.join(File.pathSeparator)}"
+    runs {
+        client = {
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+        server = {
+            workingDirectory project.file('run').canonicalPath
+        }
     }
 }
 
@@ -111,8 +82,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "${FORGE_GROUP}:userdev:${mc_version}-${forge_version}"
-    compile "${FORGE_GROUP}:forge:${mc_version}-${forge_version}:launcher"
+    minecraft "${FORGE_GROUP}:forge:${mc_version}-${forge_version}"
 
 
     // compile against the JEI API

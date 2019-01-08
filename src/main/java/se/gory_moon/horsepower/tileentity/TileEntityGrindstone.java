@@ -28,8 +28,8 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.putInt("millTime", currentItemMillTime);
-        compound.putInt("totalMillTime", totalItemMillTime);
+        compound.setInt("millTime", currentItemMillTime);
+        compound.setInt("totalMillTime", totalItemMillTime);
 
         return super.write(compound);
     }
