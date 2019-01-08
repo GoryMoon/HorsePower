@@ -7,7 +7,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.client.ModModelManager;
 import se.gory_moon.horsepower.client.renderer.ClientHandler;
 import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityGrindstoneRender;
@@ -15,6 +17,7 @@ import se.gory_moon.horsepower.client.renderer.TileEntityHandGrindstoneRender;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.util.color.ColorGetter;
 
 import java.awt.*;
 
@@ -55,15 +58,14 @@ public class ClientProxy extends CommonProxy {
                     if (outputStack.getCount() < secondaryStack.getCount())
                         outputStack = secondaryStack;
                     te.renderStack = outputStack;
-                    te.grindColor = Color.GRAY;
-                    /*if (!OreDictionary.itemMatches(te.renderStack, outputStack, true)) {
+                    if (!ItemStack.areItemsEqual(te.renderStack, outputStack)) {
                         te.renderStack = outputStack;
                         if (!outputStack.isEmpty())
                             te.grindColor = ColorGetter.getColors(outputStack, 2).get(0);
                         else
                             te.grindColor = null;
                         te.renderStack = outputStack;
-                    }*/
+                    }
 
                     if (te.grindColor != null)
                         return te.grindColor.getRGB();

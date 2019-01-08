@@ -129,7 +129,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     }
 
     public boolean hasWorker() {
-        if (worker != null && !worker.isAlive() && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
+        if (worker != null && worker.isAlive() && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
             return true;
         } else {
             if (worker != null) {

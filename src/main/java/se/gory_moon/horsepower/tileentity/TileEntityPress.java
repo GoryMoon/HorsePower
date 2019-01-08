@@ -123,7 +123,7 @@ public class TileEntityPress extends TileEntityHPHorseBase {
 
             if (recipe.isLiquidRecipe()) {
                 tank.fillInternal(fluidResult, true);
-                HorsePowerMod.logger.info("Tank: " + tank.getFluid().amount);
+                HorsePowerMod.LOGGER.info("Tank: " + tank.getFluid().amount);
             } else {
                 if (output.isEmpty()) {
                     setInventorySlotContents(1, result.copy());

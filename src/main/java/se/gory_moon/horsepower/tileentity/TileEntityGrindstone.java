@@ -199,7 +199,7 @@ public class TileEntityGrindstone extends TileEntityHPHorseBase {
     @Override
     public ITextComponent getDisplayName() {
         if (valid)
-            return super.getDisplayName();
+            return null;
         else
             return new TextComponentTranslation(Localization.INFO.GRINDSTONE_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }

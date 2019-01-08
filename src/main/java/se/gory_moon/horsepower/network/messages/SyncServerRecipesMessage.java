@@ -68,7 +68,7 @@ public class SyncServerRecipesMessage {
         ctx.get().enqueueWork(() -> {
             HPRecipes.serverSyncedRecipes = true;
             HPRecipes.instance().reloadRecipes(message.grindstoneRecipes, message.handGrindstoneRecipes, message.choppingRecipes, message.manualChoppingRecipes, message.pressRecipes);
-            HorsePowerMod.logger.info("Synced recipes from server");
+            HorsePowerMod.LOGGER.info("Synced recipes from server");
         });
     }
 }

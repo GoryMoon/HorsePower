@@ -62,7 +62,7 @@ public class ChoppingRecipeTweaker {
         public void apply() {
             List<IItemStack> items = input.getItems();
             if(items == null) {
-                HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a chopping recipe");
+                HorsePowerMod.LOGGER.error("Cannot turn " + input.toString() + " into a chopping recipe");
                 return;
             }
 

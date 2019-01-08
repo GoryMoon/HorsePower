@@ -1,8 +1,27 @@
 package se.gory_moon.horsepower.util.color;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
+import net.minecraft.client.renderer.texture.NativeImage;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 
+import javax.annotation.Nullable;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,16 +36,13 @@ public final class ColorGetter {
     }
 
     public static List<Color> getColors(ItemStack itemStack, int colorCount) {
-        /*try {
+        try {
             return unsafeGetColors(itemStack, colorCount);
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException | LinkageError ignored) {
             return Collections.emptyList();
-        } catch (LinkageError ignored) {
-            return Collections.emptyList();
-        }*/
-        return Collections.emptyList();
+        }
     }
-/*
+
     private static List<Color> unsafeGetColors(ItemStack itemStack, int colorCount) {
         final Item item = itemStack.getItem();
         if (itemStack.isEmpty()) {
@@ -38,7 +54,7 @@ public final class ColorGetter {
             if (block == null) {
                 return Collections.emptyList();
             }
-            return getBlockColors(itemStack, block, colorCount);
+            return getBlockColors(block, colorCount);
         } else {
             return getItemColors(itemStack, colorCount);
         }
@@ -54,19 +70,10 @@ public final class ColorGetter {
         return getColors(textureAtlasSprite, renderColor, colorCount);
     }
 
-    private static List<Color> getBlockColors(ItemStack itemStack, Block block, int colorCount) {
-        final int meta = itemStack.getMetadata();
-        IBlockState blockState;
-        try {
-            blockState = block.getStateFromMeta(meta);
-        } catch (RuntimeException ignored) {
-            blockState = block.getDefaultState();
-        } catch (LinkageError ignored) {
-            blockState = block.getDefaultState();
-        }
-
-        final BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
-        final int renderColor = blockColors.colorMultiplier(blockState, null, null, 0);
+    private static List<Color> getBlockColors(Block block, int colorCount) {
+        IBlockState blockState = block.getDefaultState();
+        final BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+        final int renderColor = blockColors.getColor(blockState, null, null, 0);
         final TextureAtlasSprite textureAtlasSprite = getTextureAtlasSprite(blockState);
         if (textureAtlasSprite == null) {
             return Collections.emptyList();
@@ -98,8 +105,8 @@ public final class ColorGetter {
 
     @Nullable
     private static BufferedImage getBufferedImage(TextureAtlasSprite textureAtlasSprite) {
-        final int iconWidth = textureAtlasSprite.getIconWidth();
-        final int iconHeight = textureAtlasSprite.getIconHeight();
+        final int iconWidth = textureAtlasSprite.getWidth();
+        final int iconHeight = textureAtlasSprite.getHeight();
         final int frameCount = textureAtlasSprite.getFrameCount();
         if (iconWidth <= 0 || iconHeight <= 0 || frameCount <= 0) {
             return null;
@@ -107,9 +114,9 @@ public final class ColorGetter {
 
         BufferedImage bufferedImage = new BufferedImage(iconWidth, iconHeight * frameCount, BufferedImage.TYPE_4BYTE_ABGR);
         for (int i = 0; i < frameCount; i++) {
-            int[][] frameTextureData = textureAtlasSprite.getFrameTextureData(i);
-            int[] largestMipMapTextureData = frameTextureData[0];
-            bufferedImage.setRGB(0, i * iconHeight, iconWidth, iconHeight, largestMipMapTextureData, 0, iconWidth);
+            NativeImage[] frames = textureAtlasSprite.frames;
+            NativeImage largestMipMapTextureData = frames[0];
+            bufferedImage.setRGB(0, i * iconHeight, iconWidth, iconHeight, largestMipMapTextureData.makePixelArray(), 0, iconWidth);
         }
 
         return bufferedImage;
@@ -117,11 +124,11 @@ public final class ColorGetter {
 
     @Nullable
     private static TextureAtlasSprite getTextureAtlasSprite(IBlockState blockState) {
-        Minecraft minecraft = Minecraft.getMinecraft();
+        Minecraft minecraft = Minecraft.getInstance();
         BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRendererDispatcher();
         BlockModelShapes blockModelShapes = blockRendererDispatcher.getBlockModelShapes();
         TextureAtlasSprite textureAtlasSprite = blockModelShapes.getTexture(blockState);
-        if (textureAtlasSprite == minecraft.getTextureMapBlocks().getMissingSprite()) {
+        if (textureAtlasSprite == MissingTextureSprite.getSprite()) {
             return null;
         }
         return textureAtlasSprite;
@@ -129,9 +136,9 @@ public final class ColorGetter {
 
     @Nullable
     private static TextureAtlasSprite getTextureAtlasSprite(ItemStack itemStack) {
-        RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+        ItemRenderer renderItem = Minecraft.getInstance().getItemRenderer();
         ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
         IBakedModel itemModel = itemModelMesher.getItemModel(itemStack);
         return itemModel.getParticleTexture();
-    }*/
+    }
 }

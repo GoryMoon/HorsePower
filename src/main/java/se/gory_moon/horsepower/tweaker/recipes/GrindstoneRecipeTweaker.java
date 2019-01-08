@@ -68,7 +68,7 @@ public class GrindstoneRecipeTweaker {
             }
             List<IItemStack> inputs = input.getItems();
             if(inputs == null) {
-                HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a grinding recipe");
+                HorsePowerMod.LOGGER.error("Cannot turn " + input.toString() + " into a grinding recipe");
                 return;
             }
 

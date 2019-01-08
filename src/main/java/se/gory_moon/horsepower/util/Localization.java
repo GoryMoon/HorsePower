@@ -9,14 +9,14 @@ public final class Localization {
         String result = translateToLocal(key);
 
         for (int i = 0; i < vars.length; i++) {
-            String optionCheck = "[%" + (i + 1) + "->";
+            String optionCheck = "[$" + (i + 1) + "->";
             int pos = result.indexOf(optionCheck);
 
             if (pos != -1) {
                 int endPos = result.indexOf("]");
                 if (endPos != -1) {
                     String[] options = result.substring(pos + optionCheck.length(), endPos).split("\\|");
-                    int pickedOption = vars[i].equals("1") ? 1 : 0;
+                    int pickedOption = vars[i].equals("true") ? 1 : 0;
                     if (options.length > pickedOption) {
                         String opt = options[pickedOption];
                         result = result.substring(0, pos) + opt + result.substring(endPos + 1);
@@ -25,7 +25,7 @@ public final class Localization {
                     }
                 }
             } else {
-                result = result.replace("[%" + (i + 1) + "]", vars[i]);
+                result = result.replace("[$" + (i + 1) + "]", vars[i]);
             }
         }
 
@@ -46,7 +46,7 @@ public final class Localization {
             }
 
             public String toString() {
-                return "item.horsepower:grindstone.description." + super.toString().toLowerCase();
+                return "item.horsepower.grindstone.description." + super.toString().toLowerCase();
             }
         }
 
@@ -59,7 +59,7 @@ public final class Localization {
 
             @Override
             public String toString() {
-                return "item.horsepower:hand_grindstone.description." + super.toString().toLowerCase();
+                return "item.horsepower.hand_grindstone.description." + super.toString().toLowerCase();
             }
         }
 
@@ -72,7 +72,7 @@ public final class Localization {
 
             @Override
             public String toString() {
-                return "item.horsepower:chopping.description." + super.toString().toLowerCase();
+                return "item.horsepower.chopping.description." + super.toString().toLowerCase();
             }
         }
 
@@ -85,7 +85,7 @@ public final class Localization {
 
             @Override
             public String toString() {
-                return "item.horsepower:press.description." + super.toString().toLowerCase();
+                return "item.horsepower.press.description." + super.toString().toLowerCase();
             }
         }
 
@@ -102,7 +102,7 @@ public final class Localization {
         }
 
         public String key() {
-            return "info.horsepower:" + toString().toLowerCase().replaceAll("_", ".");
+            return "info.horsepower." + toString().toLowerCase().replaceAll("_", ".");
         }
     }
 

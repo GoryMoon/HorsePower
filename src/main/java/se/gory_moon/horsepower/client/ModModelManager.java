@@ -2,17 +2,22 @@ package se.gory_moon.horsepower.client;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ItemModelMesherForge;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.lib.Reference;
@@ -21,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
-//@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Reference.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Reference.MODID)
 public class ModModelManager {
 
     public static final ModModelManager INSTANCE = new ModModelManager();
@@ -163,7 +168,8 @@ public class ModModelManager {
      * @param fullModelLocation The full model location
      */
     private void registerItemModel(Item item, ModelResourceLocation fullModelLocation) {
-        //ModelBakery.registerItemVariants(item, fullModelLocation); // Ensure the custom model is loaded and prevent the default model from being loaded
+        //Minecraft.getInstance().getItemRenderer().getItemModelMesher().register(item, fullModelLocation);
+        itemsRegistered.add(item);
         //registerItemModel(item, MeshDefinitionFix.create(stack -> fullModelLocation));
     }
 

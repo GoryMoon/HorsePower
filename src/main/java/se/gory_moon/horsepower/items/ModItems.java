@@ -17,8 +17,8 @@ import java.util.*;
 
 public class ModItems {
 
-    public static final Item FLOUR = new Item(new Item.Builder().group(HorsePowerMod.creativeTab)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.FLOUR_ITEM);
-    public static final Item DOUGH = new Item(new Item.Builder().group(HorsePowerMod.creativeTab)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.DOUGH_ITEM);
+    public static final Item FLOUR = new Item(new Item.Builder().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.FLOUR_ITEM);
+    public static final Item DOUGH = new Item(new Item.Builder().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.DOUGH_ITEM);
 
     private static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     private static List<ResourceLocation> recipesToRemove = new LinkedList<>();

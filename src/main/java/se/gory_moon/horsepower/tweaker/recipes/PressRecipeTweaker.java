@@ -67,7 +67,7 @@ public class PressRecipeTweaker {
         public void apply() {
             List<IItemStack> items = input.getItems();
             if(items == null) {
-                HorsePowerMod.logger.error("Cannot turn " + input.toString() + " into a press recipe");
+                HorsePowerMod.LOGGER.error("Cannot turn " + input.toString() + " into a press recipe");
             }
 
             ItemStack[] items2 = getItemStacks(items);

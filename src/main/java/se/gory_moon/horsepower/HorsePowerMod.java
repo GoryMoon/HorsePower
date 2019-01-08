@@ -23,9 +23,10 @@ public class HorsePowerMod {
 
     public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
-    public static HorsePowerCreativeTab creativeTab = new HorsePowerCreativeTab();
+    public static HorsePowerItemGroup itemGroup = new HorsePowerItemGroup();
+    public static final Logger LOGGER = LogManager.getLogger("HorsePower");
+
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
-    public static Logger logger = LogManager.getLogger("HorsePower");
 
     public HorsePowerMod() {
         FMLModLoadingContext.get().getModEventBus().addListener(this::preInit);
@@ -37,7 +38,6 @@ public class HorsePowerMod {
         MinecraftForge.EVENT_BUS.register(ModItems.RegistrationHandler.class);
         MinecraftForge.EVENT_BUS.register(ModBlocks.RegistrationHandler.class);
         MinecraftForge.EVENT_BUS.register(HPEventHandler.class);
-        MinecraftForge.EVENT_BUS.register(ModModelManager.class);
     }
 
     public void preInit(FMLPreInitializationEvent event) {
@@ -45,7 +45,6 @@ public class HorsePowerMod {
         PacketHandler.init();
 
         //FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER);
-
         /*if (Loader.isModLoaded("crafttweaker"))
             tweakerPlugin = new TweakerPluginImpl();
 
@@ -71,7 +70,7 @@ public class HorsePowerMod {
     }
 
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
-        logger.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
+        LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
 
 }

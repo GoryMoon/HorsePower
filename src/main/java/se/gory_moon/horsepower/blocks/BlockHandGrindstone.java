@@ -17,6 +17,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ShapeUtils;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapePart;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockReader;
@@ -40,8 +41,7 @@ public class BlockHandGrindstone extends BlockHPBase {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<HandGrindstoneModels> PART = EnumProperty.create("part", HandGrindstoneModels.class);
 
-    private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(1D/16D, 0.0D, 1D/16D, 15D/16D, 10D/16D, 15D/16D);
-    private static final AxisAlignedBB BOUNDING_AABB = new AxisAlignedBB(1D/16D, 0.0D, 1D/16D, 15D/16D, 14D/16D, 15D/16D);
+    private static final VoxelShape COLLISION = Block.makeCuboidShape(1, 0, 1, 15, 10, 15);
 
     public BlockHandGrindstone() {
         super(Builder.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
@@ -50,21 +50,12 @@ public class BlockHandGrindstone extends BlockHPBase {
         /*setHarvestLevel("pickaxe", 1);
         setSoundType(SoundType.STONE);
         setUnlocalizedName(Constants.HAND_GRINDSTONE_BLOCK);*/
+        setDefaultState(getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(PART, HandGrindstoneModels.BASE));
     }
 
     @Override
-    public VoxelShape getShape(IBlockState p_196244_1_, IBlockReader p_196244_2_, BlockPos p_196244_3_) {
-        return ShapeUtils.create(BOUNDING_AABB);
-    }
-
-    @Override
-    public VoxelShape getCollisionShape(IBlockState p_196268_1_, IBlockReader p_196268_2_, BlockPos p_196268_3_) {
-        return ShapeUtils.create(COLLISION_AABB);
-    }
-
-    @Override
-    public VoxelShape getRenderShape(IBlockState p_196247_1_, IBlockReader p_196247_2_, BlockPos p_196247_3_) {
-        return ShapeUtils.empty();
+    public VoxelShape getShape(IBlockState state, IBlockReader world, BlockPos pos) {
+        return COLLISION;
     }
 
     @Override
@@ -99,7 +90,6 @@ public class BlockHandGrindstone extends BlockHPBase {
 
     @Override
     public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-
         if (player instanceof FakePlayer || player == null)
             return true;
 

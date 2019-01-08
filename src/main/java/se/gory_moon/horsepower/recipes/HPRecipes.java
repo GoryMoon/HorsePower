@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.util.Utils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,7 +53,8 @@ public class HPRecipes {
         createRecipes(ManualChoppingBlockRecipe.class, manualChopping, true).forEach(this::addManualChoppingRecipe);
         createRecipes(PressRecipe.class, press, false).forEach(this::addPressRecipe);
 
-        addGrindstoneRecipe(Items.BONE, new ItemStack(Items.BONE_MEAL, 3), 5, false);
+        addGrindstoneRecipe(Items.BONE, new ItemStack(Items.BONE_MEAL, 3), 12, false);
+        addGrindstoneRecipe(Items.WHEAT, new ItemStack(ModItems.FLOUR, 1), 12, false);
         //HorsePowerMod.tweakerPlugin.applyTweaker();
     }
 
@@ -68,13 +70,13 @@ public class HPRecipes {
             int secondaryChance = 0;
             for (String item : comp) {
                 if (item.contains(":")) {
-                    Object stack = null;
-                    /*try {
+                    Object stack;
+                    try {
                         stack = Utils.parseItemStack(item, true, true);
                     } catch (Exception e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item" + stacks.get(0): "") + ", index: " + index, false);
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe item '" + item + "' from config" + (stacks.size() > 0 ? " with item " + stacks.get(0): "") + ", index: " + index, false);
                         break;
-                    }*/
+                    }
                     if ((stack instanceof ItemStack && !((ItemStack) stack).isEmpty()) || (!(stack instanceof ItemStack) && stack != null))
                         stacks.add(stack);
                 } else if (stacks.size() == 2) {

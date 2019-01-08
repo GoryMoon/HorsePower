@@ -69,8 +69,8 @@ public class ModBlocks {
         @SubscribeEvent
         public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
             final ItemBlock[] items = {
-                new ItemBlock(BLOCK_HAND_GRINDSTONE, new Item.Builder().group(HorsePowerMod.creativeTab)),
-                new ItemBlock(BLOCK_GRINDSTONE, new Item.Builder().group(HorsePowerMod.creativeTab)),
+                new ItemBlock(BLOCK_HAND_GRINDSTONE, new Item.Builder().group(HorsePowerMod.itemGroup)),
+                new ItemBlock(BLOCK_GRINDSTONE, new Item.Builder().group(HorsePowerMod.itemGroup)),
                 /*new ItemBlock(BLOCK_MANUAL_CHOPPER),
                 new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),
                 new ItemBlockDouble(BLOCK_PRESS, BLOCK_PRESS_FILLER)*/

@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Config.Name;
 import net.minecraftforge.fluids.Fluid;
 import se.gory_moon.horsepower.lib.Reference;
 
+//TODO update to new system
 @Config(modid = Reference.MODID, category = "all")
 public class Configs {
 
@@ -62,7 +63,7 @@ public class Configs {
         @Name("Grindstone Recipes")
         public String[] grindstoneRecipes = {
                 "minecraft:wheat-horsepower:flour-12",
-                "minecraft:reeds-minecraft:sugar-12",
+                /*"minecraft:reeds-minecraft:sugar-12",
                 "minecraft:red_flower-minecraft:dye:1-12",
                 "minecraft:red_flower:4-minecraft:dye:1-12",
                 "minecraft:double_plant:4-minecraft:dye:1@2-12",
@@ -79,7 +80,7 @@ public class Configs {
                 "minecraft:double_plant:1-minecraft:dye:13@2-12",
                 "minecraft:red_flower:5-minecraft:dye:14-12",
                 "minecraft:bone-minecraft:dye:15@3-12",
-                "minecraft:bone_block-minecraft:dye:15@9-12"
+                "minecraft:bone_block-minecraft:dye:15@9-12"*/
         };
 
         @Comment({"Uses the same syntax as the regular grindstone recipes", "These recipes are only used when the config to separate them is enabled"})
@@ -95,24 +96,24 @@ public class Configs {
         @Config.LangKey("config.gui.recipes.chopping")
         @Name("Chopping Recipes")
         public String[] choppingRecipes = {
-                "minecraft:log:0-minecraft:planks:0@4-1",
+                /*"minecraft:log:0-minecraft:planks:0@4-1",
                 "minecraft:log:1-minecraft:planks:1@4-1",
                 "minecraft:log:2-minecraft:planks:2@4-1",
                 "minecraft:log:3-minecraft:planks:3@4-1",
                 "minecraft:log2:0-minecraft:planks:4@4-1",
-                "minecraft:log2:1-minecraft:planks:5@4-1"
+                "minecraft:log2:1-minecraft:planks:5@4-1"*/
         };
 
         @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
         @Config.LangKey("config.gui.recipes.manual_chopping")
         @Name("Manual Chopping Block Recipes")
         public String[] manualChoppingRecipes = {
-                "minecraft:log:0-minecraft:planks:0@4-4",
+                /*"minecraft:log:0-minecraft:planks:0@4-4",
                 "minecraft:log:1-minecraft:planks:1@4-4",
                 "minecraft:log:2-minecraft:planks:2@4-4",
                 "minecraft:log:3-minecraft:planks:3@4-4",
                 "minecraft:log2:0-minecraft:planks:4@4-4",
-                "minecraft:log2:1-minecraft:planks:5@4-4"
+                "minecraft:log2:1-minecraft:planks:5@4-4"*/
         };
 
         @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:meta@amount${nbt}-modid:output:meta@amount${nbt}",
@@ -123,8 +124,8 @@ public class Configs {
                 "Must be edited with in-game editor for live changes."})
         @Name("Press Recipes")
         public String[] pressRecipes = {
-                "minecraft:wheat_seeds@12-minecraft:dirt",
-                "ore:treeLeaves@8-fluid:water@1000"
+                /*"minecraft:wheat_seeds@12-minecraft:dirt",
+                "ore:treeLeaves@8-fluid:water@1000"*/
         };
     }
 

@@ -37,8 +37,8 @@ public class BlockGrindstone extends BlockHPBase {
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
     public static final EnumProperty<GrindStoneModels> PART = EnumProperty.create("part", GrindStoneModels.class);
 
-    private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 8D/16D, 1.0D);
-    private static final AxisAlignedBB BOUNDING_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 13D/16D, 1.0D);
+    private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
+    private static final VoxelShape BOUNDING = Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
 
     public BlockGrindstone() {
         super(Builder.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
@@ -47,16 +47,17 @@ public class BlockGrindstone extends BlockHPBase {
         /*setHarvestLevel("pickaxe", 1);
         setSoundType(SoundType.STONE);
         setUnlocalizedName(Constants.GRINDSTONE_BLOCK);*/
+        setDefaultState(getStateContainer().getBaseState().with(FILLED, false).with(PART, GrindStoneModels.BASE));
     }
 
     @Override
-    public VoxelShape getShape(IBlockState p_196244_1_, IBlockReader p_196244_2_, BlockPos p_196244_3_) {
-        return ShapeUtils.create(BOUNDING_AABB);
+    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        return BOUNDING;
     }
 
     @Override
-    public VoxelShape getCollisionShape(IBlockState p_196268_1_, IBlockReader p_196268_2_, BlockPos p_196268_3_) {
-        return ShapeUtils.create(COLLISION_AABB);
+    public VoxelShape getCollisionShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        return COLLISION;
     }
 
     @Override
@@ -72,17 +73,9 @@ public class BlockGrindstone extends BlockHPBase {
         stateBuilder.add(FILLED, PART);
     }
 
-    public static void setState(boolean filled, World worldIn, BlockPos pos) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        keepInventory = true;
-        worldIn.setBlockState(pos, ModBlocks.BLOCK_GRINDSTONE.getDefaultState().with(FILLED, filled).with(PART, GrindStoneModels.BASE), 3);
-        keepInventory = false;
-
-        if (tileentity != null) {
-            tileentity.validate();
-            worldIn.setTileEntity(pos, tileentity);
-            tileentity.validate();
-        }
+    public static void setState(boolean filled, World world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+        world.setBlockState(pos, state.with(FILLED, filled), 2);
     }
 
     @Override
@@ -91,16 +84,6 @@ public class BlockGrindstone extends BlockHPBase {
         tooltip.add(new TextComponentString(Localization.ITEM.HORSE_GRINDSTONE.LOCATION.translate(Colors.LIGHTGRAY.toString(), Colors.WHITE.toString())));
         tooltip.add(new TextComponentString(Localization.ITEM.HORSE_GRINDSTONE.USE.translate()));
     }
-
-    // The One Probe Integration
-    /*@Optional.Method(modid = "theoneprobe")
-    @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntityGrindstone tileEntity = getTileEntity(world, data.getPos());
-        if (tileEntity != null) {
-            probeInfo.progress((long) ((((double) tileEntity.getField(1)) / ((double) tileEntity.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
-        }
-    }*/
 
     @Override
     public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
@@ -118,4 +101,14 @@ public class BlockGrindstone extends BlockHPBase {
     public Class<?> getTileClass() {
         return TileEntityGrindstone.class;
     }
+
+    // The One Probe Integration
+    /*@Optional.Method(modid = "theoneprobe")
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntityGrindstone tileEntity = getTileEntity(world, data.getPos());
+        if (tileEntity != null) {
+            probeInfo.progress((long) ((((double) tileEntity.getField(1)) / ((double) tileEntity.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.GRINDSTONE_PROGRESS.translate() + " ").suffix("%"));
+        }
+    }*/
 }

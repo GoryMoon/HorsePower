@@ -1,6 +1,8 @@
 package se.gory_moon.horsepower;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkManager;
@@ -55,11 +57,11 @@ public class HPEventHandler {
             int chance = Utils.getChance(data[1]);
             ItemStack stack = ItemStack.EMPTY;
 
-            /*try {
+            try {
                 stack = (ItemStack) Utils.parseItemStack(data[0], false, false);
             } catch (Exception e) {
                 Utils.errorMessage("Parse error with item for custom axes for the chopping block", false);
-            }*/
+            }
 
             if (!stack.isEmpty())
                 choppingAxes.put(stack, Pair.of(base, chance));
@@ -82,10 +84,12 @@ public class HPEventHandler {
 
     @SubscribeEvent
     public static void onWorldJoin(EntityJoinWorldEvent event) {
-        /*if (FMLCommonHandler.instance().getSide().isClient() && event.getEntity() instanceof EntityPlayerSP && event.getWorld() instanceof WorldClient && FMLClientHandler.instance().getClientPlayerEntity() != null) {
-            Utils.sendSavedErrors();
-            //HPEventHandler.reloadConfig();
-        }*/
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            if (event.getEntity() instanceof EntityPlayerSP && event.getWorld() instanceof WorldClient && Minecraft.getInstance().player != null) {
+                Utils.sendSavedErrors();
+                //HPEventHandler.reloadConfig();
+            }
+        });
     }
 
     @SubscribeEvent

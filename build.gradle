@@ -18,10 +18,11 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
 
-sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8 // Need this here so eclipse task generates correctly.
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 version = mod_version
@@ -32,16 +33,18 @@ if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of
     version += ".${System.getenv().BUILD_NUMBER}"
 }
 
+def FORGE_GROUP = "net.minecraftforge.test"
+
 minecraft {
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20181008-1.13'
+    mappings channel: 'snapshot', version: mcp_mappings
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    accessTransformer = file('horsepower_at.cfg')
+    accessTransformer = file('src/main/resources/META-INF/horsepower_at.cfg')
 
     // default run configurations.
     // these can be tweaked, removed, or duplicated as needed.
@@ -53,9 +56,9 @@ minecraft {
         environment "target", "fmluserdevclient"
         environment "assetDirectory", downloadAssets.output.absolutePath
         environment "FORGE_VERSION", forge_version
-        environment "FORGE_GROUP", "net.minecraftforge.test"
-        environment "MCP_VERSION", "20181008-1.13"
-        environment "MC_VERSION", "1.13"
+        environment "FORGE_GROUP", FORGE_GROUP
+        environment "MCP_VERSION", mcp_mappings
+        environment "MC_VERSION", mc_version
         environment "MOD_CLASSES", "${sourceSets.main.output.resourcesDir}${File.pathSeparator}${sourceSets.main.output.classesDirs.join(File.pathSeparator)}"
     }
 
@@ -66,6 +69,11 @@ minecraft {
         workingDirectory = project.file("run").canonicalPath
         environment "target", "fmldevserver"
         environment "assetDirectory", downloadAssets.output.absolutePath
+        environment "FORGE_VERSION", forge_version
+        environment "FORGE_GROUP", FORGE_GROUP
+        environment "MCP_VERSION", mcp_mappings
+        environment "MC_VERSION", mc_version
+        environment "MOD_CLASSES", "${sourceSets.main.output.resourcesDir}${File.pathSeparator}${sourceSets.main.output.classesDirs.join(File.pathSeparator)}"
     }
 }
 
@@ -103,8 +111,8 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "net.minecraftforge.test:userdev:1.13-${forge_version}"
-    compile "net.minecraftforge.test:forge:1.13-${forge_version}:launcher"
+    minecraft "${FORGE_GROUP}:userdev:${mc_version}-${forge_version}"
+    compile "${FORGE_GROUP}:forge:${mc_version}-${forge_version}:launcher"
 
 
     // compile against the JEI API

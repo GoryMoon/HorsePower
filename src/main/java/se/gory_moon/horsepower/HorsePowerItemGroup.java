@@ -4,9 +4,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 
-public class HorsePowerCreativeTab extends ItemGroup {
+public class HorsePowerItemGroup extends ItemGroup {
 
-    public HorsePowerCreativeTab() {
+    public HorsePowerItemGroup() {
         super("horsepower");
     }
 
