@@ -227,7 +227,7 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
         ItemStackHelper.saveAllItems(compound, itemStacks);
 
         if (canBeRotated()) {
-            compound.putString("forward", getForward().getName());
+            compound.setString("forward", getForward().getName());
         }
         return compound;
     }

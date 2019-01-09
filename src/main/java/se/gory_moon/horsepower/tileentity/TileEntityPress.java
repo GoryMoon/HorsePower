@@ -36,8 +36,8 @@ public class TileEntityPress extends TileEntityHPHorseBase {
 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.putInt("currentPressStatus", currentPressStatus);
-        compound.put("fluid", tank.writeToNBT(new NBTTagCompound()));
+        compound.setInt("currentPressStatus", currentPressStatus);
+        compound.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
         return super.write(compound);
     }
 

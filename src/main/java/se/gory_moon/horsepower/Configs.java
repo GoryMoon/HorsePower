@@ -56,7 +56,7 @@ public class Configs {
         @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: ", "modid:input:tag${nbt}-modid:output@amount${nbt}-time[-modid:secondary@amount${nbt}-chance]",
                 "The amount is optional, if not set 1 is default, ${nbt} is optional and follows vanilla tag syntax",
                 "The part in [] is optional, the chance can be 0-100",
-                "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
+                "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
                 "The time for the horse increases for each point that it reaches, one lap is 8 points.",
                 "Must be edited with in-game editor for live changes."})
         @Config.LangKey("config.gui.recipes.grindstone")
@@ -90,30 +90,30 @@ public class Configs {
 
         @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:output@amount${nbt}-time",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
-                "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
+                "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
                 "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
                 "Must be edited with in-game editor for live changes."})
         @Config.LangKey("config.gui.recipes.chopping")
         @Name("Chopping Recipes")
         public String[] choppingRecipes = {
-                "minecraft:oak_logs:tag-minecraft:oak_planks@4-1",
-                "minecraft:spruce_logs:tag-minecraft:spruce_planks@4-1",
-                "minecraft:birch_logs:tag-minecraft:birch_planks@4-1",
-                "minecraft:jungle_logs:tag-minecraft:jungle_planks@4-1",
-                "minecraft:acacia_logs:tag-minecraft:acacia_planks@4-1",
-                "minecraft:dark_oak_logs:tag-minecraft:dark_oak_planks@4-1"
+                "#minecraft:oak_logs-minecraft:oak_planks@4-1",
+                "#minecraft:spruce_logs-minecraft:spruce_planks@4-1",
+                "#minecraft:birch_logs-minecraft:birch_planks@4-1",
+                "#minecraft:jungle_logs-minecraft:jungle_planks@4-1",
+                "#minecraft:acacia_logs-minecraft:acacia_planks@4-1",
+                "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-1"
         };
 
         @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
         @Config.LangKey("config.gui.recipes.manual_chopping")
         @Name("Manual Chopping Block Recipes")
         public String[] manualChoppingRecipes = {
-                "minecraft:oak_logs:tag-minecraft:oak_planks@4-4",
-                "minecraft:spruce_logs:tag-minecraft:spruce_planks@4-4",
-                "minecraft:birch_logs:tag-minecraft:birch_planks@4-4",
-                "minecraft:jungle_logs:tag-minecraft:jungle_planks@4-4",
-                "minecraft:acacia_logs:tag-minecraft:acacia_planks@4-4",
-                "minecraft:dark_oak_logs:tag-minecraft:dark_oak_planks@4-4"
+                "#minecraft:oak_logs-minecraft:oak_planks@4-4",
+                "#minecraft:spruce_logs-minecraft:spruce_planks@4-4",
+                "#minecraft:birch_logs-minecraft:birch_planks@4-4",
+                "#minecraft:jungle_logs-minecraft:jungle_planks@4-4",
+                "#minecraft:acacia_logs-minecraft:acacia_planks@4-4",
+                "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-4"
         };
 
         @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:tag@amount${nbt}-modid:output@amount${nbt}",
