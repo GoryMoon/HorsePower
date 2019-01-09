@@ -45,7 +45,7 @@ public class BlockHandGrindstone extends BlockHPBase {
 
     public BlockHandGrindstone() {
         super(Builder.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
-        setRegistryName(Reference.RESOURCE_PREFIX + Constants.HAND_GRINDSTONE_BLOCK);
+        setRegistryName(Reference.MODID, Constants.HAND_GRINDSTONE_BLOCK);
 
         /*setHarvestLevel("pickaxe", 1);
         setSoundType(SoundType.STONE);

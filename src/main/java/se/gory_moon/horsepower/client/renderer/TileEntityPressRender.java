@@ -1,5 +1,5 @@
 package se.gory_moon.horsepower.client.renderer;
-/*
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
@@ -126,4 +126,3 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
         GlStateManager.popMatrix();
     }
 }
-*/

@@ -32,15 +32,15 @@ public class BlockFiller extends BlockDirectional {
     private boolean useTileEntity;
     private boolean providePower;
 
-    public BlockFiller(Builder builder, Material materialIn, String name, boolean useTileEntity, boolean providePower) {
+    public BlockFiller(Builder builder, String name, boolean useTileEntity, boolean providePower) {
         super(builder);
         setRegistryName(name + "filler");
         this.useTileEntity = useTileEntity;
         this.providePower = providePower;
     }
 
-    public BlockFiller(Builder builder, Material materialIn, String name, boolean useTileEntity) {
-        this(builder, materialIn, name, useTileEntity, false);
+    public BlockFiller(Builder builder, String name, boolean useTileEntity) {
+        this(builder, name, useTileEntity, false);
     }
 
     private boolean validateFilled(IWorld world, IBlockState state, BlockPos pos) {

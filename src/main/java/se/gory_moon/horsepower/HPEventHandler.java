@@ -19,6 +19,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.NetworkDirection;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -84,28 +85,30 @@ public class HPEventHandler {
 
     @SubscribeEvent
     public static void onWorldJoin(EntityJoinWorldEvent event) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+        if (FMLEnvironment.dist.isClient()) {
             if (event.getEntity() instanceof EntityPlayerSP && event.getWorld() instanceof WorldClient && Minecraft.getInstance().player != null) {
                 Utils.sendSavedErrors();
                 //HPEventHandler.reloadConfig();
             }
-        });
+        };
     }
 
     @SubscribeEvent
     public static void onServerJoined(PlayerEvent.PlayerLoggedInEvent event) {
-        DistExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () -> PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((EntityPlayerMP)event.player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT));
+        if (FMLEnvironment.dist.isDedicatedServer()) {
+            PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((EntityPlayerMP)event.player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+        }
     }
 
     @SubscribeEvent
     public static void onServerLeave(WorldEvent.Unload event) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+        if (FMLEnvironment.dist.isClient()) {
             NetworkManager manager = Minecraft.getInstance().getConnection().getNetworkManager();
             if (manager != null && !manager.isLocalChannel() && HPRecipes.serverSyncedRecipes) {
                 HPRecipes.serverSyncedRecipes = false;
                 HPRecipes.instance().reloadRecipes();
             }
-        });
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

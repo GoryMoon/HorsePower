@@ -53,34 +53,34 @@ public class Configs {
         @Config.RequiresMcRestart
         public boolean useSeperateChoppingRecipes = false;
 
-        @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: ", "modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time[-modid:secondary:meta@amount${nbt}-chance]",
-                "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default, ${nbt} is optional and follows vanilla tag syntax",
+        @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: ", "modid:input:tag${nbt}-modid:output@amount${nbt}-time[-modid:secondary@amount${nbt}-chance]",
+                "The amount is optional, if not set 1 is default, ${nbt} is optional and follows vanilla tag syntax",
                 "The part in [] is optional, the chance can be 0-100",
-                "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
+                "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
                 "The time for the horse increases for each point that it reaches, one lap is 8 points.",
                 "Must be edited with in-game editor for live changes."})
         @Config.LangKey("config.gui.recipes.grindstone")
         @Name("Grindstone Recipes")
         public String[] grindstoneRecipes = {
                 "minecraft:wheat-horsepower:flour-12",
-                /*"minecraft:reeds-minecraft:sugar-12",
-                "minecraft:red_flower-minecraft:dye:1-12",
-                "minecraft:red_flower:4-minecraft:dye:1-12",
-                "minecraft:double_plant:4-minecraft:dye:1@2-12",
-                "minecraft:beetroot-minecraft:dye:1-12",
-                "minecraft:red_flower:3-minecraft:dye:7-12",
-                "minecraft:red_flower:6-minecraft:dye:7-12",
-                "minecraft:red_flower:8-minecraft:dye:7-12",
-                "minecraft:red_flower:7-minecraft:dye:9-12",
-                "minecraft:double_plant:5-minecraft:dye:9@2-12",
-                "minecraft:yellow_flower-minecraft:dye:11-12",
-                "minecraft:double_plant-minecraft:dye:11@2-12",
-                "minecraft:red_flower:1-minecraft:dye:12-12",
-                "minecraft:red_flower:2-minecraft:dye:13-12",
-                "minecraft:double_plant:1-minecraft:dye:13@2-12",
-                "minecraft:red_flower:5-minecraft:dye:14-12",
-                "minecraft:bone-minecraft:dye:15@3-12",
-                "minecraft:bone_block-minecraft:dye:15@9-12"*/
+                "minecraft:sugar_cane-minecraft:sugar-12",
+                "minecraft:poppy-minecraft:rose_red-12",
+                "minecraft:red_tulip-minecraft:rose_red-12",
+                "minecraft:rose_bush-minecraft:rose_red@2-12",
+                "minecraft:beetroot-minecraft:rose_red-12",
+                "minecraft:azura_bluet-minecraft:light_gray_dye-12",
+                "minecraft:white_tulip-minecraft:light_gray_dye-12",
+                "minecraft:oxeye_daisy-minecraft:light_gray_dye-12",
+                "minecraft:pink_tulip-minecraft:pink_dye-12",
+                "minecraft:peony-minecraft:pink_dye@2-12",
+                "minecraft:dandelion-minecraft:dandelion_yellow-12",
+                "minecraft:sunflower-minecraft:dandelion_yellow@2-12",
+                "minecraft:blue_orchid-minecraft:light_blue_dye-12",
+                "minecraft:allium-minecraft:magenta_dye-12",
+                "minecraft:lilac-minecraft:magenta_dye@2-12",
+                "minecraft:orange_tulip-minecraft:orange_dye-12",
+                "minecraft:bone-minecraft:bone_meal@3-12",
+                "minecraft:bone_block-minecraft:bone_meal@9-12"
         };
 
         @Comment({"Uses the same syntax as the regular grindstone recipes", "These recipes are only used when the config to separate them is enabled"})
@@ -88,44 +88,44 @@ public class Configs {
         @Name("Hand Grindstone Recipes")
         public String[] handGrindstoneRecipes = {};
 
-        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:meta${nbt}-modid:output:meta@amount${nbt}-time",
+        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:output@amount${nbt}-time",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
-                "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
+                "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
                 "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
                 "Must be edited with in-game editor for live changes."})
         @Config.LangKey("config.gui.recipes.chopping")
         @Name("Chopping Recipes")
         public String[] choppingRecipes = {
-                /*"minecraft:log:0-minecraft:planks:0@4-1",
-                "minecraft:log:1-minecraft:planks:1@4-1",
-                "minecraft:log:2-minecraft:planks:2@4-1",
-                "minecraft:log:3-minecraft:planks:3@4-1",
-                "minecraft:log2:0-minecraft:planks:4@4-1",
-                "minecraft:log2:1-minecraft:planks:5@4-1"*/
+                "minecraft:oak_logs:tag-minecraft:oak_planks@4-1",
+                "minecraft:spruce_logs:tag-minecraft:spruce_planks@4-1",
+                "minecraft:birch_logs:tag-minecraft:birch_planks@4-1",
+                "minecraft:jungle_logs:tag-minecraft:jungle_planks@4-1",
+                "minecraft:acacia_logs:tag-minecraft:acacia_planks@4-1",
+                "minecraft:dark_oak_logs:tag-minecraft:dark_oak_planks@4-1"
         };
 
         @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
         @Config.LangKey("config.gui.recipes.manual_chopping")
         @Name("Manual Chopping Block Recipes")
         public String[] manualChoppingRecipes = {
-                /*"minecraft:log:0-minecraft:planks:0@4-4",
-                "minecraft:log:1-minecraft:planks:1@4-4",
-                "minecraft:log:2-minecraft:planks:2@4-4",
-                "minecraft:log:3-minecraft:planks:3@4-4",
-                "minecraft:log2:0-minecraft:planks:4@4-4",
-                "minecraft:log2:1-minecraft:planks:5@4-4"*/
+                "minecraft:oak_logs:tag-minecraft:oak_planks@4-4",
+                "minecraft:spruce_logs:tag-minecraft:spruce_planks@4-4",
+                "minecraft:birch_logs:tag-minecraft:birch_planks@4-4",
+                "minecraft:jungle_logs:tag-minecraft:jungle_planks@4-4",
+                "minecraft:acacia_logs:tag-minecraft:acacia_planks@4-4",
+                "minecraft:dark_oak_logs:tag-minecraft:dark_oak_planks@4-4"
         };
 
-        @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:meta@amount${nbt}-modid:output:meta@amount${nbt}",
+        @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:tag@amount${nbt}-modid:output@amount${nbt}",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
-                "The input item can be an item from the ore dictionary, use it as 'ore:name', the other rules don't applies",
+                "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
                 "The 'modid' for the output can be 'fluid' for fluid outputs",
                 "The time is same for all recipes, it uses the \"Points For Press\"",
                 "Must be edited with in-game editor for live changes."})
         @Name("Press Recipes")
         public String[] pressRecipes = {
-                /*"minecraft:wheat_seeds@12-minecraft:dirt",
-                "ore:treeLeaves@8-fluid:water@1000"*/
+                "minecraft:wheat_seeds@12-minecraft:dirt",
+                //"ore:treeLeaves@8-fluid:water@1000"
         };
     }
 

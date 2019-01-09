@@ -2,24 +2,19 @@ package se.gory_moon.horsepower.proxy;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.client.ModModelManager;
-import se.gory_moon.horsepower.client.renderer.ClientHandler;
-import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityGrindstoneRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityHandGrindstoneRender;
+import se.gory_moon.horsepower.client.renderer.*;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.tileentity.TileEntityPress;
 import se.gory_moon.horsepower.util.color.ColorGetter;
-
-import java.awt.*;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientProxy extends CommonProxy {
@@ -32,7 +27,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new TileEntityFillerRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandGrindstone.class, new TileEntityHandGrindstoneRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPress.class, new TileEntityPressRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPress.class, new TileEntityPressRender());
     }
 
     @Override
@@ -44,9 +39,7 @@ public class ClientProxy extends CommonProxy {
     public void loadComplete() {
         //ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
 
-        /*((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(resourceManager -> {
-            TileEntityHPBaseRenderer.clearDestroyStageicons();
-        });*/
+        ((IReloadableResourceManager)Minecraft.getInstance().getResourceManager()).addReloadListener(resourceManager -> TileEntityHPBaseRenderer.clearDestroyStageicons());
 
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (worldIn != null && pos != null) {

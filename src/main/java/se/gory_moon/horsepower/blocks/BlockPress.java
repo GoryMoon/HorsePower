@@ -1,15 +1,7 @@
 package se.gory_moon.horsepower.blocks;
-/*
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoAccessor;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import net.minecraft.block.SoundType;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityCreature;
@@ -18,21 +10,28 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.Optional;
-import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.advancements.Manager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.lib.Constants;
+import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
 import se.gory_moon.horsepower.util.Localization;
@@ -40,114 +39,93 @@ import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
-@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
+//@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockPress extends BlockHPBase {
 
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", Arrays.asList(EnumFacing.HORIZONTALS));
-    public static final PropertyEnum<PressModels> PART = PropertyEnum.create("part", PressModels.class);
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<PressModels> PART = EnumProperty.create("part", PressModels.class);
 
-    private static final AxisAlignedBB BOUND_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D + 12D/16D, 1.0D);
-    private static final AxisAlignedBB COLLISION_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D + 3D/16D, 1.0D);
+    private static final VoxelShape BOUND = Block.makeCuboidShape(0, 0, 0, 16, 16 + 12, 16);
+    private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 16 + 3, 16);
 
     public BlockPress() {
-        super(Material.WOOD);
-        setHardness(5.0F);
-        setResistance(5.0F);
-        setHarvestLevel("axe", 1);
+        super(Builder.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F));
+        setRegistryName(Reference.MODID, Constants.PRESS_BLOCK);
+
+        /*setHarvestLevel("axe", 1);
         setSoundType(SoundType.WOOD);
-        setRegistryName(Constants.PRESS_BLOCK);
-        setUnlocalizedName(Constants.PRESS_BLOCK);
-    }
-
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return BOUND_AABB;
-    }
-
-    @Nullable
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return COLLISION_AABB;
+        setUnlocalizedName(Constants.PRESS_BLOCK);*/
     }
 
     @Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-        if (!((World) world).isRemote && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
+    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        return BOUND;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+        return COLLISION;
+    }
+
+    @Override
+    public void onNeighborChange(IBlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        if (!(world).isRemote() && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
             ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
         }
     }
 
     @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
+    public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
         if (!worldIn.isRemote) {
-            EnumFacing filled = state.getValue(FACING);
-            worldIn.setBlockState(pos, state.withProperty(FACING, filled).withProperty(PART, PressModels.BASE), 2);
+            EnumFacing filled = state.get(FACING);
+            worldIn.setBlockState(pos, state.with(FACING, filled).with(PART, PressModels.BASE), 2);
         }
     }
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
         return new TileEntityPress();
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING, PART);
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING, PART);
+    }
+
+
+    @Override
+    public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
+        return getDefaultState().with(FACING, facing.getOpposite()).with(PART, PressModels.BASE);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getHorizontalIndex();
-    }
-
-    @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(PART, PressModels.BASE);
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(PART, PressModels.BASE);
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote)
             return true;
 
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (!worldIn.isRemote && tileentity != null) {
-            final IFluidHandler fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-            if (fluidHandler != null && FluidUtil.interactWithFluidHandler(playerIn, hand, fluidHandler)) {
+        if (tileentity != null) {
+            final IFluidHandler fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).orElse(null);
+            if (fluidHandler != null && FluidUtil.interactWithFluidHandler(player, hand, fluidHandler)) {
                 tileentity.markDirty();
                 return false;
             }
         }
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        return super.onBlockActivated(state, worldIn, pos, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 
         TileEntityHPBase tile = getTileEntity(worldIn, pos);
         if (tile == null)
             return;
         tile.setForward(placer.getHorizontalFacing().getOpposite());
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-    }
-
-    // The One Probe Integration
-    @Optional.Method(modid = "theoneprobe")
-    @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntityPress tileEntity = getTileEntity(world, data.getPos());
-        if (tileEntity != null) {
-            probeInfo.progress((long) ((((double) tileEntity.getField(0)) / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1)) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.PRESS_PROGRESS.translate() + " ").suffix("%"));
-        }
     }
 
     @Override
@@ -159,11 +137,12 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     @Override
     public void emptiedOutput(World world, BlockPos pos) {}
 
+
     @Override
-    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
-        tooltip.add(Localization.ITEM.HORSE_PRESS.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString()));
-        tooltip.add(Localization.ITEM.HORSE_PRESS.LOCATION.translate());
-        tooltip.add(Localization.ITEM.HORSE_PRESS.USE.translate());
+    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TextComponentString(Localization.ITEM.HORSE_PRESS.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString())));
+        tooltip.add(new TextComponentString(Localization.ITEM.HORSE_PRESS.LOCATION.translate()));
+        tooltip.add(new TextComponentString(Localization.ITEM.HORSE_PRESS.USE.translate()));
     }
 
     @Nonnull
@@ -171,5 +150,14 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
     public Class<?> getTileClass() {
         return TileEntityPress.class;
     }
+
+    // The One Probe Integration
+    /*@Optional.Method(modid = "theoneprobe")
+    @Override
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        TileEntityPress tileEntity = getTileEntity(world, data.getPos());
+        if (tileEntity != null) {
+            probeInfo.progress((long) ((((double) tileEntity.getField(0)) / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1)) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.PRESS_PROGRESS.translate() + " ").suffix("%"));
+        }
+    }*/
 }
-*/

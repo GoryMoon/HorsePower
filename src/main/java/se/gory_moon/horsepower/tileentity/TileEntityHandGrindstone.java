@@ -31,9 +31,9 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.setInt("millTime", currentItemMillTime);
-        compound.setInt("totalMillTime", totalItemMillTime);
-        compound.setInt("currentRotation", rotation);
+        compound.putInt("millTime", currentItemMillTime);
+        compound.putInt("totalMillTime", totalItemMillTime);
+        compound.putInt("currentRotation", rotation);
 
         return super.write(compound);
     }

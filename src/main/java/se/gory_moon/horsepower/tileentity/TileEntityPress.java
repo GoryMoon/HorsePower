@@ -1,26 +1,27 @@
 package se.gory_moon.horsepower.tileentity;
-/*
+
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.PressRecipe;
 import se.gory_moon.horsepower.util.Localization;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileEntityPress extends TileEntityHPHorseBase {
@@ -29,24 +30,24 @@ public class TileEntityPress extends TileEntityHPHorseBase {
     private int currentPressStatus;
 
     public TileEntityPress() {
-        super(2);
+        super(2, ModBlocks.PRESS_TILE);
         tank.setCanFill(false);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("currentPressStatus", currentPressStatus);
-        compound.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
-        return super.writeToNBT(compound);
+    public NBTTagCompound write(NBTTagCompound compound) {
+        compound.putInt("currentPressStatus", currentPressStatus);
+        compound.put("fluid", tank.writeToNBT(new NBTTagCompound()));
+        return super.write(compound);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        tank.readFromNBT(compound.getCompoundTag("fluid"));
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
+        tank.readFromNBT(compound.getCompound("fluid"));
 
         if (getStackInSlot(0).getCount() > 0) {
-            currentPressStatus = compound.getInteger("currentPressStatus");
+            currentPressStatus = compound.getInt("currentPressStatus");
         } else {
             currentPressStatus = 0;
         }
@@ -76,7 +77,7 @@ public class TileEntityPress extends TileEntityHPHorseBase {
         }
 
         for (BlockPos pos: searchPos) {
-            if (!getWorld().getBlockState(pos).getBlock().isReplaceable(world, pos))
+            if (!getWorld().getBlockState(pos).getMaterial().isReplaceable())
                 return false;
         }
         return true;
@@ -230,8 +231,8 @@ public class TileEntityPress extends TileEntityHPHorseBase {
     }
 
     @Override
-    public String getName() {
-        return "container.press";
+    public ITextComponent getName() {
+        return new TextComponentString("container.press");
     }
 
     @Override
@@ -243,24 +244,20 @@ public class TileEntityPress extends TileEntityHPHorseBase {
     @Override
     public ITextComponent getDisplayName() {
         if (valid)
-            return super.getDisplayName();
+            return null;
         else
             return new TextComponentTranslation(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return ((capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (facing == null || facing == EnumFacing.DOWN)) || super.hasCapability(capability, facing));
-    }
+    private OptionalCapabilityInstance<IFluidHandler> tankCap = OptionalCapabilityInstance.of(() -> tank);
 
-    @SuppressWarnings("unchecked")
+    @Nonnull
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (facing == null || facing == EnumFacing.DOWN)
-                return (T) tank;
+    public <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (side == null || side == EnumFacing.DOWN)
+                return tankCap.cast();
         }
-        return super.getCapability(capability, facing);
+        return super.getCapability(cap, side);
     }
 }
-*/

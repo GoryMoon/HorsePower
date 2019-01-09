@@ -206,16 +206,16 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     protected void preDestroyRender(int destroyStage) {
         /*if (destroyStage >= 0) {
             GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+            GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             GlStateManager.enableBlend();
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 0.5F);
-            GlStateManager.doPolygonOffset(-3.0F, -3.0F);
+            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 0.5F);
+            GlStateManager.polygonOffset(-3.0F, -3.0F);
             GlStateManager.enablePolygonOffset();
             GlStateManager.alphaFunc(516, 0.1F);
-            GlStateManager.enableAlpha();
+            GlStateManager.enableAlphaTest();
             GlStateManager.pushMatrix();
         }*/
     }
@@ -223,14 +223,14 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     protected void postDestroyRender(int destroyStage) {
         /*if (destroyStage >= 0) {
 
-            GlStateManager.disableAlpha();
-            GlStateManager.doPolygonOffset(0.0F, 0.0F);
+            GlStateManager.disableAlphaTest();
+            GlStateManager.polygonOffset(0.0F, 0.0F);
             GlStateManager.disablePolygonOffset();
-            GlStateManager.enableAlpha();
+            GlStateManager.enableAlphaTest();
             GlStateManager.depthMask(true);
             GlStateManager.popMatrix();
 
-            Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+            Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
             GlStateManager.disableBlend();
         }*/
     }
@@ -339,7 +339,8 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
 
     public static TextureAtlasSprite getDestroyBlockIcon(int destroyState) {
         if (destroyBlockIcons[destroyState] == null) {
-           // destroyBlockIcons = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, Minecraft.getMinecraft().renderGlobal, "destroyBlockIcons", "field_94141_F");
+            //TODO reimplement
+           //destroyBlockIcons = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, Minecraft.getInstance().renderGlobal, "destroyBlockIcons", "field_94141_F");
         }
         return destroyBlockIcons[destroyState];
     }

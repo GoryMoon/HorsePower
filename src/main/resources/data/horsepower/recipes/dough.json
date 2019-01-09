@@ -1,10 +1,4 @@
 {
-  "conditions": [
-    {
-      "type": "config",
-      "enabled": "flour"
-    }
-  ],
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {

@@ -1,9 +1,9 @@
 package se.gory_moon.horsepower.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,6 +16,7 @@ import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.tileentity.TileEntityPress;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,12 +27,13 @@ public class ModBlocks {
     public static final BlockGrindstone BLOCK_GRINDSTONE = new BlockGrindstone();
     /*public static final BlockChoppingBlock BLOCK_MANUAL_CHOPPER = new BlockChoppingBlock();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
-    public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0);//.setHardness(5F).setResistance(5F);
+    public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0);//.setHardness(5F).setResistance(5F);*/
     public static final BlockPress BLOCK_PRESS = new BlockPress();
-    public static final BlockFiller BLOCK_PRESS_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "press_", true).setHarvestLevel1("axe", 1);//.setHardness(5F).setResistance(5F);*/
+    public static final BlockFiller BLOCK_PRESS_FILLER = new BlockFiller(Block.Builder.create(Material.WOOD), "press_", true);//.setHarvestLevel1("axe", 1).setHardness(5F).setResistance(5F);
 
     public static final TileEntityType<TileEntityGrindstone> GRINDSTONE_TILE = TileEntityType.Builder.create(TileEntityGrindstone::new).build(null);
     public static final TileEntityType<TileEntityHandGrindstone> HAND_GRINDSTONE_TILE = TileEntityType.Builder.create(TileEntityHandGrindstone::new).build(null);
+    public static final TileEntityType<TileEntityPress> PRESS_TILE = TileEntityType.Builder.create(TileEntityPress::new).build(null);
     public static final TileEntityType<TileEntityFiller> FILLER_TILE = TileEntityType.Builder.create(TileEntityFiller::new).build(null);
 
     @Mod.EventBusSubscriber(modid = Reference.MODID)
@@ -49,16 +51,18 @@ public class ModBlocks {
 
             //BLOCK_PRESS_FILLER.setHarvestLevel("axe", 1);
             final Block[] blocks = {BLOCK_HAND_GRINDSTONE, BLOCK_GRINDSTONE,
-                    /*BLOCK_MANUAL_CHOPPER, BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER,
-                    BLOCK_PRESS, BLOCK_PRESS_FILLER,*/
+                    /*BLOCK_MANUAL_CHOPPER, BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER,*/
+                    BLOCK_PRESS, BLOCK_PRESS_FILLER,
             };
 
             registry.registerAll(blocks);
 
-
+            //Temp until tileentity event is fired correctly
             IForgeRegistry<TileEntityType<?>> reg = ForgeRegistries.TILE_ENTITIES;
             reg.register(GRINDSTONE_TILE.setRegistryName(Reference.MODID, Constants.GRINDSTONE_BLOCK));
             reg.register(HAND_GRINDSTONE_TILE.setRegistryName(Reference.MODID, Constants.HAND_CHOPPING_BLOCK));
+            reg.register(PRESS_TILE.setRegistryName(Reference.MODID, Constants.PRESS_BLOCK));
+            reg.register(FILLER_TILE.setRegistryName(Reference.MODID, Constants.FILLER_BLOCK));
         }
 
         /**
@@ -72,8 +76,8 @@ public class ModBlocks {
                 new ItemBlock(BLOCK_HAND_GRINDSTONE, new Item.Builder().group(HorsePowerMod.itemGroup)),
                 new ItemBlock(BLOCK_GRINDSTONE, new Item.Builder().group(HorsePowerMod.itemGroup)),
                 /*new ItemBlock(BLOCK_MANUAL_CHOPPER),
-                new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),
-                new ItemBlockDouble(BLOCK_PRESS, BLOCK_PRESS_FILLER)*/
+                new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),*/
+                //new ItemBlockDouble(BLOCK_PRESS, BLOCK_PRESS_FILLER)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
@@ -86,25 +90,12 @@ public class ModBlocks {
 
         @SubscribeEvent
         public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?> > event) {
-            IForgeRegistry<TileEntityType<?>> registry = event.getRegistry();
-            registry.register(GRINDSTONE_TILE.setRegistryName(Reference.MODID, Constants.GRINDSTONE_BLOCK));
-            registry.register(HAND_GRINDSTONE_TILE.setRegistryName(Reference.MODID, Constants.HAND_CHOPPING_BLOCK));
-            registry.register(FILLER_TILE.setRegistryName(Reference.MODID, Constants.FILLER_BLOCK));
+            IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
+            reg.register(GRINDSTONE_TILE.setRegistryName(Reference.MODID, Constants.GRINDSTONE_BLOCK));
+            reg.register(HAND_GRINDSTONE_TILE.setRegistryName(Reference.MODID, Constants.HAND_CHOPPING_BLOCK));
+            reg.register(PRESS_TILE.setRegistryName(Reference.MODID, Constants.PRESS_BLOCK));
+            reg.register(FILLER_TILE.setRegistryName(Reference.MODID, Constants.FILLER_BLOCK));
         }
-    }
-
-    public static void registerTileEntities() {
-        registerTileEntity(TileEntityHandGrindstone.class);
-        registerTileEntity(TileEntityGrindstone.class);
-        /*registerTileEntity(TileEntityManualChopper.class);
-        registerTileEntity(TileEntityChopper.class);
-        registerTileEntity(TileEntityFiller.class);
-        registerTileEntity(TileEntityPress.class);*/
-    }
-
-    private static void registerTileEntity(Class<? extends TileEntity> tileEntityClass) {
-
-        //GameRegistry.registerTileEntity(tileEntityClass, Reference.RESOURCE_PREFIX + tileEntityClass.getSimpleName().replaceFirst("TileEntity", ""));
     }
 
 }
