@@ -54,7 +54,7 @@ public class TileEntityManualChopper extends TileEntityHPBase {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack, true) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index == 0 && HPRecipes.instance().hasChopperRecipe(stack, true) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
     public boolean chop(EntityPlayer player, ItemStack held) {

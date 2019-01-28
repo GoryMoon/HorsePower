@@ -99,7 +99,7 @@ public abstract class BlockHPBase extends Block {
     public boolean removedByPlayer(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
         // we pull up a few calls to this point in time because we still have the TE here
         // the execution otherwise is equivalent to vanilla order
-        this.onBlockDestroyedByPlayer(world, pos, state);
+        this.onPlayerDestroy(world, pos, state);
         onBlockHarvested(world, pos, state, player);
         if(willHarvest) {
             this.harvestBlock(world, player, pos, state, world.getTileEntity(pos), player.getHeldItemMainhand());
@@ -124,7 +124,7 @@ public abstract class BlockHPBase extends Block {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = hand == EnumHand.MAIN_HAND ? playerIn.getHeldItem(hand): ItemStack.EMPTY;
+        ItemStack stack = playerIn.getHeldItem(hand);
         TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
         TileEntityHPHorseBase teH = null;
         if (te == null) return false;

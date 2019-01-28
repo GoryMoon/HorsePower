@@ -59,7 +59,7 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
         setHarvestLevel("axe", 1);
         setSoundType(SoundType.WOOD);
         setRegistryName(Constants.PRESS_BLOCK);
-        setUnlocalizedName(Constants.PRESS_BLOCK);
+        setTranslationKey(Constants.PRESS_BLOCK);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -110,7 +110,7 @@ public class BlockPress extends BlockHPBase implements IProbeInfoAccessor {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta)).withProperty(PART, PressModels.BASE);
+        return getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta)).withProperty(PART, PressModels.BASE);
     }
 
     @Override

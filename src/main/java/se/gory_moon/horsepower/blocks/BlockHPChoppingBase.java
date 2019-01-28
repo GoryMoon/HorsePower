@@ -64,11 +64,11 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
             // texture
             NBTTagCompound data = te.getTileData().getCompoundTag("textureBlock");
 
-            if (!data.hasNoTags()) {
+            if (!data.isEmpty()) {
                 tag.setTag("textureBlock", data);
             }
 
-            if (!tag.hasNoTags()) {
+            if (!tag.isEmpty()) {
                 item.setTagCompound(tag);
             }
         }
@@ -148,7 +148,7 @@ public abstract class BlockHPChoppingBase extends BlockHPBase {
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         List<ItemStack> stacks = Utils.getCraftingItems(this);
         for(ItemStack stack : stacks) {
-            if (!Configs.general.useDynamicDisplay && !"minecraft".equals(stack.getItem().getRegistryName().getResourceDomain()))
+            if (!Configs.general.useDynamicDisplay && !"minecraft".equals(stack.getItem().getRegistryName().getNamespace()))
                 continue;
             Block block = getBlockFromItem(stack.getItem());
             int blockMeta = stack.getItemDamage();

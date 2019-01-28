@@ -54,7 +54,7 @@ public class BlockChopper extends BlockHPChoppingBase implements IProbeInfoAcces
         setHardness(5.0F);
         setResistance(5.0F);
         setRegistryName(Constants.CHOPPER_BLOCK);
-        setUnlocalizedName(Constants.CHOPPER_BLOCK);
+        setTranslationKey(Constants.CHOPPER_BLOCK);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class BlockChopper extends BlockHPChoppingBase implements IProbeInfoAcces
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
             enumfacing = EnumFacing.NORTH;

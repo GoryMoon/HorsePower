@@ -49,7 +49,7 @@ public class BlockGrindstone extends BlockHPBase implements IProbeInfoAccessor {
         setHarvestLevel("pickaxe", 1);
         setSoundType(SoundType.STONE);
         setRegistryName(Constants.GRINDSTONE_BLOCK);
-        setUnlocalizedName(Constants.GRINDSTONE_BLOCK);
+        setTranslationKey(Constants.GRINDSTONE_BLOCK);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {

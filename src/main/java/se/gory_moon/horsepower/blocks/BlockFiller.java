@@ -86,7 +86,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
+        return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -133,11 +133,11 @@ public class BlockFiller extends BlockDirectional implements IProbeInfoAccessor 
     }
 
     @Override
-    public void onBlockDestroyedByPlayer(World world, BlockPos pos0, IBlockState state) {
+    public void onPlayerDestroy(World world, BlockPos pos0, IBlockState state) {
         BlockPos pos = pos0.offset(state.getValue(FACING));
         IBlockState state1 = world.getBlockState(pos);
         if (validateFilled(world, state1, pos0)) {
-            state1.getBlock().onBlockDestroyedByPlayer(world, pos, world.getBlockState(pos));
+            state1.getBlock().onPlayerDestroy(world, pos, world.getBlockState(pos));
             world.destroyBlock(pos, true);
         }
     }

@@ -37,8 +37,8 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = Reference.MODID)
 public class ModItems {
 
-    public static final Item FLOUR = new Item().setRegistryName(Constants.FLOUR_ITEM).setUnlocalizedName(Constants.FLOUR_ITEM).setCreativeTab(HorsePowerMod.creativeTab);
-    public static final Item DOUGH = new Item().setRegistryName(Constants.DOUGH_ITEM).setUnlocalizedName(Constants.DOUGH_ITEM).setCreativeTab(HorsePowerMod.creativeTab);
+    public static final Item FLOUR = new Item().setRegistryName(Constants.FLOUR_ITEM).setTranslationKey(Constants.FLOUR_ITEM).setCreativeTab(HorsePowerMod.creativeTab);
+    public static final Item DOUGH = new Item().setRegistryName(Constants.DOUGH_ITEM).setTranslationKey(Constants.DOUGH_ITEM).setCreativeTab(HorsePowerMod.creativeTab);
 
     private static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     private static List<ResourceLocation> recipesToRemove = new LinkedList<>();

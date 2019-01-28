@@ -41,7 +41,7 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
         setHardness(2.0F);
         setResistance(5.0F);
         setRegistryName(Constants.HAND_CHOPPING_BLOCK);
-        setUnlocalizedName(Constants.HAND_CHOPPING_BLOCK);
+        setTranslationKey(Constants.HAND_CHOPPING_BLOCK);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -65,10 +65,9 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
             return;
 
         TileEntityManualChopper te = getTileEntity(worldIn, pos);
-
         if (te != null) {
             ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
-            if (!held.isEmpty() && ((held.getItem().getHarvestLevel(held, "axe", player, null) > -1) || isItemWhitelisted(held))) {
+            if (isValidChoppingTool(held, player)) {
                 if (te.chop(player, held)) {
                     player.addExhaustion((float) Configs.general.choppingblockExhaustion);
                     if (Configs.general.shouldDamageAxe)
@@ -76,11 +75,28 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
                 }
             }
         }
-
-        super.onBlockClicked(worldIn, pos, player);
     }
 
-    private boolean isItemWhitelisted(ItemStack stack) {
+    @Override
+    public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer player, World world, BlockPos pos) {
+        TileEntityManualChopper te = getTileEntity(world, pos);
+        if (te != null) {
+            ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+            if (isValidChoppingTool(heldItem, player)) {
+                if (te.canWork()) {
+                    return -1;
+                }
+            }
+        }
+
+        return super.getPlayerRelativeBlockHardness(state, player, world, pos);
+    }
+
+    private boolean isValidChoppingTool(ItemStack held, EntityPlayer player) {
+        return !held.isEmpty() && ((held.getItem().getHarvestLevel(held, "axe", player, null) > -1) || isChoppingToolWhitelisted(held));
+    }
+
+    private boolean isChoppingToolWhitelisted(ItemStack stack) {
         for (ItemStack itemStack: HPEventHandler.choppingAxes.keySet()) {
             if (ItemStack.areItemsEqualIgnoreDurability(itemStack, stack))
                 return true;

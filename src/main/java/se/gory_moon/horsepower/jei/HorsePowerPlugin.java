@@ -102,14 +102,14 @@ public class HorsePowerPlugin implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
         subtypeRegistry.registerSubtypeInterpreter(Item.getItemFromBlock(ModBlocks.BLOCK_CHOPPER), itemStack -> {
             NBTTagCompound nbtTagCompound = itemStack.getTagCompound();
-            if (itemStack.getMetadata() == OreDictionary.WILDCARD_VALUE || nbtTagCompound == null || nbtTagCompound.hasNoTags()) {
+            if (itemStack.getMetadata() == OreDictionary.WILDCARD_VALUE || nbtTagCompound == null || nbtTagCompound.isEmpty()) {
                 return null;
             }
             return nbtTagCompound.toString();
         });
         subtypeRegistry.registerSubtypeInterpreter(Item.getItemFromBlock(ModBlocks.BLOCK_MANUAL_CHOPPER), itemStack -> {
             NBTTagCompound nbtTagCompound = itemStack.getTagCompound();
-            if (itemStack.getMetadata() == OreDictionary.WILDCARD_VALUE || nbtTagCompound == null || nbtTagCompound.hasNoTags()) {
+            if (itemStack.getMetadata() == OreDictionary.WILDCARD_VALUE || nbtTagCompound == null || nbtTagCompound.isEmpty()) {
                 return null;
             }
             return nbtTagCompound.toString();

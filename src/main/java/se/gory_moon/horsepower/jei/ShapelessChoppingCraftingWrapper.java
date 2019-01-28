@@ -42,7 +42,7 @@ public class ShapelessChoppingCraftingWrapper implements IRecipeWrapper, ICustom
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
         for(ItemStack stack : recipe.outputBlocks) {
             BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(recipe.getSimpleRecipeOutput().getItem());
-            if (!Configs.general.useDynamicCrafting && !"minecraft".equals(stack.getItem().getRegistryName().getResourceDomain())) {
+            if (!Configs.general.useDynamicCrafting && !"minecraft".equals(stack.getItem().getRegistryName().getNamespace())) {
                 builder.add(BlockHPChoppingBase.createItemStack(block, recipe.getSimpleRecipeOutput().getCount(), new ItemStack(Blocks.LOG)));
                 break;
             }

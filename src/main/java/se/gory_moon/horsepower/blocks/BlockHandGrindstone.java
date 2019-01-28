@@ -54,7 +54,7 @@ public class BlockHandGrindstone extends BlockHPBase implements IProbeInfoAccess
         setHarvestLevel("pickaxe", 1);
         setSoundType(SoundType.STONE);
         setRegistryName(Constants.HAND_GRINDSTONE_BLOCK);
-        setUnlocalizedName(Constants.HAND_GRINDSTONE_BLOCK);
+        setTranslationKey(Constants.HAND_GRINDSTONE_BLOCK);
     }
 
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {

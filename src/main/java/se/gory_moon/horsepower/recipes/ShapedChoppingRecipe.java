@@ -53,7 +53,7 @@ public class ShapedChoppingRecipe extends ShapedOreRecipe {
                 if ((OreDictionary.itemMatches(ore, stack, false) || (isTypeChopping && (Block.getBlockFromItem(stack.getItem())) instanceof BlockHPChoppingBase)) && Block.getBlockFromItem(stack.getItem()) != Blocks.AIR) {
                     BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(getSimpleRecipeOutput().getItem());
                     if (!Configs.general.useDynamicCrafting) {
-                        if ("minecraft".equals(ore.getItem().getRegistryName().getResourceDomain()))
+                        if ("minecraft".equals(ore.getItem().getRegistryName().getNamespace()))
                             return createItemStack(block, getSimpleRecipeOutput().getCount(), stack);
                         else
                             return createItemStack(block, getSimpleRecipeOutput().getCount(), new ItemStack(Blocks.LOG, 1, 0));

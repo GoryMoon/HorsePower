@@ -39,7 +39,7 @@ group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conve
 archivesBaseName = "HorsePower"
 
 minecraft {
-    version = "1.12.2-14.23.4.2705"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -47,7 +47,7 @@ minecraft {
     // stable_#            stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20180617"
+    mappings = "stable_39"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     replaceIn "Reference.java"
@@ -78,11 +78,6 @@ repositories {
     maven {
         url "http://maven.tterrag.com/"
     }
-
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }
 }
 
 dependencies {
@@ -95,7 +90,6 @@ dependencies {
     deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-${config.top_version}"
 
-    //deobfCompile "mcp.mobius.waila:Waila:${config.waila_version}:dev"
     deobfCompile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
 }
 
