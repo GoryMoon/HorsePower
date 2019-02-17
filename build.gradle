@@ -22,8 +22,6 @@ if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of
     version += ".${System.getenv().BUILD_NUMBER}"
 }
 
-def FORGE_GROUP = "net.minecraftforge.test"
-
 minecraft {
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
@@ -33,18 +31,25 @@ minecraft {
     mappings channel: mcp_channel, version: mcp_mappings
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    accessTransformer = file('src/main/resources/META-INF/horsepower_at.cfg')
-
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // default run configurations.
     // these can be tweaked, removed, or duplicated as needed.
     runs {
         client = {
-            ideaModule "${group}.${name}.main"
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            properties 'forge.logging.noansi': 'false'
             workingDirectory project.file('run').canonicalPath
             source sourceSets.main
         }
         server = {
-            ideaModule "${group}.${name}.main"
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            properties 'forge.logging.noansi': 'false'
             workingDirectory project.file('run').canonicalPath
             source sourceSets.main
         }
@@ -85,7 +90,7 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft "${FORGE_GROUP}:forge:${mc_version}-${forge_version}"
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 
     // compile against the JEI API
@@ -100,22 +105,14 @@ dependencies {
 }
 
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property 'version', project.version
-    inputs.property 'mcversion', '1.13'
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'META_INF/mods.toml'
-
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion': '1.13'
-    }
-
-    // copy everything else except the mods.toml
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'META_INF/mods.toml'
+// Example for how to get properties into the manifest for reading by the runtime..
+jar {
+    manifest {
+        attributes(["Specification-Title": "HorsePower",
+                    "Specification-Version": "25.0", // We are version 1 of the modlauncher specification
+                    "Implementation-Title": project.name,
+                    "Implementation-Version": "${version}",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
 

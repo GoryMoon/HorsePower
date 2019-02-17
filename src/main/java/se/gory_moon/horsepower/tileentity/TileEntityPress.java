@@ -7,7 +7,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -249,11 +249,11 @@ public class TileEntityPress extends TileEntityHPHorseBase {
             return new TextComponentTranslation(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 
-    private OptionalCapabilityInstance<IFluidHandler> tankCap = OptionalCapabilityInstance.of(() -> tank);
+    private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     @Nonnull
     @Override
-    public <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (side == null || side == EnumFacing.DOWN)
                 return tankCap.cast();

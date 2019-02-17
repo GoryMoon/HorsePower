@@ -4,8 +4,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -370,7 +370,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         {
             float f = this.rendererDispatcher.entityYaw;
             float f1 = this.rendererDispatcher.entityPitch;
-            EntityRenderer.drawNameplate(this.getFontRenderer(), str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, f, f1, false, false);
+            GameRenderer.drawNameplate(this.getFontRenderer(), str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, f, f1, false, false);
         }
     }
 

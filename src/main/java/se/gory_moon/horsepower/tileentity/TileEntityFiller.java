@@ -8,7 +8,7 @@ import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
+import net.minecraftforge.common.util.LazyOptional;
 import se.gory_moon.horsepower.blocks.BlockFiller;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.ModBlocks;
@@ -83,7 +83,7 @@ public class TileEntityFiller extends TileEntity implements INameable {
 
     @Nonnull
     @Override
-    public <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
         TileEntityHPBase te = getFilledTileEntity();
         if (te != null)
             return te.getCapability(cap, side);

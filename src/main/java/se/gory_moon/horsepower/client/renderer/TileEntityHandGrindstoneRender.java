@@ -3,7 +3,7 @@ package se.gory_moon.horsepower.client.renderer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockHPBase;

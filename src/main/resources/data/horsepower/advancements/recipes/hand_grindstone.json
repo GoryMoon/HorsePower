@@ -11,8 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:stone",
-            "data": 0
+            "tag": "forge:stone"
           }
         ]
       }

@@ -7,16 +7,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
+import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
 import se.gory_moon.horsepower.util.RenderUtils;
 
 import java.util.stream.StreamSupport;
 
+@Mod.EventBusSubscriber(modid = Reference.MODID, value = Dist.CLIENT)
 public class ClientHandler {
 
     @SubscribeEvent

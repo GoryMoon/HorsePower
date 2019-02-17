@@ -3,7 +3,6 @@ package se.gory_moon.horsepower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
@@ -32,14 +31,14 @@ public class BlockFiller extends BlockDirectional {
     private boolean useTileEntity;
     private boolean providePower;
 
-    public BlockFiller(Builder builder, String name, boolean useTileEntity, boolean providePower) {
+    public BlockFiller(Properties builder, String name, boolean useTileEntity, boolean providePower) {
         super(builder);
         setRegistryName(name + "filler");
         this.useTileEntity = useTileEntity;
         this.providePower = providePower;
     }
 
-    public BlockFiller(Builder builder, String name, boolean useTileEntity) {
+    public BlockFiller(Properties builder, String name, boolean useTileEntity) {
         this(builder, name, useTileEntity, false);
     }
 

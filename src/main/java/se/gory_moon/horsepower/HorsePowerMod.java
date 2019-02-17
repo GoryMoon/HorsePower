@@ -1,19 +1,20 @@
 package se.gory_moon.horsepower;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.javafmlmod.FMLModLoadingContext;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.client.ModModelManager;
+import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
-import se.gory_moon.horsepower.proxy.ClientProxy;
-import se.gory_moon.horsepower.proxy.CommonProxy;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Utils;
 
@@ -21,47 +22,41 @@ import se.gory_moon.horsepower.util.Utils;
 @Mod(Reference.MODID)
 public class HorsePowerMod {
 
-    public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-
     public static HorsePowerItemGroup itemGroup = new HorsePowerItemGroup();
-    public static final Logger LOGGER = LogManager.getLogger("HorsePower");
+    public static final Logger LOGGER = LogManager.getLogger(Reference.MODID);
 
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
 
     public HorsePowerMod() {
-        FMLModLoadingContext.get().getModEventBus().addListener(this::preInit);
-        FMLModLoadingContext.get().getModEventBus().addListener(this::init);
-        FMLModLoadingContext.get().getModEventBus().addListener(this::loadComplete);
-        FMLModLoadingContext.get().getModEventBus().addListener(this::serverLoad);
-        FMLModLoadingContext.get().getModEventBus().addListener(this::onFingerprintViolation);
-
-        MinecraftForge.EVENT_BUS.register(ModItems.RegistrationHandler.class);
-        MinecraftForge.EVENT_BUS.register(ModBlocks.RegistrationHandler.class);
-        MinecraftForge.EVENT_BUS.register(HPEventHandler.class);
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventBus.addListener(this::setup);
+        eventBus.addListener(this::sendIMC);
+        eventBus.addListener(this::loadComplete);
+        eventBus.addListener(this::serverLoad);
+        eventBus.addListener(this::onFingerprintViolation);
     }
 
-    public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit();
+    public void setup(FMLCommonSetupEvent event) {
         PacketHandler.init();
+        AdvancementManager.register();
 
-        //FMLInterModComms.sendMessage("waila", "register", Reference.WAILA_PROVIDER);
         /*if (Loader.isModLoaded("crafttweaker"))
             tweakerPlugin = new TweakerPluginImpl();
 
         tweakerPlugin.register();*/
-    }
-
-    public void init(FMLInitializationEvent event) {
-        proxy.init();
         ModItems.registerRecipes();
     }
 
-    public void loadComplete(FMLPostInitializationEvent event) {
+    public void sendIMC(InterModEnqueueEvent event) {
+        //TODO how this will work?
+        InterModComms.sendTo("waila", "register", () -> Reference.WAILA_PROVIDER);
+    }
+
+    public void loadComplete(FMLLoadCompleteEvent event) {
         //tweakerPlugin.getRemove().forEach(IHPAction::run);
         //tweakerPlugin.getAdd().forEach(IHPAction::run);
 
         HPEventHandler.reloadConfig();
-        proxy.loadComplete();
     }
 
     public void serverLoad(FMLServerAboutToStartEvent event) {

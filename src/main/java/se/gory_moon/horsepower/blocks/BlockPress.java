@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import se.gory_moon.horsepower.advancements.Manager;
+import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
@@ -51,7 +51,7 @@ public class BlockPress extends BlockHPBase {
     private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 16 + 3, 16);
 
     public BlockPress() {
-        super(Builder.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F));
+        super(Properties.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F));
         setRegistryName(Reference.MODID, Constants.PRESS_BLOCK);
 
         /*setHarvestLevel("axe", 1);
@@ -131,7 +131,7 @@ public class BlockPress extends BlockHPBase {
     @Override
     public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
         if (playerIn instanceof EntityPlayerMP)
-            Manager.USE_PRESS.trigger((EntityPlayerMP) playerIn);
+            AdvancementManager.USE_PRESS.trigger((EntityPlayerMP) playerIn);
     }
 
     @Override

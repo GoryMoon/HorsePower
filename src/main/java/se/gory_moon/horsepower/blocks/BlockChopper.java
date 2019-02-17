@@ -28,7 +28,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.Optional;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.advancements.Manager;
+import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.tileentity.TileEntityChopper;
@@ -135,7 +135,7 @@ public class BlockChopper extends BlockHPChoppingBase implements IProbeInfoAcces
     @Override
     public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
         if (playerIn instanceof EntityPlayerMP)
-            Manager.USE_CHOPPER.trigger((EntityPlayerMP) playerIn);
+            AdvancementManager.USE_CHOPPER.trigger((EntityPlayerMP) playerIn);
     }
 
     @Nonnull

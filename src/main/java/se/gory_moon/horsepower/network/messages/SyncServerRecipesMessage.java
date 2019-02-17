@@ -38,7 +38,7 @@ public class SyncServerRecipesMessage {
         this.pressRecipes = pressRecipes;
     }
 
-    public static SyncServerRecipesMessage fromBytes(PacketBuffer buf) {
+    public static SyncServerRecipesMessage decode(PacketBuffer buf) {
         return new SyncServerRecipesMessage(read(buf), read(buf), read(buf), read(buf), read(buf));
     }
 
@@ -50,7 +50,7 @@ public class SyncServerRecipesMessage {
         return recipes;
     }
 
-    public static void toBytes(SyncServerRecipesMessage message, PacketBuffer buf) {
+    public static void encode(SyncServerRecipesMessage message, PacketBuffer buf) {
         write(message.grindstoneRecipes, buf);
         write(message.handGrindstoneRecipes, buf);
         write(message.choppingRecipes, buf);
@@ -70,5 +70,6 @@ public class SyncServerRecipesMessage {
             HPRecipes.instance().reloadRecipes(message.grindstoneRecipes, message.handGrindstoneRecipes, message.choppingRecipes, message.manualChoppingRecipes, message.pressRecipes);
             HorsePowerMod.LOGGER.info("Synced recipes from server");
         });
+        ctx.get().setPacketHandled(true);
     }
 }

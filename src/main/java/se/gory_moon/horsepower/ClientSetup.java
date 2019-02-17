@@ -1,42 +1,36 @@
-package se.gory_moon.horsepower.proxy;
+package se.gory_moon.horsepower;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.client.renderer.*;
+import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
 import se.gory_moon.horsepower.util.color.ColorGetter;
 
-@OnlyIn(Dist.CLIENT)
-public class ClientProxy extends CommonProxy {
+@Mod.EventBusSubscriber(modid = Reference.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class ClientSetup {
 
-    @Override
-    public void preInit() {
-        super.preInit();
+    @SubscribeEvent
+    public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindstone.class, new TileEntityGrindstoneRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new TileEntityFillerRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandGrindstone.class, new TileEntityHandGrindstoneRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPress.class, new TileEntityPressRender());
-    }
 
-    @Override
-    public void init() {
-        MinecraftForge.EVENT_BUS.register(ClientHandler.class);
-    }
-
-    @Override
-    public void loadComplete() {
+        //TODO make server command
         //ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
 
         ((IReloadableResourceManager)Minecraft.getInstance().getResourceManager()).addReloadListener(resourceManager -> TileEntityHPBaseRenderer.clearDestroyStageicons());

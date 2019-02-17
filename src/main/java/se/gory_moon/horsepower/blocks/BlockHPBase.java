@@ -35,7 +35,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
 
     public static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
-    public BlockHPBase(Builder builder) {
+    public BlockHPBase(Properties builder) {
         super(builder);
     }
 

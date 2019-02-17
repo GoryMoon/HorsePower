@@ -13,11 +13,8 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ShapeUtils;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapePart;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockReader;
@@ -44,7 +41,7 @@ public class BlockHandGrindstone extends BlockHPBase {
     private static final VoxelShape COLLISION = Block.makeCuboidShape(1, 0, 1, 15, 10, 15);
 
     public BlockHandGrindstone() {
-        super(Builder.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
+        super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
         setRegistryName(Reference.MODID, Constants.HAND_GRINDSTONE_BLOCK);
 
         /*setHarvestLevel("pickaxe", 1);

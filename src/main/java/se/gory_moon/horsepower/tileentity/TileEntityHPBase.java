@@ -18,8 +18,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.OptionalCapabilityInstance;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -160,9 +160,9 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
                 return null;
             }
         };
-        handlerIn = OptionalCapabilityInstance.of(() -> new RangedWrapper(new InvWrapper(inventory), 0, 1));
-        handlerBottom = OptionalCapabilityInstance.of(() -> new RangedWrapper(new InvWrapper(inventory), 1, getOutputSlot() + 1));
-        handlerNull = OptionalCapabilityInstance.of(() -> new InvWrapper(inventory));
+        handlerIn = LazyOptional.of(() -> new RangedWrapper(new InvWrapper(inventory), 0, 1));
+        handlerBottom = LazyOptional.of(() -> new RangedWrapper(new InvWrapper(inventory), 1, getOutputSlot() + 1));
+        handlerNull = LazyOptional.of(() -> new InvWrapper(inventory));
     }
 
     public abstract HPRecipeBase getRecipe();
@@ -310,12 +310,12 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
         markDirty();
     }
 
-    private OptionalCapabilityInstance<IItemHandler> handlerNull;
-    private OptionalCapabilityInstance<IItemHandler> handlerBottom;
-    private OptionalCapabilityInstance<IItemHandler> handlerIn;
+    private LazyOptional<IItemHandler> handlerNull;
+    private LazyOptional<IItemHandler> handlerBottom;
+    private LazyOptional<IItemHandler> handlerIn;
     @Nonnull
     @Override
-    public <T> OptionalCapabilityInstance<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (side == null)
                 return handlerNull.cast();

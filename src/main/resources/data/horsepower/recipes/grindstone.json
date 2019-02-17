@@ -10,11 +10,11 @@
       "item": "minecraft:lead"
     },
     "S": {
-      "item": "#STICKS"
+      "tag": "forge:rods/wooden"
     },
     "#": [
       {
-        "item": "#STONES"
+        "tag": "forge:stone"
       }
     ]
   },

@@ -9,8 +9,6 @@
       "top": { "model": "horsepower:press_top" }
     },
     "facing": {
-      "up":    {},
-      "down": {},
       "north": {},
       "east":  { "y": 90 },
       "south": { "y": 180 },

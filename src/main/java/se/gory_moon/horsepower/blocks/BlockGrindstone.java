@@ -11,16 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ShapeUtils;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.advancements.Manager;
+import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.GrindStoneModels;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
@@ -41,7 +38,7 @@ public class BlockGrindstone extends BlockHPBase {
     private static final VoxelShape BOUNDING = Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
 
     public BlockGrindstone() {
-        super(Builder.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
+        super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
         setRegistryName(Reference.MODID, Constants.GRINDSTONE_BLOCK);
 
         /*setHarvestLevel("pickaxe", 1);
@@ -88,7 +85,7 @@ public class BlockGrindstone extends BlockHPBase {
     @Override
     public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
         if (playerIn instanceof EntityPlayerMP)
-            Manager.USE_GRINDSTONE.trigger((EntityPlayerMP) playerIn);
+            AdvancementManager.USE_GRINDSTONE.trigger((EntityPlayerMP) playerIn);
     }
 
     @Override

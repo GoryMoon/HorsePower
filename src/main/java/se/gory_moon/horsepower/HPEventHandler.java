@@ -3,9 +3,9 @@ package se.gory_moon.horsepower;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,7 +15,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -96,15 +95,15 @@ public class HPEventHandler {
     @SubscribeEvent
     public static void onServerJoined(PlayerEvent.PlayerLoggedInEvent event) {
         if (FMLEnvironment.dist.isDedicatedServer()) {
-            PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((EntityPlayerMP)event.player).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+            PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((EntityPlayerMP)event.getPlayer()).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
         }
     }
 
     @SubscribeEvent
     public static void onServerLeave(WorldEvent.Unload event) {
         if (FMLEnvironment.dist.isClient()) {
-            NetworkManager manager = Minecraft.getInstance().getConnection().getNetworkManager();
-            if (manager != null && !manager.isLocalChannel() && HPRecipes.serverSyncedRecipes) {
+            NetHandlerPlayClient handler = Minecraft.getInstance().getConnection();
+            if (handler != null && !handler.getNetworkManager().isLocalChannel() && HPRecipes.serverSyncedRecipes) {
                 HPRecipes.serverSyncedRecipes = false;
                 HPRecipes.instance().reloadRecipes();
             }

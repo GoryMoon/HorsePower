@@ -17,13 +17,13 @@ import java.util.*;
 
 public class ModItems {
 
-    public static final Item FLOUR = new Item(new Item.Builder().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.FLOUR_ITEM);
-    public static final Item DOUGH = new Item(new Item.Builder().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.DOUGH_ITEM);
+    public static final Item FLOUR = new Item(new Item.Properties().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.FLOUR_ITEM);
+    public static final Item DOUGH = new Item(new Item.Properties().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.DOUGH_ITEM);
 
     private static Set<Map.Entry<ResourceLocation, IRecipe>> recipes;
     private static List<ResourceLocation> recipesToRemove = new LinkedList<>();
 
-    @Mod.EventBusSubscriber(modid = Reference.MODID)
+    @Mod.EventBusSubscriber(modid = Reference.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         public static final Set<Item> ITEMS = new HashSet<>();
 

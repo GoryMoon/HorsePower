@@ -1,6 +1,6 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -37,7 +37,7 @@ public class TileEntityFillerRender extends TileEntityRenderer<TileEntityFiller>
         {
             float f = this.rendererDispatcher.entityYaw;
             float f1 = this.rendererDispatcher.entityPitch;
-            EntityRenderer.drawNameplate(this.getFontRenderer(), str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, f, f1, false, false);
+            GameRenderer.drawNameplate(this.getFontRenderer(), str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, f, f1, false, false);
         }
     }
 }
