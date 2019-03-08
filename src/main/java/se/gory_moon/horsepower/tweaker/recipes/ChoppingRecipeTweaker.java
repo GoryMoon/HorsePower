@@ -3,7 +3,6 @@ package se.gory_moon.horsepower.tweaker.recipes;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.mc1120.recipes.MCRecipeManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
@@ -110,7 +109,7 @@ public class ChoppingRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Removing chopping recipes for " + MCRecipeManager.saveToString(output);
+            return "Removing chopping recipes for " + output;
         }
 
     }

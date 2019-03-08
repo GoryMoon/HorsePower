@@ -4,7 +4,6 @@ import crafttweaker.CraftTweakerAPI;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
-import crafttweaker.mc1120.recipes.MCRecipeManager;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
@@ -117,7 +116,7 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Removing grindstone recipes for " + MCRecipeManager.saveToString(output);
+            return "Removing grindstone recipes for " + output;
         }
     }
 

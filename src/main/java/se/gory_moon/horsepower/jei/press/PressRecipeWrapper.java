@@ -5,7 +5,8 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.ingredients.VanillaTypes;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,7 +22,7 @@ import se.gory_moon.horsepower.util.color.Colors;
 import java.util.Collections;
 import java.util.List;
 
-public class PressRecipeWrapper extends BlankRecipeWrapper {
+public class PressRecipeWrapper implements IRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
     private final ItemStack output;
@@ -51,11 +52,11 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputLists(ItemStack.class, inputs);
+        ingredients.setInputLists(VanillaTypes.ITEM, inputs);
         if (isFluid)
-            ingredients.setOutput(FluidStack.class, fluidOutput);
+            ingredients.setOutput(VanillaTypes.FLUID, fluidOutput);
         else
-            ingredients.setOutput(ItemStack.class, output);
+            ingredients.setOutput(VanillaTypes.ITEM, output);
     }
 
     @Override

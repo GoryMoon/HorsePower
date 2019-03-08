@@ -3,6 +3,7 @@ package se.gory_moon.horsepower.jei;
 import mezz.jei.api.*;
 import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.init.Blocks;
@@ -89,7 +90,7 @@ public class HorsePowerPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS_ITEM);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS_FLUID);
 
-        registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
+        registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), VanillaTypes.ITEM, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
 
     @Override
