@@ -50,7 +50,7 @@ public class Utils {
         if (stack.isEmpty()) return 0;
 
         NBTTagCompound tag = stack.write(new NBTTagCompound());
-        tag.removeTag("Count");
+        tag.remove("Count");
         return tag.hashCode();
     }
 
@@ -129,10 +129,10 @@ public class Utils {
             return new FluidStack(fluid, amount, nbt);
         } else {*/
             NBTTagCompound compound = new NBTTagCompound();
-            compound.setString("id", data[0] + ":" + data[1]);
-            compound.setByte("Count", (byte) amount);
+            compound.putString("id", data[0] + ":" + data[1]);
+            compound.putByte("Count", (byte) amount);
             if (nbt != null)
-                compound.setTag("tag", nbt);
+                compound.put("tag", nbt);
             return ItemStack.read(compound);
         //}
     }

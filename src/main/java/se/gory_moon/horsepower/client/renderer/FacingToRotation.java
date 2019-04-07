@@ -29,42 +29,34 @@ public enum FacingToRotation {
         this.mat.rotZ((float) Math.toRadians( rot.z ));
     }
 
-    public Vector3f getRot()
-    {
+    public Vector3f getRot() {
         return rot;
     }
 
-    public Matrix4f getMat()
-    {
+    public Matrix4f getMat() {
         return new Matrix4f( this.mat );
     }
 
-    public void glRotateCurrentMat()
-    {
+    public void glRotateCurrentMat() {
         GlStateManager.rotatef( rot.x, 1, 0, 0 );
         GlStateManager.rotatef( rot.y, 0, 1, 0 );
         GlStateManager.rotatef( rot.z, 0, 0, 1 );
     }
 
-    public EnumFacing rotate( EnumFacing facing )
-    {
+    public EnumFacing rotate( EnumFacing facing ) {
         return TRSRTransformation.rotate( mat, facing );
     }
 
-    public EnumFacing resultingRotate( EnumFacing facing )
-    {
-        for( EnumFacing face : EnumFacing.values() )
-        {
-            if( rotate( face ) == facing )
-            {
+    public EnumFacing resultingRotate( EnumFacing facing ) {
+        for( EnumFacing face : EnumFacing.values() ) {
+            if( rotate( face ) == facing ) {
                 return face;
             }
         }
         return null;
     }
 
-    public static FacingToRotation get( EnumFacing forward)
-    {
+    public static FacingToRotation get( EnumFacing forward) {
         return values()[forward.ordinal()];
     }
 

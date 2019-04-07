@@ -8,8 +8,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.blocks.BlockHandGrindstone;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -31,9 +29,9 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.setInt("millTime", currentItemMillTime);
-        compound.setInt("totalMillTime", totalItemMillTime);
-        compound.setInt("currentRotation", rotation);
+        compound.putInt("millTime", currentItemMillTime);
+        compound.putInt("totalMillTime", totalItemMillTime);
+        compound.putInt("currentRotation", rotation);
 
         return super.write(compound);
     }

@@ -2,7 +2,9 @@ package se.gory_moon.horsepower;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -22,8 +24,8 @@ import se.gory_moon.horsepower.util.Utils;
 @Mod(Reference.MODID)
 public class HorsePowerMod {
 
-    public static HorsePowerItemGroup itemGroup = new HorsePowerItemGroup();
-    public static final Logger LOGGER = LogManager.getLogger(Reference.MODID);
+    public static HorsePowerItemGroup itemGroup;
+    public static final Logger LOGGER = LogManager.getLogger();
 
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
 
@@ -34,6 +36,8 @@ public class HorsePowerMod {
         eventBus.addListener(this::loadComplete);
         eventBus.addListener(this::serverLoad);
         eventBus.addListener(this::onFingerprintViolation);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.clientSpec);
+        eventBus.register(Configs.class);
     }
 
     public void setup(FMLCommonSetupEvent event) {
@@ -67,5 +71,4 @@ public class HorsePowerMod {
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
         LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
-
 }

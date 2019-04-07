@@ -51,6 +51,9 @@
 
   "config.gui.general": "General",
   "config.gui.client": "Client",
+  "config.gui.client.render_item_amount": "Render Item Amount",
+  "config.gui.client.must_look_at_block": "Must Look For Amount",
+  "config.gui.client.show_obstructed_place": "Show Obstructed Area",
   "config.gui.recipes": "Recipes",
   "config.gui.misc": "Misc",
   "config.gui.recipes.grindstone": "Grindstone Recipes",

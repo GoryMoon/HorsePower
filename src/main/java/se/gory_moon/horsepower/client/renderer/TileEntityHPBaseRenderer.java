@@ -109,7 +109,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     public boolean canShowAmount(TileEntityHPBase te) {
-        return Configs.client.renderItemAmount && (!Configs.client.mustLookAtBlock || this.rendererDispatcher.cameraHitResult != null && (te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()) || (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))));
+        return Configs.CLIENT.renderItemAmount.get() && (!Configs.CLIENT.mustLookAtBlock.get() || this.rendererDispatcher.cameraHitResult != null && (te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()) || (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))));
     }
 
     protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {

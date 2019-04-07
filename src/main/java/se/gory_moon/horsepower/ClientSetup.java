@@ -59,6 +59,6 @@ public class ClientSetup {
                 }
             }
             return -1;
-        }, ModBlocks.BLOCK_GRINDSTONE);
+        }, ModBlocks.BLOCK_GRINDSTONE.orElse(null));
     }
 }

@@ -63,19 +63,19 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
     @Override
     public NBTTagCompound write(NBTTagCompound compound) {
-        compound.setInt("target", target);
-        compound.setInt("origin", origin);
-        compound.setBoolean("hasWorker", hasWorker);
+        compound.putInt("target", target);
+        compound.putInt("origin", origin);
+        compound.putBoolean("hasWorker", hasWorker);
 
         if (this.worker != null) {
             if (nbtWorker == null) {
                 NBTTagCompound nbtTagCompound = new NBTTagCompound();
                 UUID uuid = worker.getUniqueID();
-                nbtTagCompound.setUniqueId("UUID", uuid);
+                nbtTagCompound.putUniqueId("UUID", uuid);
                 nbtWorker = nbtTagCompound;
             }
 
-            compound.setTag("leash", nbtWorker);
+            compound.put("leash", nbtWorker);
         }
 
         return super.write(compound);
@@ -112,7 +112,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         if (worker != null) {
             NBTTagCompound nbtTagCompound = new NBTTagCompound();
             UUID uuid = worker.getUniqueID();
-            nbtTagCompound.setUniqueId("UUID", uuid);
+            nbtTagCompound.putUniqueId("UUID", uuid);
             nbtWorker = nbtTagCompound;
         }
         markDirty();

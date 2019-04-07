@@ -26,7 +26,7 @@ public class ClientHandler {
     @SubscribeEvent
     public static void renderWorld(RenderWorldLastEvent event) {
         final ItemStack[] itemStack = {ItemStack.EMPTY};
-        if (Configs.client.showObstructedPlace) {
+        if (Configs.CLIENT.showObstructedPlace.get()) {
             if (StreamSupport.stream(Minecraft.getInstance().player.getHeldEquipment().spliterator(), false).anyMatch(stack -> !stack.isEmpty() && isHPBlock((itemStack[0] = stack).getItem()))) {
                 Minecraft mc = Minecraft.getInstance();
                 if (mc.objectMouseOver == null || mc.objectMouseOver.type != RayTraceResult.Type.BLOCK)

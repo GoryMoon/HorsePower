@@ -11,6 +11,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.blocks.BlockFiller;
 
 import javax.annotation.Nullable;
 
@@ -47,6 +48,7 @@ public class ItemBlockDouble extends ItemBlock {
         IBlockState blockStateUp = getStateForPlacementFiller(contextUp);
 
         if (!itemstack.isEmpty() && blockState != null && blockStateUp != null) {
+            blockStateUp = blockStateUp.with(BlockFiller.FACING, EnumFacing.DOWN);
             if (placeBlock(context, blockState) && placeBlock(context, blockStateUp)) {
                 SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, player);
                 world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);

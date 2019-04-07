@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.EnumProperty;
@@ -22,7 +23,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
@@ -95,10 +95,10 @@ public class BlockPress extends BlockHPBase {
         builder.add(FACING, PART);
     }
 
-
+    @Nullable
     @Override
-    public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
-        return getDefaultState().with(FACING, facing.getOpposite()).with(PART, PressModels.BASE);
+    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(PART, PressModels.BASE);
     }
 
     @Override

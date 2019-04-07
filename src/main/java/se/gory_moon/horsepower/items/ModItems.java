@@ -7,7 +7,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
-import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
@@ -34,17 +33,11 @@ public class ModItems {
          */
         @SubscribeEvent
         public static void registerItems(RegistryEvent.Register<Item> event) {
-
             final Item[] items = {FLOUR, DOUGH};
 
             final IForgeRegistry<Item> registry = event.getRegistry();
 
             for (final Item item : items) {
-                if (!Configs.general.enableFlour && item == FLOUR)
-                    continue;
-                if (!Configs.general.enableDough && item == DOUGH)
-                    continue;
-
                 registry.register(item);
                 ITEMS.add(item);
             }

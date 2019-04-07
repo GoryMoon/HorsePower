@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -41,12 +42,10 @@ public class BlockHandGrindstone extends BlockHPBase {
     private static final VoxelShape COLLISION = Block.makeCuboidShape(1, 0, 1, 15, 10, 15);
 
     public BlockHandGrindstone() {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F));
+        super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
         setRegistryName(Reference.MODID, Constants.HAND_GRINDSTONE_BLOCK);
 
-        /*setHarvestLevel("pickaxe", 1);
-        setSoundType(SoundType.STONE);
-        setUnlocalizedName(Constants.HAND_GRINDSTONE_BLOCK);*/
+        /*setHarvestLevel("pickaxe", 1);*/
         setDefaultState(getStateContainer().getBaseState().with(FACING, EnumFacing.NORTH).with(PART, HandGrindstoneModels.BASE));
     }
 

@@ -1,14 +1,15 @@
 package se.gory_moon.horsepower;
 
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.config.ModConfig;
+import org.apache.commons.lang3.tuple.Pair;
 
 //TODO update to new system
 //@Config(modid = Reference.MODID, category = "all")
 public class Configs {
-
-//    @Comment("Client only configs")
-//    @Config.LangKey("config.gui.client")
-    public static Client client = new Client();
 
 //    @Comment("General configs")
 //    @Config.LangKey("config.gui.general")
@@ -24,17 +25,31 @@ public class Configs {
 
     public static class Client {
 
-//        @Comment("If the amount text on how many items is in a stack in a grindstone should render")
-//        @Name("Render Item Amount")
-        public boolean renderItemAmount = true;
+        public BooleanValue renderItemAmount;
+        public BooleanValue mustLookAtBlock;
+        public BooleanValue showObstructedPlace;
 
-//        @Comment("Must look at the block to show the amount in it")
-//        @Name("Must Look For Amount ")
-        public boolean mustLookAtBlock = true;
+        Client(ForgeConfigSpec.Builder builder) {
+            builder.comment("Client only configs")
+                    .push("client");
 
-//        @Comment("If true will show the area needed when placing a HP block")
-//        @Name("Show Obstructed Area")
-        public boolean showObstructedPlace = true;
+            renderItemAmount = builder
+                    .comment("Render the amount text on how many items is in a stack in a grindstone")
+                    .translation("config.gui.client.render_item_amount")
+                    .define("renderItemAmount", true);
+
+            mustLookAtBlock = builder
+                    .comment("If player must look at the block to show the amount in it")
+                    .translation("config.gui.client.must_look_at_block")
+                    .define("mustLookAtBlock", true);
+
+            showObstructedPlace = builder
+                    .comment("Should show the area needed when placing a HP block")
+                    .translation("config.gui.client.show_obstructed_place")
+                    .define("showObstructedPlace", true);
+
+            builder.pop();
+        }
     }
 
     public static class Recipes {
@@ -127,16 +142,6 @@ public class Configs {
 
     public static class General {
 
-//        @Comment({"Enables the flour item", "If disabled all related recipes will be disabled", "Requires minecraft restart"})
-//        @Config.RequiresMcRestart
-//        @Name("Enable Flour")
-        public boolean enableFlour = true;
-
-//        @Comment({"Enables the dough item", "If disabled all related recipes will be disabled", "Requires minecraft restart"})
-//        @Config.RequiresMcRestart
-//        @Name("Enable Dough")
-        public boolean enableDough = true;
-
 //        @Comment({"Enables the manual chopping block", "Requires minecraft restart"})
 //        @Config.RequiresMcRestart
 //        @Name("Enable Manual Chopping Block")
@@ -156,7 +161,7 @@ public class Configs {
 //        @Name("Should Damage Axe")
         public boolean shouldDamageAxe = true;
 
-//        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:input:meta${nbt}=baseAmount-chance", "meta is optional and ${nbt} is also optional and follows vanilla tag syntax", "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
+//        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:input${nbt}=baseAmount-chance", "meta is optional and ${nbt} is also optional and follows vanilla tag syntax", "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
 //        @Config.LangKey("config.gui.chopping_axes")
 //        @Name("Chopping Block Axes")
         public String[] choppingBlockAxes = {};
@@ -224,15 +229,6 @@ public class Configs {
         public boolean useDynamicDisplay = true;
     }
 
-    /*public static class ConfigFactory implements IConditionFactory {
-
-        @Override
-        public BooleanSupplier parse(JsonContext context, JsonObject json) {
-            String item = JsonUtils.getString(json, "enabled");
-            return () -> "flour".equals(item) ? general.enableFlour: "dough".equals(item) && general.enableDough;
-        }
-    }*/
-
     public static class Misc {
 
 //        @Comment("Will show a items all ore dictionaries in the tooltip")
@@ -248,5 +244,23 @@ public class Configs {
         public String[] harvestTypes = {
                 "axe"
         };
+    }
+
+    static final ForgeConfigSpec clientSpec;
+    public static final Client CLIENT;
+    static {
+        final Pair<Client, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        clientSpec = specPair.getRight();
+        CLIENT = specPair.getLeft();
+    }
+
+    @SubscribeEvent
+    public static void onLoad(final ModConfig.Loading configEvent) {
+        HorsePowerMod.LOGGER.debug("Loaded HP config file {}", configEvent.getConfig().getFileName());
+    }
+
+    @SubscribeEvent
+    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
+        HorsePowerMod.LOGGER.debug("HP config just got changed on the file system!");
     }
 }
