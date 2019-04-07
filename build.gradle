@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenLocal()
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
@@ -14,7 +15,7 @@ apply plugin: 'eclipse'
 
 version = mod_version
 group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "HorsePower-" + mc_version
+archivesBaseName = "HorsePower-$mc_version"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -35,23 +36,35 @@ minecraft {
     // default run configurations.
     // these can be tweaked, removed, or duplicated as needed.
     runs {
-        client = {
+        client {
+            // Run directory
+            workingDirectory project.file('run')
+
             // recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
             // recommended logging level for the console
             properties 'forge.logging.console.level': 'debug'
+            // Colored console
             properties 'forge.logging.noansi': 'false'
-            workingDirectory project.file('run').canonicalPath
-            source sourceSets.main
+
+            // Intellij stuff
+            ideaModule "${project.group}.${project.name}.main"
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
-        server = {
+        server {
+            // Run directory
+            workingDirectory project.file('run')
+
             // recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
             // recommended logging level for the console
             properties 'forge.logging.console.level': 'debug'
+            // Colored console
             properties 'forge.logging.noansi': 'false'
-            workingDirectory project.file('run').canonicalPath
-            source sourceSets.main
+
+            // Intellij stuff
+            ideaModule "${project.group}.${project.name}.main"
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
     }
 }
@@ -108,10 +121,12 @@ dependencies {
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
-        attributes(["Specification-Title": "HorsePower",
-                    "Specification-Version": "25.0", // We are version 1 of the modlauncher specification
-                    "Implementation-Title": project.name,
-                    "Implementation-Version": "${version}",
+        attributes(["Specification-Title":      "HorsePower",
+                    "Specification-Vendor":     "Gory_Moon",
+                    "Specification-Version":    "1", // We are version 1 of ourselves
+                    "Implementation-Title":     project.name,
+                    "Implementation-Version":   "${version}",
+                    "Implementation-Vendor":    "Gory_Moon",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
