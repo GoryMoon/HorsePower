@@ -2,10 +2,15 @@ package se.gory_moon.horsepower;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,15 +34,14 @@ import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Mod.EventBusSubscriber(modid = Reference.MODID)
 public class HPEventHandler {
 
     public static Map<ItemStack, Pair<Integer, Integer>> choppingAxes = new HashMap<>();
     public static Map<Integer, Pair<Integer, Integer>> harvestPercentages = new HashMap<>();
+    private static Map<ResourceLocation, Collection<ResourceLocation>> tagCache = new HashMap<>();
 
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -114,37 +118,52 @@ public class HPEventHandler {
     @OnlyIn(Dist.CLIENT)
     public static void onToolTip(ItemTooltipEvent event) {
         if (!event.getItemStack().isEmpty()) {
-            String part = "";
-            /*if (Configs.misc.showOreDictionaries) {
+            List<ITextComponent> tooltipsToAdd = new ArrayList<>();
+            StringBuilder part = new StringBuilder();
+            if (Configs.CLIENT.showTags.get()) {
+                Item item = event.getItemStack().getItem();
+                Collection<ResourceLocation> tags = Optional.ofNullable(getTags(item)).orElse(Collections.emptyList());
+
                 StringBuilder out = null;
-                for (int id : OreDictionary.getOreIDs(event.getItemStack())) {
-                    String s = OreDictionary.getOreName(id);
-                    if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "Ores: " + Colors.ORANGE + s);
-                    else out.append(", ").append(s);
+                for (ResourceLocation tag: tags) {
+                    if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "Tags:\n    " + Colors.ORANGE + tag);
+                    else out.append("\n    ").append(tag);
                 }
                 if (out != null) {
-                    event.getToolTip().add(out.toString());
-                    part = "OreDict";
+                    tooltipsToAdd.add(new TextComponentString(out.toString()));
+                    part = new StringBuilder("Tags");
                 }
-            }*/
+            }
 
-            if (Configs.misc.showHarvestLevel) {
+            if (Configs.CLIENT.showHarvestLevel.get()) {
                 boolean added = false;
-                for (String harv : Configs.misc.harvestTypes) {
+                for (String harv : Configs.CLIENT.harvestTypes.get()) {
                     int harvestLevel = event.getItemStack().getItem().getHarvestLevel(event.getItemStack(), ToolType.get(harv), null, null);
                     if (harvestLevel > -1) {
-                        event.getToolTip().add(new TextComponentString(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")"));
+                        tooltipsToAdd.add(new TextComponentString(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")"));
                         if (!added) {
-                            part += (!part.isEmpty() ? " and " : "") + "HarvestLevel";
+                            part.append((part.length() > 0) ? " and " : "").append("HarvestLevel");
                             added = true;
                         }
                     }
                 }
             }
 
-            if (!part.isEmpty()) {
-                event.getToolTip().add(new TextComponentString(Colors.LIGHTGRAY + "The " + part + " tooltip was added by HorsePower, to disabled check the config."));
+            if (!tooltipsToAdd.isEmpty()) {
+                tooltipsToAdd.add(new TextComponentString(Colors.LIGHTGRAY + "The " + part + " tooltip was added by HorsePower, to disabled check the config."));
+                if (GuiScreen.isShiftKeyDown()) {
+                    event.getToolTip().addAll(tooltipsToAdd);
+                } else {
+                    event.getToolTip().add(new TextComponentString(Colors.LIGHTGRAY + "[Hold shift for more]"));
+                }
             }
         }
+    }
+
+    private static Collection<ResourceLocation> getTags(Item item) {
+        return tagCache.computeIfAbsent(item.getRegistryName(), resourceLocation ->
+                ItemTags.getCollection().getOwningTags(item).isEmpty() ?
+                        null :
+                        ItemTags.getCollection().getOwningTags(item));
     }
 }

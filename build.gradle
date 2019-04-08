@@ -47,6 +47,11 @@ minecraft {
             // Colored console
             properties 'forge.logging.noansi': 'false'
 
+            mods {
+                horsepower {
+                    source sourceSets.main
+                }
+            }
             // Intellij stuff
             ideaModule "${project.group}.${project.name}.main"
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
@@ -62,6 +67,11 @@ minecraft {
             // Colored console
             properties 'forge.logging.noansi': 'false'
 
+            mods {
+                horsepower {
+                    source sourceSets.main
+                }
+            }
             // Intellij stuff
             ideaModule "${project.group}.${project.name}.main"
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"

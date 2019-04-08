@@ -1,33 +1,35 @@
 package se.gory_moon.horsepower;
 
+import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
+
 //TODO update to new system
-//@Config(modid = Reference.MODID, category = "all")
 public class Configs {
 
 //    @Comment("General configs")
-//    @Config.LangKey("config.gui.general")
+//    @Config.LangKey("config.general")
     public static General general = new General();
 
 //    @Comment({"Contains the customizable recipes", "For the recipes to show in JEI the resources needs to be reloaded, F3+T"})
-//    @Config.LangKey("config.gui.recipes")
+//    @Config.LangKey("config.recipes")
     public static Recipes recipes = new Recipes();
-
-//    @Comment("Contains misc configs, mostly for debugging and dev")
-//    @Config.LangKey("config.gui.misc")
-    public static Misc misc = new Misc();
 
     public static class Client {
 
         public BooleanValue renderItemAmount;
         public BooleanValue mustLookAtBlock;
         public BooleanValue showObstructedPlace;
+        public BooleanValue showTags;
+        public BooleanValue showHarvestLevel;
+        public ConfigValue<ArrayList<String>> harvestTypes;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client only configs")
@@ -35,20 +37,39 @@ public class Configs {
 
             renderItemAmount = builder
                     .comment("Render the amount text on how many items is in a stack in a grindstone")
-                    .translation("config.gui.client.render_item_amount")
+                    .translation("config.horsepower.client.render_item_amount")
                     .define("renderItemAmount", true);
 
             mustLookAtBlock = builder
                     .comment("If player must look at the block to show the amount in it")
-                    .translation("config.gui.client.must_look_at_block")
+                    .translation("config.horsepower.client.must_look_at_block")
                     .define("mustLookAtBlock", true);
 
             showObstructedPlace = builder
                     .comment("Should show the area needed when placing a HP block")
-                    .translation("config.gui.client.show_obstructed_place")
+                    .translation("config.horsepower.client.show_obstructed_place")
                     .define("showObstructedPlace", true);
 
-            builder.pop();
+            //Misc is only client stuff
+            builder.comment("Contains misc configs, mostly for debugging and dev")
+                    .push("misc");
+
+            showTags = builder
+                    .comment("Will show a items all ore dictionaries in the tooltip")
+                    .translation("config.horsepower.misc.tags")
+                    .define("showTags", false);
+
+            showHarvestLevel = builder
+                    .comment("Will show the harvest level of items in the tooltip")
+                    .translation("config.horsepower.gui.misc.harvest_level")
+                    .define("showHartvestLevel", false);
+
+            harvestTypes = builder
+                    .comment("What harvest types to show the harvest level for")
+                    .translation("config.horsepower.gui.misc.harvest_types")
+                    .define("harvestTypes", Lists.newArrayList("axe"));
+
+            builder.pop(2);
         }
     }
 
@@ -70,7 +91,7 @@ public class Configs {
                 "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
                 "The time for the horse increases for each point that it reaches, one lap is 8 points.",
                 "Must be edited with in-game editor for live changes."})
-        @Config.LangKey("config.gui.recipes.grindstone")
+        @Config.LangKey("config.horsepower.recipes.grindstone")
         @Name("Grindstone Recipes")
 */        public String[] grindstoneRecipes = {
                 "minecraft:wheat-horsepower:flour-12",
@@ -95,7 +116,7 @@ public class Configs {
         };
 
 //        @Comment({"Uses the same syntax as the regular grindstone recipes", "These recipes are only used when the config to separate them is enabled"})
-//        @Config.LangKey("config.gui.recipes.hand_grindstone")
+//        @Config.LangKey("config.horsepower.recipes.hand_grindstone")
 //        @Name("Hand Grindstone Recipes")
         public String[] handGrindstoneRecipes = {};
 
@@ -104,7 +125,7 @@ public class Configs {
                 "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
                 "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
                 "Must be edited with in-game editor for live changes."})
-        @Config.LangKey("config.gui.recipes.chopping")
+        @Config.LangKey("config.horsepower.recipes.chopping")
         @Name("Chopping Recipes")
 */        public String[] choppingRecipes = {
                 "#minecraft:oak_logs-minecraft:oak_planks@4-1",
@@ -116,7 +137,7 @@ public class Configs {
         };
 
 //        @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
-//        @Config.LangKey("config.gui.recipes.manual_chopping")
+//        @Config.LangKey("config.horsepower.recipes.manual_chopping")
 //        @Name("Manual Chopping Block Recipes")
         public String[] manualChoppingRecipes = {
                 "#minecraft:oak_logs-minecraft:oak_planks@4-4",
@@ -142,11 +163,6 @@ public class Configs {
 
     public static class General {
 
-//        @Comment({"Enables the manual chopping block", "Requires minecraft restart"})
-//        @Config.RequiresMcRestart
-//        @Name("Enable Manual Chopping Block")
-        public boolean enableHandChoppingBlock = true;
-
 //        @Comment({"Removes the vanilla crafting recipes that grinds or uses grinded resources", "Removes Reeds -> Sugar, Bone -> Bonemeal, Wheat -> Bread, Flowers -> Dye"})
 //        @Config.RequiresMcRestart
 //        @Name("Remove Vanilla Recipes")
@@ -162,14 +178,14 @@ public class Configs {
         public boolean shouldDamageAxe = true;
 
 //        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:input${nbt}=baseAmount-chance", "meta is optional and ${nbt} is also optional and follows vanilla tag syntax", "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
-//        @Config.LangKey("config.gui.chopping_axes")
+//        @Config.LangKey("config.horsepower.chopping_axes")
 //        @Name("Chopping Block Axes")
         public String[] choppingBlockAxes = {};
 
 //        @Comment({"The percentage amount for the different materials", "The syntax is harvestLevel=baseAmount-chance",
 //                "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
 //        @Name("Harvestable Percentages")
-//        @Config.LangKey("config.gui.harvest")
+//        @Config.LangKey("config.horsepower.harvest")
         public String[] harvestable_percentage = {
             "0=25-25",
             "1=50-25",
@@ -207,7 +223,7 @@ public class Configs {
 
 //        @Comment({"Add mobs that can use the horse powered blocks", "Only mobs that can be leashed are valid", "Add the full path to the mob class, can be found with /horsepower entity or /hp entity",
 //                "Must be edited with in-game editor for live changes."})
-//        @Config.LangKey("config.gui.mobs")
+//        @Config.LangKey("config.horsepower.mobs")
 //        @Name("Mob List")
         public String[] grindstoneMobList = {};
 
@@ -227,23 +243,6 @@ public class Configs {
 //        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
 //        @Name("Use Dynamic Chopping Display")
         public boolean useDynamicDisplay = true;
-    }
-
-    public static class Misc {
-
-//        @Comment("Will show a items all ore dictionaries in the tooltip")
-//        @Name("Show Ore Dictionaries")
-        public boolean showOreDictionaries = false;
-
-//        @Comment("Will show the harvest level of items in the tooltip")
-//        @Name("Show Harvest Level")
-        public boolean showHarvestLevel = false;
-
-//        @Comment("What harvest types to show the harvest level for")
-//        @Name("Harvest Types")
-        public String[] harvestTypes = {
-                "axe"
-        };
     }
 
     static final ForgeConfigSpec clientSpec;
