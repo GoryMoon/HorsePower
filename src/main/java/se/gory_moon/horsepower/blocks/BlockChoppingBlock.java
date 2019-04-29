@@ -92,11 +92,11 @@ public class BlockChoppingBlock extends BlockHPChoppingBase implements IProbeInf
         return super.getPlayerRelativeBlockHardness(state, player, world, pos);
     }
 
-    private boolean isValidChoppingTool(ItemStack held, EntityPlayer player) {
-        return !held.isEmpty() && ((held.getItem().getHarvestLevel(held, "axe", player, null) > -1) || isChoppingToolWhitelisted(held));
+    public static boolean isValidChoppingTool(ItemStack stack, EntityPlayer player) {
+        return !stack.isEmpty() && ((stack.getItem().getHarvestLevel(stack, "axe", player, null) > -1) || isChoppingToolWhitelisted(stack));
     }
 
-    private boolean isChoppingToolWhitelisted(ItemStack stack) {
+    private static boolean isChoppingToolWhitelisted(ItemStack stack) {
         for (ItemStack itemStack: HPEventHandler.choppingAxes.keySet()) {
             if (ItemStack.areItemsEqualIgnoreDurability(itemStack, stack))
                 return true;

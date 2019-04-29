@@ -17,6 +17,7 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.PressRecipe;
+import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.Collections;
@@ -63,7 +64,7 @@ public class PressRecipeWrapper implements IRecipeWrapper {
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
         List<String> tooltip = Lists.newArrayList();
         if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 33) {
-            tooltip.add("Time to press: " + printLaps + " lap" + (printLaps >= 2D ? "s": ""));
+            tooltip.add(Localization.GUI.JEI.PRESSING.translate(printLaps, printLaps >= 2D));
         }
         return tooltip;
     }

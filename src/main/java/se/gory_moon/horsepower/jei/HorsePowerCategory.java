@@ -4,7 +4,7 @@ import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.ITickTimer;
-import mezz.jei.api.recipe.BlankRecipeCategory;
+import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends BlankRecipeCategory<T> {
+public abstract class HorsePowerCategory<T extends IRecipeWrapper> implements IRecipeCategory<T> {
 
     protected IDrawable background;
     protected HorseDrawable currentDrawable;

@@ -52,7 +52,7 @@ public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRec
         guiItemStacks.init(secondarySlot, false, 90, 50);
         guiItemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
             if (slotIndex == secondarySlot && !ingredient.isEmpty()) {
-                tooltip.add(tooltip.size()-1,  "Chance: " + recipeWrapper.getSecondaryChance() + "%");
+                tooltip.add(tooltip.size()-1,  Localization.GUI.JEI.GRINDING_CHANCE.translate(recipeWrapper.getSecondaryChance()));
             }
         });
 

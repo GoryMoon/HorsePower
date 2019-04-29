@@ -60,7 +60,7 @@ public class Provider implements IWailaDataProvider {
             double total = (double) nbt.getInteger("totalMillTime");
             double current = (double) nbt.getInteger("millTime");
             double progress = Math.round(((current / total) * 100D) * 100D) / 100D;
-            currenttip.add(Localization.WAILA.GRINDSTONE_PROGRESS.translate(String.valueOf(progress) + "%"));
+            currenttip.add(Localization.WAILA.GRINDSTONE_PROGRESS.translate(progress));
         } else if (nbt.hasKey("horsepower:chopper", 10)) {
             nbt = nbt.getCompoundTag("horsepower:chopper");
 
@@ -72,16 +72,16 @@ public class Provider implements IWailaDataProvider {
             double progressChopping = Math.round(((current / total) * 100D) * 100D) / 100D;
 
             if (accessor.getTileEntity() instanceof TileEntityChopper || accessor.getTileEntity() instanceof TileEntityFiller)
-                currenttip.add(Localization.WAILA.WINDUP_PROGRESS.translate(String.valueOf(progressWindup) + "%"));
+                currenttip.add(Localization.WAILA.WINDUP_PROGRESS.translate(progressWindup));
             if (total > 1 || accessor.getTileEntity() instanceof TileEntityManualChopper) {
-                currenttip.add(Localization.WAILA.CHOPPING_PROGRESS.translate(String.valueOf(progressChopping) + "%"));
+                currenttip.add(Localization.WAILA.CHOPPING_PROGRESS.translate(progressChopping));
             }
         } else if (nbt.hasKey("horsepower:press")) {
             nbt = nbt.getCompoundTag("horsepower:press");
             double current = (double) nbt.getInteger("currentPressStatus");
             double total = Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1;
             double progress = Math.round(((current / total) * 100D) * 100D) / 100D;
-            currenttip.add(Localization.WAILA.PRESS_PROGRESS.translate(String.valueOf(progress) + "%"));
+            currenttip.add(Localization.WAILA.PRESS_PROGRESS.translate(progress));
         }
 
         if (config.getConfig("horsepower:showItems") && (accessor.getTileEntity() instanceof TileEntityHPBase || accessor.getTileEntity() instanceof TileEntityFiller) && accessor.getPlayer().isSneaking()) {
@@ -91,21 +91,21 @@ public class Provider implements IWailaDataProvider {
                 if (itemHandler != null) {
                     {
                         final ItemStack stack = itemHandler.getStackInSlot(0);
-                        final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                        final String name = stack.getItem().getRegistryName().toString();
                         if (!stack.isEmpty())
-                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(stack.serializeNBT().toString())) + TextFormatting.WHITE + stack.getDisplayName());
+                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), stack.serializeNBT().toString()) + TextFormatting.WHITE + stack.getDisplayName());
                     }
                     {
                         final ItemStack stack = itemHandler.getStackInSlot(1);
-                        final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                        final String name = stack.getItem().getRegistryName().toString();
                         if (!stack.isEmpty())
-                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(stack.serializeNBT().toString())) + TextFormatting.WHITE + stack.getDisplayName());
+                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), stack.serializeNBT().toString()) + TextFormatting.WHITE + stack.getDisplayName());
                     }
                     {
                         final ItemStack stack = itemHandler.getStackInSlot(2);
-                        final String name = String.valueOf(stack.getItem().getRegistryName().toString());
+                        final String name = stack.getItem().getRegistryName().toString();
                         if (!stack.isEmpty())
-                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), String.valueOf(stack.serializeNBT().toString())) + TextFormatting.WHITE + stack.getDisplayName());
+                            currenttip.add(SpecialChars.getRenderString("waila.stack", "1", name, String.valueOf(stack.getCount()), String.valueOf(stack.getItemDamage()), stack.serializeNBT().toString()) + TextFormatting.WHITE + stack.getDisplayName());
                     }
                 }
             }

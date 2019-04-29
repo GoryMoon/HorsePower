@@ -9,25 +9,21 @@ import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.util.Localization;
 
-public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipeWrapper> {
-
-    private boolean handHandler;
+public class HPChoppingCategory extends HorsePowerCategory<ChoppingRecipeWrapper> {
 
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
 
     private final String localizedName;
 
-    public HorsePowerChoppingCategory(IGuiHelper guiHelper, boolean hand) {
+    public HPChoppingCategory(IGuiHelper guiHelper) {
         super(guiHelper);
-        this.handHandler = hand;
-
-        localizedName = handHandler ? Localization.GUI.CATEGORY_MANUAL_CHOPPING.translate(): Localization.GUI.CATEGORY_CHOPPING.translate();
+        localizedName = Localization.GUI.CATEGORY_CHOPPING.translate();
     }
 
     @Override
     public String getUid() {
-        return handHandler ? HorsePowerPlugin.MANUAL_CHOPPING: HorsePowerPlugin.CHOPPING;
+        return HorsePowerPlugin.CHOPPING;
     }
 
     @Override

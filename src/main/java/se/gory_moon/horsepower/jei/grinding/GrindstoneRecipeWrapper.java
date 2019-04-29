@@ -15,6 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
+import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -69,7 +70,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
         List<String> tooltip = Lists.newArrayList();
         if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 45) {
-            tooltip.add("Time to grind: " + printLaps + " lap" + (printLaps >= 2D ? "s": ""));
+            tooltip.add(Localization.GUI.JEI.GRINDING.translate(printLaps, printLaps >= 2D));
         }
         return tooltip;
     }

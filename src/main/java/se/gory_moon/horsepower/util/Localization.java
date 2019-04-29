@@ -4,7 +4,7 @@ import net.minecraft.util.text.translation.I18n;
 
 public final class Localization {
 
-    private static String translateString(String key, String... vars) {
+    private static String translateString(String key, Object... vars) {
         String result = translateToLocal(key);
 
         for (int i = 0; i < vars.length; i++) {
@@ -15,7 +15,7 @@ public final class Localization {
                 int endPos = result.indexOf("]");
                 if (endPos != -1) {
                     String[] options = result.substring(pos + optionCheck.length(), endPos).split("\\|");
-                    int pickedOption = vars[i].equals("1") ? 1 : 0;
+                    int pickedOption = ((boolean)vars[i]) ? 1 : 0;
                     if (options.length > pickedOption) {
                         String opt = options[pickedOption];
                         result = result.substring(0, pos) + opt + result.substring(endPos + 1);
@@ -24,7 +24,7 @@ public final class Localization {
                     }
                 }
             } else {
-                result = result.replace("[%" + (i + 1) + "]", vars[i]);
+                result = result.replace("[%" + (i + 1) + "]", String.valueOf(vars[i]));
             }
         }
 
@@ -44,7 +44,7 @@ public final class Localization {
         public enum HORSE_GRINDSTONE {
             SIZE, LOCATION, USE;
 
-            public String translate(String... vars) {
+            public String translate(Object... vars) {
                 return Localization.translateString("item.horsepower:grindstone.description." + toString().toLowerCase(), vars);
             }
         }
@@ -52,7 +52,7 @@ public final class Localization {
         public enum HAND_GRINDSTONE {
             INFO;
 
-            public String translate(String... vars) {
+            public String translate(Object... vars) {
                 return Localization.translateString("item.horsepower:hand_grindstone.description." + toString().toLowerCase(), vars);
             }
         }
@@ -60,7 +60,7 @@ public final class Localization {
         public enum HORSE_CHOPPING {
             SIZE, LOCATION, USE;
 
-            public String translate(String... vars) {
+            public String translate(Object... vars) {
                 return Localization.translateString("item.horsepower:chopping.description." + toString().toLowerCase(), vars);
             }
         }
@@ -68,7 +68,7 @@ public final class Localization {
         public enum HORSE_PRESS {
             SIZE, LOCATION, USE;
 
-            public String translate(String... vars) {
+            public String translate(Object... vars) {
                 return Localization.translateString("item.horsepower:press.description." + toString().toLowerCase(), vars);
             }
         }
@@ -81,7 +81,7 @@ public final class Localization {
         PRESS_INVALID,
         ITEM_REVEAL;
 
-        public String translate(String... vars) {
+        public String translate(Object... vars) {
             return Localization.translateString(key(), vars);
         }
 
@@ -98,7 +98,7 @@ public final class Localization {
         CATEGORY_PRESS_ITEM,
         CATEGORY_PRESS_FLUID;
 
-        public String translate(String... vars) {
+        public String translate(Object... vars) {
             return Localization.translateString(key(), vars);
         }
 
@@ -106,6 +106,25 @@ public final class Localization {
             return "gui.horsepower.jei." + toString().toLowerCase().replaceAll("_", ".");
         }
 
+        public enum JEI {
+            CHOPPING,
+            GRINDING,
+            GRINDING_CHANCE,
+            PRESSING,
+            MANUAL_CHOPPING_DESC_1,
+            MANUAL_CHOPPING_DESC_2,
+            MANUAL_CHOPPING_DESC_3,
+            MANUAL_CHOPPING;
+
+            public String translate(Object... vars) {
+                return Localization.translateString(key(), vars);
+            }
+
+            public String key() {
+                return "gui.horsepower.jei.tooltip." + toString().toLowerCase().replaceAll("_", ".");
+            }
+
+        }
     }
 
     public enum WAILA {
@@ -115,7 +134,7 @@ public final class Localization {
         PRESS_PROGRESS,
         SHOW_ITEMS;
 
-        public String translate(String... vars) {
+        public String translate(Object... vars) {
             return Localization.translateString(key(), vars);
         }
 
@@ -130,7 +149,7 @@ public final class Localization {
         CHOPPING_PROGRESS,
         PRESS_PROGRESS;
 
-        public String translate(String... vars) {
+        public String translate(Object... vars) {
             return Localization.translateString(key(), vars);
         }
 

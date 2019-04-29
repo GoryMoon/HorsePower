@@ -121,28 +121,28 @@ public class TileEntityManualChopper extends TileEntityHPBase {
         }
     }
 
-    private int getBaseAmount(ItemStack held, EntityPlayer player) {
+    public static int getBaseAmount(ItemStack axe, EntityPlayer player) {
         int baseAmount = 100;
-        int harvestLevel = held.getItem().getHarvestLevel(held, "axe", player, null);
+        int harvestLevel = axe.getItem().getHarvestLevel(axe, "axe", player, null);
         if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
             baseAmount = HPEventHandler.harvestPercentages.get(harvestLevel).getLeft();
         }
         for (Map.Entry<ItemStack, Pair<Integer, Integer>> entry: HPEventHandler.choppingAxes.entrySet()) {
-            if (entry.getKey().isItemEqual(held)) {
+            if (entry.getKey().isItemEqual(axe)) {
                 return entry.getValue().getLeft();
             }
         }
         return baseAmount;
     }
 
-    private int getChance(ItemStack held, EntityPlayer player) {
+    public static int getChance(ItemStack axe, EntityPlayer player) {
         int chance = 0;
-        int harvestLevel = held.getItem().getHarvestLevel(held, "axe", player, null);
+        int harvestLevel = axe.getItem().getHarvestLevel(axe, "axe", player, null);
         if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
             chance = HPEventHandler.harvestPercentages.get(harvestLevel).getRight();
         }
         for (Map.Entry<ItemStack, Pair<Integer, Integer>> entry: HPEventHandler.choppingAxes.entrySet()) {
-            if (entry.getKey().isItemEqual(held)) {
+            if (entry.getKey().isItemEqual(axe)) {
                 return entry.getValue().getRight();
             }
         }
