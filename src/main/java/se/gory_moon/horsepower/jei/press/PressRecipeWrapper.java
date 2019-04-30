@@ -72,7 +72,7 @@ public class PressRecipeWrapper implements IRecipeWrapper {
     @Override
     @SideOnly(Side.CLIENT)
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        arrow.draw(minecraft, isFluid ? 62: 57, 32);
+        arrow.draw(minecraft, isFluid ? 61: 57, 32);
         minecraft.fontRenderer.drawStringWithShadow("x" + printLaps, 58, 23, Colors.WHITE.getRGB());
     }
 
