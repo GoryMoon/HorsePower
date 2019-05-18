@@ -1,0 +1,94 @@
+# Items
+item.flour.name=Мука
+item.dough.name=Тесто
+
+# Item description
+item.horsepower:grindstone.description.size=Для работы жерновов необходима область размером [%1]7x7[%2] и высотой в [%1]2 блока[%2]
+item.horsepower:grindstone.description.location=Жернова необходимо поставить в центре, при этом на [%1]один блок[%2] выше (на уровне глаз)
+item.horsepower:grindstone.description.use=Чтобы использовать жернова, привяжите к ним лошадь при помощи поводка
+item.horsepower:chopping.description.size=Для работы дровокола необходима область размером [%1]7x7[%2] и высотой в [%1]2 блока[%2]
+item.horsepower:chopping.description.location=Сам дровокол необходимо ставить в центре
+item.horsepower:chopping.description.use=Чтобы использовать дровокол, привяжите к нему лошадь при помощи поводка
+item.horsepower:press.description.size=Для работы пресса необходима область размером [%1]7x7[%2] и высотой в [%1]2 блока[%2]
+item.horsepower:press.description.location=Сам пресс необходимо ставить в центре
+item.horsepower:press.description.use=Чтобы использовать пресс, привяжите к нему лошадь при помощи поводка
+
+item.horsepower:hand_grindstone.description.info=Нажмите ПКМ по блоку с предметом, который хотите перемолоть[%1]Нажав Shift + ПКМ, Вы заберёте предмет обратно[%1]Чтобы начать перемалывание, кликните ПКМ по блоку
+
+# Blocks
+tile.hand_grindstone.name=Жернова
+tile.grindstone.name=Жернова на лошадиной силе
+tile.chopping_block.name=Колода
+tile.chopper.name=Дровокол на лошадиной силе
+tile.press.name=Пресс на лошадиной силе
+
+# Info
+info.horsepower:chopping.invalid=Неверная область 7x7x2
+info.horsepower:grindstone.invalid=Неверная область 7x7x2
+info.horsepower:press.invalid=Неверная область 7x7x2
+info.horsepower:item.reveal=Возьмите в руки поводок, что увидеть необходимую область
+info.horsepower:grindstone.info1=Жернова будут измельчать предметы в их базовые компоненты. Перед установкой жерновов убедитесь, что Вы очистили территорию размером 7x7 и высотой в 2 блока, и что под этой территорией находятся полные блоки.
+info.horsepower:grindstone.info2=В центре этой площадки 7х7 установите любой блок по Вашему выбору, затем поставьте на него Жернова. Если область не очищена, жернова скажут об этом, когда Вы посмотрите на них. После того, как Вы их поставили, привяжите поводок к Лошади, Ослу, Мулу или Ламе, в зависимости от того, кого Вы хотите заставить работать у жерновов.
+info.horsepower:grindstone.info3=С привязанным к поводку животным нажмите по Жерновам ПКМ, животное в этом случае должно привязаться к ним. Теперь просто нажмите ПКМ по жерновам тем предметом, который можно измельчить, для того чтобы начать процесс. Сверху и снизу можно подключить автоматический ввод/вывод предметов.
+
+# Command
+commands.horsepower.usage=/horsepower entity
+commands.horsepower.entity.invalid=Команду можно выполнить только игрок
+commands.horsepower.entity.no=Вы не смотрите на существо
+commands.horsepower.entity.has=Существо скопировано в буфер обмена: %s
+commands.horsepower.reload=Внутриигровая перезагрузка изменённых конфигураций HorsePower
+commands.horsepower.reload.error=Перезагрузка завершилась с ошибками
+commands.horsepower.reload.noerror=Перезагрузка завершилась без ошибок
+
+# Gui
+gui.horsepower.jei.category.hand.grinding=Ручные жернова
+gui.horsepower.jei.category.grinding=Жернова
+gui.horsepower.jei.category.chopping=Дровокол
+gui.horsepower.jei.category.manual.chopping=Колода
+gui.horsepower.jei.category.press.item=Пресс (Предмет)
+gui.horsepower.jei.category.press.fluid=Пресс (Жидкость)
+gui.horsepower.jei.tooltip.chopping=Время рубки: [%1] [%2->lap|laps]
+gui.horsepower.jei.tooltip.grinding=Время перемалывания: [%1] [%2->lap|laps]
+gui.horsepower.jei.tooltip.pressing=Время прессования: [%1] [%2->lap|laps]
+gui.horsepower.jei.tooltip.grinding.chance=Шанс: [%1]%
+gui.horsepower.jei.tooltip.manual.chopping=Сумма для рубки [%1]
+gui.horsepower.jei.tooltip.manual.chopping.desc.1=Возвращенная сумма (округлено): [%1]%
+gui.horsepower.jei.tooltip.manual.chopping.desc.2=Шанс +1: [%1]%
+gui.horsepower.jei.tooltip.manual.chopping.desc.3=Сумма, возвращенная с [%1]%[%2], представлена ​​в выходном слоте
+config.gui.general=Общие
+config.gui.client=На стороне клиента
+config.gui.recipes=Рецепты
+config.gui.misc=Разное
+config.gui.recipes.grindstone=Рецепты жерновов
+config.gui.recipes.hand_grindstone=Рецепты ручных жерновов
+config.gui.recipes.chopping=Рецепты рубки
+config.gui.recipes.manual_chopping=Рецепты ручной рубки
+config.gui.mobs=Список мобов, использующихся как л.с.
+config.gui.chopping_axes=Топоры для колоды
+config.gui.harvest=Добываемые проценты
+itemGroup.horsepower=Horse Power
+
+# Waila
+gui.horsepower.waila.grindstone.progress=Перемалывание: [%1]
+gui.horsepower.waila.windup.progress=Завершение: [%1]
+gui.horsepower.waila.chopping.progress=Рубка: [%1]
+gui.horsepower.waila.press.progress=Прессование: [%1]
+gui.horsepower.waila.show.items=Показать предметы
+
+# TOP
+gui.horsepower.top.grindstone.progress=Перемалывание:
+gui.horsepower.top.windup.progress=Завершение:
+gui.horsepower.top.chopping.progress=Рубка:
+gui.horsepower.top.press.progress=Прессование:
+
+#Advancements
+advancements.horsepower.root.title=Лошадиная сила
+advancements.horsepower.root.description=Начало автоматизации
+advancements.horsepower.flour.title=Перемалывание
+advancements.horsepower.flour.description=Измельчите пшеницу в муку
+advancements.horsepower.grindstone.title=Лошадиный труд на Жерновах
+advancements.horsepower.grindstone.description=Заставьте лошадь перемалывать всякие штуки
+advancements.horsepower.chopping.title=Лошадиный труд на Дровоколе
+advancements.horsepower.chopping.description=Заставьте лошадь рубить блоки за Вас
+advancements.horsepower.press.title=Лошадиный труд на Прессе
+advancements.horsepower.press.description=Заставьте лошадь спрессовывать вещи за Вас
