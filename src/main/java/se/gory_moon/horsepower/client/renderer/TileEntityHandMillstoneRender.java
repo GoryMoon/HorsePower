@@ -1,26 +1,30 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.blocks.BlockHandGrindstone;
-import se.gory_moon.horsepower.client.model.modelvariants.HandGrindstoneModels;
-import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.blocks.BlockHandMillstone;
+import se.gory_moon.horsepower.client.model.modelvariants.HandMillstoneModels;
+import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
 
-public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityHandGrindstone> {
+public class TileEntityHandMillstoneRender extends TileEntityHPBaseRenderer<TileEntityHandMillstone> {
 
     @Override
-    public void render(TileEntityHandGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileEntityHandMillstone te, double x, double y, double z, float partialTicks, int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        BlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
-        IBlockState centerState = blockState.with(BlockHandGrindstone.PART, HandGrindstoneModels.CENTER);
+        BlockState centerState = blockState.with(BlockHandMillstone.PART, HandMillstoneModels.CENTER);
         if (!(centerState.getBlock() instanceof BlockHPBase)) return;
         IBakedModel centerModel = dispatcher.getBlockModelShapes().getModel(centerState);
 
@@ -34,7 +38,7 @@ public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<Til
 
         if (destroyStage >= 0) {
             buffer.noColor();
-            renderBlockDamage(centerState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
+            renderBlockDamage(centerState, te.getPos(), destroyStage, te.getWorld());
         } else
             dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), centerModel, centerState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
 
@@ -45,7 +49,7 @@ public class TileEntityHandGrindstoneRender extends TileEntityHPBaseRenderer<Til
 
         // Apply GL transformations relative to the center of the block: 1) TE rotation and 2) crank rotation
         GlStateManager.translated( 0.5, 0.5, 0.5 );
-        FacingToRotation.get( te.getForward()).glRotateCurrentMat();
+        FacingToRotation.get(te.getForward()).glRotateCurrentMat();
         float rotation = te.getVisibleRotation();
         GlStateManager.rotatef( rotation, 0, 1, 0 );
         GlStateManager.translated( -0.5, -0.5, -0.5 );

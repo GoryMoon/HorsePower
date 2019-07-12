@@ -1,7 +1,5 @@
 package se.gory_moon.horsepower.util.color;
 
-import java.awt.*;
-
 /**
  * Copied from JEI (Just Enough Items)
  * @author Mezz
@@ -45,11 +43,5 @@ public final class ColorUtil {
         final double greyDistance = greyDistance1 - greyDistance2;
 
         return colorDistance + (greyDistance * greyDistance / 10.0);
-    }
-
-    public static double slowPerceptualColorDistanceSquared(Color color1, Color color2) {
-        final int[] colorInts1 = {color1.getRed(), color1.getGreen(), color1.getBlue()};
-        final int[] colorInts2 = {color2.getRed(), color2.getGreen(), color2.getBlue()};
-        return slowPerceptualColorDistanceSquared(colorInts1, colorInts2);
     }
 }

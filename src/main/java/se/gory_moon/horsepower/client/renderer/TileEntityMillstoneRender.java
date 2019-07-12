@@ -1,31 +1,35 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import se.gory_moon.horsepower.blocks.BlockGrindstone;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.client.model.modelvariants.GrindStoneModels;
-import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
+import se.gory_moon.horsepower.blocks.BlockMillstone;
+import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
+import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
 import se.gory_moon.horsepower.util.RenderUtils;
 
-public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEntityGrindstone> {
+public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<TileEntityMillstone> {
 
     @Override
-    public void render(TileEntityGrindstone te, double x, double y, double z, float partialTicks, int destroyStage) {
-        IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+    public void render(TileEntityMillstone te, double x, double y, double z, float partialTicks, int destroyStage) {
+        BlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         ItemStack outputStack = te.getStackInSlot(1);
         ItemStack secondaryStack = te.getStackInSlot(2);
         if (outputStack.getCount() < secondaryStack.getCount())
             outputStack = secondaryStack;
 
-        if (blockState.get(BlockGrindstone.FILLED)) {
-            IBlockState filledState = blockState.with(BlockGrindstone.PART, GrindStoneModels.FILLED);
+        if (blockState.get(BlockMillstone.FILLED)) {
+            BlockState filledState = blockState.with(BlockMillstone.PART, MillstoneModels.FILLED);
             if (!(filledState.getBlock() instanceof BlockHPBase)) return;
 
             Tessellator tessellator = Tessellator.getInstance();
@@ -56,7 +60,7 @@ public class TileEntityGrindstoneRender extends TileEntityHPBaseRenderer<TileEnt
             RenderHelper.enableStandardItemLighting();
         } else if (outputStack.isEmpty()) {
             te.renderStack = ItemStack.EMPTY;
-            te.grindColor = null;
+            te.millColor = -1;
         }
 
         if (te.hasWorker())

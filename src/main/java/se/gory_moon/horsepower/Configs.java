@@ -36,7 +36,7 @@ public class Configs {
                     .push("client");
 
             renderItemAmount = builder
-                    .comment("Render the amount text on how many items is in a stack in a grindstone")
+                    .comment("Render the amount text on how many items is in a stack in a HP block")
                     .translation("config.horsepower.client.render_item_amount")
                     .define("renderItemAmount", true);
 
@@ -78,7 +78,7 @@ public class Configs {
 //        @Comment("If the separate list of recipes should be used for the hand grindstone")
 //        @Name("Separate Grindstone Recipes")
 //        @Config.RequiresMcRestart
-        public boolean useSeperateGrindstoneRecipes = false;
+        public boolean useSeperateMillstoneRecipes = false;
 
 //        @Comment("If the separate list of recipes should be used for the chopping block")
 //        @Name("Separate Chopping Recipes")
@@ -93,7 +93,7 @@ public class Configs {
                 "Must be edited with in-game editor for live changes."})
         @Config.LangKey("config.horsepower.recipes.grindstone")
         @Name("Grindstone Recipes")
-*/        public String[] grindstoneRecipes = {
+*/        public String[] millstoneRecipes = {
                 "minecraft:wheat-horsepower:flour-12",
                 "minecraft:sugar_cane-minecraft:sugar-12",
                 "minecraft:poppy-minecraft:rose_red-12",
@@ -118,7 +118,7 @@ public class Configs {
 //        @Comment({"Uses the same syntax as the regular grindstone recipes", "These recipes are only used when the config to separate them is enabled"})
 //        @Config.LangKey("config.horsepower.recipes.hand_grindstone")
 //        @Name("Hand Grindstone Recipes")
-        public String[] handGrindstoneRecipes = {};
+        public String[] handMillstoneRecipes = {};
 
 /*        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:output@amount${nbt}-time",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
@@ -210,7 +210,7 @@ public class Configs {
 
 //        @Comment({"The exhaustion amount that will be added to the player when using the grindstone", "If set to 0 this is disabled"})
 //        @Name("Grindstone Exhaustion")
-        public double grindstoneExhaustion = 0.1D;
+        public double millstoneExhaustion = 0.1D;
 
 //        @Comment({"The exhaustion amount that will be added to the player when using the chopping block", "If set to 0 this is disabled"})
 //        @Name("Chopping Block Exhaustion")
@@ -225,7 +225,7 @@ public class Configs {
 //                "Must be edited with in-game editor for live changes."})
 //        @Config.LangKey("config.horsepower.mobs")
 //        @Name("Mob List")
-        public String[] grindstoneMobList = {};
+        public String[] millstoneMobList = {};
 
 //        @Comment("The amount of points that is needed for a full press")
 //        @Name("Points For Press")

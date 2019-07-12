@@ -1,18 +1,18 @@
 package se.gory_moon.horsepower.tileentity;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ITickable;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 
-public class TileEntityHandGrindstone extends TileEntityHPBase implements ITickable {
+public class TileEntityHandMillstone extends TileEntityHPBase implements ITickableTileEntity {
 
     private int currentItemMillTime;
     private int totalItemMillTime;
@@ -23,12 +23,12 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     private int rotation = 0;
 
 
-    public TileEntityHandGrindstone() {
-        super(3, ModBlocks.HAND_GRINDSTONE_TILE);
+    public TileEntityHandMillstone() {
+        super(3, ModBlocks.handMillstoneTile);
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("millTime", currentItemMillTime);
         compound.putInt("totalMillTime", totalItemMillTime);
         compound.putInt("currentRotation", rotation);
@@ -37,7 +37,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
 
         if (getStackInSlot(0).getCount() > 0) {
@@ -58,12 +58,12 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getGrindstoneResult(getStackInSlot(0), true);
+        return HPRecipes.instance().getMillstoneResult(getStackInSlot(0), true);
     }
 
     @Override
     public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getGrindstoneRecipe(getStackInSlot(0), true);
+        return HPRecipes.instance().getMillstoneRecipe(getStackInSlot(0), true);
     }
 
     private void millItem() {
@@ -114,7 +114,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemMillTime = HPRecipes.instance().getGrindstoneTime(stack, true);
+            totalItemMillTime = HPRecipes.instance().getMillstoneTime(stack, true);
             currentItemMillTime = 0;
         }
         markDirty();
@@ -127,40 +127,12 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.instance().hasGrindstoneRecipe(stack, true);
-    }
-
-    @Override
-    public int getField(int id) {
-        switch (id) {
-            case 0:
-                return totalItemMillTime;
-            case 1:
-                return currentItemMillTime;
-            default:
-                return 0;
-        }
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        switch (id) {
-            case 0:
-                totalItemMillTime = value;
-                break;
-            case 1:
-                currentItemMillTime = value;
-        }
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 2;
+        return index == 0 && HPRecipes.instance().hasMillstoneRecipe(stack, true);
     }
 
     @Override
     public ITextComponent getName() {
-        return new TextComponentString("container.hand_mill");
+        return new StringTextComponent("container.hand_mill");
     }
 
     @Override
@@ -195,7 +167,7 @@ public class TileEntityHandGrindstone extends TileEntityHPBase implements ITicka
                     currentItemMillTime = 0;
 
                     millItem();
-                    totalItemMillTime = HPRecipes.instance().getGrindstoneTime(getStackInSlot(0), true);
+                    totalItemMillTime = HPRecipes.instance().getMillstoneTime(getStackInSlot(0), true);
                 }
                 markDirty();
             }

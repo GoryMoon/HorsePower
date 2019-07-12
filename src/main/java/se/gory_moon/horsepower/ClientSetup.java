@@ -2,7 +2,6 @@ package se.gory_moon.horsepower;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -10,11 +9,14 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.client.renderer.*;
+import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityHandMillstoneRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.TileEntityFiller;
-import se.gory_moon.horsepower.tileentity.TileEntityGrindstone;
-import se.gory_moon.horsepower.tileentity.TileEntityHandGrindstone;
+import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
+import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
 import se.gory_moon.horsepower.util.color.ColorGetter;
 
@@ -22,9 +24,9 @@ import se.gory_moon.horsepower.util.color.ColorGetter;
 public class ClientSetup {
 
     @SubscribeEvent
-    public void clientSetup(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGrindstone.class, new TileEntityGrindstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandGrindstone.class, new TileEntityHandGrindstoneRender());
+    public static void clientSetup(FMLClientSetupEvent event) {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMillstone.class, new TileEntityMillstoneRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandMillstone.class, new TileEntityHandMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new TileEntityFillerRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
@@ -33,32 +35,29 @@ public class ClientSetup {
         //TODO make server command
         //ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
 
-        ((IReloadableResourceManager)Minecraft.getInstance().getResourceManager()).addReloadListener(resourceManager -> TileEntityHPBaseRenderer.clearDestroyStageicons());
-
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (worldIn != null && pos != null) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
-                if (tileEntity instanceof TileEntityGrindstone) {
-                    TileEntityGrindstone te = (TileEntityGrindstone) tileEntity;
+                if (tileEntity instanceof TileEntityMillstone) {
+                    TileEntityMillstone te = (TileEntityMillstone) tileEntity;
                     ItemStack outputStack = te.getStackInSlot(1);
                     ItemStack secondaryStack = te.getStackInSlot(2);
                     if (outputStack.getCount() < secondaryStack.getCount())
                         outputStack = secondaryStack;
-                    te.renderStack = outputStack;
                     if (!ItemStack.areItemsEqual(te.renderStack, outputStack)) {
                         te.renderStack = outputStack;
                         if (!outputStack.isEmpty())
-                            te.grindColor = ColorGetter.getColors(outputStack, 2).get(0);
+                            te.millColor = ColorGetter.getColors(outputStack, 1).get(0);
                         else
-                            te.grindColor = null;
+                            te.millColor = -1;
                         te.renderStack = outputStack;
                     }
 
-                    if (te.grindColor != null)
-                        return te.grindColor.getRGB();
+                    if (te.millColor != -1)
+                        return te.millColor;
                 }
             }
             return -1;
-        }, ModBlocks.BLOCK_GRINDSTONE.orElse(null));
+        }, ModBlocks.BLOCK_MILLSTONE.orElse(null));
     }
 }

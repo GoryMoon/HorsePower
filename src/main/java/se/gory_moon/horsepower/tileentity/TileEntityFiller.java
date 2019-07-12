@@ -1,9 +1,9 @@
 package se.gory_moon.horsepower.tileentity;
 
-import net.minecraft.block.BlockDirectional;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.DirectionalBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class TileEntityFiller extends TileEntity implements INameable {
 
     public TileEntityFiller() {
-        super(ModBlocks.FILLER_TILE);
+        super(ModBlocks.fillerTile);
     }
 
     public TileEntityHPBase getFilledTileEntity() {
@@ -32,10 +32,10 @@ public class TileEntityFiller extends TileEntity implements INameable {
     }
 
     public BlockPos getFilledPos() {
-        IBlockState state = getWorld().getBlockState(getPos());
+        BlockState state = getWorld().getBlockState(getPos());
         if (!(state.getBlock() instanceof BlockFiller)) return getPos();
-        EnumFacing facing = state.get(BlockDirectional.FACING);
-        IBlockState state1 = getWorld().getBlockState(pos.offset(facing));
+        Direction facing = state.get(DirectionalBlock.FACING);
+        BlockState state1 = getWorld().getBlockState(pos.offset(facing));
         if (!(state1.getBlock() instanceof BlockHPBase)) return getPos();
         return pos.offset(facing);
     }
@@ -83,7 +83,7 @@ public class TileEntityFiller extends TileEntity implements INameable {
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         TileEntityHPBase te = getFilledTileEntity();
         if (te != null)
             return te.getCapability(cap, side);

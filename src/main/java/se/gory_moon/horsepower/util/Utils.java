@@ -2,14 +2,14 @@ package se.gory_moon.horsepower.util;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.AbstractHorse;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -25,16 +25,16 @@ import java.util.ArrayList;
 
 public class Utils {
 
-    public static ArrayList<Class<? extends EntityCreature>> getCreatureClasses() {
-        ArrayList<Class<? extends EntityCreature>> clazzes = Lists.newArrayList();
+    public static ArrayList<Class<? extends CreatureEntity>> getCreatureClasses() {
+        ArrayList<Class<? extends CreatureEntity>> clazzes = Lists.newArrayList();
         if (Configs.general.useHorseInterface)
-            clazzes.add(AbstractHorse.class);
+            clazzes.add(AbstractHorseEntity.class);
 
-        for (String e: Configs.general.grindstoneMobList) {
+        for (String e: Configs.general.millstoneMobList) {
             try {
                 Class clazz = Class.forName(e);
 
-                if (EntityCreature.class.isAssignableFrom(clazz)) {
+                if (CreatureEntity.class.isAssignableFrom(clazz)) {
                     clazzes.add(clazz);
                 } else {
                     HorsePowerMod.LOGGER.error("Error in config, the mob (" + e + ") can't be leashed");
@@ -49,7 +49,7 @@ public class Utils {
     public static int getItemStackHashCode(ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
-        NBTTagCompound tag = stack.write(new NBTTagCompound());
+        CompoundNBT tag = stack.write(new CompoundNBT());
         tag.remove("Count");
         return tag.hashCode();
     }
@@ -57,7 +57,7 @@ public class Utils {
     public static int getItemStackCountHashCode(ItemStack stack) {
         if (stack.isEmpty()) return 0;
 
-        NBTTagCompound tag = stack.write(new NBTTagCompound());
+        CompoundNBT tag = stack.write(new CompoundNBT());
         return tag.hashCode();
 
     }
@@ -83,7 +83,7 @@ public class Utils {
     public static void errorMessage(String message, boolean showDirectly) {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             if (Minecraft.getInstance().player != null && showDirectly)
-                Minecraft.getInstance().player.sendMessage(new TextComponentString(TextFormatting.RED + message).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Change in in-game config or click to open the config file to fix this")))));
+                Minecraft.getInstance().player.sendMessage(new StringTextComponent(TextFormatting.RED + message).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Change in in-game config or click to open the config file to fix this")))));
             else
                 HPRecipes.ERRORS.add(message);
         });
@@ -93,11 +93,11 @@ public class Utils {
     public static void sendSavedErrors() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
             if (Minecraft.getInstance().player != null && HPRecipes.ERRORS.size() > 0) {
-                EntityPlayerSP player = Minecraft.getInstance().player;
-                player.sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower config errors"));
-                player.sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
-                HPRecipes.ERRORS.forEach(s -> player.sendMessage(new TextComponentString(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Changed in in-game config or click to open the config file to fix this"))))));
-                player.sendMessage(new TextComponentString(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
+                ClientPlayerEntity player = Minecraft.getInstance().player;
+                player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower config errors"));
+                player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
+                HPRecipes.ERRORS.forEach(s -> player.sendMessage(new StringTextComponent(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Changed in in-game config or click to open the config file to fix this"))))));
+                player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
                 HPRecipes.ERRORS.clear();
             }
         });
@@ -105,7 +105,7 @@ public class Utils {
 
     public static Object parseItemStack(String item, boolean acceptOre, boolean acceptAmount) throws Exception {
         String[] data = item.split("\\$");
-        NBTTagCompound nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
+        CompoundNBT nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
         if (data.length == 2)
             item = item.substring(0, item.indexOf("$"));
 
@@ -128,7 +128,7 @@ public class Utils {
             Fluid fluid = FluidRegistry.getFluid(item.substring(6));
             return new FluidStack(fluid, amount, nbt);
         } else {*/
-            NBTTagCompound compound = new NBTTagCompound();
+            CompoundNBT compound = new CompoundNBT();
             compound.putString("id", data[0] + ":" + data[1]);
             compound.putByte("Count", (byte) amount);
             if (nbt != null)

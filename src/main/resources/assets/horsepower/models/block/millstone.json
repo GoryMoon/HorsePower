@@ -78,7 +78,7 @@
       }
     },
     {
-      "name": "grinder",
+      "name": "miller",
       "from": [4, 4, 4],
       "to": [12, 8, 12],
       "shade": true,
@@ -92,7 +92,7 @@
       }
     },
     {
-      "name": "grinder_stick",
+      "name": "miller_stick",
       "from": [7, 8, 7],
       "to": [9, 13, 9],
       "shade": true,

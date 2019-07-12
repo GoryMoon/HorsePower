@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.jei.grinding;
+package se.gory_moon.horsepower.jei.milling;
 /*
 import com.google.common.collect.Lists;
 import mezz.jei.api.IGuiHelper;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
-import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
+import se.gory_moon.horsepower.recipes.MillstoneRecipe;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -31,7 +31,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
     private final double printLaps;
     private final IDrawableAnimated arrow;
 
-    public GrindstoneRecipeWrapper(GrindstoneRecipe recipe) {
+    public GrindstoneRecipeWrapper(MillstoneRecipe recipe) {
         this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getSecondary(), recipe.getSecondaryChance(), recipe.getTime());
     }
 

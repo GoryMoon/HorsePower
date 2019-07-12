@@ -1,11 +1,15 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -24,9 +28,9 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        BlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
-        IBlockState topState = blockState.with(BlockPress.PART, PressModels.TOP);
+        BlockState topState = blockState.with(BlockPress.PART, PressModels.TOP);
         if (!(topState.getBlock() instanceof BlockHPBase)) return;
         IBakedModel pressModel = dispatcher.getBlockModelShapes().getModel(topState);
 
@@ -40,7 +44,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
 
         if (destroyStage >= 0) {
             buffer.noColor();
-            renderBlockDamage(topState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
+            renderBlockDamage(topState, te.getPos(), destroyStage, te.getWorld());
         } else
             dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), pressModel, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
 
@@ -49,8 +53,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
         GlStateManager.pushMatrix();
         GlStateManager.translated( x, y, z );
 
-        // Apply GL transformations relative to the center of the block: 1) TE rotation and 2) crank rotation
-        float move = (te.getField(0) / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1));
+        float move = (te.getCurrentPressStatus() / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1));
         GlStateManager.translated( 0.5, 0.5, 0.5 );
         GlStateManager.translated( 0, -( 0.58 * move), 0 );
         GlStateManager.translated( -0.5, -0.5, -0.5 );
@@ -90,7 +93,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPr
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.translated(x, y + 0.07, z);
-            Minecraft.getInstance().textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            Minecraft.getInstance().textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
             float red = (fluidColor >> 16 & 0xFF) / 255.0F;
             float green = (fluidColor >> 8 & 0xFF) / 255.0F;
             float blue = (fluidColor & 0xFF) / 255.0F;

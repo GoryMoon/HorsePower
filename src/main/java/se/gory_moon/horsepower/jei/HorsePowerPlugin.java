@@ -47,9 +47,9 @@ public class HorsePowerPlugin implements IModPlugin {
         guiHelper = jeiHelpers.getGuiHelper();
         craftingGridHelper = guiHelper.createCraftingGridHelper(1, 0);
 
-        if (Configs.recipes.useSeperateGrindstoneRecipes) {
-            registry.handleRecipes(HandGrindstoneRecipe.class, GrindstoneRecipeWrapper::new, HAND_GRINDING);
-            registry.addRecipes(GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, true), HAND_GRINDING);
+        if (Configs.recipes.useSeperateMillstoneRecipes) {
+            registry.handleRecipes(HandMillstoneRecipe.class, GrindstoneRecipeWrapper::new, HAND_GRINDING);
+            registry.addRecipes(GrindingRecipeMaker.getMillstoneRecipes(jeiHelpers, true), HAND_GRINDING);
         }
 
         if (Configs.general.enableHandChoppingBlock && Configs.recipes.useSeperateChoppingRecipes) {
@@ -57,8 +57,8 @@ public class HorsePowerPlugin implements IModPlugin {
             registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, true), MANUAL_CHOPPING);
         }
 
-        registry.handleRecipes(GrindstoneRecipe.class, GrindstoneRecipeWrapper::new, GRINDING);
-        registry.addRecipes(GrindingRecipeMaker.getGrindstoneRecipes(jeiHelpers, false), GRINDING);
+        registry.handleRecipes(MillstoneRecipe.class, GrindstoneRecipeWrapper::new, GRINDING);
+        registry.addRecipes(GrindingRecipeMaker.getMillstoneRecipes(jeiHelpers, false), GRINDING);
 
         registry.handleRecipes(ChoppingBlockRecipe.class, ChoppingRecipeWrapper::new, CHOPPING);
         registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false), CHOPPING);
@@ -71,10 +71,10 @@ public class HorsePowerPlugin implements IModPlugin {
         registry.handleRecipes(ShapedChoppingRecipe.class, ShapedChoppingCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
         registry.handleRecipes(ShapelessChoppingRecipe.class, ShapelessChoppingCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
 
-        if (Configs.recipes.useSeperateGrindstoneRecipes)
-            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE), HAND_GRINDING);
+        if (Configs.recipes.useSeperateMillstoneRecipes)
+            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_MILLSTONE), HAND_GRINDING);
         else
-            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_GRINDSTONE), GRINDING);
+            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_MILLSTONE), GRINDING);
         if (Configs.general.enableHandChoppingBlock) {
             ItemStack itemStackManualChopper = BlockHPChoppingBase.createItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER, 1, new ItemStack(Item.getItemFromBlock(Blocks.LOG)));
             if (Configs.recipes.useSeperateChoppingRecipes)
@@ -82,14 +82,14 @@ public class HorsePowerPlugin implements IModPlugin {
             else
                 registry.addRecipeCatalyst(itemStackManualChopper, CHOPPING);
         }
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), GRINDING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_MILLSTONE), GRINDING);
 
         ItemStack itemStackChopper = BlockHPChoppingBase.createItemStack(ModBlocks.BLOCK_CHOPPER, 1, new ItemStack(Item.getItemFromBlock(Blocks.LOG)));
         registry.addRecipeCatalyst(itemStackChopper, CHOPPING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS_ITEM);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_PRESS), PRESS_FLUID);
 
-        registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_GRINDSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
+        registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_MILLSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
 
     @Override
@@ -123,7 +123,7 @@ public class HorsePowerPlugin implements IModPlugin {
 
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
-        if (Configs.recipes.useSeperateGrindstoneRecipes)
+        if (Configs.recipes.useSeperateMillstoneRecipes)
             registry.addRecipeCategories(new HorsePowerGrindingCategory(registry.getJeiHelpers().getGuiHelper(), true));
         registry.addRecipeCategories(new HorsePowerGrindingCategory(registry.getJeiHelpers().getGuiHelper(), false));
         if (Configs.general.enableHandChoppingBlock && Configs.recipes.useSeperateChoppingRecipes)

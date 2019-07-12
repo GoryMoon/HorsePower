@@ -1,7 +1,7 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.model.TRSRTransformation;
@@ -43,12 +43,12 @@ public enum FacingToRotation {
         GlStateManager.rotatef( rot.z, 0, 0, 1 );
     }
 
-    public EnumFacing rotate( EnumFacing facing ) {
+    public Direction rotate(Direction facing ) {
         return TRSRTransformation.rotate( mat, facing );
     }
 
-    public EnumFacing resultingRotate( EnumFacing facing ) {
-        for( EnumFacing face : EnumFacing.values() ) {
+    public Direction resultingRotate(Direction facing ) {
+        for( Direction face : Direction.values() ) {
             if( rotate( face ) == facing ) {
                 return face;
             }
@@ -56,7 +56,7 @@ public enum FacingToRotation {
         return null;
     }
 
-    public static FacingToRotation get( EnumFacing forward) {
+    public static FacingToRotation get(Direction forward) {
         return values()[forward.ordinal()];
     }
 

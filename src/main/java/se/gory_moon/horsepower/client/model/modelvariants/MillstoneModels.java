@@ -2,7 +2,7 @@ package se.gory_moon.horsepower.client.model.modelvariants;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum GrindStoneModels implements IStringSerializable {
+public enum MillstoneModels implements IStringSerializable {
     BASE,
     FILLED;
 

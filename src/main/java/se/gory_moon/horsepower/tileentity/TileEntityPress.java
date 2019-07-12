@@ -2,8 +2,8 @@ package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraftforge.common.capabilities.Capability;
@@ -30,19 +30,19 @@ public class TileEntityPress extends TileEntityHPHorseBase {
     private int currentPressStatus;
 
     public TileEntityPress() {
-        super(2, ModBlocks.PRESS_TILE);
+        super(2, ModBlocks.pressTile);
         tank.setCanFill(false);
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("currentPressStatus", currentPressStatus);
-        compound.put("fluid", tank.writeToNBT(new NBTTagCompound()));
+        compound.put("fluid", tank.writeToNBT(new CompoundNBT()));
         return super.write(compound);
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
         tank.readFromNBT(compound.getCompound("fluid"));
 
@@ -202,37 +202,17 @@ public class TileEntityPress extends TileEntityHPHorseBase {
         return index == 0 && HPRecipes.instance().hasPressRecipe(stack) && currentPressStatus == 0 && getStackInSlot(1).isEmpty();
     }
 
+    public int getCurrentPressStatus() {
+        return currentPressStatus;
+    }
+
     public IFluidTankProperties[] getTankFluidStack() {
         return tank.getTankProperties();
     }
 
     @Override
-    public int getField(int id) {
-        switch (id) {
-            case 0:
-                return currentPressStatus;
-            default:
-                return 0;
-        }
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        switch (id) {
-            case 0:
-                currentPressStatus = value;
-                break;
-        }
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 1;
-    }
-
-    @Override
     public ITextComponent getName() {
-        return new TextComponentString("container.press");
+        return new StringTextComponent("container.press");
     }
 
     @Override
@@ -246,16 +226,16 @@ public class TileEntityPress extends TileEntityHPHorseBase {
         if (valid)
             return null;
         else
-            return new TextComponentTranslation(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+            return new TranslationTextComponent(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 
     private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (side == null || side == EnumFacing.DOWN)
+            if (side == null || side == Direction.DOWN)
                 return tankCap.cast();
         }
         return super.getCapability(cap, side);

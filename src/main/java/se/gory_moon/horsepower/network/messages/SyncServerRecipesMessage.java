@@ -16,23 +16,23 @@ import java.util.stream.Collectors;
 
 public class SyncServerRecipesMessage {
 
-    private List<String> grindstoneRecipes;
-    private List<String> handGrindstoneRecipes;
+    private List<String> millstoneRecipes;
+    private List<String> handMillstoneRecipes;
     private List<String> choppingRecipes;
     private List<String> manualChoppingRecipes;
     private List<String> pressRecipes;
 
     public SyncServerRecipesMessage() {
-        grindstoneRecipes = Arrays.stream(Configs.recipes.grindstoneRecipes).collect(Collectors.toList());
-        handGrindstoneRecipes = Arrays.stream(Configs.recipes.handGrindstoneRecipes).collect(Collectors.toList());
+        millstoneRecipes = Arrays.stream(Configs.recipes.millstoneRecipes).collect(Collectors.toList());
+        handMillstoneRecipes = Arrays.stream(Configs.recipes.handMillstoneRecipes).collect(Collectors.toList());
         choppingRecipes = Arrays.stream(Configs.recipes.choppingRecipes).collect(Collectors.toList());
         manualChoppingRecipes = Arrays.stream(Configs.recipes.manualChoppingRecipes).collect(Collectors.toList());
         pressRecipes = Arrays.stream(Configs.recipes.pressRecipes).collect(Collectors.toList());
     }
 
-    public SyncServerRecipesMessage(List<String> grindstoneRecipes, List<String> handGrindstoneRecipes, List<String> choppingRecipes, List<String> manualChoppingRecipes, List<String> pressRecipes) {
-        this.grindstoneRecipes = grindstoneRecipes;
-        this.handGrindstoneRecipes = handGrindstoneRecipes;
+    public SyncServerRecipesMessage(List<String> millstoneRecipes, List<String> handMillstoneRecipes, List<String> choppingRecipes, List<String> manualChoppingRecipes, List<String> pressRecipes) {
+        this.millstoneRecipes = millstoneRecipes;
+        this.handMillstoneRecipes = handMillstoneRecipes;
         this.choppingRecipes = choppingRecipes;
         this.manualChoppingRecipes = manualChoppingRecipes;
         this.pressRecipes = pressRecipes;
@@ -51,8 +51,8 @@ public class SyncServerRecipesMessage {
     }
 
     public static void encode(SyncServerRecipesMessage message, PacketBuffer buf) {
-        write(message.grindstoneRecipes, buf);
-        write(message.handGrindstoneRecipes, buf);
+        write(message.millstoneRecipes, buf);
+        write(message.handMillstoneRecipes, buf);
         write(message.choppingRecipes, buf);
         write(message.manualChoppingRecipes, buf);
         write(message.pressRecipes, buf);
@@ -67,7 +67,7 @@ public class SyncServerRecipesMessage {
     public static void handle(SyncServerRecipesMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             HPRecipes.serverSyncedRecipes = true;
-            HPRecipes.instance().reloadRecipes(message.grindstoneRecipes, message.handGrindstoneRecipes, message.choppingRecipes, message.manualChoppingRecipes, message.pressRecipes);
+            HPRecipes.instance().reloadRecipes(message.millstoneRecipes, message.handMillstoneRecipes, message.choppingRecipes, message.manualChoppingRecipes, message.pressRecipes);
             HorsePowerMod.LOGGER.info("Synced recipes from server");
         });
         ctx.get().setPacketHandled(true);

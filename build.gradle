@@ -12,6 +12,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 version = mod_version
 group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -53,7 +54,7 @@ minecraft {
                 }
             }
             // Intellij stuff
-            ideaModule "${project.group}.${project.name}.main"
+            ideaModule "${project.name}.main"
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
         server {
@@ -73,40 +74,37 @@ minecraft {
                 }
             }
             // Intellij stuff
-            ideaModule "${project.group}.${project.name}.main"
+            ideaModule "${project.name}.main"
             environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
     }
 }
 
 repositories {
-    /*maven {
+    maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
-        url = "http://dvs1.progwml6.com/files/maven"
+        url = "https://dvs1.progwml6.com/files/maven"
     }
     maven {
         // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
-        url = "modmaven.k-4u.nl"
+        url = "https://modmaven.k-4u.nl"
     }
-
+/*
     maven {
         url "http://maven.blamejared.com"
-    }
+    }*/
 
     maven {
+        name = "Tehnut - Hwyla"
         url "http://tehnut.info/maven"
     }
 
     maven {
-        url "http://maven.tterrag.com/"
+        name = "Tterrag - TOP"
+        url "https://maven.tterrag.com/"
     }
-
-    maven {
-        name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
-    }*/
 }
 
 dependencies {
@@ -115,16 +113,18 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-
-    // compile against the JEI API
-    //deobfCompile "mezz.jei:jei_${config.mc_version}:${config.jei_version}:api"
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
     // at runtime, use the full JEI jar
-    //runtime "mezz.jei:jei_${config.mc_version}:${config.jei_version}"
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-    //deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486"
-    //deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-${config.top_version}"
+    //compile fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486")
+    /*compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
+        transitive = false
+    })*/
 
-    //deobfCompile "mcp.mobius.waila:Hwyla:${config.hwyla_version}"
+    compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
+    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 }
 
 

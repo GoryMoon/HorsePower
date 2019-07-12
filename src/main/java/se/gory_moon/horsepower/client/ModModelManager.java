@@ -1,7 +1,7 @@
 package se.gory_moon.horsepower.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -80,11 +80,11 @@ public class ModModelManager {
     /**
      * Register a single model for the {@link Block}'s {@link Item}.
      * <p>
-     * Uses the registry name as the domain/path and the {@link IBlockState} as the variant.
+     * Uses the registry name as the domain/path and the {@link BlockState} as the variant.
      *
      * @param state The state to use as the variant
      */
-    private void registerBlockItemModel(IBlockState state) {
+    private void registerBlockItemModel(BlockState state) {
         final Block block = state.getBlock();
         final Item item = Item.getItemFromBlock(block);
 
@@ -96,12 +96,12 @@ public class ModModelManager {
     /**
      * Register a model for a metadata value of the {@link Block}'s {@link Item}.
      * <p>
-     * Uses the registry name as the domain/path and the {@link IBlockState} as the variant.
+     * Uses the registry name as the domain/path and the {@link BlockState} as the variant.
      *
      * @param state    The state to use as the variant
      * @param metadata The items metadata to register the model for
      */
-    private void registerBlockItemModelForMeta(IBlockState state, int metadata) {
+    private void registerBlockItemModelForMeta(BlockState state, int metadata) {
         final Item item = Item.getItemFromBlock(state.getBlock());
 
         if (item != null) {

@@ -38,7 +38,7 @@ public final class Localization {
 
     public static class ITEM {
 
-        public enum HORSE_GRINDSTONE {
+        public enum HORSE_MILLSTONE {
             SIZE, LOCATION, USE;
 
             public String translate(String... vars) {
@@ -46,11 +46,11 @@ public final class Localization {
             }
 
             public String toString() {
-                return "item.horsepower.grindstone.description." + super.toString().toLowerCase();
+                return "item.horsepower.millstone.description." + super.toString().toLowerCase();
             }
         }
 
-        public enum HAND_GRINDSTONE {
+        public enum HAND_MILLSTONE {
             INFO;
 
             public String translate(String... vars) {
@@ -59,7 +59,7 @@ public final class Localization {
 
             @Override
             public String toString() {
-                return "item.horsepower.hand_grindstone.description." + super.toString().toLowerCase();
+                return "item.horsepower.hand_millstone.description." + super.toString().toLowerCase();
             }
         }
 
@@ -92,7 +92,7 @@ public final class Localization {
     }
 
     public enum  INFO {
-        GRINDSTONE_INVALID,
+        MILLSTONE_INVALID,
         CHOPPING_INVALID,
         PRESS_INVALID,
         ITEM_REVEAL;
@@ -107,8 +107,8 @@ public final class Localization {
     }
 
     public enum GUI {
-        CATEGORY_GRINDING,
-        CATEGORY_HAND_GRINDING,
+        CATEGORY_MILLING,
+        CATEGORY_HAND_MILLING,
         CATEGORY_CHOPPING,
         CATEGORY_MANUAL_CHOPPING,
         CATEGORY_PRESS_ITEM,
@@ -125,7 +125,7 @@ public final class Localization {
     }
 
     public enum WAILA {
-        GRINDSTONE_PROGRESS,
+        MILLSTONE_PROGRESS,
         WINDUP_PROGRESS,
         CHOPPING_PROGRESS,
         PRESS_PROGRESS,
@@ -141,7 +141,7 @@ public final class Localization {
     }
 
     public enum TOP {
-        GRINDSTONE_PROGRESS,
+        MILLSTONE_PROGRESS,
         WINDUP_PROGRESS,
         CHOPPING_PROGRESS,
         PRESS_PROGRESS;

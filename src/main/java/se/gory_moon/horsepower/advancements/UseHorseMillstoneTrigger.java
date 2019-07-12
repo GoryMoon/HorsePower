@@ -6,16 +6,16 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.criterion.AbstractCriterionInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
 import java.util.Set;
 
-public class UseHorseGrindstoneTrigger implements ICriterionTrigger<UseHorseGrindstoneTrigger.Instance>{
+public class UseHorseMillstoneTrigger implements ICriterionTrigger<UseHorseMillstoneTrigger.Instance>{
 
-    private static final ResourceLocation ID = new ResourceLocation("horsepower","use_horse_grindstone");
+    private static final ResourceLocation ID = new ResourceLocation("horsepower","use_horse_millstone");
     private final Map<PlayerAdvancements, Listeners> listeners = Maps.newHashMap();
 
     @Override
@@ -52,7 +52,7 @@ public class UseHorseGrindstoneTrigger implements ICriterionTrigger<UseHorseGrin
         return new Instance();
     }
 
-    public void trigger(EntityPlayerMP player)
+    public void trigger(ServerPlayerEntity player)
     {
         Listeners listeners = this.listeners.get(player.getAdvancements());
 
@@ -62,7 +62,7 @@ public class UseHorseGrindstoneTrigger implements ICriterionTrigger<UseHorseGrin
         }
     }
 
-    public static class Instance extends AbstractCriterionInstance {
+    public static class Instance extends CriterionInstance {
 
         public Instance() {
             super(ID);
@@ -72,7 +72,7 @@ public class UseHorseGrindstoneTrigger implements ICriterionTrigger<UseHorseGrin
     static class Listeners
     {
         private final PlayerAdvancements playerAdvancements;
-        private final Set<Listener<UseHorseGrindstoneTrigger.Instance>> listeners = Sets.newHashSet();
+        private final Set<Listener<UseHorseMillstoneTrigger.Instance>> listeners = Sets.newHashSet();
 
         public Listeners(PlayerAdvancements playerAdvancementsIn)
         {

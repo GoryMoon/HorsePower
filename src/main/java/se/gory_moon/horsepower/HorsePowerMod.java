@@ -1,14 +1,12 @@
 package se.gory_moon.horsepower;
 
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +30,6 @@ public class HorsePowerMod {
     public HorsePowerMod() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::setup);
-        eventBus.addListener(this::sendIMC);
         eventBus.addListener(this::loadComplete);
         eventBus.addListener(this::serverLoad);
         eventBus.addListener(this::onFingerprintViolation);
@@ -49,11 +46,6 @@ public class HorsePowerMod {
 
         tweakerPlugin.register();*/
         ModItems.registerRecipes();
-    }
-
-    public void sendIMC(InterModEnqueueEvent event) {
-        //TODO how this will work?
-        InterModComms.sendTo("waila", "register", () -> Reference.WAILA_PROVIDER);
     }
 
     public void loadComplete(FMLLoadCompleteEvent event) {

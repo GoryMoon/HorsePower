@@ -1,27 +1,29 @@
 package se.gory_moon.horsepower.blocks;
 
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemLead;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.LeadItem;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.items.ItemHandlerHelper;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
@@ -31,9 +33,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public abstract class BlockHPBase extends BlockContainer implements ITileEntityProvider {
+public abstract class BlockHPBase extends ContainerBlock {
 
-    public static final AxisAlignedBB EMPTY_AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    private ToolType type;
+    private int level;
 
     public BlockHPBase(Properties builder) {
         super(builder);
@@ -41,24 +45,36 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
 
     public abstract void emptiedOutput(World world, BlockPos pos);
 
-    public int getSlot(IBlockState state, float hitX, float hitY, float hitZ) {
+    public int getSlot(BlockState state, BlockRayTraceResult hit) {
         return -1;
     }
 
-    public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {}
+    public BlockHPBase setHarvestLevel(ToolType type, int level) {
+        this.type = type;
+        this.level = level;
+        return this;
+    }
 
     @Override
-    public boolean hasTileEntity(IBlockState state) {
+    public int getHarvestLevel(BlockState state) {
+        return this.level;
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(BlockState state) {
+        return this.type;
+    }
+
+    public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {}
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
         return true;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBlockHarvested(worldIn, pos, state, player);
 
         if (!player.abilities.isCreativeMode && !worldIn.isRemote) {
@@ -73,8 +89,8 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState p_149645_1_) {
-        return EnumBlockRenderType.MODEL;
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
     }
 
     @Nonnull
@@ -87,7 +103,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return createNewTileEntity(world);
     }
 
@@ -103,7 +119,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
     }
 
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest, IFluidState fluid) {
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
         // we pull up a few calls to this point in time because we still have the TE here
         // the execution otherwise is equivalent to vanilla order
         this.onPlayerDestroy(world, pos, state);
@@ -130,22 +146,22 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
     }*/
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        ItemStack stack = hand == EnumHand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ItemStack stack = hand == Hand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
         TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
         TileEntityHPHorseBase teH = null;
         if (te == null) return false;
         if (te instanceof TileEntityHPHorseBase)
             teH = (TileEntityHPHorseBase) te;
 
-        EntityCreature creature = null;
+        CreatureEntity creature = null;
         if (teH != null) {
-            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            ArrayList<Class<? extends CreatureEntity>> clazzes = Utils.getCreatureClasses();
             search:
             for (Class<? extends Entity> clazz : clazzes) {
                 for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB(-7.0D, -7.0D,  -7.0D, 7.0D, 7.0D, 7.0D).offset(pos))) {
-                    if (entity instanceof EntityCreature && !(entity instanceof IMob)) {
-                        EntityCreature tmp = (EntityCreature) entity;
+                    if (entity instanceof CreatureEntity && !(entity instanceof IMob)) {
+                        CreatureEntity tmp = (CreatureEntity) entity;
                         if ((tmp.getLeashed() && tmp.getLeashHolder() == player)) {
                             creature = tmp;
                             break search;
@@ -154,7 +170,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
                 }
             }
         }
-        if (teH != null && ((stack.getItem() instanceof ItemLead && creature != null) || creature != null)) {
+        if (teH != null && ((stack.getItem() instanceof LeadItem && creature != null) || creature != null)) {
             if (!teH.hasWorker()) {
                 creature.clearLeashed(true, false);
                 teH.setWorker(creature);
@@ -183,7 +199,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
                 return true;
         }
 
-        int slot = getSlot(state.getBlock().getExtendedState(state, worldIn, pos), hitX, hitY, hitZ);
+        int slot = getSlot(state.getBlock().getExtendedState(state, worldIn, pos), hit);
         ItemStack result = ItemStack.EMPTY;
         if (slot > -1) {
             result = te.removeStackFromSlot(slot);
@@ -191,7 +207,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
             result = te.removeStackFromSlot(1);
             if (result.isEmpty()) {
                 result = te.removeStackFromSlot(2);
-                if (result.isEmpty() && stack.isEmpty() && hand != EnumHand.OFF_HAND) {
+                if (result.isEmpty() && stack.isEmpty() && hand != Hand.OFF_HAND) {
                     result = te.removeStackFromSlot(0);
                 }
             }
@@ -207,7 +223,7 @@ public abstract class BlockHPBase extends BlockContainer implements ITileEntityP
         }
 
         if (!result.isEmpty())
-            ItemHandlerHelper.giveItemToPlayer(player, result, EntityEquipmentSlot.MAINHAND.getSlotIndex());
+            ItemHandlerHelper.giveItemToPlayer(player, result, EquipmentSlotType.MAINHAND.getSlotIndex());
 
         te.markDirty();
         return true;

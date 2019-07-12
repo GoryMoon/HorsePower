@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "horsepower:hand_grindstone"
+      "item": "horsepower:hand_millstone"
     },
     "title": {
       "translate": "advancements.horsepower.root.title"
@@ -14,12 +14,12 @@
     "announce_to_chat": false
   },
   "criteria": {
-    "get_grindstone": {
+    "get_millstone": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "horsepower:hand_grindstone"
+            "item": "horsepower:hand_millstone"
           }
         ]
       }
@@ -35,5 +35,5 @@
       }
     }
   },
-  "requirements": [["get_grindstone", "get_wheat"]]
+  "requirements": [["get_millstone", "get_wheat"]]
 }

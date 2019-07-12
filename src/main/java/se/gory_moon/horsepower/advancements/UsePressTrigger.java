@@ -6,8 +6,8 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.criterion.AbstractCriterionInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
@@ -52,7 +52,7 @@ public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instan
         return new Instance();
     }
 
-    public void trigger(EntityPlayerMP player)
+    public void trigger(ServerPlayerEntity player)
     {
         Listeners listeners = this.listeners.get(player.getAdvancements());
 
@@ -62,7 +62,7 @@ public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instan
         }
     }
 
-    public static class Instance extends AbstractCriterionInstance {
+    public static class Instance extends CriterionInstance {
 
         public Instance() {
             super(ID);

@@ -1,14 +1,15 @@
 package se.gory_moon.horsepower.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
@@ -16,23 +17,23 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
-import se.gory_moon.horsepower.lib.Constants;
-import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
@@ -51,35 +52,32 @@ public class BlockPress extends BlockHPBase {
     private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 16 + 3, 16);
 
     public BlockPress() {
-        super(Properties.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F));
-        setRegistryName(Reference.MODID, Constants.PRESS_BLOCK);
+        super(Properties.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F).sound(SoundType.WOOD));
 
-        /*setHarvestLevel("axe", 1);
-        setSoundType(SoundType.WOOD);
-        setUnlocalizedName(Constants.PRESS_BLOCK);*/
+        setHarvestLevel(ToolType.AXE, 1);
     }
 
     @Override
-    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return BOUND;
     }
 
     @Override
-    public VoxelShape getCollisionShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return COLLISION;
     }
 
     @Override
-    public void onNeighborChange(IBlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
         if (!(world).isRemote() && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
             ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
         }
     }
 
     @Override
-    public void onBlockAdded(IBlockState state, World worldIn, BlockPos pos, IBlockState oldState) {
+    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isRemote) {
-            EnumFacing filled = state.get(FACING);
+            Direction filled = state.get(FACING);
             worldIn.setBlockState(pos, state.with(FACING, filled).with(PART, PressModels.BASE), 2);
         }
     }
@@ -91,18 +89,18 @@ public class BlockPress extends BlockHPBase {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, PART);
     }
 
     @Nullable
     @Override
-    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
         return getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(PART, PressModels.BASE);
     }
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (worldIn.isRemote)
             return true;
 
@@ -114,24 +112,18 @@ public class BlockPress extends BlockHPBase {
                 return false;
             }
         }
-        return super.onBlockActivated(state, worldIn, pos, player, hand, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(state, worldIn, pos, player, hand, hit);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-
-        TileEntityHPBase tile = getTileEntity(worldIn, pos);
-        if (tile == null)
-            return;
-        tile.setForward(placer.getHorizontalFacing().getOpposite());
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public void onWorkerAttached(EntityPlayer playerIn, EntityCreature creature) {
-        if (playerIn instanceof EntityPlayerMP)
-            AdvancementManager.USE_PRESS.trigger((EntityPlayerMP) playerIn);
+    public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {
+        if (playerIn instanceof ServerPlayerEntity)
+            AdvancementManager.USE_PRESS.trigger((ServerPlayerEntity) playerIn);
     }
 
     @Override
@@ -140,9 +132,9 @@ public class BlockPress extends BlockHPBase {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TextComponentString(Localization.ITEM.HORSE_PRESS.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString())));
-        tooltip.add(new TextComponentString(Localization.ITEM.HORSE_PRESS.LOCATION.translate()));
-        tooltip.add(new TextComponentString(Localization.ITEM.HORSE_PRESS.USE.translate()));
+        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString())));
+        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.LOCATION.translate()));
+        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.USE.translate()));
     }
 
     @Nonnull

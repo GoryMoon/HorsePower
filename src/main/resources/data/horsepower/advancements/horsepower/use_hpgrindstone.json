@@ -1,19 +1,19 @@
 {
   "display": {
     "icon": {
-      "item": "horsepower:grindstone"
+      "item": "horsepower:millstone"
     },
     "title": {
-      "translate": "advancements.horsepower.grindstone.title"
+      "translate": "advancements.horsepower.millstone.title"
     },
     "description": {
-      "translate": "advancements.horsepower.grindstone.description"
+      "translate": "advancements.horsepower.millstone.description"
     }
   },
   "parent": "horsepower:horsepower/root",
   "criteria": {
     "get_chopper": {
-      "trigger": "horsepower:use_horse_grindstone"
+      "trigger": "horsepower:use_horse_millstone"
     }
   }
 }

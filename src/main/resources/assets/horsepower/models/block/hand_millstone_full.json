@@ -88,7 +88,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [13, 4.25, 3],
       "to": [15, 8.25, 13],
       "shade": true,
@@ -106,7 +106,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [3, 4.25, 10],
       "to": [13, 8.25, 15],
       "shade": true,
@@ -125,7 +125,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [3, 4.25, 1],
       "to": [13, 8.25, 6],
       "shade": true,
@@ -144,7 +144,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [1, 4.25, 3],
       "to": [3, 8.25, 13],
       "shade": true,
@@ -162,7 +162,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [3, 4.25, 6],
       "to": [6, 8.25, 10],
       "shade": true,
@@ -178,7 +178,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [10, 4.25, 6],
       "to": [13, 8.25, 10],
       "shade": true,
@@ -194,7 +194,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [13, 4.25, 2],
       "to": [14, 8.25, 3],
       "shade": true,
@@ -211,7 +211,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [13, 4.25, 13],
       "to": [14, 8.25, 14],
       "shade": true,
@@ -228,7 +228,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [2, 4.25, 13],
       "to": [3, 8.25, 14],
       "shade": true,
@@ -245,7 +245,7 @@
       }
     },
     {
-      "name": "Grinder",
+      "name": "Miller",
       "from": [2, 4.25, 2],
       "to": [3, 8.25, 3],
       "shade": true,

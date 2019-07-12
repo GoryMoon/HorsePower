@@ -8,7 +8,9 @@
       "north": {},
       "south": {},
       "west": {},
-      "east": {}
+      "east": {},
+      "up": {},
+      "down": {}
     }
   }
 }

@@ -49,15 +49,6 @@ public enum Colors {
             k += 85;
         }
 
-        if (false/*Minecraft.getInstance().gameSettings.anaglyph*/) {
-            int j1 = (k * 30 + l * 59 + i1 * 11) / 100;
-            int k1 = (k * 30 + l * 70) / 100;
-            int l1 = (k * 30 + i1 * 70) / 100;
-            k = j1;
-            l = k1;
-            i1 = l1;
-        }
-
         return (k & 255) << 16 | (l & 255) << 8 | i1 & 255;
     }
 

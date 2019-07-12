@@ -1,26 +1,27 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
@@ -28,12 +29,9 @@ import se.gory_moon.horsepower.blocks.BlockFiller;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 import se.gory_moon.horsepower.util.Localization;
 
-import java.util.Arrays;
-
 public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> extends TileEntityRenderer<T> {
 
-    private static TextureAtlasSprite[] destroyBlockIcons = new TextureAtlasSprite[10];
-    public static ITextComponent LEAD_LOOKUP = new TextComponentTranslation(Localization.INFO.ITEM_REVEAL.key()).setStyle(new Style().setColor(TextFormatting.RED));
+    public static ITextComponent LEAD_LOOKUP = new TranslationTextComponent(Localization.INFO.ITEM_REVEAL.key()).setStyle(new Style().setColor(TextFormatting.RED));
 
     protected void renderStillItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
         renderItem(te, stack, x, y, z, scale, false);
@@ -47,8 +45,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         if (stack != null) {
             GlStateManager.translated(x, y, z);
-            EntityItem entityitem = new EntityItem(te.getWorld(), 0.0D, 0.0D, 0.0D, stack.copy());
-            entityitem.hoverStart = 0.0F;
+            ItemEntity entityitem = new ItemEntity(te.getWorld(), 0.0D, 0.0D, 0.0D, stack.copy());
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
 
@@ -57,11 +54,11 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             if (rotate)
                 GlStateManager.rotatef(rotation, 0.0F, 1.0F, 0);
             GlStateManager.scalef(0.5F * scale, 0.5F * scale, 0.5F * scale);
-            GlStateManager.pushLightingAttrib();
+            GlStateManager.pushLightingAttributes();
             RenderHelper.enableStandardItemLighting();
             itemRenderer.renderItem(entityitem.getItem(), ItemCameraTransforms.TransformType.FIXED);
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.popAttrib();
+            GlStateManager.popAttributes();
 
             GlStateManager.enableLighting();
             GlStateManager.popMatrix();
@@ -72,22 +69,21 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         if (!canShowAmount(te))
             return;
         setLightmapDisabled(true);
-        Entity entity = this.rendererDispatcher.entity;
+        Entity entity = this.rendererDispatcher.renderInfo.getRenderViewEntity();
         double d0 = te.getDistanceSq(entity.posX, entity.posY, entity.posZ);
 
         if (d0 <= (double)(14 * 14)) {
-            float f = this.rendererDispatcher.entityYaw;
-            float f1 = this.rendererDispatcher.entityPitch;
+            float f = this.rendererDispatcher.renderInfo.getYaw();
+            float f1 = this.rendererDispatcher.renderInfo.getPitch();
             FontRenderer fontRenderer = getFontRenderer();
             GlStateManager.pushMatrix();
 
             GlStateManager.translated(x, y, z);
             GlStateManager.normal3f(0.0F, 1.0F, 0.0F);
-            if (te.getForward() == EnumFacing.EAST || te.getForward() == EnumFacing.WEST)
-                FacingToRotation.get( te.getForward().getOpposite()).glRotateCurrentMat();
+            if (te.getForward() == Direction.EAST || te.getForward() == Direction.WEST)
+                FacingToRotation.get(te.getForward().getOpposite()).glRotateCurrentMat();
             else
-                FacingToRotation.get( te.getForward()).glRotateCurrentMat();
-
+                FacingToRotation.get(te.getForward()).glRotateCurrentMat();
 
             GlStateManager.rotatef(-f, 0.0F, 1.0F, 0.0F);
             GlStateManager.rotatef(f1, 1.0F, 0.0F, 0.0F);
@@ -109,7 +105,15 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     public boolean canShowAmount(TileEntityHPBase te) {
-        return Configs.CLIENT.renderItemAmount.get() && (!Configs.CLIENT.mustLookAtBlock.get() || this.rendererDispatcher.cameraHitResult != null && (te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()) || (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))));
+        RayTraceResult traceResult = this.rendererDispatcher.cameraHitResult;
+        return Configs.CLIENT.renderItemAmount.get() &&
+                (!Configs.CLIENT.mustLookAtBlock.get() ||
+                        traceResult != null &&
+                        traceResult.getType() == RayTraceResult.Type.BLOCK &&
+                        (te.getPos().equals(((BlockRayTraceResult) traceResult).getPos()) ||
+                                (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(((BlockRayTraceResult) traceResult).getPos()))
+                        )
+                );
     }
 
     protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {
@@ -118,7 +122,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.pushMatrix();
         GlStateManager.translated(ox, oy, oz);
         GlStateManager.translated( 0.5, 0.5, 0.5 );
-        FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
+        FacingToRotation.get(tile.getForward()).glRotateCurrentMat();
         GlStateManager.translated( -0.5, -0.5, -0.5 );
         renderItem(tile, stack, x, y, z, scale);
         GlStateManager.popMatrix();
@@ -126,7 +130,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.pushMatrix();
         GlStateManager.translated(ox , oy, oz);
         GlStateManager.translated( 0.5, 0.5, 0.5 );
-        FacingToRotation.get( tile.getForward()).glRotateCurrentMat();
+        FacingToRotation.get(tile.getForward()).glRotateCurrentMat();
         GlStateManager.translated( -0.5, -0.5, -0.5 );
 
         drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3,  z);
@@ -137,7 +141,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         // Most of this is blatantly copied from FastTESR
         setRenderSettings();
 
-        IBlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        BlockState blockState = te.getWorld().getBlockState( te.getPos() );
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         IBakedModel model = dispatcher.getModelForState( blockState );
 
@@ -151,7 +155,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.popMatrix();
     }
 
-    protected void renderBaseModelWithFacing(TileEntityHPBase te, IBlockState blockState, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z, int destroyStage) {
+    protected void renderBaseModelWithFacing(TileEntityHPBase te, BlockState blockState, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z, int destroyStage) {
         // Most of this is blatantly copied from FastTESR
         preDestroyRender(destroyStage);
         setRenderSettings();
@@ -164,7 +168,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
 
         if (destroyStage >= 0) {
             buffer.noColor();
-            renderBlockDamage(blockState, te.getPos(), getDestroyBlockIcon(destroyStage), te.getWorld());
+            renderBlockDamage(blockState, te.getPos(), destroyStage, te.getWorld());
         } else
             dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), model, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
 
@@ -175,7 +179,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.translated( x, y, z );
 
         GlStateManager.translated( 0.5, 0.5, 0.5 );
-        FacingToRotation.get( te.getForward()).glRotateCurrentMat();
+        FacingToRotation.get(te.getForward()).glRotateCurrentMat();
         GlStateManager.translated( -0.5, -0.5, -0.5 );
 
         tessellator.draw();
@@ -187,27 +191,24 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
     }
 
     protected void setRenderSettings() {
-        this.bindTexture( TextureMap.LOCATION_BLOCKS_TEXTURE );
+        this.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.blendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.enableBlend();
         GlStateManager.disableCull();
 
-        if( Minecraft.isAmbientOcclusionEnabled() )
-        {
-            GlStateManager.shadeModel( GL11.GL_SMOOTH );
-        }
-        else
-        {
-            GlStateManager.shadeModel( GL11.GL_FLAT );
+        if(Minecraft.isAmbientOcclusionEnabled()) {
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        } else {
+            GlStateManager.shadeModel(GL11.GL_FLAT);
         }
     }
 
     protected void preDestroyRender(int destroyStage) {
-        /*if (destroyStage >= 0) {
+        if (destroyStage >= 0) {
             GlStateManager.enableBlend();
             GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+            Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 
             GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.DST_COLOR, GlStateManager.DestFactor.SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             GlStateManager.enableBlend();
@@ -217,12 +218,11 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             GlStateManager.alphaFunc(516, 0.1F);
             GlStateManager.enableAlphaTest();
             GlStateManager.pushMatrix();
-        }*/
+        }
     }
 
     protected void postDestroyRender(int destroyStage) {
-        /*if (destroyStage >= 0) {
-
+        if (destroyStage >= 0) {
             GlStateManager.disableAlphaTest();
             GlStateManager.polygonOffset(0.0F, 0.0F);
             GlStateManager.disablePolygonOffset();
@@ -230,32 +230,25 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
             GlStateManager.depthMask(true);
             GlStateManager.popMatrix();
 
-            Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+            Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
             GlStateManager.disableBlend();
-        }*/
+        }
     }
 
-    /**
-     * Gets the value between start and end according to pct
-     */
-    private double interpolateValue(double start, double end, double pct)
-    {
-        return start + (end - start) * pct;
-    }
-
-    protected void renderLeash(EntityCreature entity, double ox, double oy, double oz, double x, double y, double z, float partialTicks, BlockPos pos) {
+    protected void renderLeash(CreatureEntity entity, double ox, double oy, double oz, double x, double y, double z, float partialTicks, BlockPos pos) {
         if (entity != null) {
             oy = oy - 0.7D;
-            double d2 = 0.0D;
-            double d3 = 0.0D;
+            double d2;
+            double d3;
             double d4 = -1.0D;
 
-            double d9 = this.interpolateValue(entity.prevRenderYawOffset, entity.renderYawOffset, (double)partialTicks) * 0.01745329238474369D + (Math.PI / 2D);
-            d2 = Math.cos(d9) * (double)entity.width * 0.4D;
-            d3 = Math.sin(d9) * (double)entity.width * 0.4D;
-            double d6 = (this.interpolateValue(entity.prevPosX, entity.posX, (double)partialTicks)) + d2;
-            double d7 = this.interpolateValue(entity.prevPosY + entity.getEyeHeight() * 1.1D, entity.posY + entity.getEyeHeight() * 1.1D, (double)partialTicks) - d4 * 0.5D - 0.25D - y;
-            double d8 = (this.interpolateValue(entity.prevPosZ, entity.posZ, (double)partialTicks)) + d3;
+            double d9 = (double)(MathHelper.lerp(partialTicks, entity.renderYawOffset, entity.prevRenderYawOffset) * ((float)Math.PI / 180F)) + (Math.PI / 2D);
+            d2 = Math.cos(d9) * (double)entity.getWidth() * 0.4D;
+            d3 = Math.sin(d9) * (double)entity.getWidth() * 0.4D;
+            double d6 = MathHelper.lerp((double)partialTicks, entity.prevPosX, entity.posX) + d2;
+            double d7 = MathHelper.lerp((double)partialTicks, entity.prevPosY + entity.getEyeHeight() * 1.1D, entity.posY + entity.getEyeHeight() * 1.1D) - d4 * 0.5D - 0.25D - y;
+            double d8 = MathHelper.lerp((double)partialTicks, entity.prevPosZ, entity.posZ) + d3;
+
 
             d2 = 0.5D;
             d3 = 0.5D;
@@ -270,7 +263,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         }
     }
 
-    protected void renderLeach(double x1, double y1, double z1, double ox, double oy, double oz, double x2, double y2, double z2) {
+    private void renderLeach(double x1, double y1, double z1, double ox, double oy, double oz, double x2, double y2, double z2) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 
@@ -278,7 +271,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         double d14 = (double)((float)(y1 - y2));
         double d15 = (double)((float)(z1 - z2));
 
-        GlStateManager.disableTexture2D();
+        GlStateManager.disableTexture();
         GlStateManager.disableLighting();
         GlStateManager.disableCull();
 
@@ -325,53 +318,39 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
 
         tessellator.draw();
         GlStateManager.enableLighting();
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.enableCull();
     }
 
-    public void renderBlockDamage(IBlockState state, BlockPos pos, TextureAtlasSprite texture, World world)
-    {
+    public void renderBlockDamage(BlockState state, BlockPos pos, int destroyState, World world) {
         state = state.getExtendedState(world, pos);
         IBakedModel ibakedmodel = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(state);
-        IBakedModel ibakedmodel1 = net.minecraftforge.client.ForgeHooksClient.getDamageModel(ibakedmodel, texture, state, world, pos);
+        long i = state.getPositionRandom(pos);
+        IBakedModel ibakedmodel1 = net.minecraftforge.client.ForgeHooksClient.getDamageModel(ibakedmodel, Minecraft.getInstance().worldRenderer.destroyBlockIcons[destroyState], state, world, pos, i);
         Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(world, ibakedmodel1, state, pos, Tessellator.getInstance().getBuffer(), true, world.rand, state.getPositionRandom(pos));
-    }
-
-    public static TextureAtlasSprite getDestroyBlockIcon(int destroyState) {
-        if (destroyBlockIcons[destroyState] == null) {
-            //TODO reimplement
-           //destroyBlockIcons = ObfuscationReflectionHelper.getPrivateValue(RenderGlobal.class, Minecraft.getInstance().renderGlobal, "destroyBlockIcons", "field_94141_F");
-        }
-        return destroyBlockIcons[destroyState];
-    }
-
-    public static void clearDestroyStageicons() {
-        Arrays.stream(destroyBlockIcons).forEach(textureAtlasSprite -> textureAtlasSprite = null);
     }
 
     public void drawDisplayText(TileEntityHPBase te, double x, double y, double z) {
         ITextComponent itextcomponent = te.getDisplayName();
 
-        if (itextcomponent != null && this.rendererDispatcher.cameraHitResult != null && te.getPos().equals(this.rendererDispatcher.cameraHitResult.getBlockPos()))
-        {
+        RayTraceResult raytraceresult = this.rendererDispatcher.cameraHitResult;
+        if (itextcomponent != null && raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.BLOCK && te.getPos().equals(((BlockRayTraceResult)raytraceresult).getPos())) {
             this.setLightmapDisabled(true);
-            this.drawCustomNameplate(te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
-            this.drawCustomNameplate(te, LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);
+            drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
+            drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);
             this.setLightmapDisabled(false);
         }
     }
 
-    protected void drawCustomNameplate(TileEntity te, String str, double x, double y, double z, int maxDistance, float offset)
-    {
-        Entity entity = this.rendererDispatcher.entity;
-        double d0 = te.getDistanceSq(entity.posX, entity.posY, entity.posZ);
+    public static void drawCustomNameplate(TileEntityRendererDispatcher rendererDispatcher, FontRenderer fontRenderer, TileEntity te, String str, double x, double y, double z, int maxDistance, float offset) {
+        ActiveRenderInfo renderInfo = rendererDispatcher.renderInfo;
+        Vec3d view = renderInfo.getProjectedView();
+        double d0 = te.getDistanceSq(view.x, view.y, view.z);
 
-        if (d0 <= (double)(maxDistance * maxDistance))
-        {
-            float f = this.rendererDispatcher.entityYaw;
-            float f1 = this.rendererDispatcher.entityPitch;
-            GameRenderer.drawNameplate(this.getFontRenderer(), str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, f, f1, false, false);
+        if (d0 <= (double)(maxDistance * maxDistance)) {
+            float yaw = renderInfo.getYaw();
+            float pitch = renderInfo.getPitch();
+            GameRenderer.drawNameplate(fontRenderer, str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, yaw, pitch, false);
         }
     }
-
 }

@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.jei.grinding;
+package se.gory_moon.horsepower.jei.milling;
 /*
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IGuiItemStackGroup;
@@ -22,10 +22,10 @@ public class HorsePowerGrindingCategory extends HorsePowerCategory<GrindstoneRec
     private final String localizedName;
 
     public HorsePowerGrindingCategory(IGuiHelper guiHelper, boolean hand) {
-        super(guiHelper, true, 146, 85, new ResourceLocation("horsepower", "textures/gui/jei_grindstone.png"));
+        super(guiHelper, true, 146, 85, new ResourceLocation("horsepower", "textures/gui/jei_millstone.png"));
         this.handHandler = hand;
 
-        localizedName = handHandler ? Localization.GUI.CATEGORY_HAND_GRINDING.translate(): Localization.GUI.CATEGORY_GRINDING.translate();
+        localizedName = handHandler ? Localization.GUI.CATEGORY_HAND_GRINDING.translate(): Localization.GUI.CATEGORY_MILLING.translate();
     }
 
     @Override

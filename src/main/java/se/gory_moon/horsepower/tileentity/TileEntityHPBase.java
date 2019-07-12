@@ -1,29 +1,27 @@
 package se.gory_moon.horsepower.tileentity;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 
 import javax.annotation.Nonnull;
@@ -33,8 +31,6 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
 
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     protected IHPInventory inventory;
-
-    private EnumFacing forward = null;
 
     public TileEntityHPBase(int inventorySize, TileEntityType type) {
         super(type);
@@ -106,15 +102,15 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
             }
 
             @Override
-            public boolean isUsableByPlayer(EntityPlayer player) {
+            public boolean isUsableByPlayer(PlayerEntity player) {
                 return getWorld().getTileEntity(getPos()) == TileEntityHPBase.this && player.getDistanceSq((double) getPos().getX() + 0.5D, (double) getPos().getY() + 0.5D, (double) getPos().getZ() + 0.5D) <= 64.0D;
             }
 
             @Override
-            public void openInventory(EntityPlayer player) {}
+            public void openInventory(PlayerEntity player) {}
 
             @Override
-            public void closeInventory(EntityPlayer player) {}
+            public void closeInventory(PlayerEntity player) {}
 
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack) {
@@ -122,42 +118,8 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
             }
 
             @Override
-            public int getField(int id) {
-                return TileEntityHPBase.this.getField(id);
-            }
-
-            @Override
-            public void setField(int id, int value) {TileEntityHPBase.this.setField(id, value);}
-
-            @Override
-            public int getFieldCount() {
-                return TileEntityHPBase.this.getFieldCount();
-            }
-
-            @Override
             public void clear() {
                 itemStacks.clear();
-            }
-
-            @Override
-            public ITextComponent getName() {
-                return TileEntityHPBase.this.getName();
-            }
-
-            @Override
-            public boolean hasCustomName() {
-                return false;
-            }
-
-            @Override
-            public ITextComponent getDisplayName() {
-                return TileEntityHPBase.this.getDisplayName();
-            }
-
-            @Nullable
-            @Override
-            public ITextComponent getCustomName() {
-                return null;
             }
         };
         handlerIn = LazyOptional.of(() -> new RangedWrapper(new InvWrapper(inventory), 0, 1));
@@ -172,16 +134,6 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
     public abstract int getInventoryStackLimit();
 
     public abstract boolean isItemValidForSlot(int index, ItemStack stack);
-
-    public int getField(int id) {
-        return 0;
-    }
-
-    public void setField(int id, int value) {}
-
-    public int getFieldCount() {
-        return 0;
-    }
 
     public abstract int getOutputSlot();
 
@@ -205,36 +157,25 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
         return getInventoryStackLimit();
     }
 
-    public IExtendedBlockState getExtendedState(IExtendedBlockState state) {
-        return state;
-    }
-
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
 
         itemStacks = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, itemStacks);
-
-        if (canBeRotated()) {
-            forward = EnumFacing.byName(compound.getString("forward"));
-        }
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
         ItemStackHelper.saveAllItems(compound, itemStacks);
 
-        if (canBeRotated()) {
-            compound.putString("forward", getForward().getName());
-        }
         return compound;
     }
 
     @Override
     public void markDirty() {
-        final IBlockState state = getWorld().getBlockState(getPos());
+        final BlockState state = getWorld().getBlockState(getPos());
         getWorld().notifyBlockUpdate(getPos(), state, state, 2);
         super.markDirty();
     }
@@ -273,39 +214,29 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
         return false;
     }
 
-    public EnumFacing getForward() {
-        if (forward == null)
-            return EnumFacing.NORTH;
-        return forward;
-    }
-
-    public void setForward(EnumFacing forward) {
-        this.forward = forward;
-    }
-
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-        return oldState.getBlock() != newState.getBlock();
+    public Direction getForward() {
+        return canBeRotated() ? getWorld().getBlockState(getPos()).getBlockState().get(BlockHPBase.FACING): Direction.NORTH;
     }
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), -999, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), -999, getUpdateTag());
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return write(new NBTTagCompound());
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
     }
 
     @Override
-    public void handleUpdateTag(NBTTagCompound tag) {
+    public void handleUpdateTag(CompoundNBT tag) {
         read(tag);
         markDirty();
     }
@@ -315,11 +246,11 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
     private LazyOptional<IItemHandler> handlerIn;
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable EnumFacing side) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (side == null)
                 return handlerNull.cast();
-            else if (side == EnumFacing.DOWN)
+            else if (side == Direction.DOWN)
                 return handlerBottom.cast();
             else
                 return handlerIn.cast();

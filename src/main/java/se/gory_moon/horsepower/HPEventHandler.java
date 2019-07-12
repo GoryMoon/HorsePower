@@ -1,17 +1,16 @@
 package se.gory_moon.horsepower;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -41,7 +40,6 @@ public class HPEventHandler {
 
     public static Map<ItemStack, Pair<Integer, Integer>> choppingAxes = new HashMap<>();
     public static Map<Integer, Pair<Integer, Integer>> harvestPercentages = new HashMap<>();
-    private static Map<ResourceLocation, Collection<ResourceLocation>> tagCache = new HashMap<>();
 
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -89,7 +87,7 @@ public class HPEventHandler {
     @SubscribeEvent
     public static void onWorldJoin(EntityJoinWorldEvent event) {
         if (FMLEnvironment.dist.isClient()) {
-            if (event.getEntity() instanceof EntityPlayerSP && event.getWorld() instanceof WorldClient && Minecraft.getInstance().player != null) {
+            if (event.getEntity() instanceof ClientPlayerEntity && event.getWorld() instanceof ClientWorld && Minecraft.getInstance().player != null) {
                 Utils.sendSavedErrors();
                 //HPEventHandler.reloadConfig();
             }
@@ -99,14 +97,14 @@ public class HPEventHandler {
     @SubscribeEvent
     public static void onServerJoined(PlayerEvent.PlayerLoggedInEvent event) {
         if (FMLEnvironment.dist.isDedicatedServer()) {
-            PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((EntityPlayerMP)event.getPlayer()).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+            PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((ServerPlayerEntity)event.getPlayer()).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
         }
     }
 
     @SubscribeEvent
     public static void onServerLeave(WorldEvent.Unload event) {
         if (FMLEnvironment.dist.isClient()) {
-            NetHandlerPlayClient handler = Minecraft.getInstance().getConnection();
+            ClientPlayNetHandler handler = Minecraft.getInstance().getConnection();
             if (handler != null && !handler.getNetworkManager().isLocalChannel() && HPRecipes.serverSyncedRecipes) {
                 HPRecipes.serverSyncedRecipes = false;
                 HPRecipes.instance().reloadRecipes();
@@ -122,7 +120,7 @@ public class HPEventHandler {
             StringBuilder part = new StringBuilder();
             if (Configs.CLIENT.showTags.get()) {
                 Item item = event.getItemStack().getItem();
-                Collection<ResourceLocation> tags = Optional.ofNullable(getTags(item)).orElse(Collections.emptyList());
+                Set<ResourceLocation> tags = item.getTags();
 
                 StringBuilder out = null;
                 for (ResourceLocation tag: tags) {
@@ -130,7 +128,9 @@ public class HPEventHandler {
                     else out.append("\n    ").append(tag);
                 }
                 if (out != null) {
-                    tooltipsToAdd.add(new TextComponentString(out.toString()));
+                    for (String s: out.toString().split("\n")) {
+                        tooltipsToAdd.add(new StringTextComponent(s));
+                    }
                     part = new StringBuilder("Tags");
                 }
             }
@@ -140,7 +140,7 @@ public class HPEventHandler {
                 for (String harv : Configs.CLIENT.harvestTypes.get()) {
                     int harvestLevel = event.getItemStack().getItem().getHarvestLevel(event.getItemStack(), ToolType.get(harv), null, null);
                     if (harvestLevel > -1) {
-                        tooltipsToAdd.add(new TextComponentString(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")"));
+                        tooltipsToAdd.add(new StringTextComponent(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")"));
                         if (!added) {
                             part.append((part.length() > 0) ? " and " : "").append("HarvestLevel");
                             added = true;
@@ -150,20 +150,13 @@ public class HPEventHandler {
             }
 
             if (!tooltipsToAdd.isEmpty()) {
-                tooltipsToAdd.add(new TextComponentString(Colors.LIGHTGRAY + "The " + part + " tooltip was added by HorsePower, to disabled check the config."));
-                if (GuiScreen.isShiftKeyDown()) {
+                tooltipsToAdd.add(new StringTextComponent(Colors.LIGHTGRAY + "The " + part + " tooltip was added by HorsePower, to disabled check the config."));
+                if (Screen.hasShiftDown()) {
                     event.getToolTip().addAll(tooltipsToAdd);
                 } else {
-                    event.getToolTip().add(new TextComponentString(Colors.LIGHTGRAY + "[Hold shift for more]"));
+                    event.getToolTip().add(new StringTextComponent(Colors.LIGHTGRAY + "[Hold shift for more]"));
                 }
             }
         }
-    }
-
-    private static Collection<ResourceLocation> getTags(Item item) {
-        return tagCache.computeIfAbsent(item.getRegistryName(), resourceLocation ->
-                ItemTags.getCollection().getOwningTags(item).isEmpty() ?
-                        null :
-                        ItemTags.getCollection().getOwningTags(item));
     }
 }

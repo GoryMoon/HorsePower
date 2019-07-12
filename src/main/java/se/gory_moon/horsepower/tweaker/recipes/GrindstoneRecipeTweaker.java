@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
-import se.gory_moon.horsepower.recipes.GrindstoneRecipe;
+import se.gory_moon.horsepower.recipes.MillstoneRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.tweaker.BaseHPAction;
 import se.gory_moon.horsepower.tweaker.TweakerPluginImpl;
@@ -77,8 +77,8 @@ public class GrindstoneRecipeTweaker {
             ItemStack secondary2 = getItemStack(secondary);
 
             for (ItemStack stack: items) {
-                GrindstoneRecipe recipe = new GrindstoneRecipe(stack, output2, secondary2, secondary2.isEmpty() ? 0: secondaryChance, time);
-                HPRecipes.instance().addGrindstoneRecipe(recipe, hand);
+                MillstoneRecipe recipe = new MillstoneRecipe(stack, output2, secondary2, secondary2.isEmpty() ? 0: secondaryChance, time);
+                HPRecipes.instance().addMillstoneRecipe(recipe, hand);
             }
         }
 
@@ -100,10 +100,10 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public void apply() {
-            ArrayList<GrindstoneRecipe> toRemove = new ArrayList<>();
-            Collection<GrindstoneRecipe> recipeList = hand && Configs.recipes.useSeperateGrindstoneRecipes ? HPRecipes.instance().getHandGrindstoneRecipes(): HPRecipes.instance().getGrindstoneRecipes();
+            ArrayList<MillstoneRecipe> toRemove = new ArrayList<>();
+            Collection<MillstoneRecipe> recipeList = hand && Configs.recipes.useSeperateMillstoneRecipes ? HPRecipes.instance().getHandMillstoneRecipes(): HPRecipes.instance().getMillstoneRecipes();
 
-            for (GrindstoneRecipe recipe: recipeList) {
+            for (MillstoneRecipe recipe: recipeList) {
                 if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
                     toRemove.add(recipe);
                 }

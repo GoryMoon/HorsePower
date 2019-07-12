@@ -1,15 +1,15 @@
 package se.gory_moon.horsepower.tileentity;
 
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.passive.AbstractHorse;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
+import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements ITickable{
+public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements ITickableTileEntity {
 
     protected static double[][] path = {{-1.5, -1.5}, {0, -1.5}, {1, -1.5}, {1, 0}, {1, 1}, {0, 1}, {-1.5, 1}, {-1.5, 0}};
     protected AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
@@ -28,8 +28,8 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     protected int target = origin;
 
     protected boolean hasWorker = false;
-    protected EntityCreature worker;
-    protected NBTTagCompound nbtWorker;
+    protected CreatureEntity worker;
+    protected CompoundNBT nbtWorker;
 
     protected boolean valid = false;
     protected int validationTimer = 0;
@@ -48,7 +48,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     public abstract int getPositionOffset();
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
 
         target = compound.getInt("target");
@@ -62,14 +62,14 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
+    public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("target", target);
         compound.putInt("origin", origin);
         compound.putBoolean("hasWorker", hasWorker);
 
         if (this.worker != null) {
             if (nbtWorker == null) {
-                NBTTagCompound nbtTagCompound = new NBTTagCompound();
+                CompoundNBT nbtTagCompound = new CompoundNBT();
                 UUID uuid = worker.getUniqueID();
                 nbtTagCompound.putUniqueId("UUID", uuid);
                 nbtWorker = nbtTagCompound;
@@ -88,11 +88,11 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         int z = pos.getZ();
 
         if (world != null) {
-            ArrayList<Class<? extends EntityCreature>> clazzes = Utils.getCreatureClasses();
+            ArrayList<Class<? extends CreatureEntity>> clazzes = Utils.getCreatureClasses();
             for (Class<? extends Entity> clazz : clazzes) {
                 for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
-                    if (entity instanceof EntityCreature) {
-                        EntityCreature creature = (EntityCreature) entity;
+                    if (entity instanceof CreatureEntity) {
+                        CreatureEntity creature = (CreatureEntity) entity;
                         if (creature.getUniqueID().equals(uuid)) {
                             setWorker(creature);
                             return true;
@@ -104,13 +104,13 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         return false;
     }
 
-    public void setWorker(EntityCreature newWorker) {
+    public void setWorker(CreatureEntity newWorker) {
         hasWorker = true;
         worker = newWorker;
         worker.setHomePosAndDistance(pos, 3);
         target = getClosestTarget();
         if (worker != null) {
-            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            CompoundNBT nbtTagCompound = new CompoundNBT();
             UUID uuid = worker.getUniqueID();
             nbtTagCompound.putUniqueId("UUID", uuid);
             nbtWorker = nbtTagCompound;
@@ -118,7 +118,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         markDirty();
     }
 
-    public void setWorkerToPlayer(EntityPlayer player) {
+    public void setWorkerToPlayer(PlayerEntity player) {
         if (hasWorker() && worker.canBeLeashedTo(player)) {
             hasWorker = false;
             worker.detachHome();
@@ -129,7 +129,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     }
 
     public boolean hasWorker() {
-        if (worker != null && worker.isAlive() && !worker.getLeashed() && worker.getDistanceSq(pos) < 45) {
+        if (worker != null && worker.isAlive() && !worker.getLeashed() && worker.getDistanceSq(pos.getX(), pos.getY(), pos.getZ()) < 45) {
             return true;
         } else {
             if (worker != null) {
@@ -143,7 +143,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
         }
     }
 
-    public EntityCreature getWorker() {
+    public CreatureEntity getWorker() {
         return worker;
     }
 
@@ -165,11 +165,8 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
 
             for (int i = 0; i < path.length; i++) {
                 Vec3d pos = getPathPosition(i);
-                double x = pos.x;
-                double y = pos.y;
-                double z = pos.z;
 
-                double tmp = worker.getDistance(x, y, z);
+                double tmp = pos.distanceTo(worker.getPositionVector());
                 if (tmp < dist) {
                     dist = tmp;
                     closest = i;
@@ -239,8 +236,8 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
                         target = next;
                     }
 
-                    if (worker instanceof AbstractHorse && ((AbstractHorse)worker).isEatingHaystack()) {
-                        ((AbstractHorse)worker).setEatingHaystack(false);
+                    if (worker instanceof AbstractHorseEntity && ((AbstractHorseEntity)worker).isEatingHaystack()) {
+                        ((AbstractHorseEntity)worker).setEatingHaystack(false);
                     }
 
                     if (target != -1 && worker.getNavigator().noPath()) {

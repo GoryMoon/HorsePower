@@ -1,15 +1,16 @@
 package se.gory_moon.horsepower.util;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.state.IBlockState;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.init.Items;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.item.Items;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -29,10 +30,10 @@ public class RenderUtils {
         return getTopTextureFromBlockstate(state);
     }*/
 
-    public static TextureAtlasSprite getTopTextureFromBlockstate(IBlockState state) {
+    public static TextureAtlasSprite getTopTextureFromBlockstate(BlockState state) {
         IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(state);
         if (model != Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getMissingModel()) {
-            List<BakedQuad> quads = model.getQuads(state, EnumFacing.UP, Minecraft.getInstance().world.rand);
+            List<BakedQuad> quads = model.getQuads(state, Direction.UP, Minecraft.getInstance().world.rand);
             return quads.size() >= 1 ? quads.get(0).getSprite(): Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
         }
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
@@ -43,7 +44,7 @@ public class RenderUtils {
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
     }*/
 
-    public static TextureAtlasSprite getTextureFromBlockstate(IBlockState state) {
+    public static TextureAtlasSprite getTextureFromBlockstate(BlockState state) {
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
     }
 
@@ -69,7 +70,7 @@ public class RenderUtils {
         GlStateManager.pushMatrix();
 
         GlStateManager.disableLighting();
-        GlStateManager.disableTexture2D();
+        GlStateManager.disableTexture();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0f);
@@ -89,17 +90,20 @@ public class RenderUtils {
                     if ((xo <= 1 && xo >= -1) && (zo <= 1 && zo >= -1))
                         continue;
                     if (pos.getY() >= 0) {
-                        IBlockState state = world.getBlockState(pos);
+                        BlockState state = world.getBlockState(pos);
+                        double playerX = -TileEntityRendererDispatcher.staticPlayerX;
+                        double playerY = -TileEntityRendererDispatcher.staticPlayerY;
+                        double playerZ = -TileEntityRendererDispatcher.staticPlayerZ;
                         if (!state.getMaterial().isReplaceable()) {
                             GlStateManager.color4f(1, 0, 0, invalidAplha);
-                            drawBoundingBoxOutline(new AxisAlignedBB(pos).offset(-Minecraft.getInstance().getRenderManager().viewerPosX, -Minecraft.getInstance().getRenderManager().viewerPosY, -Minecraft.getInstance().getRenderManager().viewerPosZ));
-                            VoxelShape shape = state.getCollisionShape(world, pos).withOffset(pos.getX(), pos.getY(), pos.getZ()).withOffset(-Minecraft.getInstance().getRenderManager().viewerPosX, -Minecraft.getInstance().getRenderManager().viewerPosY, -Minecraft.getInstance().getRenderManager().viewerPosZ);
+                            drawBoundingBoxOutline(new AxisAlignedBB(pos).offset(playerX, playerY, playerZ));
+                            VoxelShape shape = state.getCollisionShape(world, pos).withOffset(pos.getX(), pos.getY(), pos.getZ()).withOffset(playerX, playerY, playerZ);
                             for (AxisAlignedBB aabb: shape.toBoundingBoxList()) {
                                 drawBoundingBox(aabb);
                             }
                         } else {
                             GlStateManager.color4f(0, 1, 0, validAplha);
-                            drawBoundingBoxOutline(new AxisAlignedBB(pos).offset(-Minecraft.getInstance().getRenderManager().viewerPosX, -Minecraft.getInstance().getRenderManager().viewerPosY, -Minecraft.getInstance().getRenderManager().viewerPosZ));
+                            drawBoundingBoxOutline(new AxisAlignedBB(pos).offset(playerX, playerY, playerZ));
                         }
                     }
                 }
@@ -112,7 +116,7 @@ public class RenderUtils {
         GlStateManager.color4f(1, 1, 1, 1);
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
         GlStateManager.depthMask(true);
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.enableDepthTest();
         GlStateManager.disableBlend();
         GlStateManager.enableLighting();
