@@ -67,6 +67,10 @@ public class UseHorseMillstoneTrigger implements ICriterionTrigger<UseHorseMills
         public Instance() {
             super(ID);
         }
+
+        public static Instance userMillstone() {
+            return new Instance();
+        }
     }
 
     static class Listeners

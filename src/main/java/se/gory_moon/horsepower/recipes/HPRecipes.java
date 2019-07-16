@@ -54,7 +54,7 @@ public class HPRecipes {
         createRecipes(PressRecipe.class, press, false).forEach(this::addPressRecipe);
 
         addMillstoneRecipe(Items.BONE, new ItemStack(Items.BONE_MEAL, 3), 12, false);
-        addMillstoneRecipe(Items.WHEAT, new ItemStack(ModItems.FLOUR, 1), 12, false);
+        addMillstoneRecipe(Items.WHEAT, new ItemStack(ModItems.FLOUR.orElse(null), 1), 12, false);
         //HorsePowerMod.tweakerPlugin.applyTweaker();
     }
 

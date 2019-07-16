@@ -12,7 +12,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
-import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -45,7 +44,6 @@ public class HorsePowerMod {
             tweakerPlugin = new TweakerPluginImpl();
 
         tweakerPlugin.register();*/
-        ModItems.registerRecipes();
     }
 
     public void loadComplete(FMLLoadCompleteEvent event) {

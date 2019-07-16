@@ -67,6 +67,10 @@ public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instan
         public Instance() {
             super(ID);
         }
+
+        public static Instance userPress() {
+            return new Instance();
+        }
     }
 
     static class Listeners

@@ -124,14 +124,14 @@ public class HPEventHandler {
 
                 StringBuilder out = null;
                 for (ResourceLocation tag: tags) {
-                    if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "Tags:\n    " + Colors.ORANGE + tag);
+                    if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "HPTags:\n    " + Colors.ORANGE + tag);
                     else out.append("\n    ").append(tag);
                 }
                 if (out != null) {
                     for (String s: out.toString().split("\n")) {
                         tooltipsToAdd.add(new StringTextComponent(s));
                     }
-                    part = new StringBuilder("Tags");
+                    part = new StringBuilder("HPTags");
                 }
             }
 

@@ -67,6 +67,10 @@ public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlo
         public Instance() {
             super(ID);
         }
+
+        public static Instance userChoppingBlock() {
+            return new Instance();
+        }
     }
 
     static class Listeners

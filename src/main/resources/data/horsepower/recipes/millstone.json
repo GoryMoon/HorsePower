@@ -1,21 +1,22 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "  S",
+    "SLS",
     "###",
     "###"
   ],
   "key": {
+    "#": {
+      "tag": "forge:stone"
+    },
+    "L": {
+      "item": "minecraft:lead"
+    },
     "S": {
       "tag": "forge:rods/wooden"
-    },
-    "#": [
-      {
-        "tag": "forge:stone"
-      }
-    ]
+    }
   },
   "result": {
-    "item": "horsepower:hand_millstone"
+    "item": "horsepower:millstone"
   }
 }

@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:food/dough",
+    "#forge:food/flour"
+  ]
+}

@@ -14,8 +14,6 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.lib.Reference;
 
 import java.util.HashSet;
@@ -55,7 +53,7 @@ public class ModModelManager {
     }
 
     private void registerBlockModels() {
-        ModBlocks.RegistrationHandler.ITEM_BLOCKS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
+        //ModBlocks.RegistrationHandler.ITEM_BLOCKS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
     }
 
     /**
@@ -63,7 +61,7 @@ public class ModModelManager {
      */
     private void registerItemModels() {
         // Then register items with default model names
-        ModItems.RegistrationHandler.ITEMS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
+        //ModItems.RegistrationHandler.ITEMS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
     }
 
 
