@@ -1,14 +1,18 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.blocks.BlockMillstone;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.recipes.HPRecipeBase;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
@@ -22,7 +26,7 @@ public class TileEntityMillstone extends TileEntityHPHorseBase {
     public int millColor = -1;
 
     public TileEntityMillstone() {
-        super(3, ModBlocks.millstoneTile);
+        super(3, ModBlocks.MILLSTONE_TILE.orElseThrow(RuntimeException::new));
     }
 
     @Override
@@ -94,13 +98,8 @@ public class TileEntityMillstone extends TileEntityHPHorseBase {
     }
 
     @Override
-    public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getMillstoneRecipe(getStackInSlot(0), false);
-    }
-
-    @Override
-    public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getMillstoneResult(getStackInSlot(0), false);
+    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
+        return RecipeSerializers.MILLING_TYPE;
     }
 
     @Override
@@ -110,9 +109,9 @@ public class TileEntityMillstone extends TileEntityHPHorseBase {
 
     private void millItem() {
         if (canWork()) {
-            HPRecipeBase recipe = getRecipe();
-            ItemStack result = recipe.getOutput();
-            ItemStack secondary = recipe.getSecondary();
+            AbstractHPRecipe recipe = getRecipe();
+            ItemStack result = recipe.getCraftingResult(inventory);
+            ItemStack secondary = recipe.getCraftingSecondary();
 
             ItemStack input = getStackInSlot(0);
             ItemStack output = getStackInSlot(1);

@@ -62,23 +62,23 @@ public class TweakerPluginImpl implements ITweakerPlugin {
     }
 
     @ZenMethod
-    public static void addShaped(String name, IIngredient ore, IItemStack output, IIngredient[][] ingredients) {
-        MCRecipeManager.recipesToAdd.add(new AddShapedChoppingRecipe(name, ore, output, ingredients));
+    public static void addShaped(String name, IIngredient ore, IItemStack result, IIngredient[][] ingredients) {
+        MCRecipeManager.recipesToAdd.add(new AddShapedChoppingRecipe(name, ore, result, ingredients));
     }
 
     @ZenMethod
-    public static void addShaped(IIngredient ore, IItemStack output, IIngredient[][] ingredients) {
-        MCRecipeManager.recipesToAdd.add(new AddShapedChoppingRecipe(ore, output, ingredients));
+    public static void addShaped(IIngredient ore, IItemStack result, IIngredient[][] ingredients) {
+        MCRecipeManager.recipesToAdd.add(new AddShapedChoppingRecipe(ore, result, ingredients));
     }
 
     @ZenMethod
-    public static void addShapeless(String name, IIngredient ore, IItemStack output, IIngredient[] ingredients) {
-        MCRecipeManager.recipesToAdd.add(new AddShapelessChoppingRecipe(name, ore, output, ingredients));
+    public static void addShapeless(String name, IIngredient ore, IItemStack result, IIngredient[] ingredients) {
+        MCRecipeManager.recipesToAdd.add(new AddShapelessChoppingRecipe(name, ore, result, ingredients));
     }
 
     @ZenMethod
-    public static void addShapeless(IIngredient ore, IItemStack output, IIngredient[] ingredients) {
-        MCRecipeManager.recipesToAdd.add(new AddShapelessChoppingRecipe(ore, output, ingredients));
+    public static void addShapeless(IIngredient ore, IItemStack result, IIngredient[] ingredients) {
+        MCRecipeManager.recipesToAdd.add(new AddShapelessChoppingRecipe(ore, result, ingredients));
     }
 
     public static IRecipe convert(CTShapedChoppingRecipe recipe, ResourceLocation name) {
@@ -131,27 +131,27 @@ public class TweakerPluginImpl implements ITweakerPlugin {
     private static class AddShapedChoppingRecipe extends MCRecipeManager.ActionBaseAddRecipe {
 
         private IIngredient ore;
-        private IItemStack output;
+        private IItemStack result;
         private IIngredient[][] ingredients;
         private String name;
 
-        public AddShapedChoppingRecipe(IIngredient ore, IItemStack output, IIngredient[][] ingredients) {
+        public AddShapedChoppingRecipe(IIngredient ore, IItemStack result, IIngredient[][] ingredients) {
             this.ore = ore;
-            this.output = output;
+            this.result = result;
             this.ingredients = ingredients;
             this.name = calculateName();
         }
 
-        public AddShapedChoppingRecipe(String name, IIngredient ore, IItemStack output, IIngredient[][] ingredients) {
+        public AddShapedChoppingRecipe(String name, IIngredient ore, IItemStack result, IIngredient[][] ingredients) {
             this.ore = ore;
             this.name = MCRecipeManager.cleanRecipeName(name);
-            this.output = output;
+            this.result = result;
             this.ingredients = ingredients;
         }
 
         @Override
         public void apply() {
-            CTShapedChoppingRecipe recipe = new CTShapedChoppingRecipe(ore, name, output, ingredients);
+            CTShapedChoppingRecipe recipe = new CTShapedChoppingRecipe(ore, name, result, ingredients);
             IRecipe irecipe = convert(recipe, new ResourceLocation("horsepower", name));
 
             irecipe.setRegistryName(new ResourceLocation("horsepower", this.name));
@@ -160,13 +160,13 @@ public class TweakerPluginImpl implements ITweakerPlugin {
 
         @Override
         public String describe() {
-            return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(output);
+            return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(result);
         }
 
         @Override
         public String calculateName() {
             StringBuilder sb = new StringBuilder();
-            sb.append(MCRecipeManager.saveToString(output));
+            sb.append(MCRecipeManager.saveToString(result));
 
             for(IIngredient[] ingredient : ingredients) {
                 for(IIngredient iIngredient : ingredient) {
@@ -186,27 +186,27 @@ public class TweakerPluginImpl implements ITweakerPlugin {
     private static class AddShapelessChoppingRecipe extends MCRecipeManager.ActionBaseAddRecipe {
 
         private IIngredient ore;
-        private IItemStack output;
+        private IItemStack result;
         private IIngredient[] ingredients;
         private String name;
 
-        public AddShapelessChoppingRecipe(IIngredient ore, IItemStack output, IIngredient[] ingredients) {
+        public AddShapelessChoppingRecipe(IIngredient ore, IItemStack result, IIngredient[] ingredients) {
             this.ore = ore;
-            this.output = output;
+            this.result = result;
             this.ingredients = ingredients;
             this.name = calculateName();
         }
 
-        public AddShapelessChoppingRecipe(String name, IIngredient ore, IItemStack output, IIngredient[] ingredients) {
+        public AddShapelessChoppingRecipe(String name, IIngredient ore, IItemStack result, IIngredient[] ingredients) {
             this.ore = ore;
             this.name = MCRecipeManager.cleanRecipeName(name);
-            this.output = output;
+            this.result = result;
             this.ingredients = ingredients;
         }
 
         @Override
         public void apply() {
-            CTShapelessChoppingRecipe recipe = new CTShapelessChoppingRecipe(ore, name, output, ingredients);
+            CTShapelessChoppingRecipe recipe = new CTShapelessChoppingRecipe(ore, name, result, ingredients);
             IRecipe irecipe = convert(recipe, new ResourceLocation("horsepower", name));
 
             irecipe.setRegistryName(new ResourceLocation("horsepower", this.name));
@@ -215,13 +215,13 @@ public class TweakerPluginImpl implements ITweakerPlugin {
 
         @Override
         public String describe() {
-            return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(output);
+            return "Adding dynamic chopping recipe for " + MCRecipeManager.saveToString(result);
         }
 
         @Override
         public String calculateName() {
             StringBuilder sb = new StringBuilder();
-            sb.append(MCRecipeManager.saveToString(output));
+            sb.append(MCRecipeManager.saveToString(result));
 
             for(IIngredient iIngredient : ingredients) {
                 sb.append(MCRecipeManager.saveToString(iIngredient));

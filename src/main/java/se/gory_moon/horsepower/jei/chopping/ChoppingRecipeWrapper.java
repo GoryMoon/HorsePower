@@ -24,7 +24,7 @@ import java.util.List;
 public class ChoppingRecipeWrapper implements IRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
-    private final ItemStack output;
+    private final ItemStack result;
     private final int time;
     private final double printLaps;
     private final IDrawableAnimated arrow;
@@ -34,9 +34,9 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
         this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getTime(), recipe instanceof ManualChoppingBlockRecipe);
     }
 
-    public ChoppingRecipeWrapper(List<ItemStack> inputs, ItemStack output, int time, boolean hand) {
+    public ChoppingRecipeWrapper(List<ItemStack> inputs, ItemStack result, int time, boolean hand) {
         this.inputs = Collections.singletonList(inputs);
-        this.output = output;
+        this.result = result;
         this.time = time;
         this.hand = hand;
 
@@ -51,7 +51,7 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputLists(ItemStack.class, inputs);
-        ingredients.setOutput(ItemStack.class, output);
+        ingredients.setOutput(ItemStack.class, result);
     }
 
     @Override
@@ -84,13 +84,13 @@ public class ChoppingRecipeWrapper implements IRecipeWrapper {
             }
         }
 
-        return time == that.time && flag && output.equals(that.output);
+        return time == that.time && flag && result.equals(that.result);
     }
 
     @Override
     public int hashCode() {
         int result = inputs.hashCode();
-        result = 31 * result + output.hashCode();
+        result = 31 * result + result.hashCode();
         result = 31 * result + time;
         return result;
     }

@@ -83,14 +83,14 @@ public class HPRecipes {
                     try {
                         time = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and output " + stacks.get(1) + ", index: " + index, false);
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe time '" + item + "' from config for input " + stacks.get(0) + " and result " + stacks.get(1) + ", index: " + index, false);
                         time = -1;
                     }
                 } else if (stacks.size() == 3) {
                     try {
                         secondaryChance = Integer.parseInt(item);
                     } catch (NumberFormatException e) {
-                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", output " + stacks.get(1) + " and secondary " + stacks.get(2) + ", index: " + index, false);
+                        Utils.errorMessage("Parse error with " + clazz.getSimpleName().replaceAll("Recipe", "") + " recipe secondary chance '" + secondaryChance + "' from config for input " + stacks.get(0) + ", result " + stacks.get(1) + " and secondary " + stacks.get(2) + ", index: " + index, false);
                     }
                 }
             }
@@ -168,7 +168,7 @@ public class HPRecipes {
     }
 
     public void addChoppingRecipe(Item input, ItemStack output, int time, boolean hand) {
-        //addChoppingRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output, time, hand);
+        //addChoppingRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), result, time, hand);
     }
 
     public void addChoppingRecipe(ItemStack input, ItemStack output, int time, boolean hand) {
@@ -200,7 +200,7 @@ public class HPRecipes {
     }
 
     public void addPressRecipe(Item input, ItemStack output) {
-        //addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
+        //addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), result);
     }
 
     public void addPressRecipe(ItemStack input, ItemStack output) {
@@ -212,7 +212,7 @@ public class HPRecipes {
     }
 
     public void addPressRecipe(Item input, FluidStack output) {
-        //addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), output);
+        //addPressRecipe(new ItemStack(input, 1, OreDictionary.WILDCARD_VALUE), result);
     }
 
     public void addPressRecipe(ItemStack input, FluidStack output) {

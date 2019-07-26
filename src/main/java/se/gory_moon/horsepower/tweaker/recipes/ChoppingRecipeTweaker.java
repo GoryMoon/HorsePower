@@ -27,15 +27,15 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStacks;
 public class ChoppingRecipeTweaker {
 
     @ZenMethod
-    public static void add(IIngredient input, IItemStack output, int time, @Optional boolean hand) {
-        AddChoppingRecipe recipe = new AddChoppingRecipe(input, output, ItemStack.EMPTY, 0, time, hand);
+    public static void add(IIngredient input, IItemStack result, int time, @Optional boolean hand) {
+        AddChoppingRecipe recipe = new AddChoppingRecipe(input, result, ItemStack.EMPTY, 0, time, hand);
         TweakerPluginImpl.toAdd.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
     @ZenMethod
-    public static void remove(IIngredient output, @Optional boolean hand) {
-        RemoveChoppingRecipe recipe = new RemoveChoppingRecipe(output, hand);
+    public static void remove(IIngredient result, @Optional boolean hand) {
+        RemoveChoppingRecipe recipe = new RemoveChoppingRecipe(result, hand);
         TweakerPluginImpl.toRemove.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
@@ -43,15 +43,15 @@ public class ChoppingRecipeTweaker {
     private static class AddChoppingRecipe extends BaseHPAction {
 
         private final IIngredient input;
-        private final IItemStack output;
+        private final IItemStack result;
         private final ItemStack secondary;
         private final int secondaryChance;
         private final int time;
         private final boolean hand;
 
-        public AddChoppingRecipe(IIngredient input, IItemStack output, ItemStack secondary, int secondaryChance, int time, boolean hand) {
+        public AddChoppingRecipe(IIngredient input, IItemStack result, ItemStack secondary, int secondaryChance, int time, boolean hand) {
             this.input = input;
-            this.output = output;
+            this.result = result;
             this.secondary = secondary;
             this.secondaryChance = secondaryChance;
             this.time = time;
@@ -67,7 +67,7 @@ public class ChoppingRecipeTweaker {
             }
 
             ItemStack[] items2 = getItemStacks(items);
-            ItemStack output2 = getItemStack(output);
+            ItemStack output2 = getItemStack(result);
 
             for (ItemStack stack: items2) {
                 ChoppingBlockRecipe recipe = new ChoppingBlockRecipe(stack, output2, secondary, secondary.isEmpty() ? 0: secondaryChance, time);
@@ -83,11 +83,11 @@ public class ChoppingRecipeTweaker {
 
     private static class RemoveChoppingRecipe extends BaseHPAction {
 
-        private final IIngredient output;
+        private final IIngredient result;
         private final boolean hand;
 
-        private RemoveChoppingRecipe(IIngredient output, boolean hand) {
-            this.output = output;
+        private RemoveChoppingRecipe(IIngredient result, boolean hand) {
+            this.result = result;
             this.hand = hand;
         }
 
@@ -98,7 +98,7 @@ public class ChoppingRecipeTweaker {
             Collection<ChoppingBlockRecipe> recipeList = hand && Configs.recipes.useSeperateChoppingRecipes ? HPRecipes.instance().getManualChoppingRecipes(): HPRecipes.instance().getChoppingRecipes();
 
             for (ChoppingBlockRecipe recipe: recipeList) {
-                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
+                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(result), recipe.getOutput(), false)) {
                     toRemove.add(recipe);
                 }
             }
@@ -110,7 +110,7 @@ public class ChoppingRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Removing chopping recipes for " + MCRecipeManager.saveToString(output);
+            return "Removing chopping recipes for " + MCRecipeManager.saveToString(result);
         }
 
     }

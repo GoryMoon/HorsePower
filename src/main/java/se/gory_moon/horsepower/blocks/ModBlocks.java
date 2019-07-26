@@ -18,7 +18,7 @@ import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.items.ItemBlockDouble;
 import se.gory_moon.horsepower.lib.Constants;
 import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
@@ -28,23 +28,25 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import static net.minecraftforge.fml.RegistryObject.of;
+import static se.gory_moon.horsepower.lib.Reference.RESOURCE_PREFIX;
 
 public class ModBlocks {
 
-    public static final RegistryObject<BlockHandMillstone> BLOCK_HAND_MILLSTONE = of(Reference.RESOURCE_PREFIX + Constants.HAND_MILLSTONE_BLOCK, () -> Block.class);
-    public static final RegistryObject<BlockMillstone> BLOCK_MILLSTONE = of(Reference.RESOURCE_PREFIX + Constants.MILLSTONE_BLOCK, () -> Block.class);
+    public static final RegistryObject<BlockHandMillstone> BLOCK_HAND_MILLSTONE = of(RESOURCE_PREFIX + Constants.HAND_MILLSTONE_BLOCK, () -> Block.class);
+    public static final RegistryObject<BlockMillstone> BLOCK_MILLSTONE = of(RESOURCE_PREFIX + Constants.MILLSTONE_BLOCK, () -> Block.class);
 
     /*public static final BlockChoppingBlock BLOCK_MANUAL_CHOPPER = new BlockChoppingBlock();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
     public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0);//.setHardness(5F).setResistance(5F);*/
 
-    public static final RegistryObject<BlockPress> BLOCK_PRESS = of(Reference.RESOURCE_PREFIX + Constants.PRESS_BLOCK, () -> Block.class);
-    public static final RegistryObject<BlockFiller> BLOCK_PRESS_FILLER = of(Reference.RESOURCE_PREFIX + Constants.PRESS_FILLER, () -> Block.class);
+    public static final RegistryObject<BlockPress> BLOCK_PRESS = of(RESOURCE_PREFIX + Constants.PRESS_BLOCK, () -> Block.class);
+    public static final RegistryObject<BlockFiller> BLOCK_PRESS_FILLER = of(RESOURCE_PREFIX + Constants.PRESS_FILLER, () -> Block.class);
 
-    public static TileEntityType<TileEntityMillstone> millstoneTile;
-    public static TileEntityType<TileEntityHandMillstone> handMillstoneTile;
-    public static TileEntityType<TileEntityPress> pressTile;
-    public static TileEntityType<TileEntityFiller> fillerTile;
+    public static final RegistryObject<TileEntityType<?>> MILLSTONE_TILE = of(RESOURCE_PREFIX + Constants.PRESS_BLOCK, () -> TileEntityType.class);
+    public static final RegistryObject<TileEntityType<?>> HAND_MILLSTONE_TILE = of(RESOURCE_PREFIX + Constants.HAND_MILLSTONE_BLOCK, () -> TileEntityType.class);
+    public static final RegistryObject<TileEntityType<?>> PRESS_TILE = of(RESOURCE_PREFIX + Constants.PRESS_BLOCK, () -> TileEntityType.class);
+
+    public static final RegistryObject<TileEntityType<?>> FILLER_TILE = of(RESOURCE_PREFIX + Constants.FILLER, () -> TileEntityType.class);
 
     @Mod.EventBusSubscriber(modid = Reference.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -83,11 +85,11 @@ public class ModBlocks {
         public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
             HorsePowerMod.itemGroup = new HorsePowerItemGroup();
             final BlockItem[] items = {
-                new BlockItem(BLOCK_HAND_MILLSTONE.orElse(null), new Item.Properties().group(HorsePowerMod.itemGroup)),
-                new BlockItem(BLOCK_MILLSTONE.orElse(null), new Item.Properties().group(HorsePowerMod.itemGroup)),
+                new BlockItem(BLOCK_HAND_MILLSTONE.orElseThrow(RuntimeException::new), new Item.Properties().group(HorsePowerMod.itemGroup)),
+                new BlockItem(BLOCK_MILLSTONE.orElseThrow(RuntimeException::new), new Item.Properties().group(HorsePowerMod.itemGroup)),
                 /*new ItemBlock(BLOCK_MANUAL_CHOPPER),
                 new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),*/
-                new ItemBlockDouble(BLOCK_PRESS.orElse(null), BLOCK_PRESS_FILLER.orElse(null))
+                new ItemBlockDouble(BLOCK_PRESS.orElseThrow(RuntimeException::new), BLOCK_PRESS_FILLER.orElseThrow(RuntimeException::new))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
@@ -101,10 +103,10 @@ public class ModBlocks {
         @SubscribeEvent
         public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
             IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
-            reg.register(millstoneTile = create(TileEntityMillstone::new, BLOCK_MILLSTONE, Constants.MILLSTONE_BLOCK));
-            reg.register(handMillstoneTile = create(TileEntityHandMillstone::new, BLOCK_HAND_MILLSTONE, Constants.HAND_CHOPPING_BLOCK));
-            reg.register(pressTile = create(TileEntityPress::new, BLOCK_PRESS, Constants.PRESS_BLOCK));
-            reg.register(fillerTile = create(TileEntityFiller::new, BLOCK_PRESS_FILLER, Constants.PRESS_FILLER));
+            reg.register(create(TileEntityMillstone::new, BLOCK_MILLSTONE, Constants.MILLSTONE_BLOCK));
+            reg.register(create(TileEntityHandMillstone::new, BLOCK_HAND_MILLSTONE, Constants.HAND_CHOPPING_BLOCK));
+            reg.register(create(TileEntityPress::new, BLOCK_PRESS, Constants.PRESS_BLOCK));
+            reg.register(create(FillerTileEntity::new, BLOCK_PRESS_FILLER, Constants.FILLER));
         }
 
         private static <T extends TileEntity> TileEntityType<T> create(Supplier<? extends T> factory, RegistryObject<? extends Block> block, String name) {

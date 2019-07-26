@@ -146,12 +146,12 @@ public class TileEntityChopper extends TileEntityHPHorseBase {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);
             ItemStack result = getRecipeItemStack();
-            ItemStack output = getStackInSlot(1);
+            ItemStack result = getStackInSlot(1);
 
-            if (output.isEmpty()) {
+            if (result.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
-            } else if (output.getItem() == result.getItem()) {
-                output.grow(result.getCount());
+            } else if (result.getItem() == result.getItem()) {
+                result.grow(result.getCount());
             }
 
             input.shrink(1);

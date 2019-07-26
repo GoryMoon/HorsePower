@@ -85,7 +85,7 @@ public class Configs {
 //        @Config.RequiresMcRestart
         public boolean useSeperateChoppingRecipes = false;
 
-/*        @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: ", "modid:input:tag${nbt}-modid:output@amount${nbt}-time[-modid:secondary@amount${nbt}-chance]",
+/*        @Comment({"Add recipes to the Grindstone Block here, the format of the recipes is: ", "modid:input:tag${nbt}-modid:result@amount${nbt}-time[-modid:secondary@amount${nbt}-chance]",
                 "The amount is optional, if not set 1 is default, ${nbt} is optional and follows vanilla tag syntax",
                 "The part in [] is optional, the chance can be 0-100",
                 "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
@@ -120,7 +120,7 @@ public class Configs {
 //        @Name("Hand Grindstone Recipes")
         public String[] handMillstoneRecipes = {};
 
-/*        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:output@amount${nbt}-time",
+/*        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:result@amount${nbt}-time",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
                 "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
                 "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
@@ -148,10 +148,10 @@ public class Configs {
                 "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-4"
         };
 
-/*        @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:tag@amount${nbt}-modid:output@amount${nbt}",
+/*        @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:tag@amount${nbt}-modid:result@amount${nbt}",
                 "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
                 "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
-                "The 'modid' for the output can be 'fluid' for fluid outputs",
+                "The 'modid' for the result can be 'fluid' for fluid outputs",
                 "The time is same for all recipes, it uses the \"Points For Press\"",
                 "Must be edited with in-game editor for live changes."})
         @Name("Press Recipes")
@@ -177,13 +177,13 @@ public class Configs {
 //        @Name("Should Damage Axe")
         public boolean shouldDamageAxe = true;
 
-//        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:input${nbt}=baseAmount-chance", "meta is optional and ${nbt} is also optional and follows vanilla tag syntax", "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
+//        @Comment({"The items to use with the manual chopping block, syntax is: ", "modid:input${nbt}=baseAmount-chance", "meta is optional and ${nbt} is also optional and follows vanilla tag syntax", "The baseAmount is the percentage of returned items, the chance is for getting one more result"})
 //        @Config.LangKey("config.horsepower.chopping_axes")
 //        @Name("Chopping Block Axes")
         public String[] choppingBlockAxes = {};
 
 //        @Comment({"The percentage amount for the different materials", "The syntax is harvestLevel=baseAmount-chance",
-//                "The baseAmount is the percentage of returned items, the chance is for getting one more output"})
+//                "The baseAmount is the percentage of returned items, the chance is for getting one more result"})
 //        @Name("Harvestable Percentages")
 //        @Config.LangKey("config.horsepower.harvest")
         public String[] harvestable_percentage = {
@@ -195,7 +195,7 @@ public class Configs {
         };
 
 //        @Comment({"If true the manual chopping block will drop the result items", "If false the manual chopping block will put the result items in it's internal inventory"})
-//        @Name("Manual Chopping Block output")
+//        @Name("Manual Chopping Block result")
         public boolean choppingBlockDrop = true;
 
 //        @Comment({"That amount of \"points\" for the chopper to do windup and do a chop", "One lap around the chopping block is 8 \"points\""})

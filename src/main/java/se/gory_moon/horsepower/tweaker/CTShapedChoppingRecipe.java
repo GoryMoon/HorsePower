@@ -10,11 +10,11 @@ public class CTShapedChoppingRecipe {
     private final byte[] posx;
     private final byte[] posy;
     private final IIngredient ore;
-    private final IItemStack output;
+    private final IItemStack result;
     private final IIngredient[] ingredients;
     private final String name;
 
-    public CTShapedChoppingRecipe(IIngredient ore, String name, IItemStack output, IIngredient[][] ingredients) {
+    public CTShapedChoppingRecipe(IIngredient ore, String name, IItemStack result, IIngredient[][] ingredients) {
         int numIngredients = 0;
         IIngredient[][] var8 = ingredients;
         int height1 = ingredients.length;
@@ -37,7 +37,7 @@ public class CTShapedChoppingRecipe {
 
         this.posx = new byte[numIngredients];
         this.posy = new byte[numIngredients];
-        this.output = output;
+        this.result = result;
         this.ingredients = new IIngredient[numIngredients];
         this.name = name;
         int width1 = 0;
@@ -84,7 +84,7 @@ public class CTShapedChoppingRecipe {
     }
 
     public IItemStack getOutput() {
-        return this.output;
+        return this.result;
     }
 
     public IIngredient getOre() {

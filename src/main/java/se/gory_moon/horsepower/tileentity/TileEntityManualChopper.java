@@ -95,7 +95,7 @@ public class TileEntityManualChopper extends TileEntityHPBase {
             ItemStack input = getStackInSlot(0);
             if (!getWorld().isRemote) {
                 ItemStack result = getRecipeItemStack();
-                ItemStack output = getStackInSlot(1);
+                ItemStack result = getStackInSlot(1);
 
                 double baseAmount = ((double) getBaseAmount(held, player)) / 100D;
                 int chance = getChance(held, player);
@@ -108,10 +108,10 @@ public class TileEntityManualChopper extends TileEntityHPBase {
                 if (Configs.general.choppingBlockDrop) {
                     InventoryHelper.spawnItemStack(getWorld(), getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), result);
                 } else {
-                    if (output.isEmpty()) {
+                    if (result.isEmpty()) {
                         setInventorySlotContents(1, result);
-                    } else if (output.getItem() == result.getItem()) {
-                        output.grow(result.getCount());
+                    } else if (result.getItem() == result.getItem()) {
+                        result.grow(result.getCount());
                     }
                 }
             }

@@ -4,16 +4,16 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 
-public class TileEntityFillerRender extends TileEntityRenderer<TileEntityFiller> {
+public class TileEntityFillerRender extends TileEntityRenderer<FillerTileEntity> {
 
     @Override
-    public void render(TileEntityFiller te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(FillerTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         drawDisplayText(te, x, y, z);
     }
 
-    public void drawDisplayText(TileEntityFiller te, double x, double y, double z) {
+    public void drawDisplayText(FillerTileEntity te, double x, double y, double z) {
         ITextComponent itextcomponent = te.getDisplayName();
 
         RayTraceResult raytraceresult = this.rendererDispatcher.cameraHitResult;

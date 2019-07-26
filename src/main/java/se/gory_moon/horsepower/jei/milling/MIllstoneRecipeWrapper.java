@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class GrindstoneRecipeWrapper implements IRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
-    private final ItemStack output;
+    private final ItemStack result;
     private final ItemStack secondary;
     private final int secondaryChance;
     private final int time;
@@ -35,9 +35,9 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
         this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getSecondary(), recipe.getSecondaryChance(), recipe.getTime());
     }
 
-    public GrindstoneRecipeWrapper(List<ItemStack> inputs, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
+    public GrindstoneRecipeWrapper(List<ItemStack> inputs, ItemStack result, ItemStack secondary, int secondaryChance, int time) {
         this.inputs = Collections.singletonList(inputs);
-        this.output = output;
+        this.result = result;
         this.secondary = secondary;
         this.secondaryChance = secondaryChance;
         this.time = time;
@@ -52,7 +52,7 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
     @Override
     public void getIngredients(IIngredients ingredients) {
         ingredients.setInputLists(ItemStack.class, inputs);
-        ingredients.setOutputs(ItemStack.class, Lists.newArrayList(output, secondary));
+        ingredients.setOutputs(ItemStack.class, Lists.newArrayList(result, secondary));
     }
 
     @Override
@@ -91,13 +91,13 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
             }
         }
 
-        return time == that.time && flag && output.equals(that.output);
+        return time == that.time && flag && result.equals(that.result);
     }
 
     @Override
     public int hashCode() {
         int result = inputs.stream().map(itemStacks -> itemStacks.stream().map(Utils::getItemStackHashCode).collect(Collectors.toList())).hashCode();
-        result = 31 * result + Utils.getItemStackHashCode(output);
+        result = 31 * result + Utils.getItemStackHashCode(result);
         result = 31 * result + Utils.getItemStackHashCode(secondary);
         result = 31 * result + secondaryChance;
         result = 31 * result + time;

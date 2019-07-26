@@ -23,11 +23,11 @@ public class GrindingRecipeMaker {
 
         for (MillstoneRecipe recipe : grindingRecipes) {
             ItemStack input = recipe.getInput();
-            ItemStack output = recipe.getOutput();
+            ItemStack result = recipe.getOutput();
             ItemStack secondary = recipe.getSecondary();
 
             List<ItemStack> inputs = stackHelper.getSubtypes(input);
-            GrindstoneRecipeWrapper grindstoneRecipeWrapper = new GrindstoneRecipeWrapper(inputs, output, secondary, recipe.getSecondaryChance(), recipe.getTime());
+            GrindstoneRecipeWrapper grindstoneRecipeWrapper = new GrindstoneRecipeWrapper(inputs, result, secondary, recipe.getSecondaryChance(), recipe.getTime());
             recipes.add(grindstoneRecipeWrapper);
         }
 

@@ -14,7 +14,7 @@ import se.gory_moon.horsepower.client.renderer.TileEntityHandMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
 import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
@@ -27,7 +27,7 @@ public class ClientSetup {
     public static void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMillstone.class, new TileEntityMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHandMillstone.class, new TileEntityHandMillstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFiller.class, new TileEntityFillerRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(FillerTileEntity.class, new TileEntityFillerRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPress.class, new TileEntityPressRender());
@@ -58,6 +58,6 @@ public class ClientSetup {
                 }
             }
             return -1;
-        }, ModBlocks.BLOCK_MILLSTONE.orElse(null));
+        }, ModBlocks.BLOCK_MILLSTONE.orElseThrow(RuntimeException::new));
     }
 }

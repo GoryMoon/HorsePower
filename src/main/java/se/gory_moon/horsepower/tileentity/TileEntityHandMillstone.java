@@ -1,16 +1,19 @@
 package se.gory_moon.horsepower.tileentity;
 
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.recipes.HPRecipeBase;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
 public class TileEntityHandMillstone extends TileEntityHPBase implements ITickableTileEntity {
 
@@ -24,7 +27,7 @@ public class TileEntityHandMillstone extends TileEntityHPBase implements ITickab
 
 
     public TileEntityHandMillstone() {
-        super(3, ModBlocks.handMillstoneTile);
+        super(3, ModBlocks.HAND_MILLSTONE_TILE.orElseThrow(RuntimeException::new));
     }
 
     @Override
@@ -52,25 +55,15 @@ public class TileEntityHandMillstone extends TileEntityHPBase implements ITickab
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox();
-    }
-
-    @Override
-    public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getMillstoneResult(getStackInSlot(0), true);
-    }
-
-    @Override
-    public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getMillstoneRecipe(getStackInSlot(0), true);
+    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
+        return RecipeSerializers.MILLING_TYPE;
     }
 
     private void millItem() {
         if (!world.isRemote && canWork()) {
-            HPRecipeBase recipe = getRecipe();
-            ItemStack result = recipe.getOutput();
-            ItemStack secondary = recipe.getSecondary();
+            AbstractHPRecipe recipe = getRecipe();
+            ItemStack result = recipe.getCraftingResult(inventory);
+            ItemStack secondary = recipe.getCraftingSecondary();
 
             ItemStack input = getStackInSlot(0);
             ItemStack output = getStackInSlot(1);
@@ -87,7 +80,7 @@ public class TileEntityHandMillstone extends TileEntityHPBase implements ITickab
         }
     }
 
-    public static void processSecondaries(World world, ItemStack secondary, ItemStack secondaryOutput, HPRecipeBase recipe, TileEntityHPBase teBase) {
+    public static void processSecondaries(World world, ItemStack secondary, ItemStack secondaryOutput, AbstractHPRecipe recipe, TileEntityHPBase teBase) {
         if (!secondary.isEmpty()) {
             int recipeChance = recipe.getSecondaryChance();
             if (recipeChance >= 100 || world.rand.nextInt(100) < recipeChance) {

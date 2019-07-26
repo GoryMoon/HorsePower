@@ -1,42 +1,37 @@
 package se.gory_moon.horsepower.recipes;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import se.gory_moon.horsepower.blocks.ModBlocks;
 
-public class MillingRecipe implements IRecipe<IInventory> {
+public class MillingRecipe extends AbstractHPRecipe {
 
-    @Override
-    public boolean matches(IInventory inv, World worldIn) {
-        return false;
+    private Type recipeType;
+
+    public MillingRecipe(Type recipeType, ResourceLocation id, String group, Ingredient input, ItemStack result, ItemStack secondary, int time, int secondaryChance) {
+        super(RecipeSerializers.MILLING_TYPE, id, group, input, result, null, time, secondary, secondaryChance);
+        this.recipeType = recipeType;
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
-        return null;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return null;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return null;
+    public ItemStack getIcon() {
+        return new ItemStack(recipeType == Type.HAND ? ModBlocks.BLOCK_HAND_MILLSTONE.orElseThrow(RuntimeException::new): ModBlocks.BLOCK_MILLSTONE.orElseThrow(RuntimeException::new));
     }
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return null;
+        return RecipeSerializers.MILLING_SERIALIZER;
     }
 
-    @Override
-    public IRecipeType<?> getType() {
-        return null;
+    public Type getRecipeType() {
+        return recipeType;
+    }
+
+    public enum Type {
+        BOTH,
+        HAND,
+        HORSE
     }
 }

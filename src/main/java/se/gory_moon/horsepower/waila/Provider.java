@@ -12,7 +12,7 @@ import se.gory_moon.horsepower.blocks.BlockHandMillstone;
 import se.gory_moon.horsepower.blocks.BlockMillstone;
 import se.gory_moon.horsepower.blocks.BlockPress;
 import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class Provider implements IWailaPlugin {
     }
 
     public static void showItems(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config, int prog) {
-        if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof TileEntityHPBase || accessor.getTileEntity() instanceof TileEntityFiller)) {
+        if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof TileEntityHPBase || accessor.getTileEntity() instanceof FillerTileEntity)) {
             TileEntity te = accessor.getTileEntity();
             te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler -> {
                 //for (int i = 0; i < 3; i++) {
@@ -117,7 +117,7 @@ public class Provider implements IWailaPlugin {
             double progressWindup = Math.round(((windup / totalWindup) * 100D) * 100D) / 100D;
             double progressChopping = Math.round(((current / total) * 100D) * 100D) / 100D;
 
-            if (accessor.getTileEntity() instanceof TileEntityChopper || accessor.getTileEntity() instanceof TileEntityFiller)
+            if (accessor.getTileEntity() instanceof TileEntityChopper || accessor.getTileEntity() instanceof FillerTileEntity)
                 currenttip.add(Localization.WAILA.WINDUP_PROGRESS.translate(String.valueOf(progressWindup) + "%"));
             if (total > 1 || accessor.getTileEntity() instanceof TileEntityManualChopper) {
                 currenttip.add(Localization.WAILA.CHOPPING_PROGRESS.translate(String.valueOf(progressChopping) + "%"));

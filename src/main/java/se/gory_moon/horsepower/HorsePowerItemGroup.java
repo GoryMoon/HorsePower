@@ -12,6 +12,6 @@ public class HorsePowerItemGroup extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModBlocks.BLOCK_HAND_MILLSTONE.orElse(null));
+        return new ItemStack(ModBlocks.BLOCK_HAND_MILLSTONE.orElseThrow(RuntimeException::new));
     }
 }

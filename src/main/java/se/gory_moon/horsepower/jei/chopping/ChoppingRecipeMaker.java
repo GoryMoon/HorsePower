@@ -20,10 +20,10 @@ public class ChoppingRecipeMaker {
 
         for (ChoppingBlockRecipe recipe : grindingRecipes) {
             ItemStack input = recipe.getInput();
-            ItemStack output = recipe.getOutput();
+            ItemStack result = recipe.getOutput();
 
             List<ItemStack> inputs = stackHelper.getSubtypes(input);
-            ChoppingRecipeWrapper grindstoneRecipeWrapper = new ChoppingRecipeWrapper(inputs, output, recipe.getTime(), hand);
+            ChoppingRecipeWrapper grindstoneRecipeWrapper = new ChoppingRecipeWrapper(inputs, result, recipe.getTime(), hand);
             recipes.add(grindstoneRecipeWrapper);
         }
 

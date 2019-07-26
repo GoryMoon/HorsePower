@@ -21,8 +21,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.*;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 
 import javax.annotation.Nullable;
 
@@ -75,7 +76,7 @@ public class BlockFiller extends DirectionalBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new TileEntityFiller();
+        return new FillerTileEntity();
     }
 
     @Override

@@ -25,22 +25,22 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.*;
 public class PressRecipeTweaker {
 
     @ZenMethod
-    public static void add(IIngredient input, IItemStack output) {
-        AddPressRecipe recipe = new AddPressRecipe(input, output);
+    public static void add(IIngredient input, IItemStack result) {
+        AddPressRecipe recipe = new AddPressRecipe(input, result);
         TweakerPluginImpl.toAdd.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
     @ZenMethod
-    public static void add(IIngredient input, ILiquidStack output) {
-        AddPressRecipe recipe = new AddPressRecipe(input, output);
+    public static void add(IIngredient input, ILiquidStack result) {
+        AddPressRecipe recipe = new AddPressRecipe(input, result);
         TweakerPluginImpl.toAdd.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
     @ZenMethod
-    public static void remove(IIngredient output) {
-        RemovePressRecipe recipe = new RemovePressRecipe(output);
+    public static void remove(IIngredient result) {
+        RemovePressRecipe recipe = new RemovePressRecipe(result);
         TweakerPluginImpl.toRemove.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
@@ -48,19 +48,19 @@ public class PressRecipeTweaker {
     private static class AddPressRecipe extends BaseHPAction {
 
         private final IIngredient input;
-        private final IItemStack output;
+        private final IItemStack result;
         private final ILiquidStack fluidOuput;
 
-        public AddPressRecipe(IIngredient input, IItemStack output) {
+        public AddPressRecipe(IIngredient input, IItemStack result) {
             this.input = input;
-            this.output = output;
+            this.result = result;
             this.fluidOuput = null;
         }
 
-        public AddPressRecipe(IIngredient input, ILiquidStack output) {
+        public AddPressRecipe(IIngredient input, ILiquidStack result) {
             this.input = input;
-            this.fluidOuput = output;
-            this.output = null;
+            this.fluidOuput = result;
+            this.result = null;
         }
 
         @Override
@@ -71,7 +71,7 @@ public class PressRecipeTweaker {
             }
 
             ItemStack[] items2 = getItemStacks(items);
-            ItemStack output2 = getItemStack(output);
+            ItemStack output2 = getItemStack(result);
             FluidStack fluidStack = getLiquidStack(fluidOuput);
 
             for (ItemStack stack: items2) {
@@ -92,10 +92,10 @@ public class PressRecipeTweaker {
 
     private static class RemovePressRecipe extends BaseHPAction {
 
-        private final IIngredient output;
+        private final IIngredient result;
 
-        public RemovePressRecipe(IIngredient output) {
-            this.output = output;
+        public RemovePressRecipe(IIngredient result) {
+            this.result = result;
         }
 
         @Override
@@ -104,7 +104,7 @@ public class PressRecipeTweaker {
             Collection<PressRecipe> recipeList = HPRecipes.instance().getPressRecipes();
 
             for (PressRecipe recipe: recipeList) {
-                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
+                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(result), recipe.getOutput(), false)) {
                     toRemove.add(recipe);
                 }
             }
@@ -116,7 +116,7 @@ public class PressRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Removing press recipes for " + output;
+            return "Removing press recipes for " + result;
         }
     }
 

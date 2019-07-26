@@ -29,15 +29,15 @@ import static crafttweaker.api.minecraft.CraftTweakerMC.getItemStacks;
 public class GrindstoneRecipeTweaker {
 
     @ZenMethod
-    public static void add(IIngredient input, IItemStack output, int time, @Optional boolean hand, @Optional IItemStack secondary, @Optional int secondaryChance) {
-        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, output, secondary, secondaryChance, time, hand);
+    public static void add(IIngredient input, IItemStack result, int time, @Optional boolean hand, @Optional IItemStack secondary, @Optional int secondaryChance) {
+        AddGrindstoneRecipe recipe = new AddGrindstoneRecipe(input, result, secondary, secondaryChance, time, hand);
         TweakerPluginImpl.toAdd.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
 
     @ZenMethod
-    public static void remove(IIngredient output, @Optional boolean hand) {
-        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(output, hand);
+    public static void remove(IIngredient result, @Optional boolean hand) {
+        RemoveGrindstoneRecipe recipe = new RemoveGrindstoneRecipe(result, hand);
         TweakerPluginImpl.toRemove.add(recipe);
         TweakerPluginImpl.actions.add(recipe);
     }
@@ -45,7 +45,7 @@ public class GrindstoneRecipeTweaker {
     private static class AddGrindstoneRecipe extends BaseHPAction {
 
         private final IIngredient input;
-        private final IItemStack output;
+        private final IItemStack result;
         private final IItemStack secondary;
         private final int secondaryChance;
         private final int time;
@@ -53,7 +53,7 @@ public class GrindstoneRecipeTweaker {
 
         public AddGrindstoneRecipe(IIngredient input, IItemStack output2, IItemStack secondary, int secondaryChance, int time, boolean hand) {
             this.input = input;
-            this.output = output2;
+            this.result = output2;
             this.secondary = secondary;
             this.secondaryChance = secondaryChance;
             this.time = time;
@@ -73,7 +73,7 @@ public class GrindstoneRecipeTweaker {
             }
 
             ItemStack[] items = getItemStacks(inputs);
-            ItemStack output2 = getItemStack(output);
+            ItemStack output2 = getItemStack(result);
             ItemStack secondary2 = getItemStack(secondary);
 
             for (ItemStack stack: items) {
@@ -90,11 +90,11 @@ public class GrindstoneRecipeTweaker {
 
     private static class RemoveGrindstoneRecipe extends BaseHPAction {
 
-        private final IIngredient output;
+        private final IIngredient result;
         private final boolean hand;
 
-        public RemoveGrindstoneRecipe(IIngredient output, boolean hand) {
-            this.output = output;
+        public RemoveGrindstoneRecipe(IIngredient result, boolean hand) {
+            this.result = result;
             this.hand = hand;
         }
 
@@ -104,7 +104,7 @@ public class GrindstoneRecipeTweaker {
             Collection<MillstoneRecipe> recipeList = hand && Configs.recipes.useSeperateMillstoneRecipes ? HPRecipes.instance().getHandMillstoneRecipes(): HPRecipes.instance().getMillstoneRecipes();
 
             for (MillstoneRecipe recipe: recipeList) {
-                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(output), recipe.getOutput(), false)) {
+                if (OreDictionary.itemMatches(CraftTweakerMC.getItemStack(result), recipe.getOutput(), false)) {
                     toRemove.add(recipe);
                 }
             }
@@ -117,7 +117,7 @@ public class GrindstoneRecipeTweaker {
 
         @Override
         public String describe() {
-            return "Removing grindstone recipes for " + MCRecipeManager.saveToString(output);
+            return "Removing grindstone recipes for " + MCRecipeManager.saveToString(result);
         }
     }
 

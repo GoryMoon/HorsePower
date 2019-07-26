@@ -24,7 +24,7 @@ import java.util.List;
 public class PressRecipeWrapper extends BlankRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
-    private final ItemStack output;
+    private final ItemStack result;
     private final FluidStack fluidOutput;
 
     private final double printLaps;
@@ -32,12 +32,12 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
     public final boolean isFluid;
 
     public PressRecipeWrapper(PressRecipe recipe) {
-        this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getOutputFluid());
+        this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getFluidOutput());
     }
 
-    public PressRecipeWrapper(List<ItemStack> inputs, ItemStack output, FluidStack fluidOutput) {
+    public PressRecipeWrapper(List<ItemStack> inputs, ItemStack result, FluidStack fluidOutput) {
         this.inputs = Collections.singletonList(inputs);
-        this.output = output;
+        this.result = result;
         this.fluidOutput = fluidOutput;
         this.isFluid = fluidOutput != null;
 
@@ -55,7 +55,7 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
         if (isFluid)
             ingredients.setOutput(FluidStack.class, fluidOutput);
         else
-            ingredients.setOutput(ItemStack.class, output);
+            ingredients.setOutput(ItemStack.class, result);
     }
 
     @Override
@@ -88,13 +88,13 @@ public class PressRecipeWrapper extends BlankRecipeWrapper {
             }
         }
 
-        return flag && (output != null && that.output != null && output.equals(that.output) || (fluidOutput != null && that.fluidOutput != null && fluidOutput.equals(that.fluidOutput)));
+        return flag && (result != null && that.result != null && result.equals(that.result) || (fluidOutput != null && that.fluidOutput != null && fluidOutput.equals(that.fluidOutput)));
     }
 
     @Override
     public int hashCode() {
         int result = inputs.hashCode();
-        result = 31 * result + output.hashCode();
+        result = 31 * result + result.hashCode();
         return result;
     }
 }

@@ -79,9 +79,9 @@ public class ShapelessChoppingCraftingWrapper implements IRecipeWrapper, ICustom
             return false;
         }
 
-        for(ItemStack output : recipe.outputBlocks) {
-            // if the item matches the oredict entry, it is an output block
-            if(OreDictionary.itemMatches(output, stack, false)) {
+        for(ItemStack result : recipe.outputBlocks) {
+            // if the item matches the oredict entry, it is an result block
+            if(OreDictionary.itemMatches(result, stack, false)) {
                 return true;
             }
         }
@@ -109,7 +109,7 @@ public class ShapelessChoppingCraftingWrapper implements IRecipeWrapper, ICustom
 
             // input means we clicked on an ingredient, make sure it is one that affects the base
             if(mode == IFocus.Mode.INPUT && isOutputBlock(focus)) {
-                // first, get the output recipe
+                // first, get the result recipe
                 BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(recipe.getSimpleRecipeOutput().getItem());
 
                 // then create a stack with the focus item (which we already validated above)

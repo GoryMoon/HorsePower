@@ -1,0 +1,10 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "horsepower:flour"
+  },
+  "result": {
+    "item": "minecraft:bonemeal"
+  },
+  "time": 12
+}

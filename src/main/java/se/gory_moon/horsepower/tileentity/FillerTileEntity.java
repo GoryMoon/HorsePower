@@ -16,10 +16,10 @@ import se.gory_moon.horsepower.blocks.ModBlocks;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityFiller extends TileEntity implements INameable {
+public class FillerTileEntity extends TileEntity implements INameable {
 
-    public TileEntityFiller() {
-        super(ModBlocks.fillerTile);
+    public FillerTileEntity() {
+        super(ModBlocks.FILLER_TILE.orElseThrow(RuntimeException::new));
     }
 
     public TileEntityHPBase getFilledTileEntity() {

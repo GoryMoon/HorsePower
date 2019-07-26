@@ -5,13 +5,13 @@ import crafttweaker.api.item.IItemStack;
 
 public class CTShapelessChoppingRecipe {
 
-    private final IItemStack output;
+    private final IItemStack result;
     private final IIngredient ore;
     private final IIngredient[] ingredients;
     private final String name;
 
-    public CTShapelessChoppingRecipe(IIngredient ore, String name, IItemStack output, IIngredient[] ingredients) {
-        this.output = output;
+    public CTShapelessChoppingRecipe(IIngredient ore, String name, IItemStack result, IIngredient[] ingredients) {
+        this.result = result;
         this.ingredients = ingredients;
         this.name = name;
         this.ore = ore;
@@ -26,7 +26,7 @@ public class CTShapelessChoppingRecipe {
     }
 
     public IItemStack getOutput() {
-        return this.output;
+        return this.result;
     }
 
     public IIngredient getOre() {

@@ -1,22 +1,22 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePowerMod;
 import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.PressRecipe;
 import se.gory_moon.horsepower.util.Localization;
@@ -30,7 +30,7 @@ public class TileEntityPress extends TileEntityHPHorseBase {
     private int currentPressStatus;
 
     public TileEntityPress() {
-        super(2, ModBlocks.pressTile);
+        super(2, ModBlocks.PRESS_TILE.orElseThrow(RuntimeException::new));
         tank.setCanFill(false);
     }
 
@@ -99,13 +99,8 @@ public class TileEntityPress extends TileEntityHPHorseBase {
     }
 
     @Override
-    public HPRecipeBase getRecipe() {
-        return HPRecipes.instance().getPressRecipe(getStackInSlot(0));
-    }
-
-    @Override
-    public ItemStack getRecipeItemStack() {
-        return HPRecipes.instance().getPressResult(getStackInSlot(0));
+    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
+        return null;
     }
 
     @Override
@@ -115,7 +110,7 @@ public class TileEntityPress extends TileEntityHPHorseBase {
 
     private void pressItem() {
         if (canWork()) {
-            PressRecipe recipe = (PressRecipe) getRecipe();
+            /*PressRecipe recipe = getRecipe();
             ItemStack result = recipe.getOutput();
             FluidStack fluidResult = recipe.getOutputFluid();
 
@@ -134,7 +129,7 @@ public class TileEntityPress extends TileEntityHPHorseBase {
             }
 
             input.shrink(input.getCount());
-            markDirty();
+            */markDirty();
         }
     }
 
@@ -155,7 +150,7 @@ public class TileEntityPress extends TileEntityHPHorseBase {
         if (getStackInSlot(0).isEmpty()) {
             return false;
         } else {
-            PressRecipe recipe = (PressRecipe) getRecipe();
+            /*PressRecipe recipe = (PressRecipe) getRecipe();
             if (recipe == null) return false;
 
             ItemStack input = recipe.getInput();
@@ -172,7 +167,8 @@ public class TileEntityPress extends TileEntityHPHorseBase {
                 return output.isEmpty() && (tank.getFluidAmount() == 0 || tank.fillInternal(fluidOutput, false) >= fluidOutput.amount);
             } else {
                 return tank.getFluidAmount() == 0 && (output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize());
-            }
+            }*/
+            return false;
         }
     }
 

@@ -22,10 +22,10 @@ public class PressRecipeMaker {
         for (PressRecipe recipe : pressRecipes) {
             if (recipe.isLiquidRecipe()) continue;
             ItemStack input = recipe.getInput();
-            ItemStack output = recipe.getOutput();
+            ItemStack result = recipe.getOutput();
 
             List<ItemStack> inputs = stackHelper.getSubtypes(input);
-            PressRecipeWrapper pressRecipeWrapper = new PressRecipeWrapper(inputs, output, null);
+            PressRecipeWrapper pressRecipeWrapper = new PressRecipeWrapper(inputs, result, null);
             recipes.add(pressRecipeWrapper);
         }
 
@@ -41,7 +41,7 @@ public class PressRecipeMaker {
         for (PressRecipe recipe : pressRecipes) {
             if (!recipe.isLiquidRecipe()) continue;
             ItemStack input = recipe.getInput();
-            FluidStack fluidOutput = recipe.getOutputFluid();
+            FluidStack fluidOutput = recipe.getFluidOutput();
 
             List<ItemStack> inputs = stackHelper.getSubtypes(input);
             PressRecipeWrapper pressRecipeWrapper = new PressRecipeWrapper(inputs, null, fluidOutput);

@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import se.gory_moon.horsepower.tileentity.TileEntityFiller;
+import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
 import se.gory_moon.horsepower.tileentity.TileEntityPress;
@@ -39,8 +39,8 @@ public final class HUDHandlerFiller implements IComponentProvider, IServerDataPr
 
     @Override
     public void appendServerData(CompoundNBT data, ServerPlayerEntity player, World world, TileEntity te) {
-        if (te instanceof TileEntityFiller) {
-            te = ((TileEntityFiller) te).getFilledTileEntity();
+        if (te instanceof FillerTileEntity) {
+            te = ((FillerTileEntity) te).getFilledTileEntity();
             te.write(data);
             if (te instanceof TileEntityMillstone || te instanceof TileEntityHandMillstone)
                 data.putString("type", "horsepower:millstone");

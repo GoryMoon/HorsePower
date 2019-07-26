@@ -68,9 +68,9 @@ public class ShapelessChoppingRecipe extends ShapelessOreRecipe {
     @Nonnull
     @Override
     public ItemStack getRecipeOutput() {
-        if (!outputBlocks.isEmpty() && !output.isEmpty()) {
+        if (!outputBlocks.isEmpty() && !result.isEmpty()) {
             ItemStack stack = outputBlocks.get(0).copy();
-            BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(output.getItem());
+            BlockHPChoppingBase block = (BlockHPChoppingBase) Block.getBlockFromItem(result.getItem());
             int meta = stack.getMetadata();
             if (meta == OreDictionary.WILDCARD_VALUE)
                 stack.setItemDamage(0);
@@ -81,7 +81,7 @@ public class ShapelessChoppingRecipe extends ShapelessOreRecipe {
     }
 
     public ItemStack getSimpleRecipeOutput() {
-        return output;
+        return result;
     }
 }
 */
