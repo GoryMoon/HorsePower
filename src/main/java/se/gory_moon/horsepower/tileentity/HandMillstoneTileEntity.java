@@ -15,7 +15,7 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
-public class TileEntityHandMillstone extends TileEntityHPBase implements ITickableTileEntity {
+public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
     private int currentItemMillTime;
     private int totalItemMillTime;
@@ -26,8 +26,8 @@ public class TileEntityHandMillstone extends TileEntityHPBase implements ITickab
     private int rotation = 0;
 
 
-    public TileEntityHandMillstone() {
-        super(3, ModBlocks.HAND_MILLSTONE_TILE.orElseThrow(RuntimeException::new));
+    public HandMillstoneTileEntity() {
+        super(3, ModBlocks.HAND_MILLSTONE_TILE.orElseThrow(IllegalStateException::new));
     }
 
     @Override
@@ -61,26 +61,30 @@ public class TileEntityHandMillstone extends TileEntityHPBase implements ITickab
 
     private void millItem() {
         if (!world.isRemote && canWork()) {
-            AbstractHPRecipe recipe = getRecipe();
-            ItemStack result = recipe.getCraftingResult(inventory);
-            ItemStack secondary = recipe.getCraftingSecondary();
-
-            ItemStack input = getStackInSlot(0);
-            ItemStack output = getStackInSlot(1);
-            ItemStack secondaryOutput = getStackInSlot(2);
-
-            if (output.isEmpty()) {
-                setInventorySlotContents(1, result.copy());
-            } else if (output.isItemEqual(result)) {
-                output.grow(result.getCount());
-            }
-            processSecondaries(getWorld(), secondary, secondaryOutput, recipe, this);
-
-            input.shrink(1);
+            millItem(inventory, this);
         }
     }
 
-    public static void processSecondaries(World world, ItemStack secondary, ItemStack secondaryOutput, AbstractHPRecipe recipe, TileEntityHPBase teBase) {
+    public static void millItem(IInventoryHP inventory, HPBaseTileEntity te) {
+        AbstractHPRecipe recipe = te.getRecipe();
+        ItemStack result = recipe.getCraftingResult(inventory);
+        ItemStack secondary = recipe.getCraftingSecondary();
+
+        ItemStack input = te.getStackInSlot(0);
+        ItemStack output = te.getStackInSlot(1);
+        ItemStack secondaryOutput = te.getStackInSlot(2);
+
+        if (output.isEmpty()) {
+            te.setInventorySlotContents(1, result.copy());
+        } else if (output.isItemEqual(result)) {
+            output.grow(result.getCount());
+        }
+        processSecondaries(te.getWorld(), secondary, secondaryOutput, recipe, te);
+
+        input.shrink(1);
+    }
+
+    public static void processSecondaries(World world, ItemStack secondary, ItemStack secondaryOutput, AbstractHPRecipe recipe, HPBaseTileEntity teBase) {
         if (!secondary.isEmpty()) {
             int recipeChance = recipe.getSecondaryChance();
             if (recipeChance >= 100 || world.rand.nextInt(100) < recipeChance) {

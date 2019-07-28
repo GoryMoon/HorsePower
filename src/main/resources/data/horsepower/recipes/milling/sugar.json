@@ -1,0 +1,11 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:sugar_cane"
+  },
+  "result": {
+    "item": "minecraft:sugar"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

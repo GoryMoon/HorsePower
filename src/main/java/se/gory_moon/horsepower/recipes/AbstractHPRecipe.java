@@ -17,7 +17,6 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
 
     protected final IRecipeType<?> type;
     protected final ResourceLocation id;
-    protected final String group;
 
     protected final Ingredient input;
     protected final ItemStack result;
@@ -27,10 +26,9 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
     protected final ItemStack secondary;
     protected final int secondaryChance;
 
-    protected AbstractHPRecipe(IRecipeType<?> type, ResourceLocation id, String group, Ingredient input, ItemStack result, FluidStack outputFluid, int time, ItemStack secondary, int secondaryChance) {
+    protected AbstractHPRecipe(IRecipeType<?> type, ResourceLocation id, Ingredient input, ItemStack result, FluidStack outputFluid, int time, ItemStack secondary, int secondaryChance) {
         this.type = type;
         this.id = id;
-        this.group = group;
         this.input = input;
         this.result = result;
         this.outputFluid = outputFluid;
@@ -81,7 +79,7 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
 
     @Override
     public String getGroup() {
-        return group;
+        return "";
     }
 
     @Override

@@ -1,0 +1,12 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:bone_block"
+  },
+  "result": {
+    "item": "minecraft:bone_meal",
+    "count": 9
+  },
+  "time": 12,
+  "milling_type": "both"
+}

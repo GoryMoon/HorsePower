@@ -1,0 +1,11 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:wheat"
+  },
+  "result": {
+    "item": "horsepower:flour"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

@@ -1,0 +1,19 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": [
+    {
+      "item": "minecraft:azure_bluet"
+    },
+    {
+      "item": "minecraft:white_tulip"
+    },
+    {
+      "item": "minecraft:oxeye_daisy"
+    }
+  ],
+  "result": {
+    "item": "minecraft:light_gray_dye"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

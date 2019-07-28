@@ -31,16 +31,16 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileEntityHPBase extends TileEntity implements INameable {
+public abstract class HPBaseTileEntity extends TileEntity implements INameable {
 
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
-    protected IHPInventory inventory;
+    protected IInventoryHP inventory;
 
-    public TileEntityHPBase(int inventorySize, TileEntityType type) {
+    public HPBaseTileEntity(int inventorySize, TileEntityType type) {
         super(type);
         itemStacks = NonNullList.withSize(inventorySize, ItemStack.EMPTY);
 
-        inventory = new IHPInventory() {
+        inventory = new IInventoryHP() {
             @Override
             public int getSizeInventory() {
                 return itemStacks.size();
@@ -79,7 +79,7 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
 
             @Override
             public void setInventorySlotContents(int index, ItemStack stack) {
-                TileEntityHPBase.this.setInventorySlotContents(index, stack);
+                HPBaseTileEntity.this.setInventorySlotContents(index, stack);
             }
 
             @Override
@@ -93,26 +93,26 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
 
             @Override
             public int getInventoryStackLimit() {
-                return TileEntityHPBase.this.getInventoryStackLimit();
+                return HPBaseTileEntity.this.getInventoryStackLimit();
             }
 
             public int getInventoryStackLimit(ItemStack stack) {
-                return TileEntityHPBase.this.getInventoryStackLimit(stack);
+                return HPBaseTileEntity.this.getInventoryStackLimit(stack);
             }
 
             @Override
             public void markDirty() {
-                TileEntityHPBase.this.markDirty();
+                HPBaseTileEntity.this.markDirty();
             }
 
             @Override
             public boolean isUsableByPlayer(PlayerEntity player) {
-                return getWorld().getTileEntity(getPos()) == TileEntityHPBase.this && player.getDistanceSq((double) getPos().getX() + 0.5D, (double) getPos().getY() + 0.5D, (double) getPos().getZ() + 0.5D) <= 64.0D;
+                return getWorld().getTileEntity(getPos()) == HPBaseTileEntity.this && player.getDistanceSq((double) getPos().getX() + 0.5D, (double) getPos().getY() + 0.5D, (double) getPos().getZ() + 0.5D) <= 64.0D;
             }
 
             @Override
             public boolean isItemValidForSlot(int index, ItemStack stack) {
-                return TileEntityHPBase.this.isItemValidForSlot(index, stack);
+                return HPBaseTileEntity.this.isItemValidForSlot(index, stack);
             }
 
             @Override
@@ -145,7 +145,7 @@ public abstract class TileEntityHPBase extends TileEntity implements INameable {
         return inventory.removeStackFromSlot(index);
     }
 
-    public IHPInventory getInventory() {
+    public IInventoryHP getInventory() {
         return inventory;
     }
 

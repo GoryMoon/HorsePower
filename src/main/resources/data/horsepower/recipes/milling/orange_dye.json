@@ -1,0 +1,11 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:orange_tulip"
+  },
+  "result": {
+    "item": "minecraft:orange_dye"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

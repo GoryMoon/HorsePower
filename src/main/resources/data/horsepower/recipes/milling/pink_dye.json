@@ -1,0 +1,16 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": [
+    {
+      "item": "minecraft:pink_tulip"
+    },
+    {
+      "item": "minecraft:peony"
+    }
+  ],
+  "result": {
+    "item": "minecraft:pink_dye"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

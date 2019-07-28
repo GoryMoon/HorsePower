@@ -25,8 +25,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.items.ItemHandlerHelper;
-import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
-import se.gory_moon.horsepower.tileentity.TileEntityHPHorseBase;
+import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
+import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
 import se.gory_moon.horsepower.util.Utils;
 
 import javax.annotation.Nonnull;
@@ -78,11 +78,11 @@ public abstract class BlockHPBase extends ContainerBlock {
         super.onBlockHarvested(worldIn, pos, state, player);
 
         if (!player.abilities.isCreativeMode && !worldIn.isRemote) {
-            TileEntityHPBase te = getTileEntity(worldIn, pos);
+            HPBaseTileEntity te = getTileEntity(worldIn, pos);
 
             if (te != null) {
                 InventoryHelper.dropInventoryItems(worldIn, pos, te.getInventory());
-                if (te instanceof TileEntityHPHorseBase && ((TileEntityHPHorseBase) te).hasWorker())
+                if (te instanceof HPHorseBaseTileEntity && ((HPHorseBaseTileEntity) te).hasWorker())
                     InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
             }
         }
@@ -96,7 +96,7 @@ public abstract class BlockHPBase extends ContainerBlock {
     @Nonnull
     public abstract Class<?> getTileClass();
 
-    protected <T extends TileEntityHPBase> T getTileEntity(IBlockReader worldIn, BlockPos pos) {
+    protected <T extends HPBaseTileEntity> T getTileEntity(IBlockReader worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity : null;
     }
@@ -148,11 +148,11 @@ public abstract class BlockHPBase extends ContainerBlock {
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = hand == Hand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
-        TileEntityHPBase te = (TileEntityHPBase) worldIn.getTileEntity(pos);
-        TileEntityHPHorseBase teH = null;
+        HPBaseTileEntity te = (HPBaseTileEntity) worldIn.getTileEntity(pos);
+        HPHorseBaseTileEntity teH = null;
         if (te == null) return false;
-        if (te instanceof TileEntityHPHorseBase)
-            teH = (TileEntityHPHorseBase) te;
+        if (te instanceof HPHorseBaseTileEntity)
+            teH = (HPHorseBaseTileEntity) te;
 
         CreatureEntity creature = null;
         if (teH != null) {
@@ -187,7 +187,7 @@ public abstract class BlockHPBase extends ContainerBlock {
                 te.setInventorySlotContents(0, stack.copy());
                 stack.setCount(stack.getCount() - te.getInventoryStackLimit(stack));
                 flag = true;
-            } else if (TileEntityHPBase.canCombine(itemStack, stack)) {
+            } else if (HPBaseTileEntity.canCombine(itemStack, stack)) {
                 int i = Math.min(te.getInventoryStackLimit(stack), stack.getMaxStackSize()) - itemStack.getCount();
                 int j = Math.min(stack.getCount(), i);
                 stack.shrink(j);

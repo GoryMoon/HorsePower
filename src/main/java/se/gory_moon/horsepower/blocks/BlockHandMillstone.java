@@ -24,7 +24,7 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.FakePlayer;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.client.model.modelvariants.HandMillstoneModels;
-import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
+import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -69,7 +69,7 @@ public class BlockHandMillstone extends BlockHPBase {
     @Nonnull
     @Override
     public Class<?> getTileClass() {
-        return TileEntityHandMillstone.class;
+        return HandMillstoneTileEntity.class;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class BlockHandMillstone extends BlockHPBase {
         if (player instanceof FakePlayer || player == null)
             return true;
 
-        TileEntityHandMillstone tile = getTileEntity(worldIn, pos);
+        HandMillstoneTileEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.canWork() && !player.isSneaking()) {
             if (!worldIn.isRemote) {
                 if (tile.turn())

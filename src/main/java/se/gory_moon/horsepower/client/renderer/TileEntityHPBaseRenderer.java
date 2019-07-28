@@ -26,22 +26,22 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockFiller;
-import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
+import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 
-public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> extends TileEntityRenderer<T> {
+public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> extends TileEntityRenderer<T> {
 
     public static ITextComponent LEAD_LOOKUP = new TranslationTextComponent(Localization.INFO.ITEM_REVEAL.key()).setStyle(new Style().setColor(TextFormatting.RED));
 
-    protected void renderStillItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
+    protected void renderStillItem(HPBaseTileEntity te, ItemStack stack, float x, float y, float z, float scale) {
         renderItem(te, stack, x, y, z, scale, false);
     }
 
-    protected void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale) {
+    protected void renderItem(HPBaseTileEntity te, ItemStack stack, float x, float y, float z, float scale) {
         renderItem(te, stack, x, y, z, scale, true);
     }
 
-    private void renderItem(TileEntityHPBase te, ItemStack stack, float x, float y, float z, float scale, boolean rotate) {
+    private void renderItem(HPBaseTileEntity te, ItemStack stack, float x, float y, float z, float scale, boolean rotate) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         if (stack != null) {
             GlStateManager.translated(x, y, z);
@@ -65,7 +65,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         }
     }
 
-    public void drawString(TileEntityHPBase te, String str, double x, double y, double z) {
+    public void drawString(HPBaseTileEntity te, String str, double x, double y, double z) {
         if (!canShowAmount(te))
             return;
         setLightmapDisabled(true);
@@ -104,7 +104,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         setLightmapDisabled(false);
     }
 
-    public boolean canShowAmount(TileEntityHPBase te) {
+    public boolean canShowAmount(HPBaseTileEntity te) {
         RayTraceResult traceResult = this.rendererDispatcher.cameraHitResult;
         return Configs.CLIENT.renderItemAmount.get() &&
                 (!Configs.CLIENT.mustLookAtBlock.get() ||
@@ -116,7 +116,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
                 );
     }
 
-    protected void renderItemWithFacing(World world, TileEntityHPBase tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {
+    protected void renderItemWithFacing(World world, HPBaseTileEntity tile, ItemStack stack, double ox, double oy, double oz, float x, float y, float z, float scale) {
         if (stack.isEmpty())
             return;
         GlStateManager.pushMatrix();
@@ -137,7 +137,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.popMatrix();
     }
 
-    protected void renderBaseModel(TileEntityHPBase te, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z) {
+    protected void renderBaseModel(HPBaseTileEntity te, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z) {
         // Most of this is blatantly copied from FastTESR
         setRenderSettings();
 
@@ -155,7 +155,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         GlStateManager.popMatrix();
     }
 
-    protected void renderBaseModelWithFacing(TileEntityHPBase te, BlockState blockState, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z, int destroyStage) {
+    protected void renderBaseModelWithFacing(HPBaseTileEntity te, BlockState blockState, Tessellator tessellator, BufferBuilder buffer, double x, double y, double z, int destroyStage) {
         // Most of this is blatantly copied from FastTESR
         preDestroyRender(destroyStage);
         setRenderSettings();
@@ -330,7 +330,7 @@ public abstract class TileEntityHPBaseRenderer<T extends TileEntityHPBase> exten
         Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelRenderer().renderModel(world, ibakedmodel1, state, pos, Tessellator.getInstance().getBuffer(), true, world.rand, state.getPositionRandom(pos));
     }
 
-    public void drawDisplayText(TileEntityHPBase te, double x, double y, double z) {
+    public void drawDisplayText(HPBaseTileEntity te, double x, double y, double z) {
         ITextComponent itextcomponent = te.getDisplayName();
 
         RayTraceResult raytraceresult = this.rendererDispatcher.cameraHitResult;

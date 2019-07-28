@@ -1,0 +1,12 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:sunflower"
+  },
+  "result": {
+    "item": "minecraft:yellow_dye",
+    "count": 2
+  },
+  "time": 12,
+  "milling_type": "both"
+}

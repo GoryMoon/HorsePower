@@ -18,13 +18,13 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.BlockPress;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
-import se.gory_moon.horsepower.tileentity.TileEntityPress;
+import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.RenderUtils;
 
-public class TileEntityPressRender extends TileEntityHPBaseRenderer<TileEntityPress> {
+public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEntity> {
 
     @Override
-    public void render(TileEntityPress te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(PressTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();

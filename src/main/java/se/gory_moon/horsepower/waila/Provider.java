@@ -13,7 +13,7 @@ import se.gory_moon.horsepower.blocks.BlockMillstone;
 import se.gory_moon.horsepower.blocks.BlockPress;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
-import se.gory_moon.horsepower.tileentity.TileEntityHPBase;
+import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class Provider implements IWailaPlugin {
     }
 
     public static void showItems(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config, int prog) {
-        if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof TileEntityHPBase || accessor.getTileEntity() instanceof FillerTileEntity)) {
+        if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof HPBaseTileEntity || accessor.getTileEntity() instanceof FillerTileEntity)) {
             TileEntity te = accessor.getTileEntity();
             te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler -> {
                 //for (int i = 0; i < 3; i++) {

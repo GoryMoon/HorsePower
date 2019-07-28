@@ -1,0 +1,11 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:allium"
+  },
+  "result": {
+    "item": "minecraft:magenta_dye"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

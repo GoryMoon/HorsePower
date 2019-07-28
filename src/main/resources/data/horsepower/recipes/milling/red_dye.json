@@ -1,0 +1,19 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": [
+    {
+      "item": "minecraft:poppy"
+    },
+    {
+      "item": "minecraft:red_tulip"
+    },
+    {
+      "item": "minecraft:beetroot"
+    }
+  ],
+  "result": {
+    "item": "minecraft:red_dye"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

@@ -19,14 +19,14 @@ import javax.annotation.Nullable;
 public class FillerTileEntity extends TileEntity implements INameable {
 
     public FillerTileEntity() {
-        super(ModBlocks.FILLER_TILE.orElseThrow(RuntimeException::new));
+        super(ModBlocks.FILLER_TILE.orElseThrow(IllegalStateException::new));
     }
 
-    public TileEntityHPBase getFilledTileEntity() {
+    public HPBaseTileEntity getFilledTileEntity() {
         BlockPos pos = getFilledPos();
         TileEntity tileEntity = getWorld().getTileEntity(pos);
-        if (tileEntity instanceof TileEntityHPBase) {
-            return (TileEntityHPBase) tileEntity;
+        if (tileEntity instanceof HPBaseTileEntity) {
+            return (HPBaseTileEntity) tileEntity;
         }
         return null;
     }
@@ -42,7 +42,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
 
     @Override
     public void markDirty() {
-        TileEntityHPBase te = getFilledTileEntity();
+        HPBaseTileEntity te = getFilledTileEntity();
         if (te != null)
             te.markDirty();
         super.markDirty();
@@ -50,7 +50,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
 
     @Override
     public ITextComponent getName() {
-        TileEntityHPBase te = getFilledTileEntity();
+        HPBaseTileEntity te = getFilledTileEntity();
         if (te != null)
             return te.getName();
         return null;
@@ -58,7 +58,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
 
     @Override
     public boolean hasCustomName() {
-        TileEntityHPBase te = getFilledTileEntity();
+        HPBaseTileEntity te = getFilledTileEntity();
         if (te != null)
             return te.hasCustomName();
         return false;
@@ -66,7 +66,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
 
     @Override
     public ITextComponent getDisplayName() {
-        TileEntityHPBase te = getFilledTileEntity();
+        HPBaseTileEntity te = getFilledTileEntity();
         if (te != null)
             return te.getDisplayName();
         return null;
@@ -75,7 +75,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
     @Nullable
     @Override
     public ITextComponent getCustomName() {
-        TileEntityHPBase te = getFilledTileEntity();
+        HPBaseTileEntity te = getFilledTileEntity();
         if (te != null)
             return te.getCustomName();
         return null;
@@ -84,7 +84,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        TileEntityHPBase te = getFilledTileEntity();
+        HPBaseTileEntity te = getFilledTileEntity();
         if (te != null)
             return te.getCapability(cap, side);
         return super.getCapability(cap, side);

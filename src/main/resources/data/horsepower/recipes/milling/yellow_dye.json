@@ -1,0 +1,11 @@
+{
+  "type": "horsepower:milling",
+  "ingredient": {
+    "item": "minecraft:dandelion"
+  },
+  "result": {
+    "item": "minecraft:yellow_dye"
+  },
+  "time": 12,
+  "milling_type": "both"
+}

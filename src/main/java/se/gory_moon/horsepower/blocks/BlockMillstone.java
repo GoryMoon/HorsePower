@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
-import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
+import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -94,7 +94,7 @@ public class BlockMillstone extends BlockHPBase {
     @Nonnull
     @Override
     public Class<?> getTileClass() {
-        return TileEntityMillstone.class;
+        return MillstoneTileEntity.class;
     }
 
     // The One Probe Integration

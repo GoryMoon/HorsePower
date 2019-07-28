@@ -13,12 +13,12 @@ import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.BlockHandMillstone;
 import se.gory_moon.horsepower.client.model.modelvariants.HandMillstoneModels;
-import se.gory_moon.horsepower.tileentity.TileEntityHandMillstone;
+import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
 
-public class TileEntityHandMillstoneRender extends TileEntityHPBaseRenderer<TileEntityHandMillstone> {
+public class TileEntityHandMillstoneRender extends TileEntityHPBaseRenderer<HandMillstoneTileEntity> {
 
     @Override
-    public void render(TileEntityHandMillstone te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(HandMillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();

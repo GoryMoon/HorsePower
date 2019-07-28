@@ -1,12 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "horsepower:millstone"
+    "model": "horsepower:block/millstone"
   },
   "variants": {
     "part": {
-      "base": { "model": "horsepower:millstone" },
-      "filled": { "model": "horsepower:millstone_filled" }
+      "base": { "model": "horsepower:block/millstone" },
+      "filled": { "model": "horsepower:block/millstone_filled" }
     },
     "filled": {
       "true": {},

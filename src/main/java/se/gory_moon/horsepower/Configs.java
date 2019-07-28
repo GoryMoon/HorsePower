@@ -55,7 +55,7 @@ public class Configs {
                     .push("misc");
 
             showTags = builder
-                    .comment("Will show a items all ore dictionaries in the tooltip")
+                    .comment("Will show a items all tags in the tooltip")
                     .translation("config.horsepower.misc.tags")
                     .define("showTags", false);
 
@@ -94,25 +94,32 @@ public class Configs {
         @Config.LangKey("config.horsepower.recipes.grindstone")
         @Name("Grindstone Recipes")
 */        public String[] millstoneRecipes = {
-                "minecraft:wheat-horsepower:flour-12",
-                "minecraft:sugar_cane-minecraft:sugar-12",
-                "minecraft:poppy-minecraft:rose_red-12",
-                "minecraft:red_tulip-minecraft:rose_red-12",
-                "minecraft:rose_bush-minecraft:rose_red@2-12",
-                "minecraft:beetroot-minecraft:rose_red-12",
-                "minecraft:azura_bluet-minecraft:light_gray_dye-12",
-                "minecraft:white_tulip-minecraft:light_gray_dye-12",
-                "minecraft:oxeye_daisy-minecraft:light_gray_dye-12",
-                "minecraft:pink_tulip-minecraft:pink_dye-12",
-                "minecraft:peony-minecraft:pink_dye@2-12",
-                "minecraft:dandelion-minecraft:dandelion_yellow-12",
-                "minecraft:sunflower-minecraft:dandelion_yellow@2-12",
-                "minecraft:blue_orchid-minecraft:light_blue_dye-12",
-                "minecraft:allium-minecraft:magenta_dye-12",
-                "minecraft:lilac-minecraft:magenta_dye@2-12",
-                "minecraft:orange_tulip-minecraft:orange_dye-12",
-                "minecraft:bone-minecraft:bone_meal@3-12",
-                "minecraft:bone_block-minecraft:bone_meal@9-12"
+                    "minecraft:wheat-horsepower:flour-12",
+                    "minecraft:sugar_cane-minecraft:sugar-12",
+                    "minecraft:poppy-minecraft:rose_red-12",
+                    "minecraft:red_tulip-minecraft:rose_red-12",
+                    "minecraft:rose_bush-minecraft:rose_red@2-12",
+                    "minecraft:beetroot-minecraft:rose_red-12",
+
+                    "minecraft:azura_bluet-minecraft:light_gray_dye-12",
+                    "minecraft:white_tulip-minecraft:light_gray_dye-12",
+                    "minecraft:oxeye_daisy-minecraft:light_gray_dye-12",
+
+                    "minecraft:pink_tulip-minecraft:pink_dye-12",
+                    "minecraft:peony-minecraft:pink_dye@2-12",
+
+                    "minecraft:dandelion-minecraft:dandelion_yellow-12",
+                    "minecraft:sunflower-minecraft:dandelion_yellow@2-12",
+
+                    "minecraft:blue_orchid-minecraft:light_blue_dye-12",
+
+                    "minecraft:allium-minecraft:magenta_dye-12",
+                    "minecraft:lilac-minecraft:magenta_dye@2-12",
+
+                    "minecraft:orange_tulip-minecraft:orange_dye-12",
+
+                    "minecraft:bone-minecraft:bone_meal@3-12",
+                    "minecraft:bone_block-minecraft:bone_meal@9-12"
         };
 
 //        @Comment({"Uses the same syntax as the regular grindstone recipes", "These recipes are only used when the config to separate them is enabled"})

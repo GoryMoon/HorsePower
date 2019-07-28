@@ -14,13 +14,13 @@ import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.blocks.BlockMillstone;
 import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
-import se.gory_moon.horsepower.tileentity.TileEntityMillstone;
+import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.util.RenderUtils;
 
-public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<TileEntityMillstone> {
+public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<MillstoneTileEntity> {
 
     @Override
-    public void render(TileEntityMillstone te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(MillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         BlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof BlockHPBase)) return;
         ItemStack outputStack = te.getStackInSlot(1);

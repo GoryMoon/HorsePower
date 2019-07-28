@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements ITickableTileEntity {
+public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
     protected static double[][] path = {{-1.5, -1.5}, {0, -1.5}, {1, -1.5}, {1, 0}, {1, 1}, {0, 1}, {-1.5, 1}, {-1.5, 0}};
     protected AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
@@ -37,7 +37,7 @@ public abstract class TileEntityHPHorseBase extends TileEntityHPBase implements 
     protected boolean running = true;
     protected boolean wasRunning = false;
 
-    public TileEntityHPHorseBase(int inventorySize, TileEntityType type) {
+    public HPHorseBaseTileEntity(int inventorySize, TileEntityType type) {
         super(inventorySize, type);
     }
 

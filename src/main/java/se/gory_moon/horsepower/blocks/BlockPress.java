@@ -34,7 +34,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
-import se.gory_moon.horsepower.tileentity.TileEntityPress;
+import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -85,7 +85,7 @@ public class BlockPress extends BlockHPBase {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
-        return new TileEntityPress();
+        return new PressTileEntity();
     }
 
     @Override
@@ -140,7 +140,7 @@ public class BlockPress extends BlockHPBase {
     @Nonnull
     @Override
     public Class<?> getTileClass() {
-        return TileEntityPress.class;
+        return PressTileEntity.class;
     }
 
     // The One Probe Integration

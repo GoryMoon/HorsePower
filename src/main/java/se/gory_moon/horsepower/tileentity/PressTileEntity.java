@@ -24,13 +24,13 @@ import se.gory_moon.horsepower.util.Localization;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityPress extends TileEntityHPHorseBase {
+public class PressTileEntity extends HPHorseBaseTileEntity {
 
     private FluidTank tank = new FluidTank(Configs.general.pressFluidTankSize);
     private int currentPressStatus;
 
-    public TileEntityPress() {
-        super(2, ModBlocks.PRESS_TILE.orElseThrow(RuntimeException::new));
+    public PressTileEntity() {
+        super(2, ModBlocks.PRESS_TILE.orElseThrow(IllegalStateException::new));
         tank.setCanFill(false);
     }
 

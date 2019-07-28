@@ -1,12 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "horsepower:press"
+    "model": "horsepower:block/press"
   },
   "variants": {
     "part": {
-      "base": { "model": "horsepower:press" },
-      "top": { "model": "horsepower:press_top" }
+      "base": { "model": "horsepower:block/press" },
+      "top": { "model": "horsepower:block/press_top" }
     },
     "facing": {
       "north": {},

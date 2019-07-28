@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.tileentity.TileEntityPress;
+import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public final class HUDHandlerPress implements IComponentProvider, IServerDataPro
 
     @Override
     public void appendServerData(CompoundNBT data, ServerPlayerEntity player, World world, TileEntity te) {
-        if (te instanceof TileEntityPress)
+        if (te instanceof PressTileEntity)
             te.write(data);
     }
 }

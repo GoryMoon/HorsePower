@@ -1,12 +1,12 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "horsepower:hand_millstone"
+    "model": "horsepower:block/hand_millstone"
   },
   "variants": {
     "part": {
-      "base": { "model": "horsepower:hand_millstone" },
-      "center": { "model": "horsepower:hand_millstone_center" }
+      "base": { "model": "horsepower:block/hand_millstone" },
+      "center": { "model": "horsepower:block/hand_millstone_center" }
     }
   }
 }
