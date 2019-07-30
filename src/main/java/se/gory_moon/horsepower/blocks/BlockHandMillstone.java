@@ -81,7 +81,7 @@ public class BlockHandMillstone extends BlockHPBase {
         if (tile != null && tile.canWork() && !player.isSneaking()) {
             if (!worldIn.isRemote) {
                 if (tile.turn())
-                    player.addExhaustion((float) Configs.general.millstoneExhaustion);
+                    player.addExhaustion(Configs.SERVER.millstoneExhaustion.get().floatValue());
                 return true;
             } else
                 return true;

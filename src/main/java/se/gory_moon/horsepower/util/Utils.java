@@ -21,16 +21,14 @@ import se.gory_moon.horsepower.recipes.HPRecipes;
 
 import java.util.ArrayList;
 
-//import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
-
 public class Utils {
 
     public static ArrayList<Class<? extends CreatureEntity>> getCreatureClasses() {
         ArrayList<Class<? extends CreatureEntity>> clazzes = Lists.newArrayList();
-        if (Configs.general.useHorseInterface)
+        if (Configs.SERVER.useHorseInterface.get())
             clazzes.add(AbstractHorseEntity.class);
 
-        for (String e: Configs.general.millstoneMobList) {
+        for (String e: Configs.SERVER.mobList.get()) {
             try {
                 Class clazz = Class.forName(e);
 
@@ -74,7 +72,7 @@ public class Utils {
     public static int getChance(String in) {
         try {
             return Integer.parseInt(in.split("-")[1]);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             errorMessage("Chance for chopping axe is malformed, (" + in + ")", false);
         }
         return 0;
@@ -103,7 +101,7 @@ public class Utils {
         });
     }
 
-    public static Object parseItemStack(String item, boolean acceptOre, boolean acceptAmount) throws Exception {
+    public static Object parseItemStack(String item, boolean acceptAmount) throws Exception {
         String[] data = item.split("\\$");
         CompoundNBT nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
         if (data.length == 2)
@@ -113,28 +111,12 @@ public class Utils {
         int amount = !acceptAmount || data.length == 1 ? 1: Integer.parseInt(data[1]);
 
         data = item.split(":");
-        /*if (item.startsWith("ore:")) {
-            if (!acceptOre)
-                throw new InvalidParameterException();
-            if (amount > 1) {
-                return OreDictionary.getOres(item.substring(4)).stream().map(stack -> {
-                    ItemStack stack1 = stack.copy();
-                    stack1.setCount(amount);
-                    return stack1;
-                }).collect(Collectors.toList());
-            } else
-                return OreDictionary.getOres(item.substring(4));
-        } else if (item.startsWith("fluid:")) {
-            Fluid fluid = FluidRegistry.getFluid(item.substring(6));
-            return new FluidStack(fluid, amount, nbt);
-        } else {*/
-            CompoundNBT compound = new CompoundNBT();
-            compound.putString("id", data[0] + ":" + data[1]);
-            compound.putByte("Count", (byte) amount);
-            if (nbt != null)
-                compound.put("tag", nbt);
-            return ItemStack.read(compound);
-        //}
+        CompoundNBT compound = new CompoundNBT();
+        compound.putString("id", data[0] + ":" + data[1]);
+        compound.putByte("Count", (byte) amount);
+        if (nbt != null)
+            compound.put("tag", nbt);
+        return ItemStack.read(compound);
     }
 /*
     public static List<ItemStack> getCraftingItems(BlockHPChoppingBase block) {

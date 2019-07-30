@@ -21,8 +21,9 @@ import java.util.UUID;
 
 public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
-    protected static double[][] path = {{-1.5, -1.5}, {0, -1.5}, {1, -1.5}, {1, 0}, {1, 1}, {0, 1}, {-1.5, 1}, {-1.5, 0}};
-    protected AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
+    protected static double[][] walkPath = {{-1.1, -1}, {0, -1}, {1, -1}, {0.75, 0}, {0.75, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+    protected static double[][] searchPath = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+    public AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
     protected List<BlockPos> searchPos = null;
     protected int origin = -1;
     protected int target = origin;
@@ -151,10 +152,10 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         return valid;
     }
 
-    private Vec3d getPathPosition(int i) {
-        double x = pos.getX() + path[i][0] * 2;
+    private Vec3d getPathPosition(int i, boolean nav) {
+        double x = pos.getX() + (nav ? walkPath: searchPath)[i][0] * (nav ? 3: 2.5);
         double y = pos.getY() + getPositionOffset();
-        double z = pos.getZ() + path[i][1] * 2;
+        double z = pos.getZ() + (nav ? walkPath: searchPath)[i][1] * (nav ? 3: 2.5);
         return new Vec3d(x, y, z);
     }
 
@@ -163,8 +164,8 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
             double dist = Double.MAX_VALUE;
             int closest = 0;
 
-            for (int i = 0; i < path.length; i++) {
-                Vec3d pos = getPathPosition(i);
+            for (int i = 0; i < walkPath.length; i++) {
+                Vec3d pos = getPathPosition(i, false);
 
                 double tmp = pos.distanceTo(worker.getPositionVector());
                 if (tmp < dist) {
@@ -198,7 +199,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         if (locateHorseTimer <= 0)
             locateHorseTimer = 120;
 
-        if (!world.isRemote && valid) {
+        if (/*!getWorld().isRemote && */valid) {
             if (!running && canWork()) {
                 running = true;
             } else if (running && !canWork()){
@@ -213,21 +214,21 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
             if (hasWorker()) {
                 if (running) {
 
-                    Vec3d pos = getPathPosition(target);
+                    Vec3d pos = getPathPosition(target, false);
                     double x = pos.x;
                     double y = pos.y;
                     double z = pos.z;
 
-                    if (searchAreas[target] == null)
-                        searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D);
+                    //if (searchAreas[target] == null)
+                        searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 1.0D, z - 0.5D, x + 1.5D, y + 1.0D, z + 1.5D);
 
                     if (worker.getBoundingBox().intersects(searchAreas[target])) {
                         int next = target + 1;
                         int previous = target -1;
-                        if (next >= path.length)
+                        if (next >= walkPath.length)
                             next = 0;
                         if (previous < 0)
-                            previous = path.length - 1;
+                            previous = walkPath.length - 1;
 
                         if (origin != target && target != previous) {
                             origin = target;
@@ -241,7 +242,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
                     }
 
                     if (target != -1 && worker.getNavigator().noPath()) {
-                        pos = getPathPosition(target);
+                        pos = getPathPosition(target, true);
                         x = pos.x;
                         y = pos.y;
                         z = pos.z;

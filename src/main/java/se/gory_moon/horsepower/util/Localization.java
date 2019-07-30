@@ -155,4 +155,41 @@ public final class Localization {
         }
     }
 
+    public static class CONFIG {
+        public enum CLIENT {
+            RENDER_ITEM_AMOUNT,
+            MUST_LOOK_AT_BLOCK,
+            SHOW_OBSTRUCTED_PLACE,
+
+            MISC$TAGS,
+            MISC$HARVEST_LEVEL,
+            MISC$HARVEST_TYPES;
+
+            public String key() {
+                return "config.horsepower.client." + toString().toLowerCase().replaceAll("\\$", ".");
+            }
+        }
+
+        public enum SERVER {
+            USE_HORSE_INTERFACE,
+            MOB_LIST,
+            MILLSTONE_EXHAUSTION,
+            SHOULD_DAMAGE_AXE,
+            CHOPPING_BLOCK_AXES,
+            HARVESTABLE_PERCENTAGE,
+            CHOPPING_BLOCK_DROP,
+            CHOPPING_EXHAUSTION,
+            CHOPPING_MULTIPLIER,
+            POINTS_FOR_WINDUP,
+            POINTS_PER_ROTATION,
+            POINTS_FOR_PRESS,
+            PRESS_FLUID_TANK_SIZE,
+            ;
+
+            public String key() {
+                return "config.horsepower.server." + toString().toLowerCase().replaceAll("\\$", ".");
+            }
+        }
+    }
+
 }

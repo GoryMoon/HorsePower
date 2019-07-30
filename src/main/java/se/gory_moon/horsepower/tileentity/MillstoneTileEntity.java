@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.blocks.BlockMillstone;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
@@ -89,7 +90,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
         if (currentItemMillTime >= totalItemMillTime) {
             currentItemMillTime = 0;
 
-            totalItemMillTime = HPRecipes.instance().getMillstoneTime(getStackInSlot(0), false);
+            totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.HORSE);
             millItem();
             return true;
         }
@@ -99,6 +100,11 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     @Override
     public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
         return RecipeSerializers.MILLING_TYPE;
+    }
+
+    @Override
+    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
+        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.HORSE);
     }
 
     @Override
@@ -123,7 +129,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemMillTime = HPRecipes.instance().getMillstoneTime(stack, false);
+            totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.HORSE);
             currentItemMillTime = 0;
         }
         markDirty();
@@ -136,7 +142,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.instance().hasMillstoneRecipe(stack, false);
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HORSE);
     }
 
     @Override

@@ -7,7 +7,6 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -23,8 +22,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import se.gory_moon.horsepower.blocks.BlockHPBase;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 
@@ -35,6 +36,7 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
 
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     protected IInventoryHP inventory;
+    private RecipeWrapper recipeWrapperDummy = new RecipeWrapper(new ItemStackHandler());
 
     public HPBaseTileEntity(int inventorySize, TileEntityType type) {
         super(type);
@@ -126,7 +128,20 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
     }
 
     public AbstractHPRecipe getRecipe() {
-        return (AbstractHPRecipe) this.world.getRecipeManager().getRecipe(getRecipeType(), inventory, this.world).orElse(null);
+        return getRecipe(inventory);
+    }
+
+    public AbstractHPRecipe getRecipe(ItemStack stack) {
+        recipeWrapperDummy.setInventorySlotContents(0, stack);
+        return getRecipe(recipeWrapperDummy);
+    }
+
+    public AbstractHPRecipe getRecipe(IInventory inventory) {
+        return validateRecipe((AbstractHPRecipe) this.world.getRecipeManager().getRecipe(getRecipeType(), inventory, this.world).orElse(null));
+    }
+
+    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
+        return recipe;
     }
 
     public abstract IRecipeType<? extends IRecipe<IInventory>> getRecipeType();
@@ -184,12 +199,11 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         if (getStackInSlot(0).isEmpty()) {
             return false;
         } else {
-            AbstractHPRecipe recipeBase = getRecipe();
-            if (recipeBase == null) return false;
+            AbstractHPRecipe recipe = getRecipe();
+            if (recipe == null) return false;
 
-            Ingredient input = recipeBase.getIngredients().get(0);
-            ItemStack itemstack = recipeBase.getRecipeOutput();
-            ItemStack secondary = recipeBase.getSecondaryOutput();
+            ItemStack itemstack = recipe.getRecipeOutput();
+            ItemStack secondary = recipe.getSecondaryOutput();
 
             if (getStackInSlot(0).getCount() < 1) //TODO input.count()
                 return false;

@@ -4,7 +4,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.network.messages.SyncServerRecipesMessage;
 
 import java.util.Objects;
 
@@ -18,7 +17,6 @@ public class PacketHandler {
             .simpleChannel();
 
     public static void init() {
-        INSTANCE.registerMessage(0, SyncServerRecipesMessage.class, SyncServerRecipesMessage::encode, SyncServerRecipesMessage::decode, SyncServerRecipesMessage::handle);
     }
 
 }

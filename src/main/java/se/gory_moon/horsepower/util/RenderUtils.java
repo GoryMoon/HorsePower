@@ -19,8 +19,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.lwjgl.opengl.GL11;
+import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 public class RenderUtils {
@@ -66,7 +69,7 @@ public class RenderUtils {
         }
     }
 
-    public static void renderUsedArea(World world, BlockPos blockPos, int yOffset, float invalidAplha, float validAplha) {
+    private static void preBoundingBox() {
         GlStateManager.pushMatrix();
 
         GlStateManager.disableLighting();
@@ -83,6 +86,36 @@ public class RenderUtils {
         //render
         GlStateManager.polygonOffset(-0.1F, -10.0F);
         GlStateManager.enablePolygonOffset();
+    }
+
+    private static void postBoundingBox() {
+        GlStateManager.disablePolygonOffset();
+        //render end
+
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        GlStateManager.color4f(1, 1, 1, 1);
+        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture();
+        GlStateManager.enableDepthTest();
+        GlStateManager.disableBlend();
+        GlStateManager.enableLighting();
+        GlStateManager.popMatrix();
+    }
+
+    public static void renderSearchAreas(HPHorseBaseTileEntity te) {
+        preBoundingBox();
+        GlStateManager.color4f(1, 1, 1, 1);
+        BlockPos pos = te.getPos();
+        double playerX = -TileEntityRendererDispatcher.staticPlayerX;
+        double playerY = -TileEntityRendererDispatcher.staticPlayerY;
+        double playerZ = -TileEntityRendererDispatcher.staticPlayerZ;
+        Arrays.stream(te.searchAreas).filter(Objects::nonNull).map(aabb -> aabb.offset(playerX, playerY, playerZ)).forEach(RenderUtils::drawBoundingBox);
+        postBoundingBox();
+    }
+
+    public static void renderUsedArea(World world, BlockPos blockPos, int yOffset, float invalidAplha, float validAplha) {
+        preBoundingBox();
         for (int xo = -3; xo <= 3; xo++) {
             for (int yo = yOffset; yo <= 1 + yOffset; yo++) {
                 for (int zo = -3; zo <= 3; zo++) {
@@ -109,18 +142,7 @@ public class RenderUtils {
                 }
             }
         }
-        GlStateManager.disablePolygonOffset();
-        //render end
-
-        GL11.glDisable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.color4f(1, 1, 1, 1);
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
-        GlStateManager.depthMask(true);
-        GlStateManager.enableTexture();
-        GlStateManager.enableDepthTest();
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
-        GlStateManager.popMatrix();
+        postBoundingBox();
     }
 
     @OnlyIn(Dist.CLIENT)

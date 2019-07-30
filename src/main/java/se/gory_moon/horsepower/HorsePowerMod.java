@@ -33,6 +33,7 @@ public class HorsePowerMod {
         eventBus.addListener(this::serverLoad);
         eventBus.addListener(this::onFingerprintViolation);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.clientSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.serverSpec);
         eventBus.register(Configs.class);
     }
 
@@ -49,8 +50,6 @@ public class HorsePowerMod {
     public void loadComplete(FMLLoadCompleteEvent event) {
         //tweakerPlugin.getRemove().forEach(IHPAction::run);
         //tweakerPlugin.getAdd().forEach(IHPAction::run);
-
-        HPEventHandler.reloadConfig();
     }
 
     public void serverLoad(FMLServerAboutToStartEvent event) {

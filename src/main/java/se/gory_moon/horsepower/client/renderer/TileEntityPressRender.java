@@ -53,7 +53,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         GlStateManager.pushMatrix();
         GlStateManager.translated( x, y, z );
 
-        float move = (te.getCurrentPressStatus() / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1));
+        float move = (te.getCurrentPressStatus() / (float)(Configs.SERVER.pointsPerPress.get() > 0 ? Configs.SERVER.pointsPerPress.get(): 1));
         GlStateManager.translated( 0.5, 0.5, 0.5 );
         GlStateManager.translated( 0, -( 0.58 * move), 0 );
         GlStateManager.translated( -0.5, -0.5, -0.5 );

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 
 public class PressTileEntity extends HPHorseBaseTileEntity {
 
-    private FluidTank tank = new FluidTank(Configs.general.pressFluidTankSize);
+    private FluidTank tank = new FluidTank(Configs.SERVER.pressTankSize.get());
     private int currentPressStatus;
 
     public PressTileEntity() {
@@ -87,7 +87,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     public boolean targetReached() {
         currentPressStatus++;
 
-        int totalPress = Configs.general.pointsForPress;
+        int totalPress = Configs.SERVER.pointsPerPress.get();
         if (currentPressStatus >= (totalPress <= 0 ? 1: totalPress)) {
             currentPressStatus = 0;
 

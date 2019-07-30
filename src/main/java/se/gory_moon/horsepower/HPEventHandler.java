@@ -3,9 +3,7 @@ package se.gory_moon.horsepower;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -16,20 +14,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.network.NetworkDirection;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.lib.Reference;
-import se.gory_moon.horsepower.network.PacketHandler;
-import se.gory_moon.horsepower.network.messages.SyncServerRecipesMessage;
-import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -45,32 +37,31 @@ public class HPEventHandler {
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(Reference.MODID)) {
             reloadConfig();
-            Utils.sendSavedErrors();
         }
     }
 
     public static void reloadConfig() {
-        //ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE);
-        HPRecipes.instance().reloadRecipes();
         choppingAxes.clear();
-        Arrays.stream(Configs.general.choppingBlockAxes).forEach(s -> {
+        Configs.SERVER.choppingBlockAxes.get().forEach(s -> {
             String[] data = s.split("=");
             int base = Utils.getBaseAmount(data[1]);
             int chance = Utils.getChance(data[1]);
             ItemStack stack = ItemStack.EMPTY;
 
             try {
-                stack = (ItemStack) Utils.parseItemStack(data[0], false, false);
+                stack = (ItemStack) Utils.parseItemStack(data[0], false);
             } catch (Exception e) {
                 Utils.errorMessage("Parse error with item for custom axes for the chopping block", false);
             }
 
             if (!stack.isEmpty())
                 choppingAxes.put(stack, Pair.of(base, chance));
+            else
+                Utils.errorMessage("Parse error with item for custom axes for the chopping block", false);
         });
 
         harvestPercentages.clear();
-        Arrays.stream(Configs.general.harvestable_percentage).forEach(s -> {
+        Configs.SERVER.harvestablePercentage.get().forEach(s -> {
             String[] data = s.split("=");
             try {
                 int harvestLevel = Integer.parseInt(data[0]);
@@ -82,6 +73,7 @@ public class HPEventHandler {
                 Utils.errorMessage("HarvestLevel config is malformed, make sure only numbers are used as values, (" + s + ")", false);
             }
         });
+        Utils.sendSavedErrors();
     }
 
     @SubscribeEvent
@@ -89,27 +81,8 @@ public class HPEventHandler {
         if (FMLEnvironment.dist.isClient()) {
             if (event.getEntity() instanceof ClientPlayerEntity && event.getWorld() instanceof ClientWorld && Minecraft.getInstance().player != null) {
                 Utils.sendSavedErrors();
-                //HPEventHandler.reloadConfig();
             }
         };
-    }
-
-    @SubscribeEvent
-    public static void onServerJoined(PlayerEvent.PlayerLoggedInEvent event) {
-        if (FMLEnvironment.dist.isDedicatedServer()) {
-            PacketHandler.INSTANCE.sendTo(new SyncServerRecipesMessage(), ((ServerPlayerEntity)event.getPlayer()).connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onServerLeave(WorldEvent.Unload event) {
-        if (FMLEnvironment.dist.isClient()) {
-            ClientPlayNetHandler handler = Minecraft.getInstance().getConnection();
-            if (handler != null && !handler.getNetworkManager().isLocalChannel() && HPRecipes.serverSyncedRecipes) {
-                HPRecipes.serverSyncedRecipes = false;
-                HPRecipes.instance().reloadRecipes();
-            }
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

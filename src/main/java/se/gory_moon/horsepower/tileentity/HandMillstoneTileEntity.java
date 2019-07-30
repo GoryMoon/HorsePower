@@ -59,6 +59,11 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
         return RecipeSerializers.MILLING_TYPE;
     }
 
+    @Override
+    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
+        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.HAND);
+    }
+
     private void millItem() {
         if (!world.isRemote && canWork()) {
             millItem(inventory, this);
@@ -111,7 +116,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemMillTime = HPRecipes.instance().getMillstoneTime(stack, true);
+            totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.HAND);
             currentItemMillTime = 0;
         }
         markDirty();
@@ -124,7 +129,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.instance().hasMillstoneRecipe(stack, true);
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HAND);
     }
 
     @Override
@@ -158,13 +163,13 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
             if (currentTicks >= ticksPerRotation) {
                 currentTicks -= ticksPerRotation;
 
-                currentItemMillTime += Configs.general.pointsPerRotation;
+                currentItemMillTime += Configs.SERVER.pointsPerRotation.get();
 
                 if (currentItemMillTime >= totalItemMillTime) {
                     currentItemMillTime = 0;
 
                     millItem();
-                    totalItemMillTime = HPRecipes.instance().getMillstoneTime(getStackInSlot(0), true);
+                    totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.HAND);
                 }
                 markDirty();
             }

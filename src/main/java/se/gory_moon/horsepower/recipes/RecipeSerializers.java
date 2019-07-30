@@ -14,8 +14,10 @@ import se.gory_moon.horsepower.lib.Reference;
 public class RecipeSerializers {
 
     public static final HPRecipeType<MillingRecipe> MILLING_TYPE = new HPRecipeType<>("milling");
+    public static final HPRecipeType<MillingRecipe> PRESSING_TYPE = new HPRecipeType<>("milling");
 
     public static final MillingSerializer MILLING_SERIALIZER = new MillingSerializer();
+    public static final PressingSerializer PRESSING_SERIALIZER = new PressingSerializer();
 
     @Mod.EventBusSubscriber(modid = Reference.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -24,14 +26,15 @@ public class RecipeSerializers {
         public static void registerRecipeTypes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
             IForgeRegistry<IRecipeSerializer<?>> registry = event.getRegistry();
             registerRecipeType(MILLING_TYPE);
+            registerRecipeType(PRESSING_TYPE);
 
             registry.register(MILLING_SERIALIZER.setRegistryName(Reference.MODID, "milling"));
+            registry.register(PRESSING_SERIALIZER.setRegistryName(Reference.MODID, "pressing"));
         }
 
         private static <T extends IRecipe<?>> void registerRecipeType(IRecipeType<T> type) {
             Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Reference.MODID, type.toString()), type);
         }
-
     }
 
     private static class HPRecipeType<T extends IRecipe<?>> implements IRecipeType<T> {

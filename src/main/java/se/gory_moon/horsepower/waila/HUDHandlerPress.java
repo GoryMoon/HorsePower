@@ -23,8 +23,8 @@ public final class HUDHandlerPress implements IComponentProvider, IServerDataPro
     @Override
     public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
         CompoundNBT nbt = accessor.getServerData();
-        double current = (double) nbt.getInt("currentPressStatus");
-        double total = Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1;
+        double current = nbt.getInt("currentPressStatus");
+        double total = Configs.SERVER.pointsPerPress.get() > 0 ? Configs.SERVER.pointsPerPress.get(): 1;
         double progress = Math.round(((current / total) * 100D) * 100D) / 100D;
         tooltip.add(new StringTextComponent(Localization.WAILA.PRESS_PROGRESS.translate(String.valueOf(progress))));
         Provider.showItems(tooltip, accessor, config, (int) progress);
