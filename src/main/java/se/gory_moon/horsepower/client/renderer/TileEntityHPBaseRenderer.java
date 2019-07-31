@@ -4,7 +4,13 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -17,7 +23,11 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -32,6 +42,18 @@ import se.gory_moon.horsepower.util.Localization;
 public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> extends TileEntityRenderer<T> {
 
     public static ITextComponent LEAD_LOOKUP = new TranslationTextComponent(Localization.INFO.ITEM_REVEAL.key()).setStyle(new Style().setColor(TextFormatting.RED));
+
+    public static void drawCustomNameplate(TileEntityRendererDispatcher rendererDispatcher, FontRenderer fontRenderer, TileEntity te, String str, double x, double y, double z, int maxDistance, float offset) {
+        ActiveRenderInfo renderInfo = rendererDispatcher.renderInfo;
+        Vec3d view = renderInfo.getProjectedView();
+        double d0 = te.getDistanceSq(view.x, view.y, view.z);
+
+        if (d0 <= (double) (maxDistance * maxDistance)) {
+            float yaw = renderInfo.getYaw();
+            float pitch = renderInfo.getPitch();
+            GameRenderer.drawNameplate(fontRenderer, str, (float) x + 0.5F, (float) y + 1.5F + offset, (float) z + 0.5F, 0, yaw, pitch, false);
+        }
+    }
 
     protected void renderStillItem(HPBaseTileEntity te, ItemStack stack, float x, float y, float z, float scale) {
         renderItem(te, stack, x, y, z, scale, false);
@@ -335,18 +357,6 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
             drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
             drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);
             this.setLightmapDisabled(false);
-        }
-    }
-
-    public static void drawCustomNameplate(TileEntityRendererDispatcher rendererDispatcher, FontRenderer fontRenderer, TileEntity te, String str, double x, double y, double z, int maxDistance, float offset) {
-        ActiveRenderInfo renderInfo = rendererDispatcher.renderInfo;
-        Vec3d view = renderInfo.getProjectedView();
-        double d0 = te.getDistanceSq(view.x, view.y, view.z);
-
-        if (d0 <= (double) (maxDistance * maxDistance)) {
-            float yaw = renderInfo.getYaw();
-            float pitch = renderInfo.getPitch();
-            GameRenderer.drawNameplate(fontRenderer, str, (float) x + 0.5F, (float) y + 1.5F + offset, (float) z + 0.5F, 0, yaw, pitch, false);
         }
     }
 }

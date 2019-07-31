@@ -3,7 +3,12 @@ package se.gory_moon.horsepower.data;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.*;
+import net.minecraft.data.CookingRecipeBuilder;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.RecipeProvider;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
@@ -55,12 +60,12 @@ public class HPRecipeProvider extends RecipeProvider {
         //"ore:treeLeaves@8-fluid:water@1000"
     }
 
-    public InventoryChangeTrigger.Instance hasItem(IItemProvider... providers) {
-        return hasItem(Arrays.stream(providers).map(provider -> ItemPredicate.Builder.create().item(provider).build()).toArray(ItemPredicate[]::new));
-    }
-
     @Override
     public String getName() {
         return "Horsepower Recipes";
+    }
+
+    public InventoryChangeTrigger.Instance hasItem(IItemProvider... providers) {
+        return hasItem(Arrays.stream(providers).map(provider -> ItemPredicate.Builder.create().item(provider).build()).toArray(ItemPredicate[]::new));
     }
 }

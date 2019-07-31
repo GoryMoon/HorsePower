@@ -17,21 +17,50 @@ import java.util.ArrayList;
 
 public class Configs {
 
+    public static final Client CLIENT;
+    public static final Server SERVER;
+    static final ForgeConfigSpec clientSpec;
+    static final ForgeConfigSpec serverSpec;
     public static Recipes recipes = new Recipes();
+
+    static {
+        final Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        clientSpec = clientSpecPair.getRight();
+        CLIENT = clientSpecPair.getLeft();
+
+        final Pair<Server, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(Server::new);
+        serverSpec = serverSpecPair.getRight();
+        SERVER = serverSpecPair.getLeft();
+    }
+
+    @SubscribeEvent
+    public static void onLoad(final ModConfig.Loading configEvent) {
+        HorsePowerMod.LOGGER.debug("Loaded HP config file {}", configEvent.getConfig().getFileName());
+        if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
+            HPEventHandler.reloadConfig();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
+        HorsePowerMod.LOGGER.debug("HP config just got changed on the file system!");
+        ((CommentedFileConfig) configEvent.getConfig().getConfigData()).load();
+        if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
+            HPEventHandler.reloadConfig();
+        }
+    }
 
     public static class Client {
 
         public final BooleanValue renderItemAmount;
         public final BooleanValue mustLookAtBlock;
         public final BooleanValue showObstructedPlace;
-
-        //        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
-        //        @Name("Use Dynamic Chopping Display")
-        public boolean useDynamicDisplay = true;
-
         public final BooleanValue showTags;
         public final BooleanValue showHarvestLevel;
         public final ConfigValue<ArrayList<String>> harvestTypes;
+        //        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
+        //        @Name("Use Dynamic Chopping Display")
+        public boolean useDynamicDisplay = true;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client only configs")
@@ -226,37 +255,5 @@ public class Configs {
                 "#minecraft:acacia_logs-minecraft:acacia_planks@4-4",
                 "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-4"
         };
-    }
-
-    static final ForgeConfigSpec clientSpec;
-    public static final Client CLIENT;
-    static final ForgeConfigSpec serverSpec;
-    public static final Server SERVER;
-
-    static {
-        final Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
-        clientSpec = clientSpecPair.getRight();
-        CLIENT = clientSpecPair.getLeft();
-
-        final Pair<Server, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(Server::new);
-        serverSpec = serverSpecPair.getRight();
-        SERVER = serverSpecPair.getLeft();
-    }
-
-    @SubscribeEvent
-    public static void onLoad(final ModConfig.Loading configEvent) {
-        HorsePowerMod.LOGGER.debug("Loaded HP config file {}", configEvent.getConfig().getFileName());
-        if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
-            HPEventHandler.reloadConfig();
-        }
-    }
-
-    @SubscribeEvent
-    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
-        HorsePowerMod.LOGGER.debug("HP config just got changed on the file system!");
-        ((CommentedFileConfig) configEvent.getConfig().getConfigData()).load();
-        if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
-            HPEventHandler.reloadConfig();
-        }
     }
 }

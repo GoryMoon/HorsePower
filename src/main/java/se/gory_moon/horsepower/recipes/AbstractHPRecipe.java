@@ -44,11 +44,6 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return Stream.of(input).collect(Collectors.toCollection(NonNullList::create));
-    }
-
-    @Override
     public boolean matches(IInventory inv, World worldIn) {
         return input.test(inv.getStackInSlot(0));
     }
@@ -58,17 +53,37 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
         return result.copy();
     }
 
+    @Override
+    public ItemStack getRecipeOutput() {
+        return result;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return Stream.of(input).collect(Collectors.toCollection(NonNullList::create));
+    }
+
+    @Override
+    public String getGroup() {
+        return "";
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return id;
+    }
+
+    @Override
+    public IRecipeType<?> getType() {
+        return type;
+    }
+
     public FluidStack getCraftingFluid() {
         return outputFluid.copy();
     }
 
     public ItemStack getCraftingSecondary() {
         return secondary.copy();
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return result;
     }
 
     public FluidStack getFluidOutput() {
@@ -95,21 +110,6 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
         return recipeType;
     }
 
-    @Override
-    public String getGroup() {
-        return "";
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
-    public IRecipeType<?> getType() {
-        return type;
-    }
-
     public enum Type {
         BOTH(0, "both"),
         HAND(1, "hand"),
@@ -121,18 +121,6 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
         Type(int id, String name) {
             this.id = id;
             this.name = name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean is(Type type) {
-            return this == BOTH || this == type;
         }
 
         public static Type fromId(int id) {
@@ -150,6 +138,18 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
                     return BOTH;
             }
             throw new JsonSyntaxException("Invalid recipe type \"" + name + "\", expected either of: " + Arrays.toString(Type.values()));
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean is(Type type) {
+            return this == BOTH || this == type;
         }
     }
 }

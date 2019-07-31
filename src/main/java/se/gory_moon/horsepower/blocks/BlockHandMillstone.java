@@ -46,9 +46,7 @@ public class BlockHandMillstone extends BlockHPBase {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        return COLLISION;
-    }
+    public void emptiedOutput(World world, BlockPos pos) {}
 
     @Override
     public int getSlot(BlockState state, BlockRayTraceResult hit) {
@@ -91,21 +89,23 @@ public class BlockHandMillstone extends BlockHPBase {
     }
 
     @Override
-    public void emptiedOutput(World world, BlockPos pos) {}
-
-    @Override
     public boolean hasCustomBreakingProgress(BlockState state) {
         return true;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+        return COLLISION;
     }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()).with(PART, HandMillstoneModels.BASE), 2);
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING, PART);
     }
 
     @Override

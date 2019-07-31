@@ -9,7 +9,11 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,37 +34,11 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
 
     private FluidTank tank = new FluidTank(Configs.SERVER.pressTankSize.get());
     private int currentPressStatus;
+    private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     public PressTileEntity() {
         super(2, ModBlocks.PRESS_TILE.orElseThrow(IllegalStateException::new));
         tank.setCanFill(false);
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("currentPressStatus", currentPressStatus);
-        compound.put("fluid", tank.writeToNBT(new CompoundNBT()));
-        return super.write(compound);
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-        tank.readFromNBT(compound.getCompound("fluid"));
-
-        if (getStackInSlot(0).getCount() > 0) {
-            currentPressStatus = compound.getInt("currentPressStatus");
-        } else {
-            currentPressStatus = 0;
-        }
-    }
-
-    @Override
-    public void markDirty() {
-        if (getStackInSlot(0).isEmpty())
-            currentPressStatus = 0;
-
-        super.markDirty();
     }
 
     @Override
@@ -101,37 +79,55 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
+    public int getPositionOffset() {
+        return 0;
+    }
+
+    @Override
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+        tank.readFromNBT(compound.getCompound("fluid"));
+
+        if (getStackInSlot(0).getCount() > 0) {
+            currentPressStatus = compound.getInt("currentPressStatus");
+        } else {
+            currentPressStatus = 0;
+        }
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        compound.putInt("currentPressStatus", currentPressStatus);
+        compound.put("fluid", tank.writeToNBT(new CompoundNBT()));
+        return super.write(compound);
+    }
+
+    @Override
     public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
         return null;
     }
 
     @Override
-    public int getPositionOffset() {
-        return 0;
+    public int getInventoryStackLimit() {
+        AbstractHPRecipe recipe = getRecipe();
+        if (recipe == null)
+            return 64;
+        return 64;//recipe.getInput().getCount();//TODO input.count()
     }
 
-    private void pressItem() {
-        if (canWork()) {
-            AbstractHPRecipe recipe = getRecipe();
-            ItemStack result = recipe.getCraftingResult(inventory);
-            FluidStack fluidResult = recipe.getFluidOutput();
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && currentPressStatus == 0 && getStackInSlot(1).isEmpty();
+    }
 
-            ItemStack input = getStackInSlot(0);
-            ItemStack output = getStackInSlot(1);
+    @Override
+    public int getOutputSlot() {
+        return 1;
+    }
 
-            if (recipe.isFluidRecipe()) {
-                tank.fillInternal(fluidResult, true);
-            } else {
-                if (output.isEmpty()) {
-                    setInventorySlotContents(1, result.copy());
-                } else if (output.isItemEqual(result)) {
-                    output.grow(result.getCount());
-                }
-            }
-
-            input.shrink(input.getCount());
-            markDirty();
-        }
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        return currentPressStatus == 0 ? super.removeStackFromSlot(index): ItemStack.EMPTY;
     }
 
     @Override
@@ -144,6 +140,22 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             currentPressStatus = 0;
 
         markDirty();
+    }
+
+    @Override
+    public int getInventoryStackLimit(ItemStack stack) {
+        AbstractHPRecipe recipe = getRecipe(stack);
+        if (recipe == null)
+            return getInventoryStackLimit();
+        return 64;//recipe.getInput().getCount();//TODO input.count()
+    }
+
+    @Override
+    public void markDirty() {
+        if (getStackInSlot(0).isEmpty())
+            currentPressStatus = 0;
+
+        super.markDirty();
     }
 
     @Override
@@ -174,29 +186,43 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public int getInventoryStackLimit(ItemStack stack) {
-        AbstractHPRecipe recipe = getRecipe(stack);
-        if (recipe == null)
-            return getInventoryStackLimit();
-        return 64;//recipe.getInput().getCount();//TODO input.count()
+    protected void invalidateCaps() {
+        tankCap.invalidate();
+        super.invalidateCaps();
     }
 
+    @Nonnull
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        return currentPressStatus == 0 ? super.removeStackFromSlot(index): ItemStack.EMPTY;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (side == null || side == Direction.DOWN)
+                return tankCap.cast();
+        }
+        return super.getCapability(cap, side);
     }
 
-    @Override
-    public int getInventoryStackLimit() {
-        AbstractHPRecipe recipe = getRecipe();
-        if (recipe == null)
-            return 64;
-        return 64;//recipe.getInput().getCount();//TODO input.count()
-    }
+    private void pressItem() {
+        if (canWork()) {
+            AbstractHPRecipe recipe = getRecipe();
+            ItemStack result = recipe.getCraftingResult(inventory);
+            FluidStack fluidResult = recipe.getFluidOutput();
 
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && currentPressStatus == 0 && getStackInSlot(1).isEmpty();
+            ItemStack input = getStackInSlot(0);
+            ItemStack output = getStackInSlot(1);
+
+            if (recipe.isFluidRecipe()) {
+                tank.fillInternal(fluidResult, true);
+            } else {
+                if (output.isEmpty()) {
+                    setInventorySlotContents(1, result.copy());
+                } else if (output.isItemEqual(result)) {
+                    output.grow(result.getCount());
+                }
+            }
+
+            input.shrink(input.getCount());
+            markDirty();
+        }
     }
 
     public int getCurrentPressStatus() {
@@ -212,11 +238,6 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
         return new StringTextComponent("container.press");
     }
 
-    @Override
-    public int getOutputSlot() {
-        return 1;
-    }
-
     @Nullable
     @Override
     public ITextComponent getDisplayName() {
@@ -224,23 +245,5 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             return null;
         else
             return new TranslationTextComponent(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
-    }
-
-    private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
-
-    @Override
-    protected void invalidateCaps() {
-        tankCap.invalidate();
-        super.invalidateCaps();
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (side == null || side == Direction.DOWN)
-                return tankCap.cast();
-        }
-        return super.getCapability(cap, side);
     }
 }

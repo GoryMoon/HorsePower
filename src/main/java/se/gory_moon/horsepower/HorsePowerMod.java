@@ -18,8 +18,8 @@ import se.gory_moon.horsepower.network.PacketHandler;
 @Mod(Reference.MODID)
 public class HorsePowerMod {
 
-    public static HorsePowerItemGroup itemGroup;
     public static final Logger LOGGER = LogManager.getLogger();
+    public static HorsePowerItemGroup itemGroup;
 
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
 

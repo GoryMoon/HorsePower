@@ -68,13 +68,6 @@ public class BlockPress extends BlockHPBase {
     }
 
     @Override
-    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        if (!(world).isRemote() && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
-            ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-        }
-    }
-
-    @Override
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isRemote) {
             Direction filled = state.get(FACING);
@@ -84,8 +77,13 @@ public class BlockPress extends BlockHPBase {
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
-        return new PressTileEntity();
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(PART, PressModels.BASE);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
     }
 
     @Override
@@ -93,10 +91,39 @@ public class BlockPress extends BlockHPBase {
         builder.add(FACING, PART);
     }
 
+    @Override
+    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString())));
+        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.LOCATION.translate()));
+        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.USE.translate()));
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        if (!(world).isRemote() && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
+            ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+        }
+    }
+
+    @Override
+    public void emptiedOutput(World world, BlockPos pos) {}
+
+    @Override
+    public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {
+        if (playerIn instanceof ServerPlayerEntity)
+            AdvancementManager.USE_PRESS.trigger((ServerPlayerEntity) playerIn);
+    }
+
+    @Nonnull
+    @Override
+    public Class<?> getTileClass() {
+        return PressTileEntity.class;
+    }
+
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(PART, PressModels.BASE);
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+        return new PressTileEntity();
     }
 
     @Override
@@ -113,34 +140,6 @@ public class BlockPress extends BlockHPBase {
             }
         }
         return super.onBlockActivated(state, worldIn, pos, player, hand, hit);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-    }
-
-    @Override
-    public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {
-        if (playerIn instanceof ServerPlayerEntity)
-            AdvancementManager.USE_PRESS.trigger((ServerPlayerEntity) playerIn);
-    }
-
-    @Override
-    public void emptiedOutput(World world, BlockPos pos) {}
-
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.SIZE.translate(Colors.WHITE.toString(), Colors.LIGHTGRAY.toString())));
-        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.LOCATION.translate()));
-        tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_PRESS.USE.translate()));
-    }
-
-    @Nonnull
-    @Override
-    public Class<?> getTileClass() {
-        return PressTileEntity.class;
     }
 
     // The One Probe Integration

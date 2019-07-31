@@ -45,6 +45,11 @@ public class BlockMillstone extends BlockHPBase {
         setDefaultState(getStateContainer().getBaseState().with(FILLED, false).with(PART, MillstoneModels.BASE));
     }
 
+    public static void setState(boolean filled, World world, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+        world.setBlockState(pos, state.with(FILLED, filled), 2);
+    }
+
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return BOUNDING;
@@ -68,11 +73,6 @@ public class BlockMillstone extends BlockHPBase {
         stateBuilder.add(FILLED, PART);
     }
 
-    public static void setState(boolean filled, World world, BlockPos pos) {
-        BlockState state = world.getBlockState(pos);
-        world.setBlockState(pos, state.with(FILLED, filled), 2);
-    }
-
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent(Localization.ITEM.HORSE_MILLSTONE.SIZE.translate(Colors.LIGHTGRAY.toString(), Colors.WHITE.toString())));
@@ -81,14 +81,14 @@ public class BlockMillstone extends BlockHPBase {
     }
 
     @Override
-    public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {
-        if (playerIn instanceof ServerPlayerEntity)
-            AdvancementManager.USE_MILLSTONE.trigger((ServerPlayerEntity) playerIn);
+    public void emptiedOutput(World world, BlockPos pos) {
+        BlockMillstone.setState(false, world, pos);
     }
 
     @Override
-    public void emptiedOutput(World world, BlockPos pos) {
-        BlockMillstone.setState(false, world, pos);
+    public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {
+        if (playerIn instanceof ServerPlayerEntity)
+            AdvancementManager.USE_MILLSTONE.trigger((ServerPlayerEntity) playerIn);
     }
 
     @Nonnull

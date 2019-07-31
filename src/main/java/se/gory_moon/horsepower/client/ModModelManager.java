@@ -24,9 +24,9 @@ import java.util.Set;
 public class ModModelManager {
 
     public static final ModModelManager INSTANCE = new ModModelManager();
-    private final Set<Item> itemsRegistered = new HashSet<>();
     private static final ResourceLocation MODEL_ChoppingBlock = new ResourceLocation("horsepower", "block/chopper");
     private static final ResourceLocation MODEL_ManualChoppingBlock = new ResourceLocation("horsepower", "block/chopping_block");
+    private final Set<Item> itemsRegistered = new HashSet<>();
 
     public ModModelManager() {
     }
@@ -52,16 +52,22 @@ public class ModModelManager {
         INSTANCE.registerItemModels();
     }
 
-    private void registerBlockModels() {
-        //ModBlocks.RegistrationHandler.ITEM_BLOCKS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
+    public static ModelResourceLocation getModel(String resource) {
+        return new ModelResourceLocation(Reference.MODID + ":" + resource, "inventory");
     }
 
-    /**
-     * Register this mod's {@link Item} models.
-     */
-    private void registerItemModels() {
-        // Then register items with default model names
-        //ModItems.RegistrationHandler.ITEMS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
+    public static void replaceChoppingModel(ModelResourceLocation modelVariantLocation, ResourceLocation modelLocation, ModelBakeEvent event) {
+        try {
+            IModel model = ModelLoaderRegistry.getModel(modelLocation);
+            IBakedModel standard = event.getModelRegistry().get(modelVariantLocation);
+            if (standard != null) {
+                /*IBakedModel finalModel = new BakedChopperModel(standard, model, DefaultVertexFormats.BLOCK);
+
+                event.getModelRegistry().put(modelVariantLocation, finalModel);*/
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -74,6 +80,40 @@ public class ModModelManager {
             return new ModelResourceLocation("minecraft:air");
         }
     };*/
+    private void registerBlockModels() {
+        //ModBlocks.RegistrationHandler.ITEM_BLOCKS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
+    }
+
+    /**
+     * Register this mod's {@link Item} models.
+     */
+    private void registerItemModels() {
+        // Then register items with default model names
+        //ModItems.RegistrationHandler.ITEMS.stream().filter(item -> !itemsRegistered.contains(item)).forEach(this::registerItemModel);
+    }
+
+    /*
+     * Register a model for each metadata value of the {@link Block}'s {@link Item} corresponding to the values of an {@link IProperty}.
+     * <p>
+     * For each value:
+     * <li>The domain/path is the registry name</li>
+     * <li>The variant is {@code baseState} with the {@link IProperty} set to the value</li>
+     * <p>
+     * The {@code getMeta} function is used to get the metadata of each value.
+     *
+     * @param baseState The base state to use for the variant
+     * @param property  The property whose values should be used
+     * @param getMeta   A function to get the metadata of each value
+     * @param <T>       The value type
+     */
+    /*private <T extends Comparable<T>> void registerVariantBlockItemModels(IBlockState baseState, IProperty<T> property, ToIntFunction<T> getMeta) {
+        property.getAllowedValues().forEach(value -> registerBlockItemModelForMeta(baseState.withProperty(property, value), getMeta.applyAsInt(value)));
+    }
+
+    private <T extends VariantItem> void registerVariantItems(T variant, String variantName) {
+        variant.getMetas().forEach(value -> registerItemModelForMeta(variant, value, variantName + "=" + variant.getVariant(value)));
+    }
+*/
 
     /**
      * Register a single model for the {@link Block}'s {@link Item}.
@@ -107,29 +147,6 @@ public class ModModelManager {
         }
     }
 
-    /*
-     * Register a model for each metadata value of the {@link Block}'s {@link Item} corresponding to the values of an {@link IProperty}.
-     * <p>
-     * For each value:
-     * <li>The domain/path is the registry name</li>
-     * <li>The variant is {@code baseState} with the {@link IProperty} set to the value</li>
-     * <p>
-     * The {@code getMeta} function is used to get the metadata of each value.
-     *
-     * @param baseState The base state to use for the variant
-     * @param property  The property whose values should be used
-     * @param getMeta   A function to get the metadata of each value
-     * @param <T>       The value type
-     */
-    /*private <T extends Comparable<T>> void registerVariantBlockItemModels(IBlockState baseState, IProperty<T> property, ToIntFunction<T> getMeta) {
-        property.getAllowedValues().forEach(value -> registerBlockItemModelForMeta(baseState.withProperty(property, value), getMeta.applyAsInt(value)));
-    }
-
-    private <T extends VariantItem> void registerVariantItems(T variant, String variantName) {
-        variant.getMetas().forEach(value -> registerItemModelForMeta(variant, value, variantName + "=" + variant.getVariant(value)));
-    }
-*/
-
     /**
      * Register a single model for an {@link Item}.
      * <p>
@@ -140,6 +157,17 @@ public class ModModelManager {
     private void registerItemModel(Item item) {
         registerItemModel(item, item.getRegistryName().toString());
     }
+
+    /**
+     * Register an {@link ItemMeshDefinition} for an {@link Item}.
+     *
+     * @param item           The Item
+     * @param meshDefinition The ItemMeshDefinition
+     */
+    /*private void registerItemModel(Item item, ItemMeshDefinition meshDefinition) {
+        itemsRegistered.add(item);
+        //ModelLoader.setCustomMeshDefinition(item, meshDefinition);
+    }*/
 
     /**
      * Register a single model for an {@link Item}.
@@ -169,17 +197,6 @@ public class ModModelManager {
     }
 
     /**
-     * Register an {@link ItemMeshDefinition} for an {@link Item}.
-     *
-     * @param item           The Item
-     * @param meshDefinition The ItemMeshDefinition
-     */
-    /*private void registerItemModel(Item item, ItemMeshDefinition meshDefinition) {
-        itemsRegistered.add(item);
-        //ModelLoader.setCustomMeshDefinition(item, meshDefinition);
-    }*/
-
-    /**
      * Register a model for a metadata value an {@link Item}.
      * <p>
      * Uses the registry name as the domain/path and {@code variant} as the variant.
@@ -204,24 +221,6 @@ public class ModModelManager {
     private void registerItemModelForMeta(Item item, int metadata, ModelResourceLocation modelResourceLocation) {
         itemsRegistered.add(item);
         //ModelLoader.setCustomModelResourceLocation(item, metadata, modelResourceLocation);
-    }
-
-    public static ModelResourceLocation getModel(String resource) {
-        return new ModelResourceLocation(Reference.MODID + ":" + resource, "inventory");
-    }
-
-    public static void replaceChoppingModel(ModelResourceLocation modelVariantLocation, ResourceLocation modelLocation, ModelBakeEvent event) {
-        try {
-            IModel model = ModelLoaderRegistry.getModel(modelLocation);
-            IBakedModel standard = event.getModelRegistry().get(modelVariantLocation);
-            if (standard != null) {
-                /*IBakedModel finalModel = new BakedChopperModel(standard, model, DefaultVertexFormats.BLOCK);
-
-                event.getModelRegistry().put(modelVariantLocation, finalModel);*/
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }

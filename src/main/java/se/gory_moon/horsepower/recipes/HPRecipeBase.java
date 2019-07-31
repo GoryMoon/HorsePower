@@ -30,6 +30,11 @@ public abstract class HPRecipeBase {
         this.time = time;
     }
 
+    public static ItemStack getWithSize(ItemStack stack, int size) {
+        stack.setCount(size);
+        return stack;
+    }
+
     public ItemStack getInput() {
         return input;
     }
@@ -54,9 +59,14 @@ public abstract class HPRecipeBase {
         return time;
     }
 
-    public static ItemStack getWithSize(ItemStack stack, int size) {
-        stack.setCount(size);
-        return stack;
+    @Override
+    public int hashCode() {
+        int result = Utils.getItemStackHashCode(input);
+        result = 31 * result + Utils.getItemStackHashCode(output);
+        result = 31 * result + Utils.getItemStackHashCode(secondary);
+        result = 31 * result + secondaryChance;
+        result = 31 * result + time;
+        return result;
     }
 
     @Override
@@ -69,16 +79,6 @@ public abstract class HPRecipeBase {
         HPRecipeBase recipe = (HPRecipeBase) o;
 
         return time == recipe.time && secondaryChance == recipe.secondaryChance && input.isItemEqual(recipe.input) && output.isItemEqual(recipe.output) && secondary.isItemEqual(recipe.secondary);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Utils.getItemStackHashCode(input);
-        result = 31 * result + Utils.getItemStackHashCode(output);
-        result = 31 * result + Utils.getItemStackHashCode(secondary);
-        result = 31 * result + secondaryChance;
-        result = 31 * result + time;
-        return result;
     }
 
     @Override

@@ -89,7 +89,6 @@ public abstract class AbstractRecipeBuilder {
     public abstract IRecipeSerializer<?> getSerializer();
 
     public class Result implements IFinishedRecipe {
-        private IRecipeSerializer<?> serializer;
         private final ResourceLocation id;
         private final AbstractHPRecipe.Type type;
         private final Ingredient input;
@@ -99,9 +98,10 @@ public abstract class AbstractRecipeBuilder {
         private final Item secondary;
         private final int secondaryCount;
         private final int secondaryChance;
-        private FluidStack outputFluid;
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
+        private IRecipeSerializer<?> serializer;
+        private FluidStack outputFluid;
 
         public Result(IRecipeSerializer<?> serializer, ResourceLocation id, AbstractHPRecipe.Type type, Ingredient input, Item result, int count, int time, Item secondary, int secondaryCount, int secondaryChance, FluidStack outputFluid, Advancement.Builder advancementBuilder, ResourceLocation advancementId) {
             this.serializer = serializer;

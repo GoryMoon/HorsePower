@@ -17,6 +17,18 @@ public class HPRecipes {
         return INSTANCE;
     }
 
+    public static AbstractHPRecipe checkTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
+        return !hasTypeRecipe(recipe, type) ? null: recipe;
+    }
+
+    public static boolean hasTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
+        return recipe != null && (recipe.getRecipeType() == null || type == null || recipe.getRecipeType().is(type));
+    }
+
+    public static int getTypeTime(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
+        return hasTypeRecipe(recipe, type) ? recipe.getTime(): 16;
+    }
+
     public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack, boolean hand) {
         if (stack.isEmpty())
             return null;
@@ -30,18 +42,6 @@ public class HPRecipes {
 
     public boolean hasChopperRecipe(ItemStack stack, boolean hand) {
         return getChoppingBlockRecipe(stack, hand) != null;
-    }
-
-    public static AbstractHPRecipe checkTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
-        return !hasTypeRecipe(recipe, type) ? null: recipe;
-    }
-
-    public static boolean hasTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
-        return recipe != null && (recipe.getRecipeType() == null || type == null || recipe.getRecipeType().is(type));
-    }
-
-    public static int getTypeTime(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
-        return hasTypeRecipe(recipe, type) ? recipe.getTime(): 16;
     }
 
     public int getChoppingTime(ItemStack stack, boolean hand) {

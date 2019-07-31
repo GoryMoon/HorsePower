@@ -7,7 +7,11 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import se.gory_moon.horsepower.blocks.BlockMillstone;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
@@ -19,46 +23,13 @@ import javax.annotation.Nullable;
 
 public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 
+    public ItemStack renderStack = ItemStack.EMPTY;
+    public int millColor = -1;
     private int currentItemMillTime;
     private int totalItemMillTime;
 
-    public ItemStack renderStack = ItemStack.EMPTY;
-    public int millColor = -1;
-
     public MillstoneTileEntity() {
         super(3, ModBlocks.MILLSTONE_TILE.orElseThrow(IllegalStateException::new));
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("millTime", currentItemMillTime);
-        compound.putInt("totalMillTime", totalItemMillTime);
-
-        return super.write(compound);
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-
-        if (getStackInSlot(0).getCount() > 0) {
-            currentItemMillTime = compound.getInt("millTime");
-            totalItemMillTime = compound.getInt("totalMillTime");
-        } else {
-            currentItemMillTime = 0;
-            totalItemMillTime = 1;
-        }
-    }
-
-    @Override
-    public void markDirty() {
-        if (getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
-            BlockMillstone.setState(false, world, pos);
-
-        if (getStackInSlot(0).isEmpty())
-            currentItemMillTime = 0;
-
-        super.markDirty();
     }
 
     @Override
@@ -98,8 +69,29 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
-        return RecipeSerializers.MILLING_TYPE;
+    public int getPositionOffset() {
+        return -1;
+    }
+
+    @Override
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+
+        if (getStackInSlot(0).getCount() > 0) {
+            currentItemMillTime = compound.getInt("millTime");
+            totalItemMillTime = compound.getInt("totalMillTime");
+        } else {
+            currentItemMillTime = 0;
+            totalItemMillTime = 1;
+        }
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        compound.putInt("millTime", currentItemMillTime);
+        compound.putInt("totalMillTime", totalItemMillTime);
+
+        return super.write(compound);
     }
 
     @Override
@@ -108,15 +100,23 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public int getPositionOffset() {
-        return -1;
+    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
+        return RecipeSerializers.MILLING_TYPE;
     }
 
-    private void millItem() {
-        if (canWork()) {
-            HandMillstoneTileEntity.millItem(inventory, this);
-            BlockMillstone.setState(true, world, pos);
-        }
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HORSE);
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 2;
     }
 
     @Override
@@ -136,23 +136,26 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public int getInventoryStackLimit() {
-        return 64;
+    public void markDirty() {
+        if (getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
+            BlockMillstone.setState(false, world, pos);
+
+        if (getStackInSlot(0).isEmpty())
+            currentItemMillTime = 0;
+
+        super.markDirty();
     }
 
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HORSE);
+    private void millItem() {
+        if (canWork()) {
+            HandMillstoneTileEntity.millItem(inventory, this);
+            BlockMillstone.setState(true, world, pos);
+        }
     }
 
     @Override
     public ITextComponent getName() {
         return new StringTextComponent("container.mill");
-    }
-
-    @Override
-    public int getOutputSlot() {
-        return 2;
     }
 
     @Nullable

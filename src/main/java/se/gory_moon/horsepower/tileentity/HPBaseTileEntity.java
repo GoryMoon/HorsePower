@@ -37,6 +37,9 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     protected IInventoryHP inventory;
     private RecipeWrapper recipeWrapperDummy = new RecipeWrapper(new ItemStackHandler());
+    private LazyOptional<IItemHandler> handlerNull;
+    private LazyOptional<IItemHandler> handlerBottom;
+    private LazyOptional<IItemHandler> handlerIn;
 
     public HPBaseTileEntity(int inventorySize, TileEntityType type) {
         super(type);
@@ -86,21 +89,8 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
             }
 
             @Override
-            public void setSlotContent(int index, ItemStack stack) {
-                itemStacks.set(index, stack);
-
-                if (index == 0 && stack.getCount() > this.getInventoryStackLimit(stack)) {
-                    stack.setCount(this.getInventoryStackLimit(stack));
-                }
-            }
-
-            @Override
             public int getInventoryStackLimit() {
                 return HPBaseTileEntity.this.getInventoryStackLimit();
-            }
-
-            public int getInventoryStackLimit(ItemStack stack) {
-                return HPBaseTileEntity.this.getInventoryStackLimit(stack);
             }
 
             @Override
@@ -119,6 +109,19 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
             }
 
             @Override
+            public void setSlotContent(int index, ItemStack stack) {
+                itemStacks.set(index, stack);
+
+                if (index == 0 && stack.getCount() > this.getInventoryStackLimit(stack)) {
+                    stack.setCount(this.getInventoryStackLimit(stack));
+                }
+            }
+
+            public int getInventoryStackLimit(ItemStack stack) {
+                return HPBaseTileEntity.this.getInventoryStackLimit(stack);
+            }
+
+            @Override
             public void clear() {
                 itemStacks.clear();
             }
@@ -126,6 +129,10 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         handlerIn = LazyOptional.of(() -> new RangedWrapper(new InvWrapper(inventory), 0, 1));
         handlerBottom = LazyOptional.of(() -> new RangedWrapper(new InvWrapper(inventory), 1, getOutputSlot() + 1));
         handlerNull = LazyOptional.of(() -> new InvWrapper(inventory));
+    }
+
+    public static boolean canCombine(ItemStack stack1, ItemStack stack2) {
+        return stack1.getItem() == stack2.getItem() && (stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2));
     }
 
     public AbstractHPRecipe getRecipe() {
@@ -196,6 +203,17 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         super.markDirty();
     }
 
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getPos(), -999, getUpdateTag());
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return write(new CompoundNBT());
+    }
+
     public boolean canWork() {
         if (getStackInSlot(0).isEmpty()) {
             return false;
@@ -224,10 +242,6 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         }
     }
 
-    public static boolean canCombine(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && (stack1.getCount() <= stack1.getMaxStackSize() && ItemStack.areItemStackTagsEqual(stack1, stack2));
-    }
-
     public boolean canBeRotated() {
         return false;
     }
@@ -236,21 +250,10 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         return canBeRotated() ? getWorld().getBlockState(getPos()).getBlockState().get(BlockHPBase.FACING): Direction.NORTH;
     }
 
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getPos(), -999, getUpdateTag());
-    }
-
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
     }
 
     @Override
@@ -266,10 +269,6 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         handlerIn.invalidate();
         super.invalidateCaps();
     }
-
-    private LazyOptional<IItemHandler> handlerNull;
-    private LazyOptional<IItemHandler> handlerBottom;
-    private LazyOptional<IItemHandler> handlerIn;
 
     @Nonnull
     @Override

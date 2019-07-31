@@ -36,67 +36,6 @@ public final class Localization {
         return I18n.format(key);
     }
 
-    public static class ITEM {
-
-        public enum HORSE_MILLSTONE {
-            SIZE,
-            LOCATION,
-            USE;
-
-            public String translate(String... vars) {
-                return Localization.translateString(toString(), vars);
-            }
-
-            public String toString() {
-                return "item.horsepower.millstone.description." + super.toString().toLowerCase();
-            }
-        }
-
-        public enum HAND_MILLSTONE {
-            INFO;
-
-            public String translate(String... vars) {
-                return Localization.translateString(toString(), vars);
-            }
-
-            @Override
-            public String toString() {
-                return "item.horsepower.hand_millstone.description." + super.toString().toLowerCase();
-            }
-        }
-
-        public enum HORSE_CHOPPING {
-            SIZE,
-            LOCATION,
-            USE;
-
-            public String translate(String... vars) {
-                return Localization.translateString(toString(), vars);
-            }
-
-            @Override
-            public String toString() {
-                return "item.horsepower.chopping.description." + super.toString().toLowerCase();
-            }
-        }
-
-        public enum HORSE_PRESS {
-            SIZE,
-            LOCATION,
-            USE;
-
-            public String translate(String... vars) {
-                return Localization.translateString(toString(), vars);
-            }
-
-            @Override
-            public String toString() {
-                return "item.horsepower.press.description." + super.toString().toLowerCase();
-            }
-        }
-
-    }
-
     public enum INFO {
         MILLSTONE_INVALID,
         CHOPPING_INVALID,
@@ -159,6 +98,67 @@ public final class Localization {
         public String key() {
             return "gui.horsepower.top." + toString().toLowerCase().replaceAll("_", ".");
         }
+    }
+
+    public static class ITEM {
+
+        public enum HORSE_MILLSTONE {
+            SIZE,
+            LOCATION,
+            USE;
+
+            public String translate(String... vars) {
+                return Localization.translateString(toString(), vars);
+            }
+
+            public String toString() {
+                return "item.horsepower.millstone.description." + super.toString().toLowerCase();
+            }
+        }
+
+        public enum HAND_MILLSTONE {
+            INFO;
+
+            public String translate(String... vars) {
+                return Localization.translateString(toString(), vars);
+            }
+
+            @Override
+            public String toString() {
+                return "item.horsepower.hand_millstone.description." + super.toString().toLowerCase();
+            }
+        }
+
+        public enum HORSE_CHOPPING {
+            SIZE,
+            LOCATION,
+            USE;
+
+            public String translate(String... vars) {
+                return Localization.translateString(toString(), vars);
+            }
+
+            @Override
+            public String toString() {
+                return "item.horsepower.chopping.description." + super.toString().toLowerCase();
+            }
+        }
+
+        public enum HORSE_PRESS {
+            SIZE,
+            LOCATION,
+            USE;
+
+            public String translate(String... vars) {
+                return Localization.translateString(toString(), vars);
+            }
+
+            @Override
+            public String toString() {
+                return "item.horsepower.press.description." + super.toString().toLowerCase();
+            }
+        }
+
     }
 
     public static class CONFIG {

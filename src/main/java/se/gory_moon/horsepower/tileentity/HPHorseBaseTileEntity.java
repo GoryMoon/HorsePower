@@ -105,20 +105,6 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         return false;
     }
 
-    public void setWorker(CreatureEntity newWorker) {
-        hasWorker = true;
-        worker = newWorker;
-        worker.setHomePosAndDistance(pos, 3);
-        target = getClosestTarget();
-        if (worker != null) {
-            CompoundNBT nbtTagCompound = new CompoundNBT();
-            UUID uuid = worker.getUniqueID();
-            nbtTagCompound.putUniqueId("UUID", uuid);
-            nbtWorker = nbtTagCompound;
-        }
-        markDirty();
-    }
-
     public void setWorkerToPlayer(PlayerEntity player) {
         if (hasWorker() && worker.canBeLeashedTo(player)) {
             hasWorker = false;
@@ -146,6 +132,20 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
 
     public CreatureEntity getWorker() {
         return worker;
+    }
+
+    public void setWorker(CreatureEntity newWorker) {
+        hasWorker = true;
+        worker = newWorker;
+        worker.setHomePosAndDistance(pos, 3);
+        target = getClosestTarget();
+        if (worker != null) {
+            CompoundNBT nbtTagCompound = new CompoundNBT();
+            UUID uuid = worker.getUniqueID();
+            nbtTagCompound.putUniqueId("UUID", uuid);
+            nbtWorker = nbtTagCompound;
+        }
+        markDirty();
     }
 
     public boolean isValid() {
@@ -220,7 +220,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
                     double z = pos.z;
 
                     if (searchAreas[target] == null)
-                    searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 1.0D, z - 0.5D, x + 1.5D, y + 1.0D, z + 1.5D);
+                        searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 1.0D, z - 0.5D, x + 1.5D, y + 1.0D, z + 1.5D);
 
                     if (worker.getBoundingBox().intersects(searchAreas[target])) {
                         int next = target + 1;

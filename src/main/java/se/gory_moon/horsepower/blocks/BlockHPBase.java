@@ -55,17 +55,6 @@ public abstract class BlockHPBase extends ContainerBlock {
         return this;
     }
 
-    @Override
-    public int getHarvestLevel(BlockState state) {
-        return this.level;
-    }
-
-    @Nullable
-    @Override
-    public ToolType getHarvestTool(BlockState state) {
-        return this.type;
-    }
-
     public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {}
 
     @Override
@@ -73,49 +62,10 @@ public abstract class BlockHPBase extends ContainerBlock {
         return true;
     }
 
-    @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-
-        if (!player.abilities.isCreativeMode && !worldIn.isRemote) {
-            HPBaseTileEntity te = getTileEntity(worldIn, pos);
-
-            if (te != null) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, te.getInventory());
-                if (te instanceof HPHorseBaseTileEntity && ((HPHorseBaseTileEntity) te).hasWorker())
-                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
-            }
-        }
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Nonnull
-    public abstract Class<?> getTileClass();
-
-    protected <T extends HPBaseTileEntity> T getTileEntity(IBlockReader worldIn, BlockPos pos) {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
-        return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity: null;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return createNewTileEntity(world);
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
-        try {
-            return (TileEntity) getTileClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
@@ -133,17 +83,29 @@ public abstract class BlockHPBase extends ContainerBlock {
         return false;
     }
 
-    /*@Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        if (!keepInventory && !worldIn.isRemote) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    @Override
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
+    }
 
-            if (tileentity instanceof TileEntityHPBase) {
-                worldIn.updateComparatorOutputLevel(pos, this);
-            }
+    @Nonnull
+    public abstract Class<?> getTileClass();
+
+    protected <T extends HPBaseTileEntity> T getTileEntity(IBlockReader worldIn, BlockPos pos) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity: null;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+        try {
+            return (TileEntity) getTileClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
         }
-        super.breakBlock(worldIn, pos, state);
-    }*/
+        return null;
+    }
 
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
@@ -228,5 +190,43 @@ public abstract class BlockHPBase extends ContainerBlock {
 
         te.markDirty();
         return true;
+    }
+
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBlockHarvested(worldIn, pos, state, player);
+
+        if (!player.abilities.isCreativeMode && !worldIn.isRemote) {
+            HPBaseTileEntity te = getTileEntity(worldIn, pos);
+
+            if (te != null) {
+                InventoryHelper.dropInventoryItems(worldIn, pos, te.getInventory());
+                if (te instanceof HPHorseBaseTileEntity && ((HPHorseBaseTileEntity) te).hasWorker())
+                    InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(Items.LEAD));
+            }
+        }
+    }
+
+    @Nullable
+    @Override
+    public ToolType getHarvestTool(BlockState state) {
+        return this.type;
+    }
+
+    /*@Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!keepInventory && !worldIn.isRemote) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+
+            if (tileentity instanceof TileEntityHPBase) {
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+        }
+        super.breakBlock(worldIn, pos, state);
+    }*/
+
+    @Override
+    public int getHarvestLevel(BlockState state) {
+        return this.level;
     }
 }

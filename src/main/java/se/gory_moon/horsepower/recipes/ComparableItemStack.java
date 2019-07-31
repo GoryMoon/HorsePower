@@ -12,6 +12,11 @@ public class ComparableItemStack {
     }
 
     @Override
+    public int hashCode() {
+        return Utils.getItemStackHashCode(stack);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
@@ -21,11 +26,6 @@ public class ComparableItemStack {
         ComparableItemStack that = (ComparableItemStack) o;
 
         return ItemStack.areItemStackTagsEqual(stack, that.stack) && stack.isItemEqual(that.stack);
-    }
-
-    @Override
-    public int hashCode() {
-        return Utils.getItemStackHashCode(stack);
     }
 
     @Override

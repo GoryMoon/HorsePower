@@ -29,6 +29,10 @@ public enum FacingToRotation {
         this.mat.rotZ((float) Math.toRadians(rot.z));
     }
 
+    public static FacingToRotation get(Direction forward) {
+        return values()[forward.ordinal()];
+    }
+
     public Vector3f getRot() {
         return rot;
     }
@@ -54,10 +58,6 @@ public enum FacingToRotation {
             }
         }
         return null;
-    }
-
-    public static FacingToRotation get(Direction forward) {
-        return values()[forward.ordinal()];
     }
 
 }

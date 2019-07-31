@@ -1,6 +1,12 @@
 package se.gory_moon.horsepower.waila;
 
-import mcp.mobius.waila.api.*;
+import mcp.mobius.waila.api.IDataAccessor;
+import mcp.mobius.waila.api.IPluginConfig;
+import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.IWailaPlugin;
+import mcp.mobius.waila.api.RenderableTextComponent;
+import mcp.mobius.waila.api.TooltipPosition;
+import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -25,28 +31,6 @@ public class Provider implements IWailaPlugin {
     static final ResourceLocation RENDER_FURNACE_PROGRESS = new ResourceLocation("furnace_progress");
 
     static final ResourceLocation CONFIG_SHOW_ITEMS = new ResourceLocation(Reference.MODID, "show_items");
-
-    @Override
-    public void register(IRegistrar registrar) {
-        //registrar.registerStackProvider(provider, BlockFiller.class);
-
-        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, BlockMillstone.class);
-        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, BlockHandMillstone.class);
-        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, BlockMillstone.class);
-        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, BlockHandMillstone.class);
-
-        //registrar.registerComponentProvider(this, TooltipPosition.BODY, BlockHPChoppingBase.class);
-        //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChopper.class);
-        //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChoppingBlock.class);
-
-        registrar.registerComponentProvider(HUDHandlerPress.INSTANCE, TooltipPosition.BODY, BlockPress.class);
-        registrar.registerBlockDataProvider(HUDHandlerPress.INSTANCE, BlockPress.class);
-
-        registrar.registerComponentProvider(HUDHandlerFiller.INSTANCE, TooltipPosition.BODY, BlockFiller.class);
-        registrar.registerBlockDataProvider(HUDHandlerFiller.INSTANCE, BlockFiller.class);
-
-        registrar.addConfig(CONFIG_SHOW_ITEMS, true);
-    }
 
     public static void showItems(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config, int prog) {
         if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof HPBaseTileEntity || accessor.getTileEntity() instanceof FillerTileEntity)) {
@@ -92,6 +76,28 @@ public class Provider implements IWailaPlugin {
             spacerTag.putInt("width", 18);
             return new RenderableTextComponent(RENDER_SPACER, spacerTag);
         }
+    }
+
+    @Override
+    public void register(IRegistrar registrar) {
+        //registrar.registerStackProvider(provider, BlockFiller.class);
+
+        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, BlockMillstone.class);
+        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, BlockHandMillstone.class);
+        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, BlockMillstone.class);
+        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, BlockHandMillstone.class);
+
+        //registrar.registerComponentProvider(this, TooltipPosition.BODY, BlockHPChoppingBase.class);
+        //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChopper.class);
+        //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChoppingBlock.class);
+
+        registrar.registerComponentProvider(HUDHandlerPress.INSTANCE, TooltipPosition.BODY, BlockPress.class);
+        registrar.registerBlockDataProvider(HUDHandlerPress.INSTANCE, BlockPress.class);
+
+        registrar.registerComponentProvider(HUDHandlerFiller.INSTANCE, TooltipPosition.BODY, BlockFiller.class);
+        registrar.registerBlockDataProvider(HUDHandlerFiller.INSTANCE, BlockFiller.class);
+
+        registrar.addConfig(CONFIG_SHOW_ITEMS, true);
     }
 
     /*

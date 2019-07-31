@@ -17,10 +17,9 @@ import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
 public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
+    private final int ticksPerRotation = 18;
     private int currentItemMillTime;
     private int totalItemMillTime;
-
-    private final int ticksPerRotation = 18;
     private float visibleRotation = 0;
     private int currentTicks = 0;
     private int rotation = 0;
@@ -28,46 +27,6 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
 
     public HandMillstoneTileEntity() {
         super(3, ModBlocks.HAND_MILLSTONE_TILE.orElseThrow(IllegalStateException::new));
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("millTime", currentItemMillTime);
-        compound.putInt("totalMillTime", totalItemMillTime);
-        compound.putInt("currentRotation", rotation);
-
-        return super.write(compound);
-    }
-
-    @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
-
-        if (getStackInSlot(0).getCount() > 0) {
-            currentItemMillTime = compound.getInt("millTime");
-            totalItemMillTime = compound.getInt("totalMillTime");
-            rotation = compound.getInt("currentRotation");
-        } else {
-            currentItemMillTime = 0;
-            totalItemMillTime = 1;
-            rotation = 0;
-        }
-    }
-
-    @Override
-    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
-        return RecipeSerializers.MILLING_TYPE;
-    }
-
-    @Override
-    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.HAND);
-    }
-
-    private void millItem() {
-        if (!world.isRemote && canWork()) {
-            millItem(inventory, this);
-        }
     }
 
     public static void millItem(IInventoryHP inventory, HPBaseTileEntity te) {
@@ -103,10 +62,28 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
     }
 
     @Override
-    public void markDirty() {
-        super.markDirty();
-        if (getStackInSlot(0).isEmpty())
-            currentItemMillTime = 0;
+    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
+        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.HAND);
+    }
+
+    @Override
+    public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
+        return RecipeSerializers.MILLING_TYPE;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HAND);
+    }
+
+    @Override
+    public int getOutputSlot() {
+        return 2;
     }
 
     @Override
@@ -123,13 +100,45 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
     }
 
     @Override
-    public int getInventoryStackLimit() {
-        return 64;
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+
+        if (getStackInSlot(0).getCount() > 0) {
+            currentItemMillTime = compound.getInt("millTime");
+            totalItemMillTime = compound.getInt("totalMillTime");
+            rotation = compound.getInt("currentRotation");
+        } else {
+            currentItemMillTime = 0;
+            totalItemMillTime = 1;
+            rotation = 0;
+        }
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HAND);
+    public CompoundNBT write(CompoundNBT compound) {
+        compound.putInt("millTime", currentItemMillTime);
+        compound.putInt("totalMillTime", totalItemMillTime);
+        compound.putInt("currentRotation", rotation);
+
+        return super.write(compound);
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        if (getStackInSlot(0).isEmpty())
+            currentItemMillTime = 0;
+    }
+
+    @Override
+    public boolean canBeRotated() {
+        return true;
+    }
+
+    private void millItem() {
+        if (!world.isRemote && canWork()) {
+            millItem(inventory, this);
+        }
     }
 
     @Override
@@ -138,8 +147,8 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
     }
 
     @Override
-    public int getOutputSlot() {
-        return 2;
+    public ITextComponent getDisplayName() {
+        return null;
     }
 
     public boolean turn() {
@@ -180,17 +189,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
         }
     }
 
-    @Override
-    public ITextComponent getDisplayName() {
-        return null;
-    }
-
     public float getVisibleRotation() {
         return visibleRotation;
-    }
-
-    @Override
-    public boolean canBeRotated() {
-        return true;
     }
 }
