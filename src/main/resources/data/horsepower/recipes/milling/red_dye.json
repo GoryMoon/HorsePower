@@ -15,5 +15,5 @@
     "item": "minecraft:red_dye"
   },
   "time": 12,
-  "milling_type": "both"
+  "recipe_type": "both"
 }

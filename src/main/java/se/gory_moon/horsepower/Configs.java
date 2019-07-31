@@ -24,6 +24,11 @@ public class Configs {
         public final BooleanValue renderItemAmount;
         public final BooleanValue mustLookAtBlock;
         public final BooleanValue showObstructedPlace;
+
+        //        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
+        //        @Name("Use Dynamic Chopping Display")
+        public boolean useDynamicDisplay = true;
+
         public final BooleanValue showTags;
         public final BooleanValue showHarvestLevel;
         public final ConfigValue<ArrayList<String>> harvestTypes;
@@ -93,11 +98,6 @@ public class Configs {
         //        @Name("Use Dynamic Chopping Crafting")
         public boolean useDynamicCrafting = true;
 
-        //        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
-        //        @Name("Use Dynamic Chopping Display")
-        public boolean useDynamicDisplay = true;
-
-
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("Server only configs")
                     .push("server");
@@ -110,7 +110,15 @@ public class Configs {
             mobList = builder
                     .comment("Add mobs that can use the horse powered blocks", "Only mobs that can be leashed are valid", "Add the full path to the mob class, can be found with /horsepower entity or /hp entity")
                     .translation(Localization.CONFIG.SERVER.MOB_LIST.key())
-                    .define("mod_list", new ArrayList<>());
+                    .define("mod_list", ArrayList::new, o -> o != null && ArrayList.class.isAssignableFrom(o.getClass()) && ((ArrayList<String>) o).stream().allMatch(s -> {
+                            try {
+                                Class.forName(s);
+                                return true;
+                            } catch (ClassNotFoundException e) {
+                                HorsePowerMod.LOGGER.error("Error in config, could not find (" + s + ") mob class, mod for entity might not be installed");
+                                return false;
+                            }
+                        }));
 
             builder.comment("Configs related to the Millstone")
                     .push("milling");
@@ -217,18 +225,6 @@ public class Configs {
                 "#minecraft:jungle_logs-minecraft:jungle_planks@4-4",
                 "#minecraft:acacia_logs-minecraft:acacia_planks@4-4",
                 "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-4"
-        };
-
-/*        @Comment({"Add recipes to the Press Block here, the format of the recipe is: modid:input:tag@amount${nbt}-modid:result@amount${nbt}",
-                "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
-                "The input item can be an item from the tag system, add ':tag' to input, the other rules don't applies",
-                "The 'modid' for the result can be 'fluid' for fluid outputs",
-                "The time is same for all recipes, it uses the \"Points For Press\"",
-                "Must be edited with in-game editor for live changes."})
-        @Name("Press Recipes")
-*/        public String[] pressRecipes = {
-                "minecraft:wheat_seeds@12-minecraft:dirt",
-                //"ore:treeLeaves@8-fluid:water@1000"
         };
     }
 

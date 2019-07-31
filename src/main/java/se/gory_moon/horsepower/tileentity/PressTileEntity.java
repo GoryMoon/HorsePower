@@ -5,20 +5,22 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
-import se.gory_moon.horsepower.recipes.PressRecipe;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nonnull;
@@ -110,16 +112,15 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
 
     private void pressItem() {
         if (canWork()) {
-            /*PressRecipe recipe = getRecipe();
-            ItemStack result = recipe.getOutput();
-            FluidStack fluidResult = recipe.getOutputFluid();
+            AbstractHPRecipe recipe = getRecipe();
+            ItemStack result = recipe.getCraftingResult(inventory);
+            FluidStack fluidResult = recipe.getFluidOutput();
 
             ItemStack input = getStackInSlot(0);
             ItemStack output = getStackInSlot(1);
 
-            if (recipe.isLiquidRecipe()) {
+            if (recipe.isFluidRecipe()) {
                 tank.fillInternal(fluidResult, true);
-                HorsePowerMod.LOGGER.info("Tank: " + tank.getFluid().amount);
             } else {
                 if (output.isEmpty()) {
                     setInventorySlotContents(1, result.copy());
@@ -129,7 +130,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             }
 
             input.shrink(input.getCount());
-            */markDirty();
+            markDirty();
         }
     }
 
@@ -150,34 +151,33 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
         if (getStackInSlot(0).isEmpty()) {
             return false;
         } else {
-            /*PressRecipe recipe = (PressRecipe) getRecipe();
+            AbstractHPRecipe recipe = getRecipe();
             if (recipe == null) return false;
 
-            ItemStack input = recipe.getInput();
-            ItemStack itemstack = recipe.getOutput();
-            FluidStack fluidOutput = recipe.getOutputFluid();
+            Ingredient input = recipe.getIngredients().get(0);
+            ItemStack itemstack = recipe.getCraftingResult(inventory);
+            FluidStack fluidOutput = recipe.getFluidOutput();
 
-            if (getStackInSlot(0).getCount() < input.getCount())
+            if (getStackInSlot(0).getCount() < 1) //TODO input.count()
                 return false;
-            if (itemstack.isEmpty() && !recipe.isLiquidRecipe())
+            if (itemstack.isEmpty() && !recipe.isFluidRecipe())
                 return false;
 
             ItemStack output = getStackInSlot(1);
-            if (recipe.isLiquidRecipe()) {
+            if (recipe.isFluidRecipe()) {
                 return output.isEmpty() && (tank.getFluidAmount() == 0 || tank.fillInternal(fluidOutput, false) >= fluidOutput.amount);
             } else {
                 return tank.getFluidAmount() == 0 && (output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize());
-            }*/
-            return false;
+            }
         }
     }
 
     @Override
     public int getInventoryStackLimit(ItemStack stack) {
-        PressRecipe recipe = HPRecipes.instance().getPressRecipe(stack);
+        AbstractHPRecipe recipe = getRecipe(stack);
         if (recipe == null)
             return getInventoryStackLimit();
-        return recipe.getInput().getCount();
+        return 64;//recipe.getInput().getCount();//TODO input.count()
     }
 
     @Override
@@ -187,15 +187,15 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public int getInventoryStackLimit() {
-        PressRecipe recipe = HPRecipes.instance().getPressRecipe(getStackInSlot(0));
+        AbstractHPRecipe recipe = getRecipe();
         if (recipe == null)
             return 64;
-        return recipe.getInput().getCount();
+        return 64;//recipe.getInput().getCount();//TODO input.count()
     }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.instance().hasPressRecipe(stack) && currentPressStatus == 0 && getStackInSlot(1).isEmpty();
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && currentPressStatus == 0 && getStackInSlot(1).isEmpty();
     }
 
     public int getCurrentPressStatus() {
@@ -226,6 +226,12 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     }
 
     private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
+
+    @Override
+    protected void invalidateCaps() {
+        tankCap.invalidate();
+        super.invalidateCaps();
+    }
 
     @Nonnull
     @Override

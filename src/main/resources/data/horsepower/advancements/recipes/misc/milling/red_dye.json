@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "horsepower:milling/red_dye"
+    ]
+  },
+  "criteria": {
+    "has_red_plant": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:poppy"
+          },
+          {
+            "item": "minecraft:red_tulip"
+          },
+          {
+            "item": "minecraft:beetroot"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "horsepower:milling/red_dye"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_red_plant",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -38,3 +38,17 @@ A mods that adds horse powered blocks.
     versionRange="[1.14.4]"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.horsepower]]
+    modId="jei"
+    mandatory=false
+    versionRange="[6.0.0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.horsepower]]
+    modId="waila"
+    mandatory=false
+    versionRange="[1.10.4,)"
+    ordering="AFTER"
+    side="BOTH"

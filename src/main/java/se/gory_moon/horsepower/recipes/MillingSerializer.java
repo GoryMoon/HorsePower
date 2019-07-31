@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 
-public class MillingSerializer extends HPRecipeSerializer<MillingRecipe> {
+public class MillingSerializer extends AbstractRecipeSerializer<MillingRecipe> {
 
     @Override
     public MillingRecipe read(ResourceLocation recipeId, JsonObject json) {
@@ -21,10 +21,5 @@ public class MillingSerializer extends HPRecipeSerializer<MillingRecipe> {
     @Override
     public boolean hasTypes() {
         return true;
-    }
-
-    @Override
-    public String getTypeName() {
-        return "milling_type";
     }
 }

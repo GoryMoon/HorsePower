@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "horsepower:milling/pink_dye"
+    ]
+  },
+  "criteria": {
+    "has_pink_plant": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:pink_tulip"
+          },
+          {
+            "item": "minecraft:peony"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "horsepower:milling/pink_dye"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_pink_plant",
+      "has_the_recipe"
+    ]
+  ]
+}

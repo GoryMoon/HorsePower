@@ -7,17 +7,14 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
-import se.gory_moon.horsepower.recipes.HPRecipes;
-import se.gory_moon.horsepower.util.Utils;
 
-//"after:crafttweaker;after:jei;after:waila;after:theoneprobe;"
+//"after:crafttweaker;after:theoneprobe;"
 @Mod(Reference.MODID)
 public class HorsePowerMod {
 
@@ -30,7 +27,6 @@ public class HorsePowerMod {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::setup);
         eventBus.addListener(this::loadComplete);
-        eventBus.addListener(this::serverLoad);
         eventBus.addListener(this::onFingerprintViolation);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.serverSpec);
@@ -50,11 +46,6 @@ public class HorsePowerMod {
     public void loadComplete(FMLLoadCompleteEvent event) {
         //tweakerPlugin.getRemove().forEach(IHPAction::run);
         //tweakerPlugin.getAdd().forEach(IHPAction::run);
-    }
-
-    public void serverLoad(FMLServerAboutToStartEvent event) {
-        HPRecipes.instance().reloadRecipes();
-        Utils.sendSavedErrors();
     }
 
     public void onFingerprintViolation(FMLFingerprintViolationEvent event) {

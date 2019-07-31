@@ -13,16 +13,16 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Optional;
 
-public abstract class HPRecipeSerializer<T extends AbstractHPRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
+public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
 
     protected RecipeData readData(JsonObject json) {
-        AbstractHPRecipe.Type type = hasTypes() ? AbstractHPRecipe.Type.fromName(JSONUtils.getString(json, getTypeName(), AbstractHPRecipe.Type.BOTH.getName())): null;
+        AbstractHPRecipe.Type type = hasTypes() ? AbstractHPRecipe.Type.fromName(JSONUtils.getString(json, "recipe_type", AbstractHPRecipe.Type.BOTH.getName())): null;
         Ingredient ingredient = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "ingredient"));
         ItemStack result = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
         Optional<JsonObject> obj = Optional.ofNullable(JSONUtils.getJsonObject(json, "secondary", null));
         ItemStack secondary = obj.map(ShapedRecipe::deserializeItem).orElse(ItemStack.EMPTY);
         int time = JSONUtils.getInt(json, "time", 1);
-        int secondaryChance = JSONUtils.getInt(json, "time", 1);
+        int secondaryChance = JSONUtils.getInt(json, "secondary_chance", 1);
 
         //TODO parse fluid in recipe
         return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, null);
@@ -58,8 +58,6 @@ public abstract class HPRecipeSerializer<T extends AbstractHPRecipe> extends For
     }
 
     public abstract boolean hasTypes();
-
-    public abstract String getTypeName();
 
     public static class RecipeData {
         public final AbstractHPRecipe.Type type;

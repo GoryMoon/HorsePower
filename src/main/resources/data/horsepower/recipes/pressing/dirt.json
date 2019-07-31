@@ -1,0 +1,9 @@
+{
+  "type": "horsepower:pressing",
+  "ingredient": {
+    "item": "minecraft:wheat_seeds"
+  },
+  "result": {
+    "item": "minecraft:dirt"
+  }
+}

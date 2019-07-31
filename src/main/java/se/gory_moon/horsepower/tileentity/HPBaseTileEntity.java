@@ -255,6 +255,14 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         markDirty();
     }
 
+    @Override
+    protected void invalidateCaps() {
+        handlerNull.invalidate();
+        handlerBottom.invalidate();
+        handlerIn.invalidate();
+        super.invalidateCaps();
+    }
+
     private LazyOptional<IItemHandler> handlerNull;
     private LazyOptional<IItemHandler> handlerBottom;
     private LazyOptional<IItemHandler> handlerIn;

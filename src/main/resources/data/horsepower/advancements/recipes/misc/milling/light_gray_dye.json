@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "horsepower:milling/light_gray_dye"
+    ]
+  },
+  "criteria": {
+    "has_light_grey_plant": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:azure_bluet"
+          },
+          {
+            "item": "minecraft:white_tulip"
+          },
+          {
+            "item": "minecraft:oxeye_daisy"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "horsepower:milling/light_gray_dye"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_light_grey_plant",
+      "has_the_recipe"
+    ]
+  ]
+}

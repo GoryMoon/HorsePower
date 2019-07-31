@@ -9,8 +9,8 @@ import se.gory_moon.horsepower.blocks.ModBlocks;
 
 public class PressingRecipe extends AbstractHPRecipe {
 
-    protected PressingRecipe(ResourceLocation id, Ingredient input, ItemStack result, FluidStack outputFluid, int time, Type recipeType) {
-        super(RecipeSerializers.PRESSING_TYPE, id, input, result, outputFluid, time, ItemStack.EMPTY, 0, recipeType);
+    protected PressingRecipe(ResourceLocation id, Ingredient input, ItemStack result, FluidStack outputFluid, int time) {
+        super(RecipeSerializers.PRESSING_TYPE, id, input, result, outputFluid, time, ItemStack.EMPTY, 0, null);
     }
 
     @Override

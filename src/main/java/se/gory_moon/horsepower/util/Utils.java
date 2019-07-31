@@ -17,11 +17,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePowerMod;
-import se.gory_moon.horsepower.recipes.HPRecipes;
 
 import java.util.ArrayList;
 
 public class Utils {
+
+    public static ArrayList<String> ERRORS = Lists.newArrayList();
 
     public static ArrayList<Class<? extends CreatureEntity>> getCreatureClasses() {
         ArrayList<Class<? extends CreatureEntity>> clazzes = Lists.newArrayList();
@@ -37,9 +38,7 @@ public class Utils {
                 } else {
                     HorsePowerMod.LOGGER.error("Error in config, the mob (" + e + ") can't be leashed");
                 }
-            } catch (ClassNotFoundException e1) {
-                HorsePowerMod.LOGGER.error("Error in config, could not find (" + e + ") mob class, mod for entity might not be installed");
-            }
+            } catch (ClassNotFoundException ignored) {}
         }
         return clazzes;
     }
@@ -83,20 +82,20 @@ public class Utils {
             if (Minecraft.getInstance().player != null && showDirectly)
                 Minecraft.getInstance().player.sendMessage(new StringTextComponent(TextFormatting.RED + message).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Change in in-game config or click to open the config file to fix this")))));
             else
-                HPRecipes.ERRORS.add(message);
+                ERRORS.add(message);
         });
         HorsePowerMod.LOGGER.warn(message);
     }
 
     public static void sendSavedErrors() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            if (Minecraft.getInstance().player != null && HPRecipes.ERRORS.size() > 0) {
+            if (Minecraft.getInstance().player != null && ERRORS.size() > 0) {
                 ClientPlayerEntity player = Minecraft.getInstance().player;
                 player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower config errors"));
                 player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
-                HPRecipes.ERRORS.forEach(s -> player.sendMessage(new StringTextComponent(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Changed in in-game config or click to open the config file to fix this"))))));
+                ERRORS.forEach(s -> player.sendMessage(new StringTextComponent(TextFormatting.RED + s).setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Changed in in-game config or click to open the config file to fix this"))))));
                 player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"));
-                HPRecipes.ERRORS.clear();
+                ERRORS.clear();
             }
         });
     }

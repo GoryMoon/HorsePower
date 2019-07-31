@@ -50,6 +50,10 @@ public class HPRecipeProvider extends RecipeProvider {
         MillingRecipeBuilder.millingRecipe(Items.MAGENTA_DYE, 1, Ingredient.fromItems(Items.ALLIUM), 12).addCriterion("has_magenta_plant", hasItem(Items.ALLIUM)).build(consumer, "horsepower:milling/magenta_dye");
         MillingRecipeBuilder.millingRecipe(Items.MAGENTA_DYE, 2, Ingredient.fromItems(Items.LILAC), 12).addCriterion("has_magenta_plant", hasItem(Items.LILAC)).build(consumer, "horsepower:milling/magenta_dye_2");
         MillingRecipeBuilder.millingRecipe(Items.ORANGE_DYE, 1, Ingredient.fromItems(Items.ORANGE_TULIP), 12).addCriterion("has_orange_plant", hasItem(Items.ORANGE_TULIP)).build(consumer, "horsepower:milling/orange_dye");
+
+        //Pressing Recipes
+        PressingRecipeBuilder.pressingRecipe(Items.DIRT, 1, Ingredient.fromItems(Items.WHEAT_SEEDS)).addCriterion("has_seed", hasItem(Items.WHEAT_SEEDS)).build(consumer, "horsepower:pressing/dirt");
+        //"ore:treeLeaves@8-fluid:water@1000"
     }
 
     public InventoryChangeTrigger.Instance hasItem(IItemProvider... providers) {
