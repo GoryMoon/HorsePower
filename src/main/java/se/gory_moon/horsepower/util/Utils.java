@@ -29,7 +29,7 @@ public class Utils {
         if (Configs.SERVER.useHorseInterface.get())
             clazzes.add(AbstractHorseEntity.class);
 
-        for (String e: Configs.SERVER.mobList.get()) {
+        for (String e : Configs.SERVER.mobList.get()) {
             try {
                 Class clazz = Class.forName(e);
 
@@ -44,7 +44,8 @@ public class Utils {
     }
 
     public static int getItemStackHashCode(ItemStack stack) {
-        if (stack.isEmpty()) return 0;
+        if (stack.isEmpty())
+            return 0;
 
         CompoundNBT tag = stack.write(new CompoundNBT());
         tag.remove("Count");
@@ -52,7 +53,8 @@ public class Utils {
     }
 
     public static int getItemStackCountHashCode(ItemStack stack) {
-        if (stack.isEmpty()) return 0;
+        if (stack.isEmpty())
+            return 0;
 
         CompoundNBT tag = stack.write(new CompoundNBT());
         return tag.hashCode();

@@ -40,10 +40,10 @@ public class Provider implements IWailaPlugin {
         //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChoppingBlock.class);
 
         registrar.registerComponentProvider(HUDHandlerPress.INSTANCE, TooltipPosition.BODY, BlockPress.class);
-        registrar.registerBlockDataProvider(HUDHandlerPress.INSTANCE,  BlockPress.class);
+        registrar.registerBlockDataProvider(HUDHandlerPress.INSTANCE, BlockPress.class);
 
         registrar.registerComponentProvider(HUDHandlerFiller.INSTANCE, TooltipPosition.BODY, BlockFiller.class);
-        registrar.registerBlockDataProvider(HUDHandlerFiller.INSTANCE,  BlockFiller.class);
+        registrar.registerBlockDataProvider(HUDHandlerFiller.INSTANCE, BlockFiller.class);
 
         registrar.addConfig(CONFIG_SHOW_ITEMS, true);
     }
@@ -52,31 +52,29 @@ public class Provider implements IWailaPlugin {
         if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof HPBaseTileEntity || accessor.getTileEntity() instanceof FillerTileEntity)) {
             TileEntity te = accessor.getTileEntity();
             te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).ifPresent(itemHandler -> {
-                //for (int i = 0; i < 3; i++) {
-                    final ItemStack stack = itemHandler.getStackInSlot(0);
-                    final ItemStack output = itemHandler.getStackInSlot(1);
-                    final ItemStack bonus = itemHandler.getStackInSlot(2);
+                final ItemStack stack = itemHandler.getStackInSlot(0);
+                final ItemStack output = itemHandler.getStackInSlot(1);
+                final ItemStack bonus = itemHandler.getStackInSlot(2);
 
-                    if (!stack.isEmpty()) {
-                        CompoundNBT tag = new CompoundNBT();
-                        tag.putString("id", stack.getItem().getRegistryName().toString());
-                        tag.putInt("count", stack.getCount());
-                        if (stack.hasTag())
-                            tag.putString("nbt", stack.getTag().toString());
+                if (!stack.isEmpty()) {
+                    CompoundNBT tag = new CompoundNBT();
+                    tag.putString("id", stack.getItem().getRegistryName().toString());
+                    tag.putInt("count", stack.getCount());
+                    if (stack.hasTag())
+                        tag.putString("nbt", stack.getTag().toString());
 
-                        CompoundNBT progress = new CompoundNBT();
-                        progress.putInt("progress", prog);
-                        progress.putInt("total", 100);
+                    CompoundNBT progress = new CompoundNBT();
+                    progress.putInt("progress", prog);
+                    progress.putInt("total", 100);
 
-                        tooltip.add(new RenderableTextComponent(
-                                getRenderable(stack),
-                                new RenderableTextComponent(RENDER_FURNACE_PROGRESS, progress),
-                                getRenderable(output),
-                                getRenderable(bonus)
-                        ));
+                    tooltip.add(new RenderableTextComponent(
+                            getRenderable(stack),
+                            new RenderableTextComponent(RENDER_FURNACE_PROGRESS, progress),
+                            getRenderable(output),
+                            getRenderable(bonus)
+                    ));
 
-                    }
-                //}
+                }
             });
         }
     }

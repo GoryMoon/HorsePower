@@ -72,7 +72,7 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         Entity entity = this.rendererDispatcher.renderInfo.getRenderViewEntity();
         double d0 = te.getDistanceSq(entity.posX, entity.posY, entity.posZ);
 
-        if (d0 <= (double)(14 * 14)) {
+        if (d0 <= (double) (14 * 14)) {
             float f = this.rendererDispatcher.renderInfo.getYaw();
             float f1 = this.rendererDispatcher.renderInfo.getPitch();
             FontRenderer fontRenderer = getFontRenderer();
@@ -109,10 +109,10 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         return Configs.CLIENT.renderItemAmount.get() &&
                 (!Configs.CLIENT.mustLookAtBlock.get() ||
                         traceResult != null &&
-                        traceResult.getType() == RayTraceResult.Type.BLOCK &&
-                        (te.getPos().equals(((BlockRayTraceResult) traceResult).getPos()) ||
-                                (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(((BlockRayTraceResult) traceResult).getPos()))
-                        )
+                                traceResult.getType() == RayTraceResult.Type.BLOCK &&
+                                (te.getPos().equals(((BlockRayTraceResult) traceResult).getPos()) ||
+                                        (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(((BlockRayTraceResult) traceResult).getPos()))
+                                )
                 );
     }
 
@@ -121,19 +121,19 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
             return;
         GlStateManager.pushMatrix();
         GlStateManager.translated(ox, oy, oz);
-        GlStateManager.translated( 0.5, 0.5, 0.5 );
+        GlStateManager.translated(0.5, 0.5, 0.5);
         FacingToRotation.get(tile.getForward()).glRotateCurrentMat();
-        GlStateManager.translated( -0.5, -0.5, -0.5 );
+        GlStateManager.translated(-0.5, -0.5, -0.5);
         renderItem(tile, stack, x, y, z, scale);
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
-        GlStateManager.translated(ox , oy, oz);
-        GlStateManager.translated( 0.5, 0.5, 0.5 );
+        GlStateManager.translated(ox, oy, oz);
+        GlStateManager.translated(0.5, 0.5, 0.5);
         FacingToRotation.get(tile.getForward()).glRotateCurrentMat();
-        GlStateManager.translated( -0.5, -0.5, -0.5 );
+        GlStateManager.translated(-0.5, -0.5, -0.5);
 
-        drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3,  z);
+        drawString(tile, String.valueOf(stack.getCount()), x, y + 0.3, z);
         GlStateManager.popMatrix();
     }
 
@@ -141,16 +141,16 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         // Most of this is blatantly copied from FastTESR
         setRenderSettings();
 
-        BlockState blockState = te.getWorld().getBlockState( te.getPos() );
+        BlockState blockState = te.getWorld().getBlockState(te.getPos());
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        IBakedModel model = dispatcher.getModelForState( blockState );
+        IBakedModel model = dispatcher.getModelForState(blockState);
 
-        buffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
-        buffer.setTranslation( -te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ() );
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+        buffer.setTranslation(-te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ());
         dispatcher.getBlockModelRenderer().renderModel(getWorld(), model, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
-        buffer.setTranslation( 0, 0, 0 );
+        buffer.setTranslation(0, 0, 0);
         GlStateManager.pushMatrix();
-        GlStateManager.translated( x, y, z );
+        GlStateManager.translated(x, y, z);
         tessellator.draw();
         GlStateManager.popMatrix();
     }
@@ -161,26 +161,26 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         setRenderSettings();
 
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        IBakedModel model = dispatcher.getModelForState( blockState );
+        IBakedModel model = dispatcher.getModelForState(blockState);
 
-        buffer.begin( GL11.GL_QUADS, DefaultVertexFormats.BLOCK );
-        buffer.setTranslation( -te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ() );
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+        buffer.setTranslation(-te.getPos().getX(), -te.getPos().getY(), -te.getPos().getZ());
 
         if (destroyStage >= 0) {
             buffer.noColor();
             renderBlockDamage(blockState, te.getPos(), destroyStage, te.getWorld());
         } else
-            dispatcher.getBlockModelRenderer().renderModel( te.getWorld(), model, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
+            dispatcher.getBlockModelRenderer().renderModel(te.getWorld(), model, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
 
-        buffer.setTranslation( 0, 0, 0 );
+        buffer.setTranslation(0, 0, 0);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         GlStateManager.pushMatrix();
-        GlStateManager.translated( x, y, z );
+        GlStateManager.translated(x, y, z);
 
-        GlStateManager.translated( 0.5, 0.5, 0.5 );
+        GlStateManager.translated(0.5, 0.5, 0.5);
         FacingToRotation.get(te.getForward()).glRotateCurrentMat();
-        GlStateManager.translated( -0.5, -0.5, -0.5 );
+        GlStateManager.translated(-0.5, -0.5, -0.5);
 
         tessellator.draw();
         buffer.setTranslation(0.0D, 0.0D, 0.0D);
@@ -197,7 +197,7 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         GlStateManager.enableBlend();
         GlStateManager.disableCull();
 
-        if(Minecraft.isAmbientOcclusionEnabled()) {
+        if (Minecraft.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
         } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -242,12 +242,12 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
             double d3;
             double d4 = -1.0D;
 
-            double d9 = (double)(MathHelper.lerp(partialTicks, entity.renderYawOffset, entity.prevRenderYawOffset) * ((float)Math.PI / 180F)) + (Math.PI / 2D);
-            d2 = Math.cos(d9) * (double)entity.getWidth() * 0.4D;
-            d3 = Math.sin(d9) * (double)entity.getWidth() * 0.4D;
-            double d6 = MathHelper.lerp((double)partialTicks, entity.prevPosX, entity.posX) + d2;
-            double d7 = MathHelper.lerp((double)partialTicks, entity.prevPosY + entity.getEyeHeight() * 1.1D, entity.posY + entity.getEyeHeight() * 1.1D) - d4 * 0.5D - 0.25D - y;
-            double d8 = MathHelper.lerp((double)partialTicks, entity.prevPosZ, entity.posZ) + d3;
+            double d9 = (double) (MathHelper.lerp(partialTicks, entity.renderYawOffset, entity.prevRenderYawOffset) * ((float) Math.PI / 180F)) + (Math.PI / 2D);
+            d2 = Math.cos(d9) * (double) entity.getWidth() * 0.4D;
+            d3 = Math.sin(d9) * (double) entity.getWidth() * 0.4D;
+            double d6 = MathHelper.lerp(partialTicks, entity.prevPosX, entity.posX) + d2;
+            double d7 = MathHelper.lerp(partialTicks, entity.prevPosY + entity.getEyeHeight() * 1.1D, entity.posY + entity.getEyeHeight() * 1.1D) - d4 * 0.5D - 0.25D - y;
+            double d8 = MathHelper.lerp(partialTicks, entity.prevPosZ, entity.posZ) + d3;
 
 
             d2 = 0.5D;
@@ -267,9 +267,9 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 
-        double d13 = (double)((float)(x1 - x2));
-        double d14 = (double)((float)(y1 - y2));
-        double d15 = (double)((float)(z1 - z2));
+        double d13 = (float) (x1 - x2);
+        double d14 = (float) (y1 - y2);
+        double d15 = (float) (z1 - z2);
 
         GlStateManager.disableTexture();
         GlStateManager.disableLighting();
@@ -277,43 +277,39 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
 
         vertexbuffer.begin(5, DefaultVertexFormats.POSITION_COLOR);
 
-        for (int j = 0; j <= 24; ++j)
-        {
+        for (int j = 0; j <= 24; ++j) {
             float f = 0.5F;
             float f1 = 0.4F;
             float f2 = 0.3F;
 
-            if (j % 2 == 0)
-            {
+            if (j % 2 == 0) {
                 f *= 0.7F;
                 f1 *= 0.7F;
                 f2 *= 0.7F;
             }
 
-            float f3 = (float)j / 24.0F;
-            vertexbuffer.pos(ox + d13 * (double)f3 + 0.0D, oy + d14 * (double)(f3 * f3 + f3) * 0.5D + (double)((24.0F - (float)j) / 18.0F + 0.125F), oz + d15 * (double)f3).color(f, f1, f2, 1.0F).endVertex();
-            vertexbuffer.pos(ox + d13 * (double)f3 + 0.025D, oy + d14 * (double)(f3 * f3 + f3) * 0.5D + (double)((24.0F - (float)j) / 18.0F + 0.125F) + 0.025D, oz + d15 * (double)f3).color(f, f1, f2, 1.0F).endVertex();
+            float f3 = (float) j / 24.0F;
+            vertexbuffer.pos(ox + d13 * (double) f3 + 0.0D, oy + d14 * (double) (f3 * f3 + f3) * 0.5D + (double) ((24.0F - (float) j) / 18.0F + 0.125F), oz + d15 * (double) f3).color(f, f1, f2, 1.0F).endVertex();
+            vertexbuffer.pos(ox + d13 * (double) f3 + 0.025D, oy + d14 * (double) (f3 * f3 + f3) * 0.5D + (double) ((24.0F - (float) j) / 18.0F + 0.125F) + 0.025D, oz + d15 * (double) f3).color(f, f1, f2, 1.0F).endVertex();
         }
 
         tessellator.draw();
         vertexbuffer.begin(5, DefaultVertexFormats.POSITION_COLOR);
 
-        for (int k = 0; k <= 24; ++k)
-        {
+        for (int k = 0; k <= 24; ++k) {
             float f4 = 0.5F;
             float f5 = 0.4F;
             float f6 = 0.3F;
 
-            if (k % 2 == 0)
-            {
+            if (k % 2 == 0) {
                 f4 *= 0.7F;
                 f5 *= 0.7F;
                 f6 *= 0.7F;
             }
 
-            float f7 = (float)k / 24.0F;
-            vertexbuffer.pos(ox + d13 * (double)f7 + 0.0D, oy + d14 * (double)(f7 * f7 + f7) * 0.5D + (double)((24.0F - (float)k) / 18.0F + 0.125F) + 0.025D, oz + d15 * (double)f7).color(f4, f5, f6, 1.0F).endVertex();
-            vertexbuffer.pos(ox + d13 * (double)f7 + 0.025D, oy + d14 * (double)(f7 * f7 + f7) * 0.5D + (double)((24.0F - (float)k) / 18.0F + 0.125F), oz + d15 * (double)f7 + 0.025D).color(f4, f5, f6, 1.0F).endVertex();
+            float f7 = (float) k / 24.0F;
+            vertexbuffer.pos(ox + d13 * (double) f7 + 0.0D, oy + d14 * (double) (f7 * f7 + f7) * 0.5D + (double) ((24.0F - (float) k) / 18.0F + 0.125F) + 0.025D, oz + d15 * (double) f7).color(f4, f5, f6, 1.0F).endVertex();
+            vertexbuffer.pos(ox + d13 * (double) f7 + 0.025D, oy + d14 * (double) (f7 * f7 + f7) * 0.5D + (double) ((24.0F - (float) k) / 18.0F + 0.125F), oz + d15 * (double) f7 + 0.025D).color(f4, f5, f6, 1.0F).endVertex();
         }
 
         tessellator.draw();
@@ -334,7 +330,7 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         ITextComponent itextcomponent = te.getDisplayName();
 
         RayTraceResult raytraceresult = this.rendererDispatcher.cameraHitResult;
-        if (itextcomponent != null && raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.BLOCK && te.getPos().equals(((BlockRayTraceResult)raytraceresult).getPos())) {
+        if (itextcomponent != null && raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.BLOCK && te.getPos().equals(((BlockRayTraceResult) raytraceresult).getPos())) {
             this.setLightmapDisabled(true);
             drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
             drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);
@@ -347,10 +343,10 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         Vec3d view = renderInfo.getProjectedView();
         double d0 = te.getDistanceSq(view.x, view.y, view.z);
 
-        if (d0 <= (double)(maxDistance * maxDistance)) {
+        if (d0 <= (double) (maxDistance * maxDistance)) {
             float yaw = renderInfo.getYaw();
             float pitch = renderInfo.getPitch();
-            GameRenderer.drawNameplate(fontRenderer, str, (float)x + 0.5F, (float)y + 1.5F + offset, (float)z + 0.5F, 0, yaw, pitch, false);
+            GameRenderer.drawNameplate(fontRenderer, str, (float) x + 0.5F, (float) y + 1.5F + offset, (float) z + 0.5F, 0, yaw, pitch, false);
         }
     }
 }

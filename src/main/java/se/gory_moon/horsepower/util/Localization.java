@@ -16,7 +16,7 @@ public final class Localization {
                 int endPos = result.indexOf("]");
                 if (endPos != -1) {
                     String[] options = result.substring(pos + optionCheck.length(), endPos).split("\\|");
-                    int pickedOption = vars[i].equals("true") ? 1 : 0;
+                    int pickedOption = vars[i].equals("true") ? 1: 0;
                     if (options.length > pickedOption) {
                         String opt = options[pickedOption];
                         result = result.substring(0, pos) + opt + result.substring(endPos + 1);
@@ -39,7 +39,9 @@ public final class Localization {
     public static class ITEM {
 
         public enum HORSE_MILLSTONE {
-            SIZE, LOCATION, USE;
+            SIZE,
+            LOCATION,
+            USE;
 
             public String translate(String... vars) {
                 return Localization.translateString(toString(), vars);
@@ -64,7 +66,9 @@ public final class Localization {
         }
 
         public enum HORSE_CHOPPING {
-            SIZE, LOCATION, USE;
+            SIZE,
+            LOCATION,
+            USE;
 
             public String translate(String... vars) {
                 return Localization.translateString(toString(), vars);
@@ -77,7 +81,9 @@ public final class Localization {
         }
 
         public enum HORSE_PRESS {
-            SIZE, LOCATION, USE;
+            SIZE,
+            LOCATION,
+            USE;
 
             public String translate(String... vars) {
                 return Localization.translateString(toString(), vars);
@@ -91,7 +97,7 @@ public final class Localization {
 
     }
 
-    public enum  INFO {
+    public enum INFO {
         MILLSTONE_INVALID,
         CHOPPING_INVALID,
         PRESS_INVALID,

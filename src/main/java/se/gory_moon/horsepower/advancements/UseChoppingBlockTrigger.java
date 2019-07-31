@@ -13,9 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Map;
 import java.util.Set;
 
-public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlockTrigger.Instance>{
+public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlockTrigger.Instance> {
 
-    private static final ResourceLocation ID = new ResourceLocation("horsepower","use_chopping_block");
+    private static final ResourceLocation ID = new ResourceLocation("horsepower", "use_chopping_block");
     private final Map<PlayerAdvancements, Listeners> listeners = Maps.newHashMap();
 
     @Override
@@ -52,12 +52,10 @@ public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlo
         return new Instance();
     }
 
-    public void trigger(ServerPlayerEntity player)
-    {
+    public void trigger(ServerPlayerEntity player) {
         Listeners listeners = this.listeners.get(player.getAdvancements());
 
-        if (listeners != null)
-        {
+        if (listeners != null) {
             listeners.trigger();
         }
     }
@@ -73,18 +71,15 @@ public class UseChoppingBlockTrigger implements ICriterionTrigger<UseChoppingBlo
         }
     }
 
-    static class Listeners
-    {
+    static class Listeners {
         private final PlayerAdvancements playerAdvancements;
         private final Set<Listener<UseChoppingBlockTrigger.Instance>> listeners = Sets.newHashSet();
 
-        public Listeners(PlayerAdvancements playerAdvancementsIn)
-        {
+        public Listeners(PlayerAdvancements playerAdvancementsIn) {
             this.playerAdvancements = playerAdvancementsIn;
         }
 
-        public boolean isEmpty()
-        {
+        public boolean isEmpty() {
             return this.listeners.isEmpty();
         }
 

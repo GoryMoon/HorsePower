@@ -33,10 +33,12 @@ public class FillerTileEntity extends TileEntity implements INameable {
 
     public BlockPos getFilledPos() {
         BlockState state = getWorld().getBlockState(getPos());
-        if (!(state.getBlock() instanceof BlockFiller)) return getPos();
+        if (!(state.getBlock() instanceof BlockFiller))
+            return getPos();
         Direction facing = state.get(DirectionalBlock.FACING);
         BlockState state1 = getWorld().getBlockState(pos.offset(facing));
-        if (!(state1.getBlock() instanceof BlockHPBase)) return getPos();
+        if (!(state1.getBlock() instanceof BlockHPBase))
+            return getPos();
         return pos.offset(facing);
     }
 

@@ -17,7 +17,7 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
 
     protected RecipeData readData(JsonObject json) {
         AbstractHPRecipe.Type type = hasTypes() ? AbstractHPRecipe.Type.fromName(JSONUtils.getString(json, "recipe_type", AbstractHPRecipe.Type.BOTH.getName())): null;
-        Ingredient ingredient = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "ingredient"));
+        Ingredient ingredient = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient"): JSONUtils.getJsonObject(json, "ingredient"));
         ItemStack result = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
         Optional<JsonObject> obj = Optional.ofNullable(JSONUtils.getJsonObject(json, "secondary", null));
         ItemStack secondary = obj.map(ShapedRecipe::deserializeItem).orElse(ItemStack.EMPTY);

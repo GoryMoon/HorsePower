@@ -61,7 +61,8 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
 
             @Override
             public ItemStack getStackInSlot(int index) {
-                if (index >= itemStacks.size()) return ItemStack.EMPTY;
+                if (index >= itemStacks.size())
+                    return ItemStack.EMPTY;
                 return itemStacks.get(index);
             }
 
@@ -200,7 +201,8 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
             return false;
         } else {
             AbstractHPRecipe recipe = getRecipe();
-            if (recipe == null) return false;
+            if (recipe == null)
+                return false;
 
             ItemStack itemstack = recipe.getRecipeOutput();
             ItemStack secondary = recipe.getSecondaryOutput();
@@ -213,8 +215,10 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
             ItemStack output = getStackInSlot(1);
             ItemStack outputSecondary = secondary.isEmpty() ? ItemStack.EMPTY: inventory.getStackInSlot(2);
             if (!secondary.isEmpty() && !outputSecondary.isEmpty()) {
-                if (!outputSecondary.isItemEqual(secondary)) return false;
-                if (outputSecondary.getCount() + secondary.getCount() > secondary.getMaxStackSize()) return false;
+                if (!outputSecondary.isItemEqual(secondary))
+                    return false;
+                if (outputSecondary.getCount() + secondary.getCount() > secondary.getMaxStackSize())
+                    return false;
             }
             return output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize();
         }
@@ -266,6 +270,7 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
     private LazyOptional<IItemHandler> handlerNull;
     private LazyOptional<IItemHandler> handlerBottom;
     private LazyOptional<IItemHandler> handlerIn;
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {

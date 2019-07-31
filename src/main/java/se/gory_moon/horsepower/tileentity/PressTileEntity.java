@@ -78,7 +78,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             }
         }
 
-        for (BlockPos pos: searchPos) {
+        for (BlockPos pos : searchPos) {
             if (!getWorld().getBlockState(pos).getMaterial().isReplaceable())
                 return false;
         }
@@ -152,7 +152,8 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             return false;
         } else {
             AbstractHPRecipe recipe = getRecipe();
-            if (recipe == null) return false;
+            if (recipe == null)
+                return false;
 
             Ingredient input = recipe.getIngredients().get(0);
             ItemStack itemstack = recipe.getCraftingResult(inventory);

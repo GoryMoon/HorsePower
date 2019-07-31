@@ -53,9 +53,9 @@ public class RenderUtils {
 
     public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getTransforms(IBakedModel model) {
         ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-        for(ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
+        for (ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
             TRSRTransformation transformation = new TRSRTransformation(model.handlePerspective(type).getRight());
-            if(!transformation.equals(TRSRTransformation.identity())) {
+            if (!transformation.equals(TRSRTransformation.identity())) {
                 builder.put(type, TRSRTransformation.blockCenterToCorner(transformation));
             }
         }
@@ -131,7 +131,7 @@ public class RenderUtils {
                             GlStateManager.color4f(1, 0, 0, invalidAplha);
                             drawBoundingBoxOutline(new AxisAlignedBB(pos).offset(playerX, playerY, playerZ));
                             VoxelShape shape = state.getCollisionShape(world, pos).withOffset(pos.getX(), pos.getY(), pos.getZ()).withOffset(playerX, playerY, playerZ);
-                            for (AxisAlignedBB aabb: shape.toBoundingBoxList()) {
+                            for (AxisAlignedBB aabb : shape.toBoundingBoxList()) {
                                 drawBoundingBox(aabb);
                             }
                         } else {

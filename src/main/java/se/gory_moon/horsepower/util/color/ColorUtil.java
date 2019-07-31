@@ -2,6 +2,7 @@ package se.gory_moon.horsepower.util.color;
 
 /**
  * Copied from JEI (Just Enough Items)
+ *
  * @author Mezz
  */
 public final class ColorUtil {

@@ -25,8 +25,8 @@ public class ModModelManager {
 
     public static final ModModelManager INSTANCE = new ModModelManager();
     private final Set<Item> itemsRegistered = new HashSet<>();
-    private static final ResourceLocation MODEL_ChoppingBlock = new ResourceLocation("horsepower","block/chopper");
-    private static final ResourceLocation MODEL_ManualChoppingBlock = new ResourceLocation("horsepower","block/chopping_block");
+    private static final ResourceLocation MODEL_ChoppingBlock = new ResourceLocation("horsepower", "block/chopper");
+    private static final ResourceLocation MODEL_ManualChoppingBlock = new ResourceLocation("horsepower", "block/chopping_block");
 
     public ModModelManager() {
     }
@@ -129,6 +129,7 @@ public class ModModelManager {
         variant.getMetas().forEach(value -> registerItemModelForMeta(variant, value, variantName + "=" + variant.getVariant(value)));
     }
 */
+
     /**
      * Register a single model for an {@link Item}.
      * <p>
@@ -213,12 +214,12 @@ public class ModModelManager {
         try {
             IModel model = ModelLoaderRegistry.getModel(modelLocation);
             IBakedModel standard = event.getModelRegistry().get(modelVariantLocation);
-            if(standard != null) {
+            if (standard != null) {
                 /*IBakedModel finalModel = new BakedChopperModel(standard, model, DefaultVertexFormats.BLOCK);
 
                 event.getModelRegistry().put(modelVariantLocation, finalModel);*/
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -2,12 +2,27 @@ package se.gory_moon.horsepower.util.color;
 
 
 public enum Colors {
-    BLACK(0), BLUE(1), GREEN(2), CYAN(3), RED(4), PURPLE(5), ORANGE(6), LIGHTGRAY(7), GRAY(8), LIGHTBLUE(9), LIME(10), TURQUISE(11), PINK(12), MAGNETA(13), YELLOW(14), WHITE(15);
+    BLACK(0),
+    BLUE(1),
+    GREEN(2),
+    CYAN(3),
+    RED(4),
+    PURPLE(5),
+    ORANGE(6),
+    LIGHTGRAY(7),
+    GRAY(8),
+    LIGHTBLUE(9),
+    LIME(10),
+    TURQUISE(11),
+    PINK(12),
+    MAGNETA(13),
+    YELLOW(14),
+    WHITE(15);
 
     private int number;
     private int rgb;
 
-    private Colors(int number) {
+    Colors(int number) {
         this.number = number;
         rgb = getRGB(number);
     }

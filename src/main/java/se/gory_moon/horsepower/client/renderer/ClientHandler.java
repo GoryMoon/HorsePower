@@ -26,7 +26,7 @@ public class ClientHandler {
 
     @SubscribeEvent
     public static void renderWorld(RenderWorldLastEvent event) {
-        final ItemStack[] itemStack = {ItemStack.EMPTY};
+        final ItemStack[] itemStack = { ItemStack.EMPTY };
         if (Configs.CLIENT.showObstructedPlace.get()) {
             if (StreamSupport.stream(Minecraft.getInstance().player.getHeldEquipment().spliterator(), false).anyMatch(stack -> !stack.isEmpty() && isHPBlock((itemStack[0] = stack).getItem()))) {
                 Minecraft mc = Minecraft.getInstance();
@@ -37,7 +37,7 @@ public class ClientHandler {
                 if (!itemStack[0].isEmpty() && ((BlockItem) itemStack[0].getItem()).getBlock() instanceof BlockMillstone)
                     offset = -1;
 
-                Direction enumFacing = ((BlockRayTraceResult)mc.objectMouseOver).getFace();
+                Direction enumFacing = ((BlockRayTraceResult) mc.objectMouseOver).getFace();
                 BlockPos pos = ((BlockRayTraceResult) mc.objectMouseOver).getPos();
                 if (!mc.world.getBlockState(pos).getMaterial().isReplaceable())
                     pos = pos.offset(enumFacing);
@@ -51,8 +51,7 @@ public class ClientHandler {
 
     private static boolean isHPBlock(Item item) {
         if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof BlockHPBase) {
-            if (HPHorseBaseTileEntity.class.isAssignableFrom(((BlockHPBase) ((BlockItem) item).getBlock()).getTileClass()))
-                return true;
+            return HPHorseBaseTileEntity.class.isAssignableFrom(((BlockHPBase) ((BlockItem) item).getBlock()).getTileClass());
         }
         return false;
     }

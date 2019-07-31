@@ -98,7 +98,7 @@ public abstract class BlockHPBase extends ContainerBlock {
 
     protected <T extends HPBaseTileEntity> T getTileEntity(IBlockReader worldIn, BlockPos pos) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity : null;
+        return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity: null;
     }
 
     @Nullable
@@ -124,7 +124,7 @@ public abstract class BlockHPBase extends ContainerBlock {
         // the execution otherwise is equivalent to vanilla order
         this.onPlayerDestroy(world, pos, state);
         onBlockHarvested(world, pos, state, player);
-        if(willHarvest) {
+        if (willHarvest) {
             this.harvestBlock(world, player, pos, state, world.getTileEntity(pos), player.getHeldItemMainhand());
         }
 
@@ -150,7 +150,8 @@ public abstract class BlockHPBase extends ContainerBlock {
         ItemStack stack = hand == Hand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
         HPBaseTileEntity te = (HPBaseTileEntity) worldIn.getTileEntity(pos);
         HPHorseBaseTileEntity teH = null;
-        if (te == null) return false;
+        if (te == null)
+            return false;
         if (te instanceof HPHorseBaseTileEntity)
             teH = (HPHorseBaseTileEntity) te;
 
@@ -159,7 +160,7 @@ public abstract class BlockHPBase extends ContainerBlock {
             ArrayList<Class<? extends CreatureEntity>> clazzes = Utils.getCreatureClasses();
             search:
             for (Class<? extends Entity> clazz : clazzes) {
-                for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB(-7.0D, -7.0D,  -7.0D, 7.0D, 7.0D, 7.0D).offset(pos))) {
+                for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB(-7.0D, -7.0D, -7.0D, 7.0D, 7.0D, 7.0D).offset(pos))) {
                     if (entity instanceof CreatureEntity && !(entity instanceof IMob)) {
                         CreatureEntity tmp = (CreatureEntity) entity;
                         if ((tmp.getLeashed() && tmp.getLeashHolder() == player)) {
@@ -203,7 +204,7 @@ public abstract class BlockHPBase extends ContainerBlock {
         ItemStack result = ItemStack.EMPTY;
         if (slot > -1) {
             result = te.removeStackFromSlot(slot);
-        } else if (slot > -2){
+        } else if (slot > -2) {
             result = te.removeStackFromSlot(1);
             if (result.isEmpty()) {
                 result = te.removeStackFromSlot(2);

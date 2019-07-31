@@ -21,8 +21,9 @@ public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<Millston
 
     @Override
     public void render(MillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        BlockState blockState = te.getWorld().getBlockState( te.getPos() );
-        if (!(blockState.getBlock() instanceof BlockHPBase)) return;
+        BlockState blockState = te.getWorld().getBlockState(te.getPos());
+        if (!(blockState.getBlock() instanceof BlockHPBase))
+            return;
         ItemStack outputStack = te.getStackInSlot(1);
         ItemStack secondaryStack = te.getStackInSlot(2);
         if (outputStack.getCount() < secondaryStack.getCount())
@@ -30,7 +31,8 @@ public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<Millston
 
         if (blockState.get(BlockMillstone.FILLED)) {
             BlockState filledState = blockState.with(BlockMillstone.PART, MillstoneModels.FILLED);
-            if (!(filledState.getBlock() instanceof BlockHPBase)) return;
+            if (!(filledState.getBlock() instanceof BlockHPBase))
+                return;
 
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
@@ -48,11 +50,11 @@ public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<Millston
             GlStateManager.pushMatrix();
             GlStateManager.translated(x, y, z);
 
-            GlStateManager.translated( 0.5, 0.5, 0.5 );
+            GlStateManager.translated(0.5, 0.5, 0.5);
             float maxStackSize = outputStack.getMaxStackSize() > 0 ? outputStack.getMaxStackSize(): 1F;
-            float fillState = 0.23F * (((float)outputStack.getCount()) / maxStackSize);
-            GlStateManager.translated( 0, -0.187 + fillState, 0 );
-            GlStateManager.translated( -0.5, -0.5, -0.5 );
+            float fillState = 0.23F * (((float) outputStack.getCount()) / maxStackSize);
+            GlStateManager.translated(0, -0.187 + fillState, 0);
+            GlStateManager.translated(-0.5, -0.5, -0.5);
 
             tessellator.draw();
             GlStateManager.popMatrix();

@@ -21,8 +21,8 @@ import java.util.UUID;
 
 public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
-    protected static double[][] walkPath = {{-1.1, -1}, {0, -1}, {1, -1}, {0.75, 0}, {0.75, 1}, {0, 1}, {-1, 1}, {-1, 0}};
-    protected static double[][] searchPath = {{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
+    protected static double[][] walkPath = { { -1.1, -1 }, { 0, -1 }, { 1, -1 }, { 0.75, 0 }, { 0.75, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+    protected static double[][] searchPath = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
     public AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
     protected List<BlockPos> searchPos = null;
     protected int origin = -1;
@@ -202,7 +202,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         if (/*!getWorld().isRemote && */valid) {
             if (!running && canWork()) {
                 running = true;
-            } else if (running && !canWork()){
+            } else if (running && !canWork()) {
                 running = false;
             }
 
@@ -219,12 +219,12 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
                     double y = pos.y;
                     double z = pos.z;
 
-                    //if (searchAreas[target] == null)
-                        searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 1.0D, z - 0.5D, x + 1.5D, y + 1.0D, z + 1.5D);
+                    if (searchAreas[target] == null)
+                    searchAreas[target] = new AxisAlignedBB(x - 0.5D, y - 1.0D, z - 0.5D, x + 1.5D, y + 1.0D, z + 1.5D);
 
                     if (worker.getBoundingBox().intersects(searchAreas[target])) {
                         int next = target + 1;
-                        int previous = target -1;
+                        int previous = target - 1;
                         if (next >= walkPath.length)
                             next = 0;
                         if (previous < 0)
@@ -237,8 +237,8 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
                         target = next;
                     }
 
-                    if (worker instanceof AbstractHorseEntity && ((AbstractHorseEntity)worker).isEatingHaystack()) {
-                        ((AbstractHorseEntity)worker).setEatingHaystack(false);
+                    if (worker instanceof AbstractHorseEntity && ((AbstractHorseEntity) worker).isEatingHaystack()) {
+                        ((AbstractHorseEntity) worker).setEatingHaystack(false);
                     }
 
                     if (target != -1 && worker.getNavigator().noPath()) {

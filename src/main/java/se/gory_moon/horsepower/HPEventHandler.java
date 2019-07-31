@@ -82,7 +82,7 @@ public class HPEventHandler {
             if (event.getEntity() instanceof ClientPlayerEntity && event.getWorld() instanceof ClientWorld && Minecraft.getInstance().player != null) {
                 Utils.sendSavedErrors();
             }
-        };
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -96,12 +96,14 @@ public class HPEventHandler {
                 Set<ResourceLocation> tags = item.getTags();
 
                 StringBuilder out = null;
-                for (ResourceLocation tag: tags) {
-                    if (out == null) out = new StringBuilder(Colors.LIGHTGRAY + "HPTags:\n    " + Colors.ORANGE + tag);
-                    else out.append("\n    ").append(tag);
+                for (ResourceLocation tag : tags) {
+                    if (out == null)
+                        out = new StringBuilder(Colors.LIGHTGRAY + "HPTags:\n    " + Colors.ORANGE + tag);
+                    else
+                        out.append("\n    ").append(tag);
                 }
                 if (out != null) {
-                    for (String s: out.toString().split("\n")) {
+                    for (String s : out.toString().split("\n")) {
                         tooltipsToAdd.add(new StringTextComponent(s));
                     }
                     part = new StringBuilder("HPTags");
@@ -115,7 +117,7 @@ public class HPEventHandler {
                     if (harvestLevel > -1) {
                         tooltipsToAdd.add(new StringTextComponent(Colors.LIGHTGRAY + "HarvestLevel: " + Colors.ORANGE + StringUtils.capitalize(harv) + " (" + harvestLevel + ")"));
                         if (!added) {
-                            part.append((part.length() > 0) ? " and " : "").append("HarvestLevel");
+                            part.append((part.length() > 0) ? " and ": "").append("HarvestLevel");
                             added = true;
                         }
                     }

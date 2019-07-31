@@ -61,8 +61,10 @@ public abstract class HPRecipeBase {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HPRecipeBase)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof HPRecipeBase))
+            return false;
 
         HPRecipeBase recipe = (HPRecipeBase) o;
 

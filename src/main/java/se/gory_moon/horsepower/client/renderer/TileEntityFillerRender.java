@@ -17,7 +17,7 @@ public class TileEntityFillerRender extends TileEntityRenderer<FillerTileEntity>
         ITextComponent itextcomponent = te.getDisplayName();
 
         RayTraceResult raytraceresult = this.rendererDispatcher.cameraHitResult;
-        if (itextcomponent != null && raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.BLOCK && te.getPos().equals(((BlockRayTraceResult)raytraceresult).getPos())) {
+        if (itextcomponent != null && raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.BLOCK && te.getPos().equals(((BlockRayTraceResult) raytraceresult).getPos())) {
             this.setLightmapDisabled(true);
             TileEntityHPBaseRenderer.drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
             TileEntityHPBaseRenderer.drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, TileEntityHPBaseRenderer.LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);

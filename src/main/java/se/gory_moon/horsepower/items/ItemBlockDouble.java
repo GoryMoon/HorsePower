@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 public class ItemBlockDouble extends BlockItem {
 
     private Block fillerBlock;
+
     public ItemBlockDouble(Block block, Block filler) {
         super(block, new Item.Properties().group(HorsePowerMod.itemGroup));
         fillerBlock = filler;
@@ -59,7 +60,7 @@ public class ItemBlockDouble extends BlockItem {
                     this.onBlockPlaced(pos, world, player, itemstack, blockstate1);
                     block.onBlockPlacedBy(world, pos, blockstate1, player, itemstack);
                     if (player instanceof ServerPlayerEntity) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity)player, pos, itemstack);
+                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, pos, itemstack);
                     }
                 }
                 SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, player);
@@ -76,6 +77,6 @@ public class ItemBlockDouble extends BlockItem {
     @Nullable
     protected BlockState getStateForPlacementFiller(BlockItemUseContext context) {
         BlockState iblockstate = this.fillerBlock.getStateForPlacement(context);
-        return iblockstate != null && this.canPlace(context, iblockstate) ? iblockstate : null;
+        return iblockstate != null && this.canPlace(context, iblockstate) ? iblockstate: null;
     }
 }

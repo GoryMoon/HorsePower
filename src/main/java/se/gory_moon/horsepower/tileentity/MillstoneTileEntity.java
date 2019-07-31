@@ -76,7 +76,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
             }
         }
 
-        for (BlockPos pos: searchPos) {
+        for (BlockPos pos : searchPos) {
             if (!getWorld().getBlockState(pos).getMaterial().isReplaceable())
                 return false;
         }

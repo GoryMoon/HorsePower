@@ -11,22 +11,22 @@ import javax.vecmath.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public enum FacingToRotation {
-    DOWN	( new Vector3f(	0,		0,		0	) ), //NOOP
-    UP		( new Vector3f(	0,		0,		0	) ), //NOOP
-    NORTH	( new Vector3f(	0,		0,		0	) ),
-    SOUTH	( new Vector3f(	0,		180,	    0	) ),
-    WEST    ( new Vector3f(	0,		90,		0	) ),
-    EAST	( new Vector3f(	0,		-90,	    0	) );
+    DOWN(new Vector3f(0, 0, 0)), //NOOP
+    UP(new Vector3f(0, 0, 0)), //NOOP
+    NORTH(new Vector3f(0, 0, 0)),
+    SOUTH(new Vector3f(0, 180, 0)),
+    WEST(new Vector3f(0, 90, 0)),
+    EAST(new Vector3f(0, -90, 0));
 
     private final Vector3f rot;
     private final Matrix4f mat;
 
-    FacingToRotation( Vector3f rot ) {
+    FacingToRotation(Vector3f rot) {
         this.rot = rot;
         this.mat = new Matrix4f();
-        this.mat.rotX((float) Math.toRadians( rot.x ));
-        this.mat.rotY((float) Math.toRadians( rot.y ));
-        this.mat.rotZ((float) Math.toRadians( rot.z ));
+        this.mat.rotX((float) Math.toRadians(rot.x));
+        this.mat.rotY((float) Math.toRadians(rot.y));
+        this.mat.rotZ((float) Math.toRadians(rot.z));
     }
 
     public Vector3f getRot() {
@@ -34,22 +34,22 @@ public enum FacingToRotation {
     }
 
     public Matrix4f getMat() {
-        return new Matrix4f( this.mat );
+        return new Matrix4f(this.mat);
     }
 
     public void glRotateCurrentMat() {
-        GlStateManager.rotatef( rot.x, 1, 0, 0 );
-        GlStateManager.rotatef( rot.y, 0, 1, 0 );
-        GlStateManager.rotatef( rot.z, 0, 0, 1 );
+        GlStateManager.rotatef(rot.x, 1, 0, 0);
+        GlStateManager.rotatef(rot.y, 0, 1, 0);
+        GlStateManager.rotatef(rot.z, 0, 0, 1);
     }
 
-    public Direction rotate(Direction facing ) {
-        return TRSRTransformation.rotate( mat, facing );
+    public Direction rotate(Direction facing) {
+        return TRSRTransformation.rotate(mat, facing);
     }
 
-    public Direction resultingRotate(Direction facing ) {
-        for( Direction face : Direction.values() ) {
-            if( rotate( face ) == facing ) {
+    public Direction resultingRotate(Direction facing) {
+        for (Direction face : Direction.values()) {
+            if (rotate(face) == facing) {
                 return face;
             }
         }

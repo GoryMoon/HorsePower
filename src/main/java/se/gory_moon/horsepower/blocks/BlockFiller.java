@@ -50,7 +50,7 @@ public class BlockFiller extends DirectionalBlock {
             return true;
         } else {
             if (world instanceof IWorldWriter) {
-                ((IWorldWriter)world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+                ((IWorldWriter) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
             }
             return false;
         }
@@ -299,7 +299,7 @@ public class BlockFiller extends DirectionalBlock {
             return true;
         boolean flag = state1.getBlock().addLandingEffects(state1, world, pos, iblockstate, entity, numberOfParticles);
         if (!flag)
-            world.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), pos0.getX(), pos0.getY(), pos0.getZ(), numberOfParticles, 0.0D, 0.0D, 0.0D, (double)0.15F);
+            world.spawnParticle(new BlockParticleData(ParticleTypes.BLOCK, state), pos0.getX(), pos0.getY(), pos0.getZ(), numberOfParticles, 0.0D, 0.0D, 0.0D, 0.15F);
         return true;
     }
 

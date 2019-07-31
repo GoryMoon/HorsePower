@@ -23,8 +23,8 @@ public final class HUDHandlerMillstone implements IComponentProvider, IServerDat
     @Override
     public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
         CompoundNBT nbt = accessor.getServerData();
-        double total = (double) nbt.getInt("totalMillTime");
-        double current = (double) nbt.getInt("millTime");
+        double total = nbt.getInt("totalMillTime");
+        double current = nbt.getInt("millTime");
         double progress = Math.round(((current / total) * 100D) * 100D) / 100D;
         tooltip.add(new StringTextComponent(Localization.WAILA.MILLSTONE_PROGRESS.translate(String.valueOf(progress))));
         Provider.showItems(tooltip, accessor, config, (int) progress);

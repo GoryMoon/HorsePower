@@ -33,7 +33,7 @@ public class HPRecipes {
     }
 
     public static AbstractHPRecipe checkTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
-        return !hasTypeRecipe(recipe, type) ? null : recipe;
+        return !hasTypeRecipe(recipe, type) ? null: recipe;
     }
 
     public static boolean hasTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {

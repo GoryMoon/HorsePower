@@ -44,8 +44,8 @@ public final class HUDHandlerFiller implements IComponentProvider, IServerDataPr
             te.write(data);
             if (te instanceof MillstoneTileEntity || te instanceof HandMillstoneTileEntity)
                 data.putString("type", "horsepower:millstone");
-//            else if (te instanceof TileEntityChopper || te instanceof TileEntityManualChopper)
-//                data.putString("type", "horsepower:chopper");
+                //            else if (te instanceof TileEntityChopper || te instanceof TileEntityManualChopper)
+                //                data.putString("type", "horsepower:chopper");
             else if (te instanceof PressTileEntity)
                 data.putString("type", "horsepower:press");
         }

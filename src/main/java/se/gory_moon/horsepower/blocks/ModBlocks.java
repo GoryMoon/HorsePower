@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import static net.minecraftforge.fml.RegistryObject.of;
 import static se.gory_moon.horsepower.lib.Reference.RESOURCE_PREFIX;
 
+@SuppressWarnings("RedundantCast")
 public class ModBlocks {
 
     public static final RegistryObject<BlockHandMillstone> BLOCK_HAND_MILLSTONE = of(RESOURCE_PREFIX + Constants.HAND_MILLSTONE_BLOCK, () -> Block.class);
@@ -84,11 +85,11 @@ public class ModBlocks {
         public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
             HorsePowerMod.itemGroup = new HorsePowerItemGroup();
             final BlockItem[] items = {
-                new BlockItem(BLOCK_HAND_MILLSTONE.orElseThrow(IllegalStateException::new), new Item.Properties().group(HorsePowerMod.itemGroup)),
-                new BlockItem(BLOCK_MILLSTONE.orElseThrow(IllegalStateException::new), new Item.Properties().group(HorsePowerMod.itemGroup)),
-                /*new ItemBlock(BLOCK_MANUAL_CHOPPER),
-                new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),*/
-                new ItemBlockDouble(BLOCK_PRESS.orElseThrow(IllegalStateException::new), BLOCK_PRESS_FILLER.orElseThrow(IllegalStateException::new))
+                    new BlockItem(BLOCK_HAND_MILLSTONE.orElseThrow(IllegalStateException::new), new Item.Properties().group(HorsePowerMod.itemGroup)),
+                    new BlockItem(BLOCK_MILLSTONE.orElseThrow(IllegalStateException::new), new Item.Properties().group(HorsePowerMod.itemGroup)),
+                    /*new ItemBlock(BLOCK_MANUAL_CHOPPER),
+                    new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),*/
+                    new ItemBlockDouble(BLOCK_PRESS.orElseThrow(IllegalStateException::new), BLOCK_PRESS_FILLER.orElseThrow(IllegalStateException::new))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

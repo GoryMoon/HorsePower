@@ -13,8 +13,10 @@ public class ComparableItemStack {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ComparableItemStack)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof ComparableItemStack))
+            return false;
 
         ComparableItemStack that = (ComparableItemStack) o;
 

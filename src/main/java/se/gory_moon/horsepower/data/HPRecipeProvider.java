@@ -33,7 +33,6 @@ public class HPRecipeProvider extends RecipeProvider {
         CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(ModItems.DOUGH.orElse(null)), Items.BREAD, 0.1F, 200).addCriterion("has_dough", hasItem(HPTags.Items.DOUGH)).build(consumer, "horsepower:bread");
 
 
-
         //Milling recipes
         MillingRecipeBuilder.millingRecipe(ModItems.FLOUR.orElseThrow(IllegalAccessError::new), 1, Ingredient.fromItems(Items.WHEAT), 12).addCriterion("has_wheat", hasItem(Items.WHEAT)).build(consumer, "horsepower:milling/flour");
         MillingRecipeBuilder.millingRecipe(Items.SUGAR, 1, Ingredient.fromItems(Items.SUGAR_CANE), 12).addCriterion("has_sugar_cane", hasItem(Items.SUGAR_CANE)).build(consumer, "horsepower:milling/sugar");

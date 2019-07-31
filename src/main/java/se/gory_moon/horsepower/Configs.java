@@ -111,14 +111,14 @@ public class Configs {
                     .comment("Add mobs that can use the horse powered blocks", "Only mobs that can be leashed are valid", "Add the full path to the mob class, can be found with /horsepower entity or /hp entity")
                     .translation(Localization.CONFIG.SERVER.MOB_LIST.key())
                     .define("mod_list", ArrayList::new, o -> o != null && ArrayList.class.isAssignableFrom(o.getClass()) && ((ArrayList<String>) o).stream().allMatch(s -> {
-                            try {
-                                Class.forName(s);
-                                return true;
-                            } catch (ClassNotFoundException e) {
-                                HorsePowerMod.LOGGER.error("Error in config, could not find (" + s + ") mob class, mod for entity might not be installed");
-                                return false;
-                            }
-                        }));
+                        try {
+                            Class.forName(s);
+                            return true;
+                        } catch (ClassNotFoundException e) {
+                            HorsePowerMod.LOGGER.error("Error in config, could not find (" + s + ") mob class, mod for entity might not be installed");
+                            return false;
+                        }
+                    }));
 
             builder.comment("Configs related to the Millstone")
                     .push("milling");
@@ -194,19 +194,19 @@ public class Configs {
     //TODO make recipes
     public static class Recipes {
 
-//        @Comment("If the separate list of recipes should be used for the chopping block")
-//        @Name("Separate Chopping Recipes")
-//        @Config.RequiresMcRestart
+        //        @Comment("If the separate list of recipes should be used for the chopping block")
+        //        @Name("Separate Chopping Recipes")
+        //        @Config.RequiresMcRestart
         public boolean useSeperateChoppingRecipes = false;
 
-/*        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:result@amount${nbt}-time",
-                "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
-                "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
-                "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
-                "Must be edited with in-game editor for live changes."})
-        @Config.LangKey("config.horsepower.recipes.chopping")
-        @Name("Chopping Recipes")
-*/        public String[] choppingRecipes = {
+        /*        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:result@amount${nbt}-time",
+                        "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
+                        "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
+                        "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
+                        "Must be edited with in-game editor for live changes."})
+                @Config.LangKey("config.horsepower.recipes.chopping")
+                @Name("Chopping Recipes")
+        */        public String[] choppingRecipes = {
                 "#minecraft:oak_logs-minecraft:oak_planks@4-1",
                 "#minecraft:spruce_logs-minecraft:spruce_planks@4-1",
                 "#minecraft:birch_logs-minecraft:birch_planks@4-1",
@@ -215,9 +215,9 @@ public class Configs {
                 "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-1"
         };
 
-//        @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
-//        @Config.LangKey("config.horsepower.recipes.manual_chopping")
-//        @Name("Manual Chopping Block Recipes")
+        //        @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
+        //        @Config.LangKey("config.horsepower.recipes.manual_chopping")
+        //        @Name("Manual Chopping Block Recipes")
         public String[] manualChoppingRecipes = {
                 "#minecraft:oak_logs-minecraft:oak_planks@4-4",
                 "#minecraft:spruce_logs-minecraft:spruce_planks@4-4",
@@ -232,6 +232,7 @@ public class Configs {
     public static final Client CLIENT;
     static final ForgeConfigSpec serverSpec;
     public static final Server SERVER;
+
     static {
         final Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
         clientSpec = clientSpecPair.getRight();
@@ -253,7 +254,7 @@ public class Configs {
     @SubscribeEvent
     public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
         HorsePowerMod.LOGGER.debug("HP config just got changed on the file system!");
-        ((CommentedFileConfig)configEvent.getConfig().getConfigData()).load();
+        ((CommentedFileConfig) configEvent.getConfig().getConfigData()).load();
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             HPEventHandler.reloadConfig();
         }

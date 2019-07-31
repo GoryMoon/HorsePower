@@ -107,7 +107,7 @@ public class ColorThief {
 
             // If pixel is mostly opaque and not white
             if (a > 125 && !(ignoreWhite && r > 250 && r > 250 && r > 250)) {
-                pixelArray[numUsedPixels] = new int[]{r, g, b};
+                pixelArray[numUsedPixels] = new int[] { r, g, b };
                 numUsedPixels++;
                 i += quality;
             } else {
