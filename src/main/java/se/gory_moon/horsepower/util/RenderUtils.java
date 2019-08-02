@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -28,24 +29,15 @@ import java.util.stream.StreamSupport;
 
 public class RenderUtils {
 
-    /*public static TextureAtlasSprite getTopTextureFromBlock(Block block, int meta) {
-        IBlockState state = block.getStateFromMeta(meta);
-        return getTopTextureFromBlockstate(state);
-    }*/
-
     public static TextureAtlasSprite getTopTextureFromBlockstate(BlockState state) {
-        IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(state);
-        if (model != Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModelManager().getMissingModel()) {
+        BlockModelShapes modelShapes = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes();
+        IBakedModel model = modelShapes.getModel(state);
+        if (model != modelShapes.getModelManager().getMissingModel()) {
             List<BakedQuad> quads = model.getQuads(state, Direction.UP, Minecraft.getInstance().world.rand);
-            return quads.size() >= 1 ? quads.get(0).getSprite(): Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
+            return quads.size() >= 1 ? quads.get(0).getSprite(): modelShapes.getTexture(state);
         }
-        return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
+        return modelShapes.getTexture(state);
     }
-
-    /*public static TextureAtlasSprite getTextureFromBlock(Block block, int meta) {
-        IBlockState state = block.getState(meta);
-        return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
-    }*/
 
     public static TextureAtlasSprite getTextureFromBlockstate(BlockState state) {
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);

@@ -15,8 +15,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.blocks.BlockPress;
+import se.gory_moon.horsepower.blocks.HPBaseBlock;
+import se.gory_moon.horsepower.blocks.PressBlock;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.RenderUtils;
@@ -29,10 +29,10 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState blockState = te.getWorld().getBlockState(te.getPos());
-        if (!(blockState.getBlock() instanceof BlockHPBase))
+        if (!(blockState.getBlock() instanceof HPBaseBlock))
             return;
-        BlockState topState = blockState.with(BlockPress.PART, PressModels.TOP);
-        if (!(topState.getBlock() instanceof BlockHPBase))
+        BlockState topState = blockState.with(PressBlock.PART, PressModels.TOP);
+        if (!(topState.getBlock() instanceof HPBaseBlock))
             return;
         IBakedModel pressModel = dispatcher.getBlockModelShapes().getModel(topState);
 
@@ -65,7 +65,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         postDestroyRender(destroyStage);
         RenderHelper.enableStandardItemLighting();
 
-        if (!(blockState.getBlock() instanceof BlockHPBase))
+        if (!(blockState.getBlock() instanceof HPBaseBlock))
             return;
 
         if (te.hasWorker())

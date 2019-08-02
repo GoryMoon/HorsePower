@@ -16,29 +16,25 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = Reference.MODID)
+@Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class HPEventHandler {
 
     public static Map<ItemStack, Pair<Integer, Integer>> choppingAxes = new HashMap<>();
     public static Map<Integer, Pair<Integer, Integer>> harvestPercentages = new HashMap<>();
-
-    @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(Reference.MODID)) {
-            reloadConfig();
-        }
-    }
 
     public static void reloadConfig() {
         choppingAxes.clear();

@@ -9,7 +9,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
-import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.util.Constants;
 
 public class RecipeSerializers {
 
@@ -19,7 +19,7 @@ public class RecipeSerializers {
     public static final MillingSerializer MILLING_SERIALIZER = new MillingSerializer();
     public static final PressingSerializer PRESSING_SERIALIZER = new PressingSerializer();
 
-    @Mod.EventBusSubscriber(modid = Reference.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = Constants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
         @SubscribeEvent
@@ -28,12 +28,12 @@ public class RecipeSerializers {
             registerRecipeType(MILLING_TYPE);
             registerRecipeType(PRESSING_TYPE);
 
-            registry.register(MILLING_SERIALIZER.setRegistryName(Reference.MODID, "milling"));
-            registry.register(PRESSING_SERIALIZER.setRegistryName(Reference.MODID, "pressing"));
+            registry.register(MILLING_SERIALIZER.setRegistryName(Constants.MOD_ID, "milling"));
+            registry.register(PRESSING_SERIALIZER.setRegistryName(Constants.MOD_ID, "pressing"));
         }
 
         private static <T extends IRecipe<?>> void registerRecipeType(IRecipeType<T> type) {
-            Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Reference.MODID, type.toString()), type);
+            Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(Constants.MOD_ID, type.toString()), type);
         }
     }
 

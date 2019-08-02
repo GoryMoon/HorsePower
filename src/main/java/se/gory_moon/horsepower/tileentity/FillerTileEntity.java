@@ -9,8 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import se.gory_moon.horsepower.blocks.BlockFiller;
-import se.gory_moon.horsepower.blocks.BlockHPBase;
+import se.gory_moon.horsepower.blocks.FillerBlock;
+import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 
 import javax.annotation.Nonnull;
@@ -33,11 +33,11 @@ public class FillerTileEntity extends TileEntity implements INameable {
 
     public BlockPos getFilledPos() {
         BlockState state = getWorld().getBlockState(getPos());
-        if (!(state.getBlock() instanceof BlockFiller))
+        if (!(state.getBlock() instanceof FillerBlock))
             return getPos();
         Direction facing = state.get(DirectionalBlock.FACING);
         BlockState state1 = getWorld().getBlockState(pos.offset(facing));
-        if (!(state1.getBlock() instanceof BlockHPBase))
+        if (!(state1.getBlock() instanceof HPBaseBlock))
             return getPos();
         return pos.offset(facing);
     }

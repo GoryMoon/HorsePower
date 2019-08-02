@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockMillstone extends BlockHPBase {
+public class MillstoneBlock extends HPBaseBlock {
 
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
     public static final EnumProperty<MillstoneModels> PART = EnumProperty.create("part", MillstoneModels.class);
@@ -38,7 +38,7 @@ public class BlockMillstone extends BlockHPBase {
     private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
     private static final VoxelShape BOUNDING = Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
 
-    public BlockMillstone() {
+    public MillstoneBlock() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
 
         setHarvestLevel(ToolType.PICKAXE, 1);
@@ -82,7 +82,7 @@ public class BlockMillstone extends BlockHPBase {
 
     @Override
     public void emptiedOutput(World world, BlockPos pos) {
-        BlockMillstone.setState(false, world, pos);
+        MillstoneBlock.setState(false, world, pos);
     }
 
     @Override

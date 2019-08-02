@@ -13,15 +13,15 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.blocks.BlockMillstone;
-import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.blocks.HPBaseBlock;
+import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
+import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.RenderUtils;
 
 import java.util.stream.StreamSupport;
 
-@Mod.EventBusSubscriber(modid = Reference.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class ClientHandler {
 
     @SubscribeEvent
@@ -34,7 +34,7 @@ public class ClientHandler {
                     return;
 
                 int offset = 0;
-                if (!itemStack[0].isEmpty() && ((BlockItem) itemStack[0].getItem()).getBlock() instanceof BlockMillstone)
+                if (!itemStack[0].isEmpty() && ((BlockItem) itemStack[0].getItem()).getBlock() instanceof MillstoneBlock)
                     offset = -1;
 
                 Direction enumFacing = ((BlockRayTraceResult) mc.objectMouseOver).getFace();
@@ -50,8 +50,8 @@ public class ClientHandler {
     }
 
     private static boolean isHPBlock(Item item) {
-        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof BlockHPBase) {
-            return HPHorseBaseTileEntity.class.isAssignableFrom(((BlockHPBase) ((BlockItem) item).getBlock()).getTileClass());
+        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof HPBaseBlock) {
+            return HPHorseBaseTileEntity.class.isAssignableFrom(((HPBaseBlock) ((BlockItem) item).getBlock()).getTileClass());
         }
         return false;
     }

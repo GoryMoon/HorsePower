@@ -13,13 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
-import se.gory_moon.horsepower.blocks.BlockFiller;
-import se.gory_moon.horsepower.blocks.BlockHandMillstone;
-import se.gory_moon.horsepower.blocks.BlockMillstone;
-import se.gory_moon.horsepower.blocks.BlockPress;
-import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.blocks.FillerBlock;
+import se.gory_moon.horsepower.blocks.HandMillstoneBlock;
+import se.gory_moon.horsepower.blocks.MillstoneBlock;
+import se.gory_moon.horsepower.blocks.PressBlock;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
+import se.gory_moon.horsepower.util.Constants;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class Provider implements IWailaPlugin {
     static final ResourceLocation RENDER_SPACER = new ResourceLocation("spacer");
     static final ResourceLocation RENDER_FURNACE_PROGRESS = new ResourceLocation("furnace_progress");
 
-    static final ResourceLocation CONFIG_SHOW_ITEMS = new ResourceLocation(Reference.MODID, "show_items");
+    static final ResourceLocation CONFIG_SHOW_ITEMS = new ResourceLocation(Constants.MOD_ID, "show_items");
 
     public static void showItems(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config, int prog) {
         if (config.get(CONFIG_SHOW_ITEMS) && (accessor.getTileEntity() instanceof HPBaseTileEntity || accessor.getTileEntity() instanceof FillerTileEntity)) {
@@ -82,20 +82,20 @@ public class Provider implements IWailaPlugin {
     public void register(IRegistrar registrar) {
         //registrar.registerStackProvider(provider, BlockFiller.class);
 
-        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, BlockMillstone.class);
-        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, BlockHandMillstone.class);
-        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, BlockMillstone.class);
-        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, BlockHandMillstone.class);
+        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, MillstoneBlock.class);
+        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, HandMillstoneBlock.class);
+        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, MillstoneBlock.class);
+        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, HandMillstoneBlock.class);
 
         //registrar.registerComponentProvider(this, TooltipPosition.BODY, BlockHPChoppingBase.class);
         //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChopper.class);
         //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChoppingBlock.class);
 
-        registrar.registerComponentProvider(HUDHandlerPress.INSTANCE, TooltipPosition.BODY, BlockPress.class);
-        registrar.registerBlockDataProvider(HUDHandlerPress.INSTANCE, BlockPress.class);
+        registrar.registerComponentProvider(HUDHandlerPress.INSTANCE, TooltipPosition.BODY, PressBlock.class);
+        registrar.registerBlockDataProvider(HUDHandlerPress.INSTANCE, PressBlock.class);
 
-        registrar.registerComponentProvider(HUDHandlerFiller.INSTANCE, TooltipPosition.BODY, BlockFiller.class);
-        registrar.registerBlockDataProvider(HUDHandlerFiller.INSTANCE, BlockFiller.class);
+        registrar.registerComponentProvider(HUDHandlerFiller.INSTANCE, TooltipPosition.BODY, FillerBlock.class);
+        registrar.registerBlockDataProvider(HUDHandlerFiller.INSTANCE, FillerBlock.class);
 
         registrar.addConfig(CONFIG_SHOW_ITEMS, true);
     }

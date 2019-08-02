@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="HorsePower:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="se.gory_moon" external.system.module.type="sourceSet" external.system.module.version="3.0.0" type="JAVA_MODULE" version="4">
+  <component name="ExternalSystem" externalSystem="GRADLE" externalSystemModuleGroup="se.gory_moon" externalSystemModuleType="sourceSet" externalSystemModuleVersion="3.0.0" linkedProjectId="HorsePower:main" linkedProjectPath="$MODULE_DIR$/../.." rootProjectPath="$MODULE_DIR$/../.." />
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../out/production/classes" />
     <exclude-output />
@@ -9,8 +10,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.0.27_mapped_snapshot_20190731-1.14.3_at_3de059769a00f31d64c95a8ca5edc22e9707520c" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.0.27_mapped_snapshot_20190731-1.14.3_at_3de059769a00f31d64c95a8ca5edc22e9707520c" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.0.27_mapped_snapshot_20190731-1.14.3_at_8f1b633e2fc005246b1c7576a761367ac3d61e87" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.0.27_mapped_snapshot_20190731-1.14.3_at_8f1b633e2fc005246b1c7576a761367ac3d61e87" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: mezz.jei:jei-1.14.3:6.0.0.8_mapped_snapshot_20190731-1.14.3" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraft:client:extra:1.14.4" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:accesstransformers:shadowed:0.16.0" level="project" />
@@ -65,19 +66,18 @@
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.3.2" level="project" />
     <orderEntry type="library" name="Gradle: it.unimi.dsi:fastutil:8.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-jemalloc:3.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-jemalloc:natives-windows:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-jemalloc:natives-macos:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-openal:3.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-openal:natives-windows:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-openal:natives-macos:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-opengl:3.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-opengl:natives-windows:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-opengl:natives-macos:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-glfw:3.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-glfw:natives-windows:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-glfw:natives-macos:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-stb:3.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-stb:natives-windows:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-stb:natives-macos:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:3.2.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:natives-windows:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:natives-macos:3.2.2" level="project" />
     <orderEntry type="library" name="Gradle: com.mojang:text2speech:1.11.3" level="project" />
-    <orderEntry type="library" name="Gradle: com.mojang:text2speech:natives-windows:1.11.3" level="project" />
     <orderEntry type="library" name="Gradle: org.antlr:antlr4-runtime:4.7.2" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.plexus:plexus-utils:3.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline-reader:3.9.0" level="project" />

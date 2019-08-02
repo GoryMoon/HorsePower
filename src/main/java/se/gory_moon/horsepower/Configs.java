@@ -9,8 +9,10 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
+import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
 
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ public class Configs {
 
     @SubscribeEvent
     public static void onLoad(final ModConfig.Loading configEvent) {
-        HorsePowerMod.LOGGER.debug("Loaded HP config file {}", configEvent.getConfig().getFileName());
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             HPEventHandler.reloadConfig();
         }
@@ -43,9 +44,20 @@ public class Configs {
 
     @SubscribeEvent
     public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
-        HorsePowerMod.LOGGER.debug("HP config just got changed on the file system!");
         ((CommentedFileConfig) configEvent.getConfig().getConfigData()).load();
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
+            HPEventHandler.reloadConfig();
+        }
+    }
+
+    /**
+     * Called from in-game config
+     *
+     * @param event The event
+     */
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.getModID().equals(Constants.MOD_ID)) {
             HPEventHandler.reloadConfig();
         }
     }
@@ -144,7 +156,7 @@ public class Configs {
                             Class.forName(s);
                             return true;
                         } catch (ClassNotFoundException e) {
-                            HorsePowerMod.LOGGER.error("Error in config, could not find (" + s + ") mob class, mod for entity might not be installed");
+                            HorsePower.LOGGER.error("Error in config, could not find (" + s + ") mob class, mod for entity might not be installed");
                             return false;
                         }
                     }));

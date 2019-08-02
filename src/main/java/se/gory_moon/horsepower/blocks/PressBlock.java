@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 //@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockPress extends BlockHPBase {
+public class PressBlock extends HPBaseBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<PressModels> PART = EnumProperty.create("part", PressModels.class);
@@ -51,7 +51,7 @@ public class BlockPress extends BlockHPBase {
     private static final VoxelShape BOUND = Block.makeCuboidShape(0, 0, 0, 16, 16 + 12, 16);
     private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 16 + 3, 16);
 
-    public BlockPress() {
+    public PressBlock() {
         super(Properties.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F).sound(SoundType.WOOD));
 
         setHarvestLevel(ToolType.AXE, 1);
@@ -100,7 +100,7 @@ public class BlockPress extends BlockHPBase {
 
     @Override
     public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-        if (!(world).isRemote() && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof BlockFiller)) {
+        if (!(world).isRemote() && pos.up().equals(neighbor) && !(world.getBlockState(neighbor).getBlock() instanceof FillerBlock)) {
             ((World) world).setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
         }
     }

@@ -11,19 +11,19 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
-import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.network.PacketHandler;
+import se.gory_moon.horsepower.util.Constants;
 
 //"after:crafttweaker;after:theoneprobe;"
-@Mod(Reference.MODID)
-public class HorsePowerMod {
+@Mod(Constants.MOD_ID)
+public class HorsePower {
 
     public static final Logger LOGGER = LogManager.getLogger();
     public static HorsePowerItemGroup itemGroup;
 
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
 
-    public HorsePowerMod() {
+    public HorsePower() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         eventBus.addListener(this::setup);
         eventBus.addListener(this::loadComplete);

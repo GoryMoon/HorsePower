@@ -53,6 +53,8 @@ gradle-app.setting
 
 out/
 
+.idea/**/emacs.xml
+
 
 ### Java template
 # Compiled class file

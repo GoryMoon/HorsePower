@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower;
+package se.gory_moon.horsepower.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -13,14 +13,14 @@ import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityHandMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
-import se.gory_moon.horsepower.lib.Reference;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
+import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.color.ColorGetter;
 
-@Mod.EventBusSubscriber(modid = Reference.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
 
     @SubscribeEvent

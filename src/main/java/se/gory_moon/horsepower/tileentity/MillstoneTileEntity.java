@@ -12,7 +12,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import se.gory_moon.horsepower.blocks.BlockMillstone;
+import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -125,7 +125,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
         super.setInventorySlotContents(index, stack);
 
         if ((index == 1 || index == 2) && getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
-            BlockMillstone.setState(false, world, pos);
+            MillstoneBlock.setState(false, world, pos);
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
@@ -138,7 +138,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     @Override
     public void markDirty() {
         if (getStackInSlot(1).isEmpty() && getStackInSlot(2).isEmpty())
-            BlockMillstone.setState(false, world, pos);
+            MillstoneBlock.setState(false, world, pos);
 
         if (getStackInSlot(0).isEmpty())
             currentItemMillTime = 0;
@@ -149,7 +149,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     private void millItem() {
         if (canWork()) {
             HandMillstoneTileEntity.millItem(inventory, this);
-            BlockMillstone.setState(true, world, pos);
+            MillstoneBlock.setState(true, world, pos);
         }
     }
 

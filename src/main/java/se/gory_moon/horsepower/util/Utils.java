@@ -16,7 +16,7 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePowerMod;
+import se.gory_moon.horsepower.HorsePower;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public class Utils {
                 if (CreatureEntity.class.isAssignableFrom(clazz)) {
                     clazzes.add(clazz);
                 } else {
-                    HorsePowerMod.LOGGER.error("Error in config, the mob (" + e + ") can't be leashed");
+                    HorsePower.LOGGER.error("Error in config, the mob (" + e + ") can't be leashed");
                 }
             } catch (ClassNotFoundException ignored) {}
         }
@@ -86,7 +86,7 @@ public class Utils {
             else
                 ERRORS.add(message);
         });
-        HorsePowerMod.LOGGER.warn(message);
+        HorsePower.LOGGER.warn(message);
     }
 
     public static void sendSavedErrors() {

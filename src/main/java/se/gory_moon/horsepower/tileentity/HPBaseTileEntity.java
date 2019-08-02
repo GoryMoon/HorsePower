@@ -26,7 +26,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import se.gory_moon.horsepower.blocks.BlockHPBase;
+import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 
 import javax.annotation.Nonnull;
@@ -246,7 +246,7 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
     }
 
     public Direction getForward() {
-        return canBeRotated() ? getWorld().getBlockState(getPos()).getBlockState().get(BlockHPBase.FACING): Direction.NORTH;
+        return canBeRotated() ? getWorld().getBlockState(getPos()).getBlockState().get(HPBaseBlock.FACING): Direction.NORTH;
     }
 
     @Override

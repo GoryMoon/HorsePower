@@ -6,23 +6,27 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.HorsePowerMod;
-import se.gory_moon.horsepower.blocks.BlockFiller;
+import se.gory_moon.horsepower.HorsePower;
+import se.gory_moon.horsepower.blocks.FillerBlock;
 
 import javax.annotation.Nullable;
 
-public class ItemBlockDouble extends BlockItem {
+public class DoubleBlockItem extends BlockItem {
 
     private Block fillerBlock;
 
-    public ItemBlockDouble(Block block, Block filler) {
-        super(block, new Item.Properties().group(HorsePowerMod.itemGroup));
+    public DoubleBlockItem(Block block, Block filler) {
+        super(block, new Item.Properties().group(HorsePower.itemGroup));
         fillerBlock = filler;
     }
 
@@ -51,7 +55,7 @@ public class ItemBlockDouble extends BlockItem {
         BlockState blockStateUp = getStateForPlacementFiller(contextUp);
 
         if (!itemstack.isEmpty() && blockState != null && blockStateUp != null) {
-            blockStateUp = blockStateUp.with(BlockFiller.FACING, Direction.DOWN);
+            blockStateUp = blockStateUp.with(FillerBlock.FACING, Direction.DOWN);
             if (placeBlock(context, blockState) && placeBlock(contextUp, blockStateUp)) {
 
                 BlockState blockstate1 = world.getBlockState(pos);

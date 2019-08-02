@@ -6,9 +6,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
-import se.gory_moon.horsepower.HorsePowerMod;
-import se.gory_moon.horsepower.lib.Constants;
-import se.gory_moon.horsepower.lib.Reference;
+import se.gory_moon.horsepower.HorsePower;
+import se.gory_moon.horsepower.util.Constants;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,10 +15,10 @@ import java.util.Set;
 
 public class ModItems {
 
-    public static final RegistryObject<Item> FLOUR = RegistryObject.of(Reference.RESOURCE_PREFIX + Constants.FLOUR_ITEM, () -> Item.class);
-    public static final RegistryObject<Item> DOUGH = RegistryObject.of(Reference.RESOURCE_PREFIX + Constants.DOUGH_ITEM, () -> Item.class);
+    public static final RegistryObject<Item> FLOUR = RegistryObject.of(Constants.RESOURCE_PREFIX + Constants.FLOUR_ITEM, () -> Item.class);
+    public static final RegistryObject<Item> DOUGH = RegistryObject.of(Constants.RESOURCE_PREFIX + Constants.DOUGH_ITEM, () -> Item.class);
 
-    @Mod.EventBusSubscriber(modid = Reference.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = Constants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         public static final Set<Item> ITEMS = new HashSet<>();
 
@@ -31,8 +30,8 @@ public class ModItems {
         @SubscribeEvent
         public static void registerItems(RegistryEvent.Register<Item> event) {
             final Item[] items = {
-                    new Item(new Item.Properties().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.FLOUR_ITEM),
-                    new Item(new Item.Properties().group(HorsePowerMod.itemGroup)).setRegistryName(Reference.RESOURCE_PREFIX + Constants.DOUGH_ITEM)
+                    new Item(new Item.Properties().group(HorsePower.itemGroup)).setRegistryName(Constants.RESOURCE_PREFIX + Constants.FLOUR_ITEM),
+                    new Item(new Item.Properties().group(HorsePower.itemGroup)).setRegistryName(Constants.RESOURCE_PREFIX + Constants.DOUGH_ITEM)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

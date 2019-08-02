@@ -51,7 +51,7 @@ public final class Localization {
         }
     }
 
-    public enum GUI {
+    public enum JEI {
         CATEGORY_MILLING,
         CATEGORY_HAND_MILLING,
         CATEGORY_CHOPPING,
@@ -73,8 +73,7 @@ public final class Localization {
         MILLSTONE_PROGRESS,
         WINDUP_PROGRESS,
         CHOPPING_PROGRESS,
-        PRESS_PROGRESS,
-        SHOW_ITEMS;
+        PRESS_PROGRESS;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);

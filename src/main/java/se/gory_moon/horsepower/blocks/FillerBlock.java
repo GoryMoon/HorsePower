@@ -37,25 +37,25 @@ import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import javax.annotation.Nullable;
 
 //@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockFiller extends DirectionalBlock {
+public class FillerBlock extends DirectionalBlock {
 
     private boolean useTileEntity;
     private boolean providePower;
     private ToolType type;
     private int level;
 
-    public BlockFiller(Properties builder, boolean useTileEntity, boolean providePower) {
+    public FillerBlock(Properties builder, boolean useTileEntity, boolean providePower) {
         super(builder);
         this.useTileEntity = useTileEntity;
         this.providePower = providePower;
     }
 
-    public BlockFiller(Properties builder, boolean useTileEntity) {
+    public FillerBlock(Properties builder, boolean useTileEntity) {
         this(builder, useTileEntity, false);
     }
 
     private boolean validateFilled(IBlockReader world, BlockState state, BlockPos pos) {
-        if (state.getBlock() instanceof BlockHPBase) {
+        if (state.getBlock() instanceof HPBaseBlock) {
             return true;
         } else {
             if (world instanceof IWorldWriter) {
@@ -65,7 +65,7 @@ public class BlockFiller extends DirectionalBlock {
         }
     }
 
-    public BlockFiller setHarvestLevel(ToolType type, int level) {
+    public FillerBlock setHarvestLevel(ToolType type, int level) {
         this.type = type;
         this.level = level;
         return this;

@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import se.gory_moon.horsepower.blocks.BlockHPBase;
-import se.gory_moon.horsepower.blocks.BlockMillstone;
+import se.gory_moon.horsepower.blocks.HPBaseBlock;
+import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.util.RenderUtils;
@@ -22,16 +22,16 @@ public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<Millston
     @Override
     public void render(MillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         BlockState blockState = te.getWorld().getBlockState(te.getPos());
-        if (!(blockState.getBlock() instanceof BlockHPBase))
+        if (!(blockState.getBlock() instanceof HPBaseBlock))
             return;
         ItemStack outputStack = te.getStackInSlot(1);
         ItemStack secondaryStack = te.getStackInSlot(2);
         if (outputStack.getCount() < secondaryStack.getCount())
             outputStack = secondaryStack;
 
-        if (blockState.get(BlockMillstone.FILLED)) {
-            BlockState filledState = blockState.with(BlockMillstone.PART, MillstoneModels.FILLED);
-            if (!(filledState.getBlock() instanceof BlockHPBase))
+        if (blockState.get(MillstoneBlock.FILLED)) {
+            BlockState filledState = blockState.with(MillstoneBlock.PART, MillstoneModels.FILLED);
+            if (!(filledState.getBlock() instanceof HPBaseBlock))
                 return;
 
             Tessellator tessellator = Tessellator.getInstance();

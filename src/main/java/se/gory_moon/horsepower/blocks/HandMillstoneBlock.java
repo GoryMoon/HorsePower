@@ -33,12 +33,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 //@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockHandMillstone extends BlockHPBase {
+public class HandMillstoneBlock extends HPBaseBlock {
     public static final EnumProperty<HandMillstoneModels> PART = EnumProperty.create("part", HandMillstoneModels.class);
 
     private static final VoxelShape COLLISION = Block.makeCuboidShape(1, 0, 1, 15, 10, 15);
 
-    public BlockHandMillstone() {
+    public HandMillstoneBlock() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
 
         setHarvestLevel(ToolType.PICKAXE, 1);

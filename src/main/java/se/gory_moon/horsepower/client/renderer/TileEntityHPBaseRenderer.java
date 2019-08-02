@@ -35,7 +35,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.BlockFiller;
+import se.gory_moon.horsepower.blocks.FillerBlock;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 
@@ -133,7 +133,7 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
                         traceResult != null &&
                                 traceResult.getType() == RayTraceResult.Type.BLOCK &&
                                 (te.getPos().equals(((BlockRayTraceResult) traceResult).getPos()) ||
-                                        (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof BlockFiller && te.getPos().up().equals(((BlockRayTraceResult) traceResult).getPos()))
+                                        (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof FillerBlock && te.getPos().up().equals(((BlockRayTraceResult) traceResult).getPos()))
                                 )
                 );
     }

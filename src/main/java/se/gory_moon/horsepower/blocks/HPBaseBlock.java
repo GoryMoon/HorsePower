@@ -33,13 +33,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public abstract class BlockHPBase extends ContainerBlock {
+public abstract class HPBaseBlock extends ContainerBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private ToolType type;
     private int level;
 
-    public BlockHPBase(Properties builder) {
+    public HPBaseBlock(Properties builder) {
         super(builder);
     }
 
@@ -49,7 +49,7 @@ public abstract class BlockHPBase extends ContainerBlock {
         return -1;
     }
 
-    public BlockHPBase setHarvestLevel(ToolType type, int level) {
+    public HPBaseBlock setHarvestLevel(ToolType type, int level) {
         this.type = type;
         this.level = level;
         return this;
