@@ -79,8 +79,7 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
 
             @Override
             public ItemStack removeStackFromSlot(int index) {
-                ItemStack stack = ItemStackHelper.getAndRemove(itemStacks, index);
-                return stack;
+                return ItemStackHelper.getAndRemove(itemStacks, index);
             }
 
             @Override

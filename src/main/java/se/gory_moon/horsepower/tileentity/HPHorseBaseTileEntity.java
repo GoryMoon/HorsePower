@@ -148,8 +148,8 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         markDirty();
     }
 
-    public boolean isValid() {
-        return valid;
+    public boolean isInvalid() {
+        return !valid;
     }
 
     private Vec3d getPathPosition(int i, boolean nav) {

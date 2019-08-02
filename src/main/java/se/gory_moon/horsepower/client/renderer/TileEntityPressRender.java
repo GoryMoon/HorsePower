@@ -127,7 +127,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         GlStateManager.pushMatrix();
         drawDisplayText(te, x, y + 1, z);
 
-        if (!te.isValid())
+        if (te.isInvalid())
             RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), 0);
         GlStateManager.popMatrix();
     }

@@ -81,7 +81,7 @@ public class TileEntityMillstoneRender extends TileEntityHPBaseRenderer<Millston
 
         drawDisplayText(te, x, y, z);
 
-        if (!te.isValid())
+        if (te.isInvalid())
             RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), -1);
         GlStateManager.popMatrix();
     }
