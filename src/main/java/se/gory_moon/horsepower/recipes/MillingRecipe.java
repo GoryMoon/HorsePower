@@ -14,7 +14,7 @@ public class MillingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(recipeType == Type.HAND ? ModBlocks.BLOCK_HAND_MILLSTONE.orElseThrow(IllegalStateException::new): ModBlocks.BLOCK_MILLSTONE.orElseThrow(IllegalStateException::new));
+        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.MANUAL_MILLSTONE_BLOCK.get(): ModBlocks.MILLSTONE_BLOCK.get());
     }
 
     @Override

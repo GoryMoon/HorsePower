@@ -59,6 +59,11 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
     }
 
     @Override
+    public boolean canFit(int width, int height) {
+        return false;
+    }
+
+    @Override
     public NonNullList<Ingredient> getIngredients() {
         return Stream.of(input).collect(Collectors.toCollection(NonNullList::create));
     }
@@ -112,7 +117,7 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
 
     public enum Type {
         BOTH(0, "both"),
-        HAND(1, "hand"),
+        MANUAL(1, "manual"),
         HORSE(2, "horse");
 
         private final int id;
@@ -124,14 +129,14 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
         }
 
         public static Type fromId(int id) {
-            return id == 1 ? HAND: id == 2 ? HORSE: BOTH;
+            return id == 1 ? MANUAL: id == 2 ? HORSE: BOTH;
         }
 
         public static Type fromName(@Nonnull String name) {
             String s = name.toLowerCase();
             switch (s) {
-                case "hand":
-                    return HAND;
+                case "manual":
+                    return MANUAL;
                 case "horse":
                     return HORSE;
                 case "both":

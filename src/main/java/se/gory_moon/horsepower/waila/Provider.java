@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import se.gory_moon.horsepower.blocks.FillerBlock;
-import se.gory_moon.horsepower.blocks.HandMillstoneBlock;
+import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
@@ -83,9 +83,9 @@ public class Provider implements IWailaPlugin {
         //registrar.registerStackProvider(provider, BlockFiller.class);
 
         registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, MillstoneBlock.class);
-        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, HandMillstoneBlock.class);
+        registrar.registerComponentProvider(HUDHandlerMillstone.INSTANCE, TooltipPosition.BODY, ManualMillstoneBlock.class);
         registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, MillstoneBlock.class);
-        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, HandMillstoneBlock.class);
+        registrar.registerBlockDataProvider(HUDHandlerMillstone.INSTANCE, ManualMillstoneBlock.class);
 
         //registrar.registerComponentProvider(this, TooltipPosition.BODY, BlockHPChoppingBase.class);
         //registrar.registerBlockDataProvider(this, TooltipPosition.BODY, BlockChopper.class);

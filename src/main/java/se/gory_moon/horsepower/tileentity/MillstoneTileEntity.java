@@ -29,7 +29,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     private int totalItemMillTime;
 
     public MillstoneTileEntity() {
-        super(3, ModBlocks.MILLSTONE_TILE.orElseThrow(IllegalStateException::new));
+        super(3, ModBlocks.MILLSTONE_TILE.get());
     }
 
     @Override
@@ -148,7 +148,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 
     private void millItem() {
         if (canWork()) {
-            HandMillstoneTileEntity.millItem(inventory, this);
+            ManualMillstoneTileEntity.millItem(inventory, this);
             MillstoneBlock.setState(true, world, pos);
         }
     }

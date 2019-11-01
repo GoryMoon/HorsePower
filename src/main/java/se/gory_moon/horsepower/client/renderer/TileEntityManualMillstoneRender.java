@@ -11,21 +11,21 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
-import se.gory_moon.horsepower.blocks.HandMillstoneBlock;
-import se.gory_moon.horsepower.client.model.modelvariants.HandMillstoneModels;
-import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
+import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
+import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
+import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 
-public class TileEntityHandMillstoneRender extends TileEntityHPBaseRenderer<HandMillstoneTileEntity> {
+public class TileEntityManualMillstoneRender extends TileEntityHPBaseRenderer<ManualMillstoneTileEntity> {
 
     @Override
-    public void render(HandMillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(ManualMillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState blockState = te.getWorld().getBlockState(te.getPos());
         if (!(blockState.getBlock() instanceof HPBaseBlock))
             return;
-        BlockState centerState = blockState.with(HandMillstoneBlock.PART, HandMillstoneModels.CENTER);
+        BlockState centerState = blockState.with(ManualMillstoneBlock.PART, ManualMillstoneModels.CENTER);
         if (!(centerState.getBlock() instanceof HPBaseBlock))
             return;
         IBakedModel centerModel = dispatcher.getBlockModelShapes().getModel(centerState);

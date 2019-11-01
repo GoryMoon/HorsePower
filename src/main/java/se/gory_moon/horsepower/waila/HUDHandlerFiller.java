@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
-import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
 
@@ -42,7 +42,7 @@ public final class HUDHandlerFiller implements IComponentProvider, IServerDataPr
         if (te instanceof FillerTileEntity) {
             te = ((FillerTileEntity) te).getFilledTileEntity();
             te.write(data);
-            if (te instanceof MillstoneTileEntity || te instanceof HandMillstoneTileEntity)
+            if (te instanceof MillstoneTileEntity || te instanceof ManualMillstoneTileEntity)
                 data.putString("type", "horsepower:millstone");
                 //            else if (te instanceof TileEntityChopper || te instanceof TileEntityManualChopper)
                 //                data.putString("type", "horsepower:chopper");

@@ -23,8 +23,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.FakePlayer;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.client.model.modelvariants.HandMillstoneModels;
-import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
+import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
+import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -33,16 +33,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 //@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class HandMillstoneBlock extends HPBaseBlock {
-    public static final EnumProperty<HandMillstoneModels> PART = EnumProperty.create("part", HandMillstoneModels.class);
+public class ManualMillstoneBlock extends HPBaseBlock {
+    public static final EnumProperty<ManualMillstoneModels> PART = EnumProperty.create("part", ManualMillstoneModels.class);
 
     private static final VoxelShape COLLISION = Block.makeCuboidShape(1, 0, 1, 15, 10, 15);
 
-    public HandMillstoneBlock() {
+    public ManualMillstoneBlock() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
 
         setHarvestLevel(ToolType.PICKAXE, 1);
-        setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, HandMillstoneModels.BASE));
+        setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, ManualMillstoneModels.BASE));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class HandMillstoneBlock extends HPBaseBlock {
     @Nonnull
     @Override
     public Class<?> getTileClass() {
-        return HandMillstoneTileEntity.class;
+        return ManualMillstoneTileEntity.class;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class HandMillstoneBlock extends HPBaseBlock {
         if (player instanceof FakePlayer || player == null)
             return true;
 
-        HandMillstoneTileEntity tile = getTileEntity(worldIn, pos);
+        ManualMillstoneTileEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.canWork() && !player.isSneaking()) {
             if (!worldIn.isRemote) {
                 if (tile.turn())
@@ -100,7 +100,7 @@ public class HandMillstoneBlock extends HPBaseBlock {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()).with(PART, HandMillstoneModels.BASE), 2);
+        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()).with(PART, ManualMillstoneModels.BASE), 2);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class HandMillstoneBlock extends HPBaseBlock {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(Localization.ITEM.HAND_MILLSTONE.INFO.translate("\n" + Colors.LIGHTGRAY.toString())));
+        tooltip.add(new StringTextComponent(Localization.ITEM.MANUAL_MILLSTONE.INFO.translate("\n" + Colors.LIGHTGRAY.toString())));
     }
 
     // The One Probe Integration

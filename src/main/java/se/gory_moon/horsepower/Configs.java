@@ -8,7 +8,7 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
@@ -226,7 +226,7 @@ public class Configs {
                     .comment("The tank size of the press in mb, 1000mb = 1 bucket")
                     .worldRestart()
                     .translation(Localization.CONFIG.SERVER.PRESS_FLUID_TANK_SIZE.key())
-                    .defineInRange("press_tank_size", Fluid.BUCKET_VOLUME * 3, Fluid.BUCKET_VOLUME, Fluid.BUCKET_VOLUME * 100);
+                    .defineInRange("press_tank_size", FluidAttributes.BUCKET_VOLUME * 3, FluidAttributes.BUCKET_VOLUME, FluidAttributes.BUCKET_VOLUME * 100);
 
             builder.pop(2);
         }

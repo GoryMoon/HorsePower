@@ -11,6 +11,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
+import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.util.Constants;
 
@@ -28,6 +30,9 @@ public class HorsePower {
         eventBus.addListener(this::setup);
         eventBus.addListener(this::loadComplete);
         eventBus.addListener(this::onFingerprintViolation);
+        itemGroup = new HorsePowerItemGroup();
+        ModBlocks.register(eventBus);
+        ModItems.register(eventBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.serverSpec);
         eventBus.register(Configs.class);

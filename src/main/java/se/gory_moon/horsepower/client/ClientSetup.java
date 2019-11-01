@@ -10,11 +10,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityHandMillstoneRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityManualMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
-import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Constants;
@@ -26,7 +26,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(MillstoneTileEntity.class, new TileEntityMillstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(HandMillstoneTileEntity.class, new TileEntityHandMillstoneRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(ManualMillstoneTileEntity.class, new TileEntityManualMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(FillerTileEntity.class, new TileEntityFillerRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
         //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
@@ -58,6 +58,6 @@ public class ClientSetup {
                 }
             }
             return -1;
-        }, ModBlocks.BLOCK_MILLSTONE.orElseThrow(IllegalStateException::new));
+        }, ModBlocks.MILLSTONE_BLOCK.get());
     }
 }

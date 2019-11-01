@@ -52,19 +52,19 @@ public final class Localization {
     }
 
     public enum JEI {
-        CATEGORY_MILLING,
-        CATEGORY_HAND_MILLING,
-        CATEGORY_CHOPPING,
-        CATEGORY_MANUAL_CHOPPING,
-        CATEGORY_PRESS_ITEM,
-        CATEGORY_PRESS_FLUID;
+        CATEGORY$MILLING,
+        CATEGORY$MANUAL_MILLING,
+        CATEGORY$CHOPPING,
+        CATEGORY$MANUAL_CHOPPING,
+        CATEGORY$PRESS_ITEM,
+        CATEGORY$PRESS_FLUID;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
         }
 
         public String key() {
-            return "gui.horsepower.jei." + toString().toLowerCase().replaceAll("_", ".");
+            return "gui.horsepower.jei." + toString().toLowerCase().replaceAll("\\$", ".");
         }
 
     }
@@ -115,7 +115,7 @@ public final class Localization {
             }
         }
 
-        public enum HAND_MILLSTONE {
+        public enum MANUAL_MILLSTONE {
             INFO;
 
             public String translate(String... vars) {
@@ -124,7 +124,7 @@ public final class Localization {
 
             @Override
             public String toString() {
-                return "item.horsepower.hand_millstone.description." + super.toString().toLowerCase();
+                return "item.horsepower.manual_millstone.description." + super.toString().toLowerCase();
             }
         }
 

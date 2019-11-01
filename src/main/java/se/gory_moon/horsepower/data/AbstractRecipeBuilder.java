@@ -55,7 +55,7 @@ public abstract class AbstractRecipeBuilder {
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
     public void build(Consumer<IFinishedRecipe> consumerIn) {
-        this.build(consumerIn, this.result != null ? this.result.getRegistryName(): ResourceLocation.tryCreate(outputFluid.getFluid().getName()));
+        this.build(consumerIn, this.result != null ? this.result.getRegistryName(): outputFluid.getFluid().getRegistryName());
     }
 
     /**
@@ -63,7 +63,7 @@ public abstract class AbstractRecipeBuilder {
      * the result.
      */
     public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
-        ResourceLocation resourcelocation = this.result != null ? this.result.getRegistryName(): ResourceLocation.tryCreate(outputFluid.getFluid().getName());
+        ResourceLocation resourcelocation = this.result != null ? this.result.getRegistryName(): outputFluid.getFluid().getRegistryName();
         if ((new ResourceLocation(save)).equals(resourcelocation)) {
             throw new IllegalStateException("HP Recipe " + save + " should remove its 'save' argument");
         } else {
@@ -125,8 +125,8 @@ public abstract class AbstractRecipeBuilder {
 
             if (outputFluid != null) {
                 JsonObject fluid = new JsonObject();
-                fluid.addProperty("id", outputFluid.getFluid().getName());
-                fluid.addProperty("amount", outputFluid.amount);
+                fluid.addProperty("id", outputFluid.getFluid().getRegistryName().toString());
+                fluid.addProperty("amount", outputFluid.getAmount());
                 json.add("fluid", fluid);
             } else {
                 JsonObject resultObj = new JsonObject();

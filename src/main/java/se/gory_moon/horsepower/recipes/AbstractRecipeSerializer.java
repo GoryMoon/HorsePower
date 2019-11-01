@@ -22,7 +22,7 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
         Optional<JsonObject> obj = Optional.ofNullable(JSONUtils.getJsonObject(json, "secondary", null));
         ItemStack secondary = obj.map(ShapedRecipe::deserializeItem).orElse(ItemStack.EMPTY);
         int time = JSONUtils.getInt(json, "time", 1);
-        int secondaryChance = JSONUtils.getInt(json, "secondary_chance", 1);
+        int secondaryChance = JSONUtils.getInt(json, "secondary_chance", 0);
 
         //TODO parse fluid in recipe
         return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, null);

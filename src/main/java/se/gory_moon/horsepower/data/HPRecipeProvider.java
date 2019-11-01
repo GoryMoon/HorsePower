@@ -31,15 +31,15 @@ public class HPRecipeProvider extends RecipeProvider {
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         ShapelessRecipeBuilder.shapelessRecipe(ModItems.DOUGH.orElse(null)).addIngredient(ModItems.FLOUR.orElse(null)).addIngredient(Items.WATER_BUCKET).addCriterion("has_flour", hasItem(HPTags.Items.FLOUR)).build(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.BLOCK_MILLSTONE.orElse(null)).key('#', Tags.Items.STONE).key('L', Items.LEAD).key('S', Tags.Items.RODS_WOODEN).patternLine("SLS").patternLine("###").patternLine("###").addCriterion("has_lead", hasItem(Items.LEAD)).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.BLOCK_HAND_MILLSTONE.orElse(null)).key('#', Tags.Items.STONE).key('S', Tags.Items.RODS_WOODEN).patternLine("  S").patternLine("###").patternLine("###").addCriterion("has_stone", hasItem(Tags.Items.STONE)).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.BLOCK_PRESS.orElse(null)).key('#', ItemTags.PLANKS).key('L', Items.LEAD).key('S', Tags.Items.RODS_WOODEN).key('P', ItemTags.WOODEN_PRESSURE_PLATES).patternLine("LSL").patternLine("#P#").patternLine("###").addCriterion("has_lead", hasItem(Items.LEAD)).build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.MILLSTONE_BLOCK.orElse(null)).key('#', Tags.Items.STONE).key('L', Items.LEAD).key('S', Tags.Items.RODS_WOODEN).patternLine("SLS").patternLine("###").patternLine("###").addCriterion("has_lead", hasItem(Items.LEAD)).build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.MANUAL_MILLSTONE_BLOCK.orElse(null)).key('#', Tags.Items.STONE).key('S', Tags.Items.RODS_WOODEN).patternLine("  S").patternLine("###").patternLine("###").addCriterion("has_stone", hasItem(Tags.Items.STONE)).build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(ModBlocks.PRESS_BLOCK.orElse(null)).key('#', ItemTags.PLANKS).key('L', Items.LEAD).key('S', Tags.Items.RODS_WOODEN).key('P', ItemTags.WOODEN_PRESSURE_PLATES).patternLine("LSL").patternLine("#P#").patternLine("###").addCriterion("has_lead", hasItem(Items.LEAD)).build(consumer);
 
         CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(ModItems.DOUGH.orElse(null)), Items.BREAD, 0.1F, 200).addCriterion("has_dough", hasItem(HPTags.Items.DOUGH)).build(consumer, "horsepower:bread");
 
 
         //Milling recipes
-        MillingRecipeBuilder.millingRecipe(ModItems.FLOUR.orElseThrow(IllegalAccessError::new), 1, Ingredient.fromItems(Items.WHEAT), 12).addCriterion("has_wheat", hasItem(Items.WHEAT)).build(consumer, "horsepower:milling/flour");
+        MillingRecipeBuilder.millingRecipe(ModItems.FLOUR.get(), 1, Ingredient.fromItems(Items.WHEAT), 12).addCriterion("has_wheat", hasItem(Items.WHEAT)).build(consumer, "horsepower:milling/flour");
         MillingRecipeBuilder.millingRecipe(Items.SUGAR, 1, Ingredient.fromItems(Items.SUGAR_CANE), 12).addCriterion("has_sugar_cane", hasItem(Items.SUGAR_CANE)).build(consumer, "horsepower:milling/sugar");
         MillingRecipeBuilder.millingRecipe(Items.BONE_MEAL, 3, Ingredient.fromItems(Items.BONE), 12).addCriterion("has_bone", hasItem(Items.BONE)).build(consumer, "horsepower:milling/bone_meal");
         MillingRecipeBuilder.millingRecipe(Items.BONE_MEAL, 9, Ingredient.fromItems(Blocks.BONE_BLOCK), 12).addCriterion("has_bone_block", hasItem(Blocks.BONE_BLOCK)).build(consumer, "horsepower:milling/bone_meal_2");

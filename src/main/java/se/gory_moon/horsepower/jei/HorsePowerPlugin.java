@@ -1,44 +1,62 @@
 package se.gory_moon.horsepower.jei;
-/*
-import mezz.jei.api.*;
-import mezz.jei.api.gui.ICraftingGridHelper;
-import mezz.jei.api.ingredients.IModIngredientRegistration;
-import mezz.jei.api.recipe.IRecipeCategoryRegistration;
-import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
-import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.BlockHPChoppingBase;
-import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.jei.chopping.ChoppingRecipeMaker;
-import se.gory_moon.horsepower.jei.chopping.ChoppingRecipeWrapper;
-import se.gory_moon.horsepower.jei.chopping.HorsePowerChoppingCategory;
-import se.gory_moon.horsepower.jei.grinding.GrindingRecipeMaker;
-import se.gory_moon.horsepower.jei.grinding.GrindstoneRecipeWrapper;
-import se.gory_moon.horsepower.jei.grinding.HorsePowerGrindingCategory;
-import se.gory_moon.horsepower.jei.press.HorsePowerPressCategory;
-import se.gory_moon.horsepower.jei.press.PressRecipeMaker;
-import se.gory_moon.horsepower.jei.press.PressRecipeWrapper;
-import se.gory_moon.horsepower.recipes.*;
 
-@JEIPlugin
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.recipe.IRecipeManager;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.jei.milling.HorsePowerMillingCategory;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.MillingRecipe;
+import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.util.Constants;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@JeiPlugin
 public class HorsePowerPlugin implements IModPlugin {
 
-    public static final String HAND_GRINDING = "horsepower.hand_grinding";
-    public static final String GRINDING = "horsepower.grinding";
-    public static final String MANUAL_CHOPPING = "horsepower.manual_chopping";
-    public static final String CHOPPING = "horsepower.chopping";
-    public static final String PRESS_ITEM = "horsepower.press";
-    public static final String PRESS_FLUID = "horsepower.press_fluid";
+    public static final ResourceLocation UID = new ResourceLocation(Constants.MOD_ID, "jei");
+
+    public static final ResourceLocation MANUAL_MILLING = new ResourceLocation(Constants.MOD_ID, "manual_milling");
+    public static final ResourceLocation MILLING = new ResourceLocation(Constants.MOD_ID, "milling");
+    public static final ResourceLocation MANUAL_CHOPPING = new ResourceLocation(Constants.MOD_ID, "manual_chopping");
+    public static final ResourceLocation CHOPPING = new ResourceLocation(Constants.MOD_ID, "chopping");
+    public static final ResourceLocation PRESS_ITEM = new ResourceLocation(Constants.MOD_ID, "pressing");
+    public static final ResourceLocation PRESS_FLUID = new ResourceLocation(Constants.MOD_ID, "pressing_fluid");
+    public static IRecipeManager recipeManager;
+
+    private static boolean millingRecipePredicate(IRecipe<IInventory> recipe, AbstractHPRecipe.Type type) {
+        return recipe instanceof MillingRecipe && ((MillingRecipe) recipe).getRecipeType().is(type);
+    }
+
+
 
     public static IJeiHelpers jeiHelpers;
     public static IGuiHelper guiHelper;
     private static IJeiRuntime jeiRuntime;
-    public static IRecipeRegistry recipeRegistry;
+
+    @Override
+    public ResourceLocation getPluginUid() {
+        return UID;
+    }
     public static ICraftingGridHelper craftingGridHelper;
+
+/*
 
     @Override
     public void register(IModRegistry registry) {
@@ -47,18 +65,10 @@ public class HorsePowerPlugin implements IModPlugin {
         guiHelper = jeiHelpers.getGuiHelper();
         craftingGridHelper = guiHelper.createCraftingGridHelper(1, 0);
 
-        if (Configs.recipes.useSeperateMillstoneRecipes) {
-            registry.handleRecipes(HandMillstoneRecipe.class, GrindstoneRecipeWrapper::new, HAND_GRINDING);
-            registry.addRecipes(GrindingRecipeMaker.getMillstoneRecipes(jeiHelpers, true), HAND_GRINDING);
-        }
-
         if (Configs.general.enableHandChoppingBlock && Configs.recipes.useSeperateChoppingRecipes) {
             registry.handleRecipes(ChoppingBlockRecipe.class, ChoppingRecipeWrapper::new, MANUAL_CHOPPING);
             registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, true), MANUAL_CHOPPING);
         }
-
-        registry.handleRecipes(MillstoneRecipe.class, GrindstoneRecipeWrapper::new, GRINDING);
-        registry.addRecipes(GrindingRecipeMaker.getMillstoneRecipes(jeiHelpers, false), GRINDING);
 
         registry.handleRecipes(ChoppingBlockRecipe.class, ChoppingRecipeWrapper::new, CHOPPING);
         registry.addRecipes(ChoppingRecipeMaker.getChoppingRecipes(jeiHelpers, false), CHOPPING);
@@ -71,10 +81,7 @@ public class HorsePowerPlugin implements IModPlugin {
         registry.handleRecipes(ShapedChoppingRecipe.class, ShapedChoppingCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
         registry.handleRecipes(ShapelessChoppingRecipe.class, ShapelessChoppingCraftingWrapper::new, VanillaRecipeCategoryUid.CRAFTING);
 
-        if (Configs.recipes.useSeperateMillstoneRecipes)
-            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_MILLSTONE), HAND_GRINDING);
-        else
-            registry.addRecipeCatalyst(new ItemStack(ModBlocks.BLOCK_HAND_MILLSTONE), GRINDING);
+
         if (Configs.general.enableHandChoppingBlock) {
             ItemStack itemStackManualChopper = BlockHPChoppingBase.createItemStack(ModBlocks.BLOCK_MANUAL_CHOPPER, 1, new ItemStack(Item.getItemFromBlock(Blocks.LOG)));
             if (Configs.recipes.useSeperateChoppingRecipes)
@@ -92,11 +99,6 @@ public class HorsePowerPlugin implements IModPlugin {
         registry.addIngredientInfo(new ItemStack(ModBlocks.BLOCK_MILLSTONE), ItemStack.class, "info.horsepower:grindstone.info1", "info.horsepower:grindstone.info2", "info.horsepower:grindstone.info3");
     }
 
-    @Override
-    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-        HorsePowerPlugin.jeiRuntime = jeiRuntime;
-        recipeRegistry = jeiRuntime.getRecipeRegistry();
-    }
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry subtypeRegistry) {
@@ -117,11 +119,6 @@ public class HorsePowerPlugin implements IModPlugin {
     }
 
     @Override
-    public void registerIngredients(IModIngredientRegistration registry) {
-
-    }
-
-    @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         if (Configs.recipes.useSeperateMillstoneRecipes)
             registry.addRecipeCategories(new HorsePowerGrindingCategory(registry.getJeiHelpers().getGuiHelper(), true));
@@ -133,6 +130,39 @@ public class HorsePowerPlugin implements IModPlugin {
         registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper(), false));
         registry.addRecipeCategories(new HorsePowerPressCategory(registry.getJeiHelpers().getGuiHelper(), true));
     }
-
-}
 */
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        jeiHelpers = registration.getJeiHelpers();
+        guiHelper = jeiHelpers.getGuiHelper();
+        registration.addRecipeCategories(
+                new HorsePowerMillingCategory(guiHelper, false),
+                new HorsePowerMillingCategory(guiHelper, true)
+        );
+    }
+
+    @Override
+    public void registerRecipes(IRecipeRegistration registration) {
+        ClientWorld world = Minecraft.getInstance().world;
+        Collection<IRecipe<IInventory>> values = world.getRecipeManager().getRecipes(RecipeSerializers.MILLING_TYPE).values();
+        List<IRecipe<IInventory>> millingRecipes = values.stream().filter(recipe -> millingRecipePredicate(recipe, AbstractHPRecipe.Type.HORSE)).collect(Collectors.toList());
+        List<IRecipe<IInventory>> manualMillingRecipes = values.stream().filter(recipe -> millingRecipePredicate(recipe, AbstractHPRecipe.Type.MANUAL)).collect(Collectors.toList());
+
+        registration.addRecipes(millingRecipes, MILLING);
+        registration.addRecipes(manualMillingRecipes, MANUAL_MILLING);
+    }
+
+
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MILLSTONE_BLOCK.get()), MILLING);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MANUAL_MILLSTONE_BLOCK.get()), MANUAL_MILLING);
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        HorsePowerPlugin.jeiRuntime = jeiRuntime;
+        HorsePowerPlugin.recipeManager = jeiRuntime.getRecipeManager();
+    }
+}

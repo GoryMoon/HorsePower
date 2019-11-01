@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class FillerTileEntity extends TileEntity implements INameable {
 
     public FillerTileEntity() {
-        super(ModBlocks.FILLER_TILE.orElseThrow(IllegalStateException::new));
+        super(ModBlocks.FILLER_TILE.get());
     }
 
     public HPBaseTileEntity getFilledTileEntity() {

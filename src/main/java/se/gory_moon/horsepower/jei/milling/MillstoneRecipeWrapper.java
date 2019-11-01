@@ -1,19 +1,11 @@
 package se.gory_moon.horsepower.jei.milling;
 /*
 import com.google.common.collect.Lists;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 import se.gory_moon.horsepower.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.jei.HorsePowerPlugin;
-import se.gory_moon.horsepower.recipes.MillstoneRecipe;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -21,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GrindstoneRecipeWrapper implements IRecipeWrapper {
+public class MillstoneRecipeWrapper implements IRecipeWrapper {
 
     private final List<List<ItemStack>> inputs;
     private final ItemStack result;
@@ -31,11 +23,11 @@ public class GrindstoneRecipeWrapper implements IRecipeWrapper {
     private final double printLaps;
     private final IDrawableAnimated arrow;
 
-    public GrindstoneRecipeWrapper(MillstoneRecipe recipe) {
+    public MillstoneRecipeWrapper(MillstoneRecipe recipe) {
         this(Collections.singletonList(recipe.getInput()), recipe.getOutput(), recipe.getSecondary(), recipe.getSecondaryChance(), recipe.getTime());
     }
 
-    public GrindstoneRecipeWrapper(List<ItemStack> inputs, ItemStack result, ItemStack secondary, int secondaryChance, int time) {
+    public MillstoneRecipeWrapper(List<ItemStack> inputs, ItemStack result, ItemStack secondary, int secondaryChance, int time) {
         this.inputs = Collections.singletonList(inputs);
         this.result = result;
         this.secondary = secondary;

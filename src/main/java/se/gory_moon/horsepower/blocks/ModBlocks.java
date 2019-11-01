@@ -8,109 +8,52 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import se.gory_moon.horsepower.HorsePower;
-import se.gory_moon.horsepower.HorsePowerItemGroup;
 import se.gory_moon.horsepower.items.DoubleBlockItem;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
-import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Supplier;
 
-import static net.minecraftforge.fml.RegistryObject.of;
-import static se.gory_moon.horsepower.util.Constants.RESOURCE_PREFIX;
+import static se.gory_moon.horsepower.util.Constants.MOD_ID;
 
-@SuppressWarnings("RedundantCast")
 public class ModBlocks {
 
-    public static final RegistryObject<HandMillstoneBlock> BLOCK_HAND_MILLSTONE = of(RESOURCE_PREFIX + Constants.HAND_MILLSTONE_BLOCK, () -> Block.class);
-    public static final RegistryObject<MillstoneBlock> BLOCK_MILLSTONE = of(RESOURCE_PREFIX + Constants.MILLSTONE_BLOCK, () -> Block.class);
+    private static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
+    public static final RegistryObject<ManualMillstoneBlock> MANUAL_MILLSTONE_BLOCK = BLOCKS.register(Constants.MANUAL_MILLSTONE_BLOCK, ManualMillstoneBlock::new);
+    public static final RegistryObject<MillstoneBlock> MILLSTONE_BLOCK = BLOCKS.register(Constants.MILLSTONE_BLOCK, MillstoneBlock::new);
+    public static final RegistryObject<PressBlock> PRESS_BLOCK = BLOCKS.register(Constants.PRESS_BLOCK, PressBlock::new);
+    public static final RegistryObject<FillerBlock> PRESS_FILLER_BLOCK = BLOCKS.register(Constants.PRESS_FILLER, () -> new FillerBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(5F).sound(SoundType.WOOD), true).setHarvestLevel(ToolType.AXE, 1));
 
     /*public static final BlockChoppingBlock BLOCK_MANUAL_CHOPPER = new BlockChoppingBlock();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
     public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0);//.setHardness(5F).setResistance(5F);*/
+    private static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
+    public static final RegistryObject<BlockItem> MANUAL_MILLSTONE_ITEM = ITEMS.register(Constants.MANUAL_MILLSTONE_BLOCK, () -> new BlockItem(MANUAL_MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
+    public static final RegistryObject<BlockItem> MILLSTONE_ITEM = ITEMS.register(Constants.MILLSTONE_BLOCK, () -> new BlockItem(MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
+    public static final RegistryObject<BlockItem> PRESS_ITEM = ITEMS.register(Constants.PRESS_BLOCK, () -> new DoubleBlockItem(PRESS_BLOCK.get(), PRESS_FILLER_BLOCK.get()));
+    private static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
+    public static final RegistryObject<TileEntityType<MillstoneTileEntity>> MILLSTONE_TILE = TILE_ENTITIES.register(Constants.MILLSTONE_BLOCK, () -> create(MillstoneTileEntity::new, MILLSTONE_BLOCK));
+    public static final RegistryObject<TileEntityType<ManualMillstoneTileEntity>> HAND_MILLSTONE_TILE = TILE_ENTITIES.register(Constants.MANUAL_MILLSTONE_BLOCK, () -> create(ManualMillstoneTileEntity::new, MANUAL_MILLSTONE_BLOCK));
+    public static final RegistryObject<TileEntityType<PressTileEntity>> PRESS_TILE = TILE_ENTITIES.register(Constants.PRESS_BLOCK, () -> create(PressTileEntity::new, PRESS_BLOCK));
+    public static final RegistryObject<TileEntityType<FillerTileEntity>> FILLER_TILE = TILE_ENTITIES.register(Constants.FILLER, () -> create(FillerTileEntity::new, PRESS_FILLER_BLOCK));
 
-    public static final RegistryObject<PressBlock> BLOCK_PRESS = of(RESOURCE_PREFIX + Constants.PRESS_BLOCK, () -> Block.class);
-    public static final RegistryObject<FillerBlock> BLOCK_PRESS_FILLER = of(RESOURCE_PREFIX + Constants.PRESS_FILLER, () -> Block.class);
+    public static void register(IEventBus event) {
+        BLOCKS.register(event);
+        ITEMS.register(event);
+        TILE_ENTITIES.register(event);
+    }
 
-    public static final RegistryObject<TileEntityType<MillstoneTileEntity>> MILLSTONE_TILE = of(RESOURCE_PREFIX + Constants.MILLSTONE_BLOCK, (Supplier<Class<? super TileEntityType<?>>>) () -> TileEntityType.class);
-    public static final RegistryObject<TileEntityType<HandMillstoneTileEntity>> HAND_MILLSTONE_TILE = of(RESOURCE_PREFIX + Constants.HAND_MILLSTONE_BLOCK, (Supplier<Class<? super TileEntityType<?>>>) () -> TileEntityType.class);
-    public static final RegistryObject<TileEntityType<PressTileEntity>> PRESS_TILE = of(RESOURCE_PREFIX + Constants.PRESS_BLOCK, (Supplier<Class<? super TileEntityType<?>>>) () -> TileEntityType.class);
-    public static final RegistryObject<TileEntityType<FillerTileEntity>> FILLER_TILE = of(RESOURCE_PREFIX + Constants.FILLER, (Supplier<Class<? super TileEntityType<?>>>) () -> TileEntityType.class);
-
-    @Mod.EventBusSubscriber(modid = Constants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistrationHandler {
-        public static final Set<BlockItem> ITEM_BLOCKS = new HashSet<>();
-
-        /**
-         * Register this mod's {@link Block}s.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void registerBlocks(RegistryEvent.Register<Block> event) {
-            final IForgeRegistry<Block> registry = event.getRegistry();
-
-            final Block[] blocks = {
-                    register(new HandMillstoneBlock(), Constants.HAND_MILLSTONE_BLOCK),
-                    register(new MillstoneBlock(), Constants.MILLSTONE_BLOCK),
-                    /*BLOCK_MANUAL_CHOPPER,
-                    BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER,*/
-                    register(new PressBlock(), Constants.PRESS_BLOCK), register(new FillerBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(5F).sound(SoundType.WOOD), true).setHarvestLevel(ToolType.AXE, 1), Constants.PRESS_FILLER),
-            };
-
-            registry.registerAll(blocks);
-        }
-
-        private static Block register(Block block, String name) {
-            return block.setRegistryName(Constants.MOD_ID, name);
-        }
-
-        /**
-         * Register this mod's {@link BlockItem}s.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
-            HorsePower.itemGroup = new HorsePowerItemGroup();
-            final BlockItem[] items = {
-                    new BlockItem(BLOCK_HAND_MILLSTONE.orElseThrow(IllegalStateException::new), new Item.Properties().group(HorsePower.itemGroup)),
-                    new BlockItem(BLOCK_MILLSTONE.orElseThrow(IllegalStateException::new), new Item.Properties().group(HorsePower.itemGroup)),
-                    /*new ItemBlock(BLOCK_MANUAL_CHOPPER),
-                    new ItemBlockDouble(BLOCK_CHOPPER, BLOCK_CHOPPER_FILLER),*/
-                    new DoubleBlockItem(BLOCK_PRESS.orElseThrow(IllegalStateException::new), BLOCK_PRESS_FILLER.orElseThrow(IllegalStateException::new))
-            };
-
-            final IForgeRegistry<Item> registry = event.getRegistry();
-
-            for (final BlockItem item : items) {
-                registry.register(item.setRegistryName(item.getBlock().getRegistryName()));
-                ITEM_BLOCKS.add(item);
-            }
-        }
-
-        @SubscribeEvent
-        public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-            IForgeRegistry<TileEntityType<?>> reg = event.getRegistry();
-            reg.register(create(MillstoneTileEntity::new, BLOCK_MILLSTONE, Constants.MILLSTONE_BLOCK));
-            reg.register(create(HandMillstoneTileEntity::new, BLOCK_HAND_MILLSTONE, Constants.HAND_MILLSTONE_BLOCK));
-            reg.register(create(PressTileEntity::new, BLOCK_PRESS, Constants.PRESS_BLOCK));
-            reg.register(create(FillerTileEntity::new, BLOCK_PRESS_FILLER, Constants.FILLER));
-        }
-
-        private static <T extends TileEntity> TileEntityType<T> create(Supplier<? extends T> factory, RegistryObject<? extends Block> block, String name) {
-            return (TileEntityType<T>) TileEntityType.Builder.create(factory, block.orElseThrow(IllegalStateException::new)).build(null).setRegistryName(Constants.MOD_ID, name);
-        }
+    @SuppressWarnings("unchecked")
+    private static <T extends TileEntity> TileEntityType<T> create(Supplier<? extends T> factory, RegistryObject<? extends Block> block) {
+        return (TileEntityType<T>) TileEntityType.Builder.create(factory, block.get()).build(null);
     }
 
 }

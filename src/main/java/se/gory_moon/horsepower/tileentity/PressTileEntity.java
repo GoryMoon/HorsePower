@@ -17,10 +17,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
@@ -37,8 +36,8 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     public PressTileEntity() {
-        super(2, ModBlocks.PRESS_TILE.orElseThrow(IllegalStateException::new));
-        tank.setCanFill(false);
+        super(2, ModBlocks.PRESS_TILE.get());
+        //        tank.setCanFill(false);
     }
 
     @Override
@@ -178,7 +177,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
 
             ItemStack output = getStackInSlot(1);
             if (recipe.isFluidRecipe()) {
-                return output.isEmpty() && (tank.getFluidAmount() == 0 || tank.fillInternal(fluidOutput, false) >= fluidOutput.amount);
+                return output.isEmpty() && (tank.getFluidAmount() == 0 || tank.fill(fluidOutput, IFluidHandler.FluidAction.SIMULATE) >= fluidOutput.getAmount());
             } else {
                 return tank.getFluidAmount() == 0 && (output.isEmpty() || output.isItemEqual(itemstack) && output.getCount() + itemstack.getCount() <= output.getMaxStackSize());
             }
@@ -211,7 +210,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             ItemStack output = getStackInSlot(1);
 
             if (recipe.isFluidRecipe()) {
-                tank.fillInternal(fluidResult, true);
+                tank.fill(fluidResult, IFluidHandler.FluidAction.EXECUTE);
             } else {
                 if (output.isEmpty()) {
                     setInventorySlotContents(1, result.copy());
@@ -229,8 +228,8 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
         return currentPressStatus;
     }
 
-    public IFluidTankProperties[] getTankFluidStack() {
-        return tank.getTankProperties();
+    public FluidTank getTank() {
+        return tank;
     }
 
     @Override

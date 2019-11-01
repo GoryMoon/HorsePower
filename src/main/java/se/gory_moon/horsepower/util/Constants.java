@@ -15,7 +15,7 @@ public class Constants {
     public static final String FLOUR_ITEM = "flour";
 
     public static final String MILLSTONE_BLOCK = "millstone";
-    public static final String HAND_MILLSTONE_BLOCK = "hand_millstone";
+    public static final String MANUAL_MILLSTONE_BLOCK = "manual_millstone";
     public static final String HAND_CHOPPING_BLOCK = "chopping_block";
     public static final String CHOPPER_BLOCK = "chopper";
     public static final String PRESS_BLOCK = "press";

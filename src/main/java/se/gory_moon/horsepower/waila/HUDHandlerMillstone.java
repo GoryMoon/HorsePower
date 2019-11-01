@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import se.gory_moon.horsepower.tileentity.HandMillstoneTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 
@@ -32,7 +32,7 @@ public final class HUDHandlerMillstone implements IComponentProvider, IServerDat
 
     @Override
     public void appendServerData(CompoundNBT data, ServerPlayerEntity player, World world, TileEntity te) {
-        if (te instanceof MillstoneTileEntity || te instanceof HandMillstoneTileEntity)
+        if (te instanceof MillstoneTileEntity || te instanceof ManualMillstoneTileEntity)
             te.write(data);
     }
 }

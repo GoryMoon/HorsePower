@@ -20,20 +20,20 @@ public class MillingRecipeBuilder extends AbstractRecipeBuilder {
         return new MillingRecipeBuilder(MillingRecipe.Type.BOTH, result, count, input, time, secondary, secondaryCount, secondaryChance);
     }
 
-    public static MillingRecipeBuilder handMillingRecipe(IItemProvider result, int count, Ingredient input, int time) {
-        return new MillingRecipeBuilder(MillingRecipe.Type.BOTH, result, count, input, time, null, 0, 0);
+    public static MillingRecipeBuilder manualMillingRecipe(IItemProvider result, int count, Ingredient input, int time) {
+        return new MillingRecipeBuilder(MillingRecipe.Type.MANUAL, result, count, input, time, null, 0, 0);
     }
 
-    public static MillingRecipeBuilder handMillingRecipe(IItemProvider result, int count, Ingredient input, int time, IItemProvider secondary, int secondaryCount, int secondaryChance) {
-        return new MillingRecipeBuilder(MillingRecipe.Type.BOTH, result, count, input, time, secondary, secondaryCount, secondaryChance);
+    public static MillingRecipeBuilder manualMillingRecipe(IItemProvider result, int count, Ingredient input, int time, IItemProvider secondary, int secondaryCount, int secondaryChance) {
+        return new MillingRecipeBuilder(MillingRecipe.Type.MANUAL, result, count, input, time, secondary, secondaryCount, secondaryChance);
     }
 
     public static MillingRecipeBuilder horseMillingRecipe(IItemProvider result, int count, Ingredient input, int time) {
-        return new MillingRecipeBuilder(MillingRecipe.Type.BOTH, result, count, input, time, null, 0, 0);
+        return new MillingRecipeBuilder(MillingRecipe.Type.HORSE, result, count, input, time, null, 0, 0);
     }
 
     public static MillingRecipeBuilder horseMillingRecipe(IItemProvider result, int count, Ingredient input, int time, IItemProvider secondary, int secondaryCount, int secondaryChance) {
-        return new MillingRecipeBuilder(MillingRecipe.Type.BOTH, result, count, input, time, secondary, secondaryCount, secondaryChance);
+        return new MillingRecipeBuilder(MillingRecipe.Type.HORSE, result, count, input, time, secondary, secondaryCount, secondaryChance);
     }
 
     @Override

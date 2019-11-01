@@ -1,46 +1,25 @@
 package se.gory_moon.horsepower.items;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.util.Constants;
 
-import java.util.HashSet;
-import java.util.Set;
+import static se.gory_moon.horsepower.util.Constants.MOD_ID;
 
 
 public class ModItems {
 
-    public static final RegistryObject<Item> FLOUR = RegistryObject.of(Constants.RESOURCE_PREFIX + Constants.FLOUR_ITEM, () -> Item.class);
-    public static final RegistryObject<Item> DOUGH = RegistryObject.of(Constants.RESOURCE_PREFIX + Constants.DOUGH_ITEM, () -> Item.class);
+    private static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
 
-    @Mod.EventBusSubscriber(modid = Constants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistrationHandler {
-        public static final Set<Item> ITEMS = new HashSet<>();
+    public static final RegistryObject<Item> FLOUR = ITEMS.register(Constants.FLOUR_ITEM, () -> new Item(new Item.Properties().group(HorsePower.itemGroup)));
+    public static final RegistryObject<Item> DOUGH = ITEMS.register(Constants.DOUGH_ITEM, () -> new Item(new Item.Properties().group(HorsePower.itemGroup)));
 
-        /**
-         * Register this mod's {@link Item}s.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void registerItems(RegistryEvent.Register<Item> event) {
-            final Item[] items = {
-                    new Item(new Item.Properties().group(HorsePower.itemGroup)).setRegistryName(Constants.RESOURCE_PREFIX + Constants.FLOUR_ITEM),
-                    new Item(new Item.Properties().group(HorsePower.itemGroup)).setRegistryName(Constants.RESOURCE_PREFIX + Constants.DOUGH_ITEM)
-            };
-
-            final IForgeRegistry<Item> registry = event.getRegistry();
-
-            for (final Item item : items) {
-                registry.register(item);
-                ITEMS.add(item);
-            }
-        }
+    public static void register(IEventBus event) {
+        ITEMS.register(event);
     }
 
     /*@SubscribeEvent

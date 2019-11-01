@@ -1,14 +1,12 @@
 package se.gory_moon.horsepower.jei;
-/*
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawableAnimated;
-import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.gui.ITickTimer;
-import net.minecraft.client.Minecraft;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HorseDrawable implements IDrawableAnimated {
@@ -28,7 +26,7 @@ public class HorseDrawable implements IDrawableAnimated {
     private int y;
     private String hovering;
 
-    public HorseDrawable(IGuiHelper guiHelper, IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4, ITickTimer animTimer, ITickTimer pathTimer, boolean grinding, String hovering) {
+    public HorseDrawable(IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4, ITickTimer animTimer, ITickTimer pathTimer, boolean grinding, String hovering) {
         this.horse1 = horse1;
         this.horse2 = horse2;
         this.horse3 = horse3;
@@ -49,13 +47,14 @@ public class HorseDrawable implements IDrawableAnimated {
         return 20;
     }
 
+
     @Override
-    public void draw(Minecraft minecraft) {
-        draw(minecraft, 0, 0);
+    public void draw() {
+        draw(0, 0);
     }
 
     @Override
-    public void draw(Minecraft minecraft, int xOffset, int yOffset) {
+    public void draw(int xOffset, int yOffset) {
         reverse = false;
         location = pathTimer.getValue();
         setXYPos();
@@ -67,7 +66,7 @@ public class HorseDrawable implements IDrawableAnimated {
             draw = reverse ? horse4: horse2;
         }
 
-        draw.draw(minecraft, xOffset + x, yOffset + y, 0, 0, 0, 0);
+        draw.draw(xOffset + x, yOffset + y, 0, 0, 0, 0);
     }
 
     private void setXYPos() {
@@ -108,13 +107,12 @@ public class HorseDrawable implements IDrawableAnimated {
         }
     }
 
-    private boolean isHovering(int mx, int my) {
+    private boolean isHovering(double mx, double my) {
         return mx >= x && mx <= x + horse1.getWidth() && my >= y && my <= y + horse1.getHeight();
     }
 
-    public List<String> getTooltipStrings(int mouseX, int mouseY) {
+    public List<String> getTooltipStrings(double mouseX, double mouseY) {
         setXYPos();
-        return isHovering(mouseX, mouseY) && hovering != null ? Lists.newArrayList(Splitter.on('\n').split(hovering)): Collections.emptyList();
+        return isHovering(mouseX, mouseY) && hovering != null ? Lists.newArrayList(Splitter.on('\n').split(hovering)): new ArrayList<>();
     }
 }
-*/

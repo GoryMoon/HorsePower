@@ -1,21 +1,20 @@
 package se.gory_moon.horsepower.jei;
-/*
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IDrawable;
-import mezz.jei.api.gui.IDrawableStatic;
+
 import mezz.jei.api.gui.ITickTimer;
-import mezz.jei.api.recipe.BlankRecipeCategory;
-import mezz.jei.api.recipe.IRecipeWrapper;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
+import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.ModList;
 import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends BlankRecipeCategory<T> {
+public abstract class HorsePowerCategory<T> implements IRecipeCategory<T> {
 
     protected IDrawable background;
     protected HorseDrawable currentDrawable;
@@ -23,7 +22,7 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
     protected HorseDrawable hedgehog;
     protected HorseDrawable character;
 
-    public static final ResourceLocation COMPONENTS = new ResourceLocation("horsepower", "textures/gui/COMPONENTS.png");
+    public static final ResourceLocation COMPONENTS = new ResourceLocation("horsepower", "textures/gui/components.png");
 
     public HorsePowerCategory(IGuiHelper guiHelper) {
         this(guiHelper, false, 146, 74, new ResourceLocation("horsepower", "textures/gui/jei.png"));
@@ -43,7 +42,7 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
         IDrawableStatic horseAnim4 = guiHelper.createDrawable(COMPONENTS, 30, y + 20, 30, 20);
         ITickTimer animTimer = guiHelper.createTickTimer(animCycle, 1, false);
         ITickTimer pathTimer = guiHelper.createTickTimer(pathCycle, grinding ? 352: 324, false);
-        return new HorseDrawable(guiHelper, horseAnim1, horseAnim2, horseAnim3, horseAnim4, animTimer, pathTimer, grinding, hovering);
+        return new HorseDrawable(horseAnim1, horseAnim2, horseAnim3, horseAnim4, animTimer, pathTimer, grinding, hovering);
     }
 
     @Override
@@ -52,23 +51,22 @@ public abstract class HorsePowerCategory<T extends IRecipeWrapper> extends Blank
     }
 
     @Override
-    public void drawExtras(Minecraft minecraft) {
-        currentDrawable.draw(minecraft, 2, 0);
+    public void draw(T recipe, double mouseX, double mouseY) {
+        currentDrawable.draw(2, 0);
     }
 
     @Override
-    public List<String> getTooltipStrings(int mouseX, int mouseY) {
+    public List<String> getTooltipStrings(T recipe, double mouseX, double mouseY) {
         return currentDrawable.getTooltipStrings(mouseX, mouseY);
     }
 
     protected void openRecipe() {
         currentDrawable = horse;
-        Random rand = Minecraft.getMinecraft().world.rand;
+        Random rand = Minecraft.getInstance().world.rand;
 
-        if (rand.nextInt(100) <= 10 && UUID.fromString("10755ea6-9721-467a-8b5c-92adf689072c").equals(Minecraft.getMinecraft().player.getGameProfile().getId()))
+        if (rand.nextInt(100) <= 10 && UUID.fromString("10755ea6-9721-467a-8b5c-92adf689072c").equals(Minecraft.getInstance().player.getGameProfile().getId()))
             currentDrawable = character;
-        else if (rand.nextInt(3000) <= 50 && Loader.isModLoaded("animania"))
+        else if (rand.nextInt(3000) <= 50 && ModList.get().isLoaded("animania"))
             currentDrawable = hedgehog;
     }
 }
-*/

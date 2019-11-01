@@ -15,7 +15,7 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
-public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
+public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
     private final int ticksPerRotation = 18;
     private int currentItemMillTime;
@@ -25,8 +25,8 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
     private int rotation = 0;
 
 
-    public HandMillstoneTileEntity() {
-        super(3, ModBlocks.HAND_MILLSTONE_TILE.orElseThrow(IllegalStateException::new));
+    public ManualMillstoneTileEntity() {
+        super(3, ModBlocks.HAND_MILLSTONE_TILE.get());
     }
 
     public static void millItem(IInventoryHP inventory, HPBaseTileEntity te) {
@@ -63,7 +63,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
 
     @Override
     public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.HAND);
+        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.MANUAL);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HAND);
+        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.MANUAL);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.HAND);
+            totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.MANUAL);
             currentItemMillTime = 0;
         }
         markDirty();
@@ -178,7 +178,7 @@ public class HandMillstoneTileEntity extends HPBaseTileEntity implements ITickab
                     currentItemMillTime = 0;
 
                     millItem();
-                    totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.HAND);
+                    totalItemMillTime = HPRecipes.getTypeTime(getRecipe(), AbstractHPRecipe.Type.MANUAL);
                 }
                 markDirty();
             }

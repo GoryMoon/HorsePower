@@ -11,8 +11,9 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
@@ -85,12 +86,15 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         GlStateManager.popMatrix();
 
 
-        IFluidTankProperties tankProperties = te.getTankFluidStack()[0];
-        FluidStack stack = tankProperties.getContents();
-        if (stack != null && move <= 0.25) {
-            float amount = (0.75F / ((float) tankProperties.getCapacity())) * stack.amount;
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(stack.getFluid().getStill().toString());
-            int fluidColor = stack.getFluid().getColor(stack);
+        FluidTank tank = te.getTank();
+        FluidStack stack = tank.getFluid();
+        if (stack.isEmpty() && move <= 0.25) {
+            float amount = (0.75F / ((float) tank.getCapacity())) * stack.getAmount();
+
+            FluidAttributes attributes = stack.getFluid().getAttributes();
+            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(attributes.getStill(stack).toString());
+            int fluidColor = attributes.getColor(stack);
+
 
             GlStateManager.disableLighting();
             GlStateManager.pushMatrix();
