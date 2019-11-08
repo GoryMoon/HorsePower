@@ -8,20 +8,20 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="HorsePower.main" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.1.76_mapped_snapshot_20191101-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.1.76_mapped_snapshot_20191101-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.1.87_mapped_snapshot_20191108-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.1.87_mapped_snapshot_20191108-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraft:client:extra:1.14.4" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:accesstransformers:shadowed:1.0.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: mezz.jei:jei-1.14.4:6.0.0.18_mapped_snapshot_20191101-1.14.3" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:accesstransformers:shadowed:1.0.1-milestone.0.1+94458e7" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: mezz.jei:jei-1.14.4:6.0.0.24_mapped_snapshot_20191108-1.14.3" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:eventbus:service:1.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: mcp.mobius.waila:Hwyla:1.10.6-B67_1.14.4_mapped_snapshot_20191108-1.14.3" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:coremods:1.0.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: mcp.mobius.waila:Hwyla:1.10.6-B67_1.14.4_mapped_snapshot_20191101-1.14.3" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forgespi:1.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forgespi:1.5.0" level="project" />
     <orderEntry type="library" name="Gradle: cpw.mods:modlauncher:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: cpw.mods:modlauncher:api:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:mergetool:api:1.0.9" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraft:mappings_snapshot:zip:20191101-1.14.3" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraft:mappings_snapshot:zip:20191108-1.14.3" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-commons:6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-util:6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-analysis:6.2" level="project" />

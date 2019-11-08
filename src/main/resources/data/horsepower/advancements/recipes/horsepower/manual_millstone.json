@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "horsepower:hand_millstone"
+      "horsepower:manual_millstone"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "horsepower:hand_millstone"
+        "recipe": "horsepower:manual_millstone"
       }
     }
   },

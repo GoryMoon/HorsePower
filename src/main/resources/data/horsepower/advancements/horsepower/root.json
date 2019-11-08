@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "horsepower:hand_millstone"
+      "item": "horsepower:manual_millstone"
     },
     "title": {
       "translate": "advancements.horsepower.root.title"
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "horsepower:hand_millstone"
+            "item": "horsepower:manual_millstone"
           }
         ]
       }

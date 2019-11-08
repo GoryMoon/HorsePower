@@ -8,6 +8,8 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.pathfinding.Path;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -21,7 +23,7 @@ import java.util.UUID;
 
 public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
-    protected static double[][] walkPath = { { -1.1, -1 }, { 0, -1 }, { 1, -1 }, { 0.75, 0 }, { 0.75, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
+    protected static double[][] walkPath = { { -1, -1 }, { 0, -1 }, { 0.75, -1 }, { 0.75, 0 }, { 0.75, 0.75 }, { 0, 0.75 }, { -1, 0.75 }, { -0.75, 0 } };
     protected static double[][] searchPath = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { 1, 0 }, { 1, 1 }, { 0, 1 }, { -1, 1 }, { -1, 0 } };
     public AxisAlignedBB[] searchAreas = new AxisAlignedBB[8];
     protected List<BlockPos> searchPos = null;
@@ -199,7 +201,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         if (locateHorseTimer <= 0)
             locateHorseTimer = 120;
 
-        if (/*!getWorld().isRemote && */valid) {
+        if (getWorld() != null && !getWorld().isRemote && valid) {
             if (!running && canWork()) {
                 running = true;
             } else if (running && !canWork()) {
@@ -237,19 +239,21 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
                         target = next;
                     }
 
-                    if (worker instanceof AbstractHorseEntity && ((AbstractHorseEntity) worker).isEatingHaystack()) {
-                        ((AbstractHorseEntity) worker).setEatingHaystack(false);
+                    if (worker instanceof AbstractHorseEntity) {
+                        AbstractHorseEntity horse = (AbstractHorseEntity) this.worker;
+                        if (horse.isEatingHaystack())
+                            horse.setEatingHaystack(false);
+                        if (horse.isRearing())
+                            horse.setRearing(false);
                     }
 
-                    if (target != -1 && worker.getNavigator().noPath()) {
+                    PathNavigator navigator = worker.getNavigator();
+                    if (target != -1 && navigator.noPath()) {
                         pos = getPathPosition(target, true);
-                        x = pos.x;
-                        y = pos.y;
-                        z = pos.z;
 
-                        worker.getNavigator().tryMoveToXYZ(x, y, z, 1D);
+                        Path path = navigator.getPathToPos(new BlockPos(pos), 0);
+                        navigator.setPath(path, 1D);
                     }
-
                 }
             }
         }

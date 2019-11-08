@@ -151,7 +151,7 @@ public class Configs {
             mobList = builder
                     .comment("Add mobs that can use the horse powered blocks", "Only mobs that can be leashed are valid", "Add the full path to the mob class, can be found with /horsepower entity or /hp entity")
                     .translation(Localization.CONFIG.SERVER.MOB_LIST.key())
-                    .define("mod_list", ArrayList::new, o -> o != null && ArrayList.class.isAssignableFrom(o.getClass()) && ((ArrayList<String>) o).stream().allMatch(s -> {
+                    .define("mob_list", ArrayList::new, o -> o != null && ArrayList.class.isAssignableFrom(o.getClass()) && ((ArrayList<String>) o).stream().allMatch(s -> {
                         try {
                             Class.forName(s);
                             return true;

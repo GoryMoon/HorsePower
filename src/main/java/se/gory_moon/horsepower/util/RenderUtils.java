@@ -98,7 +98,6 @@ public class RenderUtils {
     public static void renderSearchAreas(HPHorseBaseTileEntity te) {
         preBoundingBox();
         GlStateManager.color4f(1, 1, 1, 1);
-        BlockPos pos = te.getPos();
         double playerX = -TileEntityRendererDispatcher.staticPlayerX;
         double playerY = -TileEntityRendererDispatcher.staticPlayerY;
         double playerZ = -TileEntityRendererDispatcher.staticPlayerZ;
