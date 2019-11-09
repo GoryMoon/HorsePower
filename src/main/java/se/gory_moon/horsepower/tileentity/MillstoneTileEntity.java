@@ -153,6 +153,14 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
         }
     }
 
+    public int getCurrentItemMillTime() {
+        return currentItemMillTime;
+    }
+
+    public int getTotalItemMillTime() {
+        return totalItemMillTime;
+    }
+
     @Override
     public ITextComponent getName() {
         return new StringTextComponent("container.mill");

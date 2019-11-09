@@ -189,6 +189,14 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
         }
     }
 
+    public int getCurrentItemMillTime() {
+        return currentItemMillTime;
+    }
+
+    public int getTotalItemMillTime() {
+        return totalItemMillTime;
+    }
+
     public float getVisibleRotation() {
         return visibleRotation;
     }

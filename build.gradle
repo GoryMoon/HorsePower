@@ -140,9 +140,9 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:${jei_version}")
 
     //compile fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486")
-    /*compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
+    compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
         transitive = false
-    })*/
+    })
 
     compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
     runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")

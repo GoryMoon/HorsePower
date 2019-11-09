@@ -32,7 +32,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-//@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class ManualMillstoneBlock extends HPBaseBlock {
     public static final EnumProperty<ManualMillstoneModels> PART = EnumProperty.create("part", ManualMillstoneModels.class);
 
@@ -112,14 +111,4 @@ public class ManualMillstoneBlock extends HPBaseBlock {
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent(Localization.ITEM.MANUAL_MILLSTONE.INFO.translate("\n" + Colors.LIGHTGRAY.toString())));
     }
-
-    // The One Probe Integration
-    /*@Optional.Method(modid = "theoneprobe")
-    @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntityHandMillstone tileEntity = (TileEntityHandMillstone) world.getTileEntity(data.getPos());
-        if (tileEntity != null) {
-            probeInfo.progress((long) ((((double) tileEntity.getField(1)) / ((double) tileEntity.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.MILLSTONE_PROGRESS.translate() + " ").suffix("%"));
-        }
-    }*/
 }

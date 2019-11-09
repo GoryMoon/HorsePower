@@ -280,7 +280,7 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
             else
                 return handlerIn.cast();
         }
-        return super.getCapability(cap);
+        return super.getCapability(cap, null);
     }
 
     @Override

@@ -42,7 +42,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-//@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class PressBlock extends HPBaseBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -141,14 +140,4 @@ public class PressBlock extends HPBaseBlock {
         }
         return super.onBlockActivated(state, worldIn, pos, player, hand, hit);
     }
-
-    // The One Probe Integration
-    /*@Optional.Method(modid = "theoneprobe")
-    @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntityPress tileEntity = getTileEntity(world, data.getPos());
-        if (tileEntity != null) {
-            probeInfo.progress((long) ((((double) tileEntity.getField(0)) / (float)(Configs.general.pointsForPress > 0 ? Configs.general.pointsForPress: 1)) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.PRESS_PROGRESS.translate() + " ").suffix("%"));
-        }
-    }*/
 }

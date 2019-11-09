@@ -96,14 +96,4 @@ public class MillstoneBlock extends HPBaseBlock {
     public Class<?> getTileClass() {
         return MillstoneTileEntity.class;
     }
-
-    // The One Probe Integration
-    /*@Optional.Method(modid = "theoneprobe")
-    @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        TileEntityMillstone tileEntity = getTileEntity(world, data.getPos());
-        if (tileEntity != null) {
-            probeInfo.progress((long) ((((double) tileEntity.getField(1)) / ((double) tileEntity.getField(0))) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.MILLSTONE_PROGRESS.translate() + " ").suffix("%"));
-        }
-    }*/
 }

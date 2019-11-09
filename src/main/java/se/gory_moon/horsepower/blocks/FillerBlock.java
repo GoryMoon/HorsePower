@@ -36,7 +36,6 @@ import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 
 import javax.annotation.Nullable;
 
-//@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class FillerBlock extends DirectionalBlock {
 
     private boolean useTileEntity;
@@ -54,7 +53,7 @@ public class FillerBlock extends DirectionalBlock {
         this(builder, useTileEntity, false);
     }
 
-    private boolean validateFilled(IBlockReader world, BlockState state, BlockPos pos) {
+    public static boolean validateFilled(IBlockReader world, BlockState state, BlockPos pos) {
         if (state.getBlock() instanceof HPBaseBlock) {
             return true;
         } else {
@@ -310,15 +309,4 @@ public class FillerBlock extends DirectionalBlock {
     public int getHarvestLevel(BlockState state) {
         return this.level;
     }
-
-    // The One Probe Integration
-    /*@Optional.Method(modid = "theoneprobe")
-    @Override
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        BlockPos pos = data.getPos().offset(blockState.getValue(FACING));
-        IBlockState state = world.getBlockState(pos);
-        if (validateFilled(world, state, data.getPos()) && state.getBlock() instanceof IProbeInfoAccessor) {
-            ((IProbeInfoAccessor) state.getBlock()).addProbeInfo(mode, probeInfo, player, world, state, new ProbeHitData(pos, data.getHitVec(), data.getSideHit(), data.getPickBlock()));
-        }
-    }*/
 }

@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="HorsePower:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="se.gory_moon" external.system.module.type="sourceSet" external.system.module.version="3.0.0" type="JAVA_MODULE" version="4">
   <component name="ExternalSystem" externalSystem="GRADLE" externalSystemModuleGroup="se.gory_moon" externalSystemModuleType="sourceSet" externalSystemModuleVersion="3.0.0" linkedProjectId="HorsePower:main" linkedProjectPath="$MODULE_DIR$/../.." rootProjectPath="$MODULE_DIR$/../.." />
+  <component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+      <configuration>
+        <autoDetectTypes>
+          <platformType>FORGE</platformType>
+          <platformType>MCP</platformType>
+        </autoDetectTypes>
+      </configuration>
+    </facet>
+  </component>
+  <component name="McpModuleSettings">
+    <option name="mappingFile" value="$MODULE_DIR$/../../build/createMcpToSrg/output.tsrg" />
+    <option name="mcpVersion" value="snapshot_20191108-1.14.3" />
+    <option name="minecraftVersion" value="1.14.4" />
+    <option name="srgType" value="TSRG" />
+  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../out/production/classes" />
     <exclude-output />
@@ -10,6 +26,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: mcjty.theoneprobe:TheOneProbe-1.14:1.14-1.4.37-12_mapped_snapshot_20191108-1.14.3" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.1.87_mapped_snapshot_20191108-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.1.87_mapped_snapshot_20191108-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraft:client:extra:1.14.4" level="project" />
