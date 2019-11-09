@@ -1,5 +1,6 @@
 package se.gory_moon.horsepower;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +19,9 @@ import se.gory_moon.horsepower.compat.top.TOPCompatibility;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.network.PacketHandler;
 import se.gory_moon.horsepower.util.Constants;
+import se.gory_moon.horsepower.util.HorsePowerCommand;
 
-//"after:crafttweaker;after:theoneprobe;"
+//"after:crafttweaker;"
 @Mod(Constants.MOD_ID)
 public class HorsePower {
 
@@ -32,6 +35,7 @@ public class HorsePower {
         eventBus.addListener(this::setup);
         eventBus.addListener(this::loadComplete);
         eventBus.addListener(this::onFingerprintViolation);
+        MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
         itemGroup = new HorsePowerItemGroup();
         ModBlocks.register(eventBus);
         ModItems.register(eventBus);
@@ -40,7 +44,7 @@ public class HorsePower {
         eventBus.register(Configs.class);
     }
 
-    public void setup(FMLCommonSetupEvent event) {
+    private void setup(FMLCommonSetupEvent event) {
         PacketHandler.init();
         AdvancementManager.register();
 
@@ -53,12 +57,16 @@ public class HorsePower {
         tweakerPlugin.register();*/
     }
 
-    public void loadComplete(FMLLoadCompleteEvent event) {
+    private void loadComplete(FMLLoadCompleteEvent event) {
         //tweakerPlugin.getRemove().forEach(IHPAction::run);
         //tweakerPlugin.getAdd().forEach(IHPAction::run);
     }
 
-    public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+    private void serverStarting(FMLServerStartingEvent event) {
+        new HorsePowerCommand(event.getCommandDispatcher());
+    }
+
+    private void onFingerprintViolation(FMLFingerprintViolationEvent event) {
         LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
     }
 }

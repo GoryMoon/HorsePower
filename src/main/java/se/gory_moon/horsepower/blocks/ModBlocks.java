@@ -39,6 +39,7 @@ public class ModBlocks {
     public static final RegistryObject<BlockItem> MANUAL_MILLSTONE_ITEM = ITEMS.register(Constants.MANUAL_MILLSTONE_BLOCK, () -> new BlockItem(MANUAL_MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
     public static final RegistryObject<BlockItem> MILLSTONE_ITEM = ITEMS.register(Constants.MILLSTONE_BLOCK, () -> new BlockItem(MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
     public static final RegistryObject<BlockItem> PRESS_ITEM = ITEMS.register(Constants.PRESS_BLOCK, () -> new DoubleBlockItem(PRESS_BLOCK.get(), PRESS_FILLER_BLOCK.get()));
+
     private static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
     public static final RegistryObject<TileEntityType<MillstoneTileEntity>> MILLSTONE_TILE = TILE_ENTITIES.register(Constants.MILLSTONE_BLOCK, () -> create(MillstoneTileEntity::new, MILLSTONE_BLOCK));
     public static final RegistryObject<TileEntityType<ManualMillstoneTileEntity>> HAND_MILLSTONE_TILE = TILE_ENTITIES.register(Constants.MANUAL_MILLSTONE_BLOCK, () -> create(ManualMillstoneTileEntity::new, MANUAL_MILLSTONE_BLOCK));

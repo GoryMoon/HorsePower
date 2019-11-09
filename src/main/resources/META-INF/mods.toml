@@ -52,3 +52,10 @@ A mods that adds horse powered blocks.
     versionRange="[1.10.4,)"
     ordering="AFTER"
     side="BOTH"
+
+[[dependencies.horsepower]]
+    modId="theoneprobe"
+    mandatory=false
+    versionRange="[1.4.37,)"
+    ordering="AFTER"
+    side="BOTH"

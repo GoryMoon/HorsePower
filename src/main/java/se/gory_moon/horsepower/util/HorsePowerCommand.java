@@ -1,95 +1,30 @@
 package se.gory_moon.horsepower.util;
-/*
-import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.IClientCommand;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import se.gory_moon.horsepower.HPEventHandler;
-import se.gory_moon.horsepower.recipes.HPRecipes;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.network.PacketDistributor;
+import se.gory_moon.horsepower.network.PacketHandler;
+import se.gory_moon.horsepower.network.messages.EntityMessage;
 
-@SideOnly(Side.CLIENT)
-public class HorsePowerCommand extends CommandBase implements IClientCommand {
+public class HorsePowerCommand {
 
-    @Override
-    public String getName() {
-        return "horsepower";
+    public HorsePowerCommand(CommandDispatcher<CommandSource> dispatcher) {
+        dispatcher.register(Commands.literal("horsepower")
+                .then(registerEntity())
+        );
     }
 
-    @Override
-    public String getUsage(ICommandSender sender) {
-        return "commands.horsepower.usage";
-    }
-
-    @Override
-    public List<String> getAliases() {
-        return Lists.newArrayList("hp");
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
+    private ArgumentBuilder<CommandSource, ?> registerEntity()
     {
-        return 2;
-    }
-
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if (args.length == 1) {
-            if ("entity".equals(args[0])) {
-                if (sender instanceof EntityPlayerSP) {
-                    RayTraceResult result = Minecraft.getMinecraft().objectMouseOver;
-
-                    if (result != null && result.typeOfHit == RayTraceResult.Type.ENTITY) {
-                        Entity entity = result.entityHit;
-                        sender.sendMessage(new TextComponentTranslation("commands.horsepower.entity.has", entity.getClass().getName()));
-                        try {
-                            StringSelection selection = new StringSelection(entity.getClass().getName());
-                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, selection);
-                        } catch (Exception ignored){}
-                    } else
-                        sender.sendMessage(new TextComponentTranslation("commands.horsepower.entity.no"));
-                } else
-                    throw new CommandException("commands.horsepower.entity.invalid");
-                return;
-            } if ("reload".equals(args[0])) {
-                sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload").setStyle(new Style().setColor(TextFormatting.YELLOW).setBold(true)));
-                HPEventHandler.reloadConfig();
-                boolean hasErrors = HPRecipes.ERRORS.size() > 0;
-                Utils.sendSavedErrors();
-                if (hasErrors)
-                    sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload.error").setStyle(new Style().setColor(TextFormatting.DARK_RED).setBold(true)));
-                else
-                    sender.sendMessage(new TextComponentTranslation("commands.horsepower.reload.noerror").setStyle(new Style().setColor(TextFormatting.GREEN).setBold(true)));
-                return;
-            }
-        }
-        throw new WrongUsageException(getUsage(sender));
-    }
-
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-        return args.length == 1 ? getListOfStringsMatchingLastWord(args, "entity", "reload"): Collections.emptyList();
-    }
-
-    @Override
-    public boolean allowUsageWithoutPrefix(ICommandSender sender, String message) {
-        return false;
+        return Commands.literal("entity")
+                .requires(cs -> cs.hasPermissionLevel(2)) //permission
+                .executes(ctx -> {
+                    ServerPlayerEntity player = ctx.getSource().asPlayer();
+                    PacketHandler.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new EntityMessage());
+                    return 0;
+                });
     }
 }
-*/

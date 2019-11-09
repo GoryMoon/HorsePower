@@ -33,8 +33,6 @@
   "info.horsepower.millstone.info3": "With the animal attached with the lead right click the millstone and the animal should now be connected to that. Now simply right click the millstone with a item that can be milled to start the process or attach any automatic input/output on the top or bottom.",
 
   "_comment": "Command",
-  "commands.horsepower.usage": "/horsepower entity",
-  "commands.horsepower.entity.invalid": "Can only do this command as a player",
   "commands.horsepower.entity.no": "Not looking at an entity",
   "commands.horsepower.entity.has": "Entity copied to clipboard: %s",
 
