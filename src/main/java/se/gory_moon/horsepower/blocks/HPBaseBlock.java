@@ -45,7 +45,7 @@ public abstract class HPBaseBlock extends ContainerBlock {
 
     public abstract void emptiedOutput(World world, BlockPos pos);
 
-    public int getSlot(BlockState state, BlockRayTraceResult hit) {
+    public int getSlot(BlockState state, World worldIn, PlayerEntity player, BlockRayTraceResult hit) {
         return -1;
     }
 
@@ -162,7 +162,7 @@ public abstract class HPBaseBlock extends ContainerBlock {
                 return true;
         }
 
-        int slot = getSlot(state.getBlock().getExtendedState(state, worldIn, pos), hit);
+        int slot = getSlot(state, worldIn, player, hit);
         ItemStack result = ItemStack.EMPTY;
         if (slot > -1) {
             result = te.removeStackFromSlot(slot);

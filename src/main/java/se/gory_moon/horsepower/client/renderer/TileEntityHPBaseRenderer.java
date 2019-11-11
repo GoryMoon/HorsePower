@@ -341,7 +341,6 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
     }
 
     public void renderBlockDamage(BlockState state, BlockPos pos, int destroyState, World world) {
-        state = state.getExtendedState(world, pos);
         IBakedModel ibakedmodel = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(state);
         long i = state.getPositionRandom(pos);
         IBakedModel ibakedmodel1 = net.minecraftforge.client.ForgeHooksClient.getDamageModel(ibakedmodel, Minecraft.getInstance().worldRenderer.destroyBlockIcons[destroyState], state, world, pos, i);

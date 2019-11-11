@@ -10,6 +10,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
@@ -32,7 +33,6 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
 
     private final String localizedName;
 
-    private final double printLaps = 1.5;
     private final IDrawableAnimated arrow;
 
     public HorsePowerMillingCategory(IGuiHelper guiHelper, boolean hand) {
@@ -92,6 +92,7 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
     public void draw(MillingRecipe recipe, double mouseX, double mouseY) {
         super.draw(recipe, mouseX, mouseY);
 
+        double printLaps = handHandler ? ((double) recipe.getTime()) / Configs.SERVER.pointsPerRotation.get(): (double) Math.round((recipe.getTime() / 8D) * 100.0D) / 100.0D;
         arrow.draw(57, 27);
         Minecraft.getInstance().fontRenderer.drawStringWithShadow("x" + printLaps, 33, 48, Colors.WHITE.getRGB());
         if (recipe.getSecondaryChance() > 0)
@@ -102,7 +103,8 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
     public List<String> getTooltipStrings(MillingRecipe recipe, double mouseX, double mouseY) {
         List<String> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
         if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 45) {
-            tooltip.add("Time to grind: " + printLaps + " lap" + (printLaps >= 2D ? "s": ""));
+            double printLaps = handHandler ? ((double) recipe.getTime()) / Configs.SERVER.pointsPerRotation.get(): (double) Math.round((recipe.getTime() / 8D) * 100.0D) / 100.0D;
+            tooltip.add("Time to grind: " + printLaps + (handHandler ? " rotation": " lap") + (printLaps >= 2D ? "s": ""));
         }
         return tooltip;
     }
