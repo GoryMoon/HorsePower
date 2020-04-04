@@ -55,6 +55,9 @@ out/
 
 .idea/**/emacs.xml
 
+#eclipse specific
+.classpath
+.project
 
 ### Java template
 # Compiled class file
