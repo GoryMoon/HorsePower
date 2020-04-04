@@ -251,7 +251,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
                     if (target != -1 && navigator.noPath()) {
                         pos = getPathPosition(target, true);
 
-                        Path path = navigator.getPathToPos(new BlockPos(pos), 0);
+                        Path path = navigator.func_179680_a(new BlockPos(pos), 0); //was getPathToPos
                         navigator.setPath(path, 1D);
                     }
                 }
