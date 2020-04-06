@@ -88,11 +88,10 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
 
         FluidTank tank = te.getTank();
         FluidStack stack = tank.getFluid();
-        if (stack.isEmpty() && move <= 0.25) {
+        if (stack.isEmpty() && move <= 0.25 && stack.getAmount() > 0) {
             float amount = (0.75F / ((float) tank.getCapacity())) * stack.getAmount();
-
             FluidAttributes attributes = stack.getFluid().getAttributes();
-            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getAtlasSprite(attributes.getStill(stack).toString());
+            TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getSprite(attributes.getStillTexture());
             int fluidColor = attributes.getColor(stack);
 
 
