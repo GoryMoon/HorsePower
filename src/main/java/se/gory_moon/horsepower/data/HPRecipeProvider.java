@@ -9,11 +9,13 @@ import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.util.color.HPTags;
@@ -57,6 +59,7 @@ public class HPRecipeProvider extends RecipeProvider {
 
         //Pressing Recipes
         PressingRecipeBuilder.pressingRecipe(Items.DIRT, 1, Ingredient.fromItems(Items.WHEAT_SEEDS)).addCriterion("has_seed", hasItem(Items.WHEAT_SEEDS)).build(consumer, "horsepower:pressing/dirt");
+        PressingRecipeBuilder.pressingRecipe(new FluidStack(Fluids.WATER, 1000), Ingredient.fromTag(ItemTags.LEAVES)).addCriterion("has_leave", hasItem(Items.OAK_LEAVES)).build(consumer, "horsepower:pressing/water_from_leaves"); //FIXME temp recipe
         //"ore:treeLeaves@8-fluid:water@1000"
     }
 

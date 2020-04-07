@@ -77,7 +77,12 @@ public abstract class AbstractRecipeBuilder {
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
         this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
+        if(result != null) {
+            consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
+        }
+        else { //fluid output
+        	consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.outputFluid.getFluid().getRegistryName().getPath() + "/" + id.getPath())));
+        }	
     }
 
     private void validate(ResourceLocation id) {
@@ -126,18 +131,18 @@ public abstract class AbstractRecipeBuilder {
             if (outputFluid != null) {
                 JsonObject fluid = new JsonObject();
                 fluid.addProperty("id", outputFluid.getFluid().getRegistryName().toString());
-                fluid.addProperty("amount", outputFluid.getAmount());
+                fluid.addProperty("amount", Integer.valueOf(outputFluid.getAmount()));
                 json.add("fluid", fluid);
             } else {
                 JsonObject resultObj = new JsonObject();
                 resultObj.addProperty("item", this.result.getRegistryName().toString());
                 if (this.count > 1) {
-                    resultObj.addProperty("count", this.count);
+                    resultObj.addProperty("count", Integer.valueOf(this.count));
                 }
                 json.add("result", resultObj);
             }
             if (time > 0) {
-                json.addProperty("time", this.time);
+                json.addProperty("time", Integer.valueOf(this.time));
             }
             if (this.type != null) {
                 json.addProperty("recipe_type", this.type.getName());
@@ -146,10 +151,10 @@ public abstract class AbstractRecipeBuilder {
                 JsonObject secondaryObj = new JsonObject();
                 secondaryObj.addProperty("item", this.secondary.getRegistryName().toString());
                 if (this.count > 1) {
-                    secondaryObj.addProperty("count", this.count);
+                    secondaryObj.addProperty("count", Integer.valueOf(this.count));
                 }
                 json.add("secondary", secondaryObj);
-                json.addProperty("secondary_chance", secondaryChance);
+                json.addProperty("secondary_chance", Integer.valueOf(secondaryChance));
             }
         }
 

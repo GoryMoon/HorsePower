@@ -24,6 +24,7 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nonnull;
@@ -103,7 +104,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
-        return null;
+        return RecipeSerializers.PRESSING_TYPE;
     }
 
     @Override

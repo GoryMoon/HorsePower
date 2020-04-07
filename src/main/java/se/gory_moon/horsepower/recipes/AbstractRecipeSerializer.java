@@ -1,6 +1,8 @@
 package se.gory_moon.horsepower.recipes;
 
 import com.google.gson.JsonObject;
+
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
@@ -8,7 +10,9 @@ import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Optional;
@@ -18,15 +22,32 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
     protected RecipeData readData(JsonObject json) {
         AbstractHPRecipe.Type type = hasTypes() ? AbstractHPRecipe.Type.fromName(JSONUtils.getString(json, "recipe_type", AbstractHPRecipe.Type.BOTH.getName())): null;
         Ingredient ingredient = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient"): JSONUtils.getJsonObject(json, "ingredient"));
-        ItemStack result = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+        ItemStack result = JSONUtils.hasField(json, "result") ?ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result")):ItemStack.EMPTY;
         Optional<JsonObject> obj = Optional.ofNullable(JSONUtils.getJsonObject(json, "secondary", null));
         ItemStack secondary = obj.map(ShapedRecipe::deserializeItem).orElse(ItemStack.EMPTY);
         int time = JSONUtils.getInt(json, "time", 1);
         int secondaryChance = JSONUtils.getInt(json, "secondary_chance", 0);
-
-        //TODO parse fluid in recipe
-        return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, null);
+   
+        FluidStack fluidStack = parseFluidOutput(json); //can be null
+        return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, fluidStack);
     }
+
+    protected static FluidStack parseFluidOutput(JsonObject result) {
+		FluidStack fluidStack = null;
+		
+		if(JSONUtils.hasField(result, "fluid")) {
+			JsonObject fluidJson = JSONUtils.getJsonObject(result, "fluid");
+	        int fluidAmount = JSONUtils.getInt(fluidJson, "amount");
+	        String outputFluidName = JSONUtils.getString(fluidJson, "id");
+	        if(outputFluidName != null && !outputFluidName.isEmpty() && fluidAmount > 0)
+	        {
+	            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(outputFluidName));
+	            if (fluid != null)
+	            	fluidStack = new FluidStack(fluid, fluidAmount);
+	        }
+		}
+		return fluidStack;
+	}
 
     protected RecipeData readData(PacketBuffer buffer) {
         AbstractHPRecipe.Type type = hasTypes() ? AbstractHPRecipe.Type.fromId(buffer.readInt()): null;

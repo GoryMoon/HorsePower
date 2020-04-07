@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
@@ -88,8 +89,8 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
 
         FluidTank tank = te.getTank();
         FluidStack stack = tank.getFluid();
-        if (stack.isEmpty() && move <= 0.25 && stack.getAmount() > 0) {
-            float amount = (0.75F / ((float) tank.getCapacity())) * stack.getAmount();
+        if (!stack.isEmpty() && move <= 0.25) {
+            float amount = (0.75F / tank.getCapacity()) * stack.getAmount();
             FluidAttributes attributes = stack.getFluid().getAttributes();
             TextureAtlasSprite sprite = Minecraft.getInstance().getTextureMap().getSprite(attributes.getStillTexture());
             int fluidColor = attributes.getColor(stack);

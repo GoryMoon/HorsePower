@@ -14,7 +14,7 @@ import se.gory_moon.horsepower.util.Constants;
 public class RecipeSerializers {
 
     public static final HPRecipeType<MillingRecipe> MILLING_TYPE = new HPRecipeType<>("milling");
-    public static final HPRecipeType<MillingRecipe> PRESSING_TYPE = new HPRecipeType<>("milling");
+    public static final HPRecipeType<PressingRecipe> PRESSING_TYPE = new HPRecipeType<>("pressing");
 
     public static final MillingSerializer MILLING_SERIALIZER = new MillingSerializer();
     public static final PressingSerializer PRESSING_SERIALIZER = new PressingSerializer();

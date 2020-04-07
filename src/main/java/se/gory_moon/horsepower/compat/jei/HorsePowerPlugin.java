@@ -15,11 +15,14 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.compat.jei.milling.HorsePowerMillingCategory;
+import se.gory_moon.horsepower.compat.jei.press.HorsePowerPressCategory;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.MillingRecipe;
+import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Constants;
 
@@ -42,6 +45,9 @@ public class HorsePowerPlugin implements IModPlugin {
 
     private static boolean millingRecipePredicate(IRecipe<IInventory> recipe, AbstractHPRecipe.Type type) {
         return recipe instanceof MillingRecipe && ((MillingRecipe) recipe).getRecipeType().is(type);
+    }
+    private static boolean pressingRecipePredicate(IRecipe<IInventory> recipe) {
+    	return recipe instanceof PressingRecipe && ((PressingRecipe) recipe).getFluidOutput() != null;
     }
 
 
@@ -138,19 +144,27 @@ public class HorsePowerPlugin implements IModPlugin {
         guiHelper = jeiHelpers.getGuiHelper();
         registration.addRecipeCategories(
                 new HorsePowerMillingCategory(guiHelper, false),
-                new HorsePowerMillingCategory(guiHelper, true)
+                new HorsePowerMillingCategory(guiHelper, true),
+                new HorsePowerPressCategory(guiHelper, false),
+                new HorsePowerPressCategory(guiHelper, true)
         );
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         ClientWorld world = Minecraft.getInstance().world;
-        Collection<IRecipe<IInventory>> values = world.getRecipeManager().getRecipes(RecipeSerializers.MILLING_TYPE).values();
-        List<IRecipe<IInventory>> millingRecipes = values.stream().filter(recipe -> millingRecipePredicate(recipe, AbstractHPRecipe.Type.HORSE)).collect(Collectors.toList());
-        List<IRecipe<IInventory>> manualMillingRecipes = values.stream().filter(recipe -> millingRecipePredicate(recipe, AbstractHPRecipe.Type.MANUAL)).collect(Collectors.toList());
+        RecipeManager minecraftRecipeManager = world.getRecipeManager();
+		Collection<IRecipe<IInventory>> millingTypeRecipes = minecraftRecipeManager.getRecipes(RecipeSerializers.MILLING_TYPE).values();
+        List<IRecipe<IInventory>> millingRecipes = millingTypeRecipes.stream().filter(recipe -> millingRecipePredicate(recipe, AbstractHPRecipe.Type.HORSE)).collect(Collectors.toList());
+        List<IRecipe<IInventory>> manualMillingRecipes = millingTypeRecipes.stream().filter(recipe -> millingRecipePredicate(recipe, AbstractHPRecipe.Type.MANUAL)).collect(Collectors.toList());
 
+        Collection<IRecipe<IInventory>> pressingTypeRecipes = minecraftRecipeManager.getRecipes(RecipeSerializers.PRESSING_TYPE).values();
+        List<IRecipe<IInventory>> pressingFluidRecipes = pressingTypeRecipes.stream().filter(HorsePowerPlugin::pressingRecipePredicate).collect(Collectors.toList());
+        List<IRecipe<IInventory>> pressingItemRecipes = pressingTypeRecipes.stream().filter(recipe -> !pressingRecipePredicate(recipe)).collect(Collectors.toList());
         registration.addRecipes(millingRecipes, MILLING);
         registration.addRecipes(manualMillingRecipes, MANUAL_MILLING);
+        registration.addRecipes(pressingItemRecipes, PRESS_ITEM);
+        registration.addRecipes(pressingFluidRecipes, PRESS_FLUID);
     }
 
 
@@ -158,6 +172,8 @@ public class HorsePowerPlugin implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MILLSTONE_BLOCK.get()), MILLING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.MANUAL_MILLSTONE_BLOCK.get()), MANUAL_MILLING);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_ITEM);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_FLUID);
     }
 
     @Override
