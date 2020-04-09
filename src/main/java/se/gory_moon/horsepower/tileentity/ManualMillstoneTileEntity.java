@@ -26,7 +26,7 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
 
 
     public ManualMillstoneTileEntity() {
-        super(3, ModBlocks.HAND_MILLSTONE_TILE.get());
+        super(3, ModBlocks.manualMillstoneTile.get());
     }
 
     public static void millItem(IInventoryHP inventory, HPBaseTileEntity te) {

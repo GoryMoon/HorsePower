@@ -13,7 +13,7 @@
   </component>
   <component name="McpModuleSettings">
     <option name="mappingFile" value="$MODULE_DIR$/../../build/createMcpToSrg/output.tsrg" />
-    <option name="mcpVersion" value="snapshot_20191108-1.14.3" />
+    <option name="mcpVersion" value="stable_56-1.14.3" />
     <option name="minecraftVersion" value="1.14.4" />
     <option name="srgType" value="TSRG" />
   </component>
@@ -24,27 +24,29 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="HorsePower.main" />
-    <orderEntry type="library" name="Gradle: mcjty.theoneprobe:TheOneProbe-1.14:1.14-1.4.37-12_mapped_snapshot_20191108-1.14.3" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.1.87_mapped_snapshot_20191108-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.1.87_mapped_snapshot_20191108-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
+    <orderEntry type="library" name="Gradle: mcjty.theoneprobe:TheOneProbe-1.14:1.14-1.4.37-12_mapped_stable_56-1.14.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.tterrag.registrate:Registrate:MC1.14.4-0.0.2.30_mapped_stable_56-1.14.3" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:1.14.4-28.1.115_mapped_stable_56-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forge:launcher:1.14.4-28.1.115_mapped_stable_56-1.14.3_at_cefe0d0b718130a2959e79f569aba873cbed3324" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraft:client:extra:1.14.4" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:accesstransformers:shadowed:1.0.1-milestone.0.1+94458e7" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: mezz.jei:jei-1.14.4:6.0.0.24_mapped_snapshot_20191108-1.14.3" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:eventbus:service:1.0.0" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:coremods:1.0.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: mcp.mobius.waila:Hwyla:1.10.6-B67_1.14.4_mapped_snapshot_20191108-1.14.3" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraftforge:forgespi:1.5.0" level="project" />
-    <orderEntry type="library" name="Gradle: cpw.mods:modlauncher:4.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: cpw.mods:modlauncher:api:4.1.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.1" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:mergetool:api:1.0.9" level="project" />
-    <orderEntry type="library" name="Gradle: net.minecraft:mappings_snapshot:zip:20191108-1.14.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: mezz.jei:jei-1.14.4:6.0.0.27_mapped_stable_56-1.14.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: mcp.mobius.waila:Hwyla:1.10.6-B67_1.14.4_mapped_stable_56-1.14.3" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraft:mappings_stable:zip:56-1.14.3" level="project" />
+    <orderEntry type="library" name="Gradle: cpw.mods:modlauncher:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-commons:6.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.ow2.asm:asm-util:6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-analysis:6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm-tree:6.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: cpw.mods:modlauncher:api:4.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.ow2.asm:asm:6.2" level="project" />
     <orderEntry type="library" name="Gradle: cpw.mods:grossjava9hacks:1.1.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:accesstransformers:shadowed:1.0.1-milestone.0.1+94458e7" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:eventbus:service:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:forgespi:1.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: net.minecraftforge:coremods:1.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.ow2.asm:asm-util:6.2" level="project" />
     <orderEntry type="library" name="Gradle: net.minecraftforge:unsafe:0.2.0" level="project" />
     <orderEntry type="library" name="Gradle: com.electronwill.night-config:toml:3.6.0" level="project" />
     <orderEntry type="library" name="Gradle: com.electronwill.night-config:core:3.6.0" level="project" />
@@ -80,25 +82,25 @@
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.3.2" level="project" />
     <orderEntry type="library" name="Gradle: it.unimi.dsi:fastutil:8.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-jemalloc:3.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-jemalloc:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-openal:3.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-openal:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-opengl:3.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-opengl:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-glfw:3.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-glfw:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-stb:3.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-stb:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:3.2.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:natives-macos:3.2.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-jemalloc:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: com.mojang:text2speech:1.11.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.antlr:antlr4-runtime:4.7.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-openal:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.plexus:plexus-utils:3.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline-reader:3.12.1" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-linux:2.0.5" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-windows:2.0.5" level="project" />
-    <orderEntry type="library" name="Gradle: net.java.jinput:jinput-platform:natives-osx:2.0.5" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-opengl:natives-macos:3.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline-terminal:3.12.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-glfw:natives-macos:3.2.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl-stb:natives-macos:3.2.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.lwjgl:lwjgl:natives-macos:3.2.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.antlr:antlr4-runtime:4.7.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: net.java.jinput:jinput-platform:natives-linux:2.0.5" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: net.java.jinput:jinput-platform:natives-windows:2.0.5" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: net.java.jinput:jinput-platform:natives-osx:2.0.5" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="HorsePower.main" />
 </module>
