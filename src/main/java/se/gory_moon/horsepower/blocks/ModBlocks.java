@@ -32,8 +32,9 @@ import static se.gory_moon.horsepower.util.Constants.MOD_ID;
 public class ModBlocks {
 
     private static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
+    private static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
+    
     //public static final RegistryObject<BlockItem> MANUAL_MILLSTONE_ITEM = ITEMS.register(Constants.MANUAL_MILLSTONE_BLOCK, () -> new BlockItem(MANUAL_MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
-    public static final RegistryObject<BlockItem> MILLSTONE_ITEM = ITEMS.register(Constants.MILLSTONE_BLOCK, () -> new BlockItem(MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
     public static final RegistryObject<MillstoneBlock> MILLSTONE_BLOCK = BLOCKS.register(Constants.MILLSTONE_BLOCK, MillstoneBlock::new);
     public static final RegistryObject<PressBlock> PRESS_BLOCK = BLOCKS.register(Constants.PRESS_BLOCK, PressBlock::new);
     public static final RegistryObject<FillerBlock> PRESS_FILLER_BLOCK = BLOCKS.register(Constants.PRESS_FILLER, () -> new FillerBlock(Block.Properties.create(Material.WOOD).hardnessAndResistance(5F).sound(SoundType.WOOD), true).setHarvestLevel(ToolType.AXE, 1));
@@ -41,8 +42,9 @@ public class ModBlocks {
     /*public static final BlockChoppingBlock BLOCK_MANUAL_CHOPPER = new BlockChoppingBlock();
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
     public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0);//.setHardness(5F).setResistance(5F);*/
-    private static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
     public static RegistryEntry<ManualMillstoneBlock> manualMillstoneBlock;
+    
+    public static final RegistryObject<BlockItem> MILLSTONE_ITEM = ITEMS.register(Constants.MILLSTONE_BLOCK, () -> new BlockItem(MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
     public static final RegistryObject<BlockItem> PRESS_ITEM = ITEMS.register(Constants.PRESS_BLOCK, () -> new DoubleBlockItem(PRESS_BLOCK.get(), PRESS_FILLER_BLOCK.get()));
 
     private static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
