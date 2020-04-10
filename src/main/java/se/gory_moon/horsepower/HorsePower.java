@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower;
 
+import com.tterrag.registrate.Registrate;
+import net.minecraft.util.LazyLoadBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -25,6 +27,7 @@ import se.gory_moon.horsepower.util.HorsePowerCommand;
 @Mod(Constants.MOD_ID)
 public class HorsePower {
 
+    public static final LazyLoadBase<Registrate> REGISTRATE = new LazyLoadBase<>(() -> Registrate.create(Constants.MOD_ID));
     public static final Logger LOGGER = LogManager.getLogger();
     public static HorsePowerItemGroup itemGroup;
 
@@ -36,12 +39,17 @@ public class HorsePower {
         eventBus.addListener(this::loadComplete);
         eventBus.addListener(this::onFingerprintViolation);
         MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
+        registrate().itemGroup(HorsePowerItemGroup::new, "Horse Power");
         itemGroup = new HorsePowerItemGroup();
         ModBlocks.register(eventBus);
         ModItems.register(eventBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.serverSpec);
         eventBus.register(Configs.class);
+    }
+
+    public static Registrate registrate() {
+        return REGISTRATE.getValue();
     }
 
     private void setup(FMLCommonSetupEvent event) {

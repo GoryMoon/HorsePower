@@ -5,7 +5,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -66,8 +65,8 @@ public class ManualMillstoneBlock extends HPBaseBlock {
     private static final List<Slot> WEST_SLOTS = ImmutableList.of(new Slot(1, BB_SOUTH), new Slot(0, BB_NORTH), new Slot(2, BB_EAST));
     private static final List<Slot> EAST_SLOTS = ImmutableList.of(new Slot(1, BB_NORTH), new Slot(0, BB_SOUTH), new Slot(2, BB_WEST));
 
-    public ManualMillstoneBlock() {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
+    public ManualMillstoneBlock(Properties properties) {
+        super(properties.hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
 
         setHarvestLevel(ToolType.PICKAXE, 1);
         setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, ManualMillstoneModels.BASE));

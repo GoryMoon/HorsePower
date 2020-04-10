@@ -62,7 +62,7 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
 
     @Override
     public IDrawable getIcon() {
-        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.MANUAL_MILLSTONE_BLOCK.get(): ModBlocks.MILLSTONE_BLOCK.get()));
+        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.manualMillstoneBlock.get(): ModBlocks.MILLSTONE_BLOCK.get()));
     }
 
     @Override
