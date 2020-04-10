@@ -22,6 +22,7 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
     protected final ResourceLocation id;
 
     protected final Ingredient input;
+    protected final int inputCount; 
     protected final ItemStack result;
     protected final FluidStack outputFluid;
     protected final int time;
@@ -31,7 +32,7 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
 
     protected Type recipeType;
 
-    protected AbstractHPRecipe(IRecipeType<?> type, ResourceLocation id, Ingredient input, ItemStack result, FluidStack outputFluid, int time, ItemStack secondary, int secondaryChance, Type recipeType) {
+    protected AbstractHPRecipe(IRecipeType<?> type, ResourceLocation id, Ingredient input, ItemStack result, FluidStack outputFluid, int time, ItemStack secondary, int secondaryChance, Type recipeType, int inputCount) {
         this.type = type;
         this.id = id;
         this.input = input;
@@ -41,11 +42,14 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
         this.secondary = secondary;
         this.secondaryChance = secondaryChance;
         this.recipeType = recipeType;
+        this.inputCount = inputCount;
     }
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        return input.test(inv.getStackInSlot(0));
+        ItemStack inputStack = inv.getStackInSlot(0);
+        //we do not check for input count here, otherwise hoppers and smaller stacks can not placed inside
+        return input.test(inputStack);
     }
 
     @Override
@@ -56,6 +60,10 @@ public abstract class AbstractHPRecipe implements IRecipe<IInventory> {
     @Override
     public ItemStack getRecipeOutput() {
         return result;
+    }
+    
+    public int getInputCount() {
+        return inputCount;
     }
 
     @Override

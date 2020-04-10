@@ -22,6 +22,7 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
     protected RecipeData readData(JsonObject json) {
         AbstractHPRecipe.Type type = hasTypes() ? AbstractHPRecipe.Type.fromName(JSONUtils.getString(json, "recipe_type", AbstractHPRecipe.Type.BOTH.getName())): null;
         Ingredient ingredient = Ingredient.deserialize(JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient"): JSONUtils.getJsonObject(json, "ingredient"));
+        int inputCount = JSONUtils.getInt(json, "input_count", 1);
         ItemStack result = JSONUtils.hasField(json, "result") ?ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result")):ItemStack.EMPTY;
         Optional<JsonObject> obj = Optional.ofNullable(JSONUtils.getJsonObject(json, "secondary", null));
         ItemStack secondary = obj.map(ShapedRecipe::deserializeItem).orElse(ItemStack.EMPTY);
@@ -29,7 +30,7 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
         int secondaryChance = JSONUtils.getInt(json, "secondary_chance", 0);
    
         FluidStack fluidStack = parseFluidOutput(json); //can be null
-        return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, fluidStack);
+        return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, fluidStack,inputCount);
     }
 
     protected static FluidStack parseFluidOutput(JsonObject result) {
@@ -57,7 +58,8 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
         int time = buffer.readInt();
         int secondaryChance = buffer.readInt();
         FluidStack outputFluid = buffer.readBoolean() ? FluidStack.loadFluidStackFromNBT(buffer.readCompoundTag()): null;
-        return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, outputFluid);
+        int inputCount = buffer.readInt();
+        return new RecipeData(type, ingredient, result, secondary, time, secondaryChance, outputFluid, inputCount);
     }
 
     @Override
@@ -76,6 +78,7 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
             buffer.writeBoolean(true);
             buffer.writeCompoundTag(recipe.outputFluid.writeToNBT(new CompoundNBT()));
         }
+        buffer.writeInt(recipe.inputCount);
     }
 
     public abstract boolean hasTypes();
@@ -88,8 +91,9 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
         public final int time;
         public final int secondaryChance;
         public final FluidStack outputFluid;
+        public final int inputCount;
 
-        public RecipeData(AbstractHPRecipe.Type type, Ingredient ingredient, ItemStack result, ItemStack secondary, int time, int secondaryChance, FluidStack outputFluid) {
+        public RecipeData(AbstractHPRecipe.Type type, Ingredient ingredient, ItemStack result, ItemStack secondary, int time, int secondaryChance, FluidStack outputFluid, int inputCount) {
             this.type = type;
             this.ingredient = ingredient;
             this.result = result;
@@ -97,6 +101,7 @@ public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> exten
             this.time = time;
             this.secondaryChance = secondaryChance;
             this.outputFluid = outputFluid;
+            this.inputCount = inputCount;
         }
     }
 }

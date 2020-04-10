@@ -112,7 +112,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
         AbstractHPRecipe recipe = getRecipe();
         if (recipe == null)
             return 64;
-        return 64;//recipe.getInput().getCount();//TODO input.count()
+        return recipe.getInputCount();
     }
 
     @Override
@@ -147,7 +147,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
         AbstractHPRecipe recipe = getRecipe(stack);
         if (recipe == null)
             return getInventoryStackLimit();
-        return 64;//recipe.getInput().getCount();//TODO input.count()
+        return recipe.getInputCount();
     }
 
     @Override
@@ -171,7 +171,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             ItemStack itemstack = recipe.getCraftingResult(inventory);
             FluidStack fluidOutput = recipe.getFluidOutput();
 
-            if (getStackInSlot(0).getCount() < 1) //TODO input.count()
+            if (getStackInSlot(0).getCount() < 1 || getStackInSlot(0).getCount() < recipe.getInputCount())
                 return false;
             if (itemstack.isEmpty() && !recipe.isFluidRecipe())
                 return false;

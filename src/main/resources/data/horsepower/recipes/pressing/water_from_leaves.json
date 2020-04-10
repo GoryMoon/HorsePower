@@ -6,5 +6,6 @@
   "fluid": {
     "id": "minecraft:water",
     "amount": 1000
-  }
+  },
+  "input_count": 8
 }

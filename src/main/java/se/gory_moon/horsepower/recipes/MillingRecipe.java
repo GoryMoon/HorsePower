@@ -8,8 +8,8 @@ import se.gory_moon.horsepower.blocks.ModBlocks;
 
 public class MillingRecipe extends AbstractHPRecipe {
 
-    public MillingRecipe(ResourceLocation id, Ingredient input, ItemStack result, ItemStack secondary, int time, int secondaryChance, Type recipeType) {
-        super(RecipeSerializers.MILLING_TYPE, id, input, result, null, time, secondary, secondaryChance, recipeType);
+    public MillingRecipe(ResourceLocation id, Ingredient input, ItemStack result, ItemStack secondary, int time, int secondaryChance, Type recipeType, int inputCount) {
+        super(RecipeSerializers.MILLING_TYPE, id, input, result, null, time, secondary, secondaryChance, recipeType, inputCount);
     }
 
     @Override

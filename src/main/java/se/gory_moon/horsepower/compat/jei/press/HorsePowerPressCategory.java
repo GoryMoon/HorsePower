@@ -1,5 +1,8 @@
 package se.gory_moon.horsepower.compat.jei.press;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,7 +60,8 @@ public class HorsePowerPressCategory extends HorsePowerCategory<PressingRecipe> 
 
 	@Override
 	public void setIngredients(PressingRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputIngredients(recipe.getIngredients());
+	    List<ItemStack> inputIngredients = recipe.getIngredients().stream().flatMap(i -> Stream.of(i.getMatchingStacks())).distinct().map(stack -> {stack.setCount(recipe.getInputCount());return stack;}).collect(Collectors.toList());
+	    ingredients.setInputLists(VanillaTypes.ITEM,Arrays.asList(inputIngredients));
         ingredients.setOutputs(VanillaTypes.ITEM, Stream.of(recipe.getRecipeOutput(), recipe.getSecondaryOutput()).map(stack -> stack.isEmpty() ? null: stack).collect(Collectors.toList()));
         if(isLiquid)
             ingredients.setOutput(VanillaTypes.FLUID, recipe.getFluidOutput());

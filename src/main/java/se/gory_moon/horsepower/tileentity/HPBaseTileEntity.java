@@ -224,7 +224,7 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
             ItemStack itemstack = recipe.getRecipeOutput();
             ItemStack secondary = recipe.getSecondaryOutput();
 
-            if (getStackInSlot(0).getCount() < 1) //TODO input.count()
+            if (getStackInSlot(0).getCount() < 1 || getStackInSlot(0).getCount() < recipe.getInputCount())
                 return false;
             if (itemstack.isEmpty())
                 return false;

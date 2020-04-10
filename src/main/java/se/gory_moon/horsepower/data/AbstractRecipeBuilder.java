@@ -29,9 +29,10 @@ public abstract class AbstractRecipeBuilder {
     private final int secondaryCount;
     private final int secondaryChance;
     private final FluidStack outputFluid;
+    private final int inputCount;
     private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
 
-    protected AbstractRecipeBuilder(AbstractHPRecipe.Type type, IItemProvider result, int count, Ingredient input, int time, IItemProvider secondary, int secondaryCount, int secondaryChance, FluidStack outputFluid) {
+    protected AbstractRecipeBuilder(AbstractHPRecipe.Type type, IItemProvider result, int count, Ingredient input, int time, IItemProvider secondary, int secondaryCount, int secondaryChance, FluidStack outputFluid, int inputCount) {
         this.type = type;
         this.result = result != null ? result.asItem(): null;
         this.count = count;
@@ -41,6 +42,7 @@ public abstract class AbstractRecipeBuilder {
         this.secondaryCount = secondaryCount;
         this.secondaryChance = secondaryChance;
         this.outputFluid = outputFluid;
+        this.inputCount = inputCount;
     }
 
     /**
@@ -78,10 +80,10 @@ public abstract class AbstractRecipeBuilder {
         this.validate(id);
         this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
         if(result != null) {
-            consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
+            consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid,this.inputCount, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
         }
         else { //fluid output
-        	consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.outputFluid.getFluid().getRegistryName().getPath() + "/" + id.getPath())));
+        	consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid,this.inputCount, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.outputFluid.getFluid().getRegistryName().getPath() + "/" + id.getPath())));
         }	
     }
 
@@ -107,8 +109,9 @@ public abstract class AbstractRecipeBuilder {
         private final ResourceLocation advancementId;
         private IRecipeSerializer<?> serializer;
         private FluidStack outputFluid;
+        private int inputCount;
 
-        public Result(IRecipeSerializer<?> serializer, ResourceLocation id, AbstractHPRecipe.Type type, Ingredient input, Item result, int count, int time, Item secondary, int secondaryCount, int secondaryChance, FluidStack outputFluid, Advancement.Builder advancementBuilder, ResourceLocation advancementId) {
+        public Result(IRecipeSerializer<?> serializer, ResourceLocation id, AbstractHPRecipe.Type type, Ingredient input, Item result, int count, int time, Item secondary, int secondaryCount, int secondaryChance, FluidStack outputFluid, int inputCount, Advancement.Builder advancementBuilder, ResourceLocation advancementId) {
             this.serializer = serializer;
             this.id = id;
             this.type = type;
@@ -122,6 +125,7 @@ public abstract class AbstractRecipeBuilder {
             this.outputFluid = outputFluid;
             this.advancementBuilder = advancementBuilder;
             this.advancementId = advancementId;
+            this.inputCount = inputCount;
         }
 
         @Override
@@ -155,6 +159,9 @@ public abstract class AbstractRecipeBuilder {
                 }
                 json.add("secondary", secondaryObj);
                 json.addProperty("secondary_chance", Integer.valueOf(secondaryChance));
+            }
+            if (this.inputCount > 1) {
+                json.addProperty("input_count", Integer.valueOf(this.inputCount));
             }
         }
 

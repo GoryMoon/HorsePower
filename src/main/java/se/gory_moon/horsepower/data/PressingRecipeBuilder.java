@@ -8,16 +8,16 @@ import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
 public class PressingRecipeBuilder extends AbstractRecipeBuilder {
 
-    private PressingRecipeBuilder(IItemProvider result, int count, Ingredient input, FluidStack fluidStack) {
-        super(null, result, count, input, 0, null, 0, 0, fluidStack);
+    private PressingRecipeBuilder(IItemProvider result, int count, Ingredient input, FluidStack fluidStack, int inputCount) {
+        super(null, result, count, input, 0, null, 0, 0, fluidStack, inputCount);
     }
 
-    public static PressingRecipeBuilder pressingRecipe(IItemProvider result, int count, Ingredient input) {
-        return new PressingRecipeBuilder(result, count, input, null);
+    public static PressingRecipeBuilder pressingRecipe(IItemProvider result, int count, Ingredient input, int inputCount) {
+        return new PressingRecipeBuilder(result, count, input, null, inputCount);
     }
 
-    public static PressingRecipeBuilder pressingRecipe(FluidStack result, Ingredient input) {
-        return new PressingRecipeBuilder(null, 0, input, result);
+    public static PressingRecipeBuilder pressingRecipe(FluidStack result, Ingredient input, int inputCount) {
+        return new PressingRecipeBuilder(null, 0, input, result, inputCount);
     }
 
     @Override
