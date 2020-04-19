@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +23,7 @@ import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
+import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
 import se.gory_moon.horsepower.util.Constants;
 
 import java.util.function.Supplier;
@@ -43,6 +45,7 @@ public class ModBlocks {
     public static final BlockChopper BLOCK_CHOPPER = new BlockChopper();
     public static final BlockFiller BLOCK_CHOPPER_FILLER = (BlockFiller) new BlockFiller(Material.WOOD, "chopper_", true).setHarvestLevel1("axe", 0);//.setHardness(5F).setResistance(5F);*/
     public static RegistryEntry<ManualMillstoneBlock> manualMillstoneBlock;
+    public static RegistryEntry<BlockChoppingBlock> choppingBlock;    
     
     public static final RegistryObject<BlockItem> MILLSTONE_ITEM = ITEMS.register(Constants.MILLSTONE_BLOCK, () -> new BlockItem(MILLSTONE_BLOCK.get(), new Item.Properties().group(HorsePower.itemGroup)));
     public static final RegistryObject<BlockItem> PRESS_ITEM = ITEMS.register(Constants.PRESS_BLOCK, () -> new DoubleBlockItem(PRESS_BLOCK.get(), PRESS_FILLER_BLOCK.get()));
@@ -50,6 +53,7 @@ public class ModBlocks {
     private static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
     public static final RegistryObject<TileEntityType<MillstoneTileEntity>> MILLSTONE_TILE = TILE_ENTITIES.register(Constants.MILLSTONE_BLOCK, () -> create(MillstoneTileEntity::new, MILLSTONE_BLOCK));
     public static RegistryEntry<TileEntityType<ManualMillstoneTileEntity>> manualMillstoneTile;
+    public static RegistryEntry<TileEntityType<TileEntityManualChopper>> choppingBlockTile;
     public static final RegistryObject<TileEntityType<PressTileEntity>> PRESS_TILE = TILE_ENTITIES.register(Constants.PRESS_BLOCK, () -> create(PressTileEntity::new, PRESS_BLOCK));
     public static final RegistryObject<TileEntityType<FillerTileEntity>> FILLER_TILE = TILE_ENTITIES.register(Constants.FILLER, () -> create(FillerTileEntity::new, PRESS_FILLER_BLOCK));
 
@@ -71,6 +75,21 @@ public class ModBlocks {
                 .register();
         manualMillstoneTile = manualMillstoneBlock.getSibling(ForgeRegistries.TILE_ENTITIES);
 
+        choppingBlock = registrate().object(Constants.HAND_CHOPPING_BLOCK)
+                .block(Material.WOOD, BlockChoppingBlock::new)
+                .lang("Chopping Block")
+                .blockstate((ctx,prov) -> {})
+                .recipe((ctx,prov) -> ShapedRecipeBuilder.shapedRecipe(ctx.getEntry()).patternLine("   ").patternLine("   ").patternLine("WWW")
+                        .key('W', Items.OAK_WOOD)
+                        .addCriterion("has_wood", prov.hasItem(Items.OAK_WOOD))
+                        .build(prov))
+                .item()
+                .model((ctx,prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/chopping_block")))
+                .build()
+                .tileEntity(TileEntityManualChopper::new)
+                .register();
+        choppingBlockTile = choppingBlock.getSibling(ForgeRegistries.TILE_ENTITIES);
+        
 
         BLOCKS.register(event);
         ITEMS.register(event);

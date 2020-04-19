@@ -15,9 +15,11 @@ public class RecipeSerializers {
 
     public static final HPRecipeType<MillingRecipe> MILLING_TYPE = new HPRecipeType<>("milling");
     public static final HPRecipeType<PressingRecipe> PRESSING_TYPE = new HPRecipeType<>("pressing");
+    public static final HPRecipeType<ChoppingRecipe> CHOPPING_TYPE = new HPRecipeType<>("chopping");
 
     public static final MillingSerializer MILLING_SERIALIZER = new MillingSerializer();
     public static final PressingSerializer PRESSING_SERIALIZER = new PressingSerializer();
+    public static final ChoppingSerializer CHOPPING_SERIALIZER = new ChoppingSerializer();
 
     @Mod.EventBusSubscriber(modid = Constants.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -27,9 +29,11 @@ public class RecipeSerializers {
             IForgeRegistry<IRecipeSerializer<?>> registry = event.getRegistry();
             registerRecipeType(MILLING_TYPE);
             registerRecipeType(PRESSING_TYPE);
+            registerRecipeType(CHOPPING_TYPE);
 
             registry.register(MILLING_SERIALIZER.setRegistryName(Constants.MOD_ID, "milling"));
             registry.register(PRESSING_SERIALIZER.setRegistryName(Constants.MOD_ID, "pressing"));
+            registry.register(CHOPPING_SERIALIZER.setRegistryName(Constants.MOD_ID, "chopping"));
         }
 
         private static <T extends IRecipe<?>> void registerRecipeType(IRecipeType<T> type) {
