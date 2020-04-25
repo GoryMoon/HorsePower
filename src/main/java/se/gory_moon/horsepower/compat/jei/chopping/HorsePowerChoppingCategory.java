@@ -1,15 +1,23 @@
 package se.gory_moon.horsepower.compat.jei.chopping;
-/*
-import mezz.jei.api.IGuiHelper;
-import mezz.jei.api.gui.IGuiItemStackGroup;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import se.gory_moon.horsepower.jei.HorsePowerCategory;
-import se.gory_moon.horsepower.jei.HorsePowerPlugin;
-import se.gory_moon.horsepower.lib.Reference;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
+import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
+import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.util.Localization;
 
-public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipeWrapper> {
+public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipe> {
 
     private boolean handHandler;
 
@@ -22,12 +30,12 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
         super(guiHelper);
         this.handHandler = hand;
 
-        localizedName = handHandler ? Localization.GUI.CATEGORY_MANUAL_CHOPPING.translate(): Localization.GUI.CATEGORY_CHOPPING.translate();
+        localizedName = handHandler ? Localization.JEI.CATEGORY$MANUAL_CHOPPING.translate(): Localization.JEI.CATEGORY$CHOPPING.translate();
     }
 
     @Override
-    public String getUid() {
-        return handHandler ? HorsePowerPlugin.MANUAL_CHOPPING: HorsePowerPlugin.CHOPPING;
+    public ResourceLocation getUid() {
+        return handHandler ? HorsePowerPlugin.CHOPPING : HorsePowerPlugin.CHOPPING; //FIXME DIFFERENCE FOR MANUAL
     }
 
     @Override
@@ -35,14 +43,10 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
         return localizedName;
     }
 
-    @Override
-    public String getModName() {
-        return Reference.NAME;
-    }
 
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, ChoppingRecipeWrapper recipeWrapper, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, ChoppingRecipe recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
         guiItemStacks.init(inputSlot, true, 34, 32);
@@ -51,5 +55,20 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
         guiItemStacks.set(ingredients);
         super.openRecipe();
     }
+
+    @Override
+    public Class<? extends ChoppingRecipe> getRecipeClass() {
+        return ChoppingRecipe.class;
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.choppingBlock.get(): ModBlocks.MILLSTONE_BLOCK.get())); //FIXME DIFFERENCE FOR MANUAL
+    }
+
+    @Override
+    public void setIngredients(ChoppingRecipe recipe, IIngredients ingredients) {
+        ingredients.setInputIngredients(recipe.getIngredients());
+        ingredients.setOutputs(VanillaTypes.ITEM, Stream.of(recipe.getRecipeOutput()).collect(Collectors.toList()));
+    }
 }
-*/

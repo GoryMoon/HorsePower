@@ -2,6 +2,7 @@ package se.gory_moon.horsepower.data;
 
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.CookingRecipeBuilder;
 import net.minecraft.data.DataGenerator;
@@ -16,6 +17,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.registries.ForgeRegistries;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.items.ModItems;
 import se.gory_moon.horsepower.util.color.HPTags;
@@ -60,7 +62,14 @@ public class HPRecipeProvider extends RecipeProvider {
         //Pressing Recipes
         PressingRecipeBuilder.pressingRecipe(Items.DIRT, 1, Ingredient.fromItems(Items.WHEAT_SEEDS),12).addCriterion("has_seed", hasItem(Items.WHEAT_SEEDS)).build(consumer, "horsepower:pressing/dirt");
         PressingRecipeBuilder.pressingRecipe(new FluidStack(Fluids.WATER, 1000), Ingredient.fromTag(ItemTags.LEAVES),8).addCriterion("has_leave", hasItem(Items.OAK_LEAVES)).build(consumer, "horsepower:pressing/water_from_leaves");
-        //"ore:treeLeaves@8-fluid:water@1000"
+
+        //Chopping Recipes
+        ChoppingRecipeBuilder.choppingRecipe(Items.OAK_PLANKS, 1, Ingredient.fromItems(Items.OAK_LOG)).addCriterion("has_oak", hasItem(Items.OAK_LOG)).build(consumer, "horsepower:chopping/oak_planks");
+        ChoppingRecipeBuilder.choppingRecipe(Items.ACACIA_PLANKS, 1, Ingredient.fromItems(Items.ACACIA_LOG)).addCriterion("has_acacia", hasItem(Items.ACACIA_LOG)).build(consumer, "horsepower:chopping/acacia_planks");
+        ChoppingRecipeBuilder.choppingRecipe(Items.BIRCH_PLANKS, 1, Ingredient.fromItems(Items.BIRCH_LOG)).addCriterion("has_birch", hasItem(Items.BIRCH_LOG)).build(consumer, "horsepower:chopping/birch_planks");
+        ChoppingRecipeBuilder.choppingRecipe(Items.DARK_OAK_PLANKS, 1, Ingredient.fromItems(Items.DARK_OAK_LOG)).addCriterion("has_dark_oak", hasItem(Items.DARK_OAK_LOG)).build(consumer, "horsepower:chopping/dark_oak_planks");
+        ChoppingRecipeBuilder.choppingRecipe(Items.JUNGLE_PLANKS, 1, Ingredient.fromItems(Items.JUNGLE_LOG)).addCriterion("has_jungle", hasItem(Items.JUNGLE_LOG)).build(consumer, "horsepower:chopping/jungle_planks");
+        ChoppingRecipeBuilder.choppingRecipe(Items.SPRUCE_PLANKS, 1, Ingredient.fromItems(Items.SPRUCE_LOG)).addCriterion("has_spruce", hasItem(Items.SPRUCE_LOG)).build(consumer, "horsepower:chopping/spruce_planks");
     }
 
     @Override

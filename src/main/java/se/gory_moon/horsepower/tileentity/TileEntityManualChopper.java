@@ -23,6 +23,7 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
@@ -175,7 +176,8 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
 
     @Override
     public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.MANUAL); //TODO another type for chopping?
+        System.out.println(recipe.getRecipeOutput().getItem().getRegistryName());
+        return recipe instanceof ChoppingRecipe ? recipe : null;
     }
 
     @Override

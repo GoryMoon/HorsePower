@@ -17,7 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.compat.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.compat.jei.milling.HorsePowerMillingCategory;
 import se.gory_moon.horsepower.compat.jei.press.HorsePowerPressCategory;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
@@ -146,7 +148,8 @@ public class HorsePowerPlugin implements IModPlugin {
                 new HorsePowerMillingCategory(guiHelper, false),
                 new HorsePowerMillingCategory(guiHelper, true),
                 new HorsePowerPressCategory(guiHelper, false),
-                new HorsePowerPressCategory(guiHelper, true)
+                new HorsePowerPressCategory(guiHelper, true),
+                new HorsePowerChoppingCategory(guiHelper,true)
         );
     }
 
@@ -165,6 +168,10 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipes(manualMillingRecipes, MANUAL_MILLING);
         registration.addRecipes(pressingItemRecipes, PRESS_ITEM);
         registration.addRecipes(pressingFluidRecipes, PRESS_FLUID);
+        
+        Collection<IRecipe<IInventory>> choppingTypeRecipes = minecraftRecipeManager.getRecipes(RecipeSerializers.CHOPPING_TYPE).values();
+        HorsePower.LOGGER.info("JEI chopping recipes: "+choppingTypeRecipes.size());
+        registration.addRecipes(choppingTypeRecipes, CHOPPING);
     }
 
 
@@ -174,6 +181,8 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.manualMillstoneBlock.get()), MANUAL_MILLING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_ITEM);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_FLUID);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.choppingBlock.get()), CHOPPING);
+        
     }
 
     @Override
