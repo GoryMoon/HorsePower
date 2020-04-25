@@ -1,0 +1,9 @@
+{
+  "type": "horsepower:chopping",
+  "ingredient": {
+    "item": "minecraft:acacia_log"
+  },
+  "result": {
+    "item": "minecraft:acacia_planks"
+  }
+}

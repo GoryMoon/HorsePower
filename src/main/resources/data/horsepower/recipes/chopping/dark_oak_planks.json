@@ -1,0 +1,9 @@
+{
+  "type": "horsepower:chopping",
+  "ingredient": {
+    "item": "minecraft:dark_oak_log"
+  },
+  "result": {
+    "item": "minecraft:dark_oak_planks"
+  }
+}

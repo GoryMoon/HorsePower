@@ -1,0 +1,9 @@
+{
+  "type": "horsepower:chopping",
+  "ingredient": {
+    "item": "minecraft:jungle_log"
+  },
+  "result": {
+    "item": "minecraft:jungle_planks"
+  }
+}
