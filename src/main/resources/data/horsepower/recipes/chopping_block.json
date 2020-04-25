@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "   ",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:oak_log"
+    }
+  },
+  "result": {
+    "item": "horsepower:chopping_block"
+  }
+}

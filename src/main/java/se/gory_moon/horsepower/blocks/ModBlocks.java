@@ -80,7 +80,7 @@ public class ModBlocks {
                 .lang("Chopping Block")
                 .blockstate((ctx,prov) -> {})
                 .recipe((ctx,prov) -> ShapedRecipeBuilder.shapedRecipe(ctx.getEntry()).patternLine("   ").patternLine("   ").patternLine("WWW")
-                        .key('W', Items.OAK_WOOD)
+                        .key('W', Items.OAK_LOG)
                         .addCriterion("has_wood", prov.hasItem(Items.OAK_WOOD))
                         .build(prov))
                 .item()

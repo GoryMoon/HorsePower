@@ -1,9 +1,9 @@
 {
-  "parent": "block/block",
+  "parent": "minecraft:block/block",
   "textures": {
-    "1": "minecraft:blocks/log_oak_top",
-    "2": "minecraft:blocks/log_oak",
-    "particle": "minecraft:blocks/planks_oak"
+    "1": "minecraft:block/oak_log_top",
+    "2": "minecraft:block/oak_log",
+    "particle": "minecraft:block/oak_planks"
   },
   "elements": [
     {
