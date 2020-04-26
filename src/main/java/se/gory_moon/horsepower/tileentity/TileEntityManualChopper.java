@@ -176,7 +176,6 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
 
     @Override
     public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        System.out.println(recipe.getRecipeOutput().getItem().getRegistryName());
         return recipe instanceof ChoppingRecipe ? recipe : null;
     }
 

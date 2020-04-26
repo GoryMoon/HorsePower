@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "   ",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:birch_log"
+    }
+  },
+  "result": {
+    "item": "horsepower:chopper"
+  }
+}
