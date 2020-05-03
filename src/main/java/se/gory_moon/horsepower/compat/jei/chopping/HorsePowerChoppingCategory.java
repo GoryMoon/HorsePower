@@ -35,7 +35,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
     @Override
     public ResourceLocation getUid() {
-        return handHandler ? HorsePowerPlugin.CHOPPING : HorsePowerPlugin.CHOPPING; //FIXME DIFFERENCE FOR MANUAL
+        return handHandler ? HorsePowerPlugin.MANUAL_CHOPPING : HorsePowerPlugin.CHOPPING;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
     @Override
     public IDrawable getIcon() {
-        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.choppingBlock.get(): ModBlocks.MILLSTONE_BLOCK.get())); //FIXME DIFFERENCE FOR MANUAL
+        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.choppingBlock.get(): ModBlocks.chopperBlock.get()));
     }
 
     @Override

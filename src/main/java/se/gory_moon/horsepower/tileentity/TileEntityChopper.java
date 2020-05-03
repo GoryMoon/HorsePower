@@ -10,8 +10,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.blocks.BlockChopper;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -77,7 +79,7 @@ public class TileEntityChopper extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack, false) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
     @Override
@@ -123,7 +125,7 @@ public class TileEntityChopper extends HPHorseBaseTileEntity {
             if (currentItemChopTime >= totalItemChopTime) {
                 currentItemChopTime = 0;
 
-                totalItemChopTime = HPRecipes.instance().getChoppingTime(getStackInSlot(0), false);
+                totalItemChopTime = HPRecipes.getTypeTime(getRecipe(), null);;
                 chopItem();
                 return true;
             }
@@ -143,7 +145,7 @@ public class TileEntityChopper extends HPHorseBaseTileEntity {
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemChopTime = HPRecipes.instance().getChoppingTime(stack, false);
+            totalItemChopTime = HPRecipes.getTypeTime(getRecipe(), null);
             currentItemChopTime = 0;
             currentWindup = 0;
             markDirty();
@@ -153,29 +155,20 @@ public class TileEntityChopper extends HPHorseBaseTileEntity {
     private void chopItem() {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);
-//            ItemStack result = getRecipeItemStack(); //FIME output?
-            ItemStack result = getStackInSlot(1); 
-
-            if (result.isEmpty()) {
+            ItemStack output = getStackInSlot(1);
+           
+            ItemStack result =  getRecipe().getCraftingResult(inventory);
+                        
+            if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
-            } else if (result.getItem() == result.getItem()) {
-                result.grow(result.getCount());
+            } else if (output.isItemEqual(result)) {
+                output.grow(result.getCount());
             }
 
             input.shrink(1);
             markDirty();
         }
     }
-
-//    @Override
-//    public ItemStack getRecipeItemStack() {
-//        return HPRecipes.instance().getChopperResult(getStackInSlot(0), false);
-//    }
-
-//    @Override
-//    public HPRecipeBase getRecipe() {
-//        return HPRecipes.instance().getChoppingBlockRecipe(getStackInSlot(0), false);
-//    }
 
     @Override
     public int getPositionOffset() {
@@ -186,38 +179,6 @@ public class TileEntityChopper extends HPHorseBaseTileEntity {
     public int getInventoryStackLimit() {
         return 1;
     }
-
-//    @Override
-//    public int getField(int id) {
-//        switch (id) {
-//            case 0:
-//                return totalItemChopTime;
-//            case 1:
-//                return currentItemChopTime;
-//            case 2:
-//                return currentWindup;
-//            default:
-//                return 0;
-//        }
-//    }
-
-//    @Override
-//    public void setField(int id, int value) {
-//        switch (id) {
-//            case 0:
-//                totalItemChopTime = value;
-//                break;
-//            case 1:
-//                currentItemChopTime = value;
-//            case 2:
-//                currentWindup = value;
-//        }
-//    }
-
-//    @Override
-//    public int getFieldCount() {
-//        return 3;
-//    }
 
     @Override
     public ITextComponent getName() {

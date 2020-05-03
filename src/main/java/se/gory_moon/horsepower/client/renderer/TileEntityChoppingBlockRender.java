@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower.client.renderer;
-/*
-import net.minecraft.client.renderer.GlStateManager;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
 
 public class TileEntityChoppingBlockRender extends TileEntityHPBaseRenderer<TileEntityManualChopper> {
@@ -23,4 +24,3 @@ public class TileEntityChoppingBlockRender extends TileEntityHPBaseRenderer<Tile
     }
 
 }
-*/

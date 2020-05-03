@@ -149,6 +149,7 @@ public class HorsePowerPlugin implements IModPlugin {
                 new HorsePowerMillingCategory(guiHelper, true),
                 new HorsePowerPressCategory(guiHelper, false),
                 new HorsePowerPressCategory(guiHelper, true),
+                new HorsePowerChoppingCategory(guiHelper,false),
                 new HorsePowerChoppingCategory(guiHelper,true)
         );
     }
@@ -170,8 +171,9 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipes(pressingFluidRecipes, PRESS_FLUID);
         
         Collection<IRecipe<IInventory>> choppingTypeRecipes = minecraftRecipeManager.getRecipes(RecipeSerializers.CHOPPING_TYPE).values();
-        HorsePower.LOGGER.info("JEI chopping recipes: "+choppingTypeRecipes.size());
+
         registration.addRecipes(choppingTypeRecipes, CHOPPING);
+        registration.addRecipes(choppingTypeRecipes, MANUAL_CHOPPING);
     }
 
 
@@ -181,7 +183,8 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.manualMillstoneBlock.get()), MANUAL_MILLING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_ITEM);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_FLUID);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.choppingBlock.get()), CHOPPING);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.choppingBlock.get()), MANUAL_CHOPPING);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.chopperBlock.get()), CHOPPING);
         
     }
 

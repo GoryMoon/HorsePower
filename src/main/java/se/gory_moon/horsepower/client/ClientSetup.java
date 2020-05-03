@@ -9,6 +9,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.client.renderer.TileEntityChopperRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityChoppingBlockRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityManualMillstoneRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
@@ -17,6 +19,8 @@ import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
+import se.gory_moon.horsepower.tileentity.TileEntityChopper;
+import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.color.ColorGetter;
 
@@ -28,8 +32,8 @@ public class ClientSetup {
         ClientRegistry.bindTileEntitySpecialRenderer(MillstoneTileEntity.class, new TileEntityMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(ManualMillstoneTileEntity.class, new TileEntityManualMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(FillerTileEntity.class, new TileEntityFillerRender());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
-        //ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
         ClientRegistry.bindTileEntitySpecialRenderer(PressTileEntity.class, new TileEntityPressRender());
 
         //TODO make server command

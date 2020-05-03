@@ -142,7 +142,8 @@ public abstract class HPBaseBlock extends ContainerBlock {
             } else {
                 return false;
             }
-        } else if (!stack.isEmpty() && te.isItemValidForSlot(0, stack)) {
+        } else 
+            if (!stack.isEmpty() && te.isItemValidForSlot(0, stack)) {
             ItemStack itemStack = te.getStackInSlot(0);
             boolean flag = false;
 

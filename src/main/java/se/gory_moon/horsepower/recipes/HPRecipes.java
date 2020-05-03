@@ -10,8 +10,8 @@ public class HPRecipes {
 
     private static HPRecipes INSTANCE = new HPRecipes();
 
-    private final Map<ComparableItemStack, ChoppingBlockRecipe> choppingBlockRecipes = Maps.newHashMap();
-    private final Map<ComparableItemStack, ChoppingBlockRecipe> manualChoppingBlockRecipes = Maps.newHashMap();
+//    private final Map<ComparableItemStack, ChoppingBlockRecipe> choppingBlockRecipes = Maps.newHashMap();
+//    private final Map<ComparableItemStack, ChoppingBlockRecipe> manualChoppingBlockRecipes = Maps.newHashMap();
 
     public static HPRecipes instance() {
         return INSTANCE;
@@ -29,24 +29,24 @@ public class HPRecipes {
         return hasTypeRecipe(recipe, type) ? recipe.getTime(): 16;
     }
 
-    public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack, boolean hand) {
-        if (stack.isEmpty())
-            return null;
-        return hand && Configs.recipes.useSeperateChoppingRecipes ? manualChoppingBlockRecipes.get(new ComparableItemStack(stack)): choppingBlockRecipes.get(new ComparableItemStack(stack));
-    }
+//    public ChoppingBlockRecipe getChoppingBlockRecipe(ItemStack stack, boolean hand) {
+//        if (stack.isEmpty())
+//            return null;
+//        return hand && Configs.recipes.useSeperateChoppingRecipes ? manualChoppingBlockRecipes.get(new ComparableItemStack(stack)): choppingBlockRecipes.get(new ComparableItemStack(stack));
+//    }
 
-    public ItemStack getChopperResult(ItemStack stack, boolean hand) {
-        ChoppingBlockRecipe recipe = getChoppingBlockRecipe(stack, hand);
-        return recipe != null ? recipe.getOutput(): ItemStack.EMPTY;
-    }
+//    public ItemStack getChopperResult(ItemStack stack, boolean hand) {
+//        ChoppingBlockRecipe recipe = getChoppingBlockRecipe(stack, hand);
+//        return recipe != null ? recipe.getOutput(): ItemStack.EMPTY;
+//    }
 
-    public boolean hasChopperRecipe(ItemStack stack, boolean hand) {
-        return getChoppingBlockRecipe(stack, hand) != null;
-    }
+//    public boolean hasChopperRecipe(ItemStack stack, boolean hand) {
+//        return getChoppingBlockRecipe(stack, hand) != null;
+//    }
 
-    public int getChoppingTime(ItemStack stack, boolean hand) {
-        int mult = Configs.recipes.useSeperateChoppingRecipes ? 1: (hand ? Configs.SERVER.choppingMultiplier.get(): 1);
-        ChoppingBlockRecipe recipe = getChoppingBlockRecipe(stack, hand);
-        return mult * (recipe != null ? recipe.getTime(): 1);
-    }
+//    public int getChoppingTime(ItemStack stack, boolean hand) {
+//        int mult = Configs.recipes.useSeperateChoppingRecipes ? 1: (hand ? Configs.SERVER.choppingMultiplier.get(): 1);
+//        ChoppingBlockRecipe recipe = getChoppingBlockRecipe(stack, hand);
+//        return mult * (recipe != null ? recipe.getTime(): 1);
+//    }
 }

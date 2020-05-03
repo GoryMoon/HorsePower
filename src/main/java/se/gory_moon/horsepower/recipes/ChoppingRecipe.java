@@ -14,7 +14,7 @@ public class ChoppingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.choppingBlock.get(): ModBlocks.MILLSTONE_BLOCK.get()); //FIXME horse chopper block
+        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.choppingBlock.get(): ModBlocks.chopperBlock.get());
     }
 
     @Override

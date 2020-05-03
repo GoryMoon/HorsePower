@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.util.Utils;
 
 import java.util.ArrayList;
@@ -200,7 +201,6 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         }
         if (locateHorseTimer <= 0)
             locateHorseTimer = 120;
-
         if (getWorld() != null && !getWorld().isRemote && valid) {
             if (!running && canWork()) {
                 running = true;

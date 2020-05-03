@@ -136,7 +136,9 @@ public class BlockChopper extends BlockHPChoppingBase{// implements IProbeInfoAc
     }
 
     @Override
-    public void emptiedOutput(World world, BlockPos pos) {}
+    public void emptiedOutput(World world, BlockPos pos) {
+        //
+    }
 
     @Override
     public void onWorkerAttached(PlayerEntity playerIn, CreatureEntity creature) {

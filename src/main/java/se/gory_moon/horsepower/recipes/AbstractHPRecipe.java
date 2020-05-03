@@ -10,7 +10,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.stream.Collectors;

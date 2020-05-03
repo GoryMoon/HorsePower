@@ -21,6 +21,7 @@ import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
+import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
@@ -64,7 +65,7 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.instance().hasChopperRecipe(stack, true) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
     public boolean chop(PlayerEntity player, ItemStack held) {
@@ -74,7 +75,7 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
             if (currentItemChopAmount >= totalItemChopAmount) {
                 currentItemChopAmount = 0;
 
-                totalItemChopAmount = HPRecipes.instance().getChoppingTime(getStackInSlot(0), true);
+                totalItemChopAmount = HPRecipes.getTypeTime(getRecipe(), null);
                 chopItem(player, held);
                 return true;
             }
@@ -94,7 +95,7 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
 
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
-            totalItemChopAmount = HPRecipes.instance().getChoppingTime(stack, true);
+            totalItemChopAmount = HPRecipes.getTypeTime(getRecipe(), null);
             currentItemChopAmount = 0;
             markDirty();
         }
@@ -104,13 +105,12 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);
             if (!getWorld().isRemote) {
-//                ItemStack result = getRecipeItemStack(); //TODO what is the right result here ?
-                ItemStack result = getStackInSlot(1);
-
+                ItemStack output = getStackInSlot(1); //current output slot
+                ItemStack result =  getRecipe().getCraftingResult(inventory); //crafting recipe output
+                                            
                 double baseAmount = ((double) getBaseAmount(held, player)) / 100D;
                 int chance = getChance(held, player);
 
-                result = result.copy();
                 result.setCount((int) Math.ceil((double) result.getCount() * baseAmount));
                 if (chance >= 100 || world.rand.nextInt(100) < chance)
                     result.grow(1);
@@ -118,10 +118,10 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
                 if (Boolean.TRUE) { //FIXME Config chopping block drop    -- Configs.general.choppingBlockDrop
                     InventoryHelper.spawnItemStack(getWorld(), getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), result);
                 } else {
-                    if (result.isEmpty()) {
-                        setInventorySlotContents(1, result);
-                    } else if (result.getItem() == result.getItem()) {
-                        result.grow(result.getCount());
+                    if (output.isEmpty()) {
+                        setInventorySlotContents(1, result.copy());
+                    } else if (output.isItemEqual(result)) {
+                        output.grow(result.getCount());
                     }
                 }
             }
