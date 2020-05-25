@@ -179,10 +179,10 @@ public class HorsePowerPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MILLSTONE_BLOCK.get()), MILLING);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.millstoneBlock.get()), MILLING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.manualMillstoneBlock.get()), MANUAL_MILLING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_ITEM);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.PRESS_BLOCK.get()), PRESS_FLUID);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.pressBlock.get()), PRESS_ITEM);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.pressBlock.get()), PRESS_FLUID);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.choppingBlock.get()), MANUAL_CHOPPING);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.chopperBlock.get()), CHOPPING);
         

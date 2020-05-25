@@ -29,7 +29,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     private int totalItemMillTime;
 
     public MillstoneTileEntity() {
-        super(3, ModBlocks.MILLSTONE_TILE.get());
+        super(3, ModBlocks.millstoneTile.get());
     }
 
     @Override

@@ -37,7 +37,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     public PressTileEntity() {
-        super(2, ModBlocks.PRESS_TILE.get());
+        super(2, ModBlocks.pressTile.get());
         //        tank.setCanFill(false);
     }
 

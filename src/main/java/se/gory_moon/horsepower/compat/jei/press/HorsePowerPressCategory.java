@@ -55,7 +55,7 @@ public class HorsePowerPressCategory extends HorsePowerCategory<PressingRecipe> 
 
 	@Override
 	public IDrawable getIcon() {
-		return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.PRESS_BLOCK.get()));
+		return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.pressBlock.get()));
 	}
 
 	@Override

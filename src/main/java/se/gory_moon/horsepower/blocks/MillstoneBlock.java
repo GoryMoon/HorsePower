@@ -3,6 +3,7 @@ package se.gory_moon.horsepower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.Block.Properties;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.CreatureEntity;
@@ -38,11 +39,11 @@ public class MillstoneBlock extends HPBaseBlock {
     private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
     private static final VoxelShape BOUNDING = Block.makeCuboidShape(0, 0, 0, 16, 13, 16);
 
-    public MillstoneBlock() {
-        super(Properties.create(Material.ROCK).hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
+    public MillstoneBlock(Properties properties) {
+        super(properties.hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
 
         setHarvestLevel(ToolType.PICKAXE, 1);
-        setDefaultState(getStateContainer().getBaseState().with(FILLED, false).with(PART, MillstoneModels.BASE));
+        setDefaultState(getStateContainer().getBaseState().with(FILLED, Boolean.FALSE).with(PART, MillstoneModels.BASE));
     }
 
     public static void setState(boolean filled, World world, BlockPos pos) {

@@ -15,7 +15,7 @@ public class PressingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(ModBlocks.PRESS_BLOCK.get());
+        return new ItemStack(ModBlocks.pressBlock.get());
     }
 
     @Override

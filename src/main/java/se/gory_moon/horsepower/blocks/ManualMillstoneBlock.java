@@ -73,7 +73,9 @@ public class ManualMillstoneBlock extends HPBaseBlock {
     }
 
     @Override
-    public void emptiedOutput(World world, BlockPos pos) {}
+    public void emptiedOutput(World world, BlockPos pos) {
+        //
+    }
 
     @Override
     public int getSlot(BlockState state, World worldIn, PlayerEntity player, BlockRayTraceResult hit) {

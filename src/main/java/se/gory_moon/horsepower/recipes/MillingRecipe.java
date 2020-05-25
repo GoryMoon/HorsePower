@@ -14,7 +14,7 @@ public class MillingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.manualMillstoneBlock.get(): ModBlocks.MILLSTONE_BLOCK.get());
+        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.manualMillstoneBlock.get(): ModBlocks.millstoneBlock.get());
     }
 
     @Override

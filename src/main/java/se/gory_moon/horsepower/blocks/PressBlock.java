@@ -50,8 +50,8 @@ public class PressBlock extends HPBaseBlock {
     private static final VoxelShape BOUND = Block.makeCuboidShape(0, 0, 0, 16, 16 + 12, 16);
     private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 16 + 3, 16);
 
-    public PressBlock() {
-        super(Properties.create(Material.WOOD).hardnessAndResistance(5.0F, 5.0F).sound(SoundType.WOOD));
+    public PressBlock(Properties properties) {
+        super(properties.hardnessAndResistance(5.0F, 5.0F).sound(SoundType.WOOD));
 
         setHarvestLevel(ToolType.AXE, 1);
     }

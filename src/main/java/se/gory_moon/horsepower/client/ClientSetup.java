@@ -62,6 +62,6 @@ public class ClientSetup {
                 }
             }
             return -1;
-        }, ModBlocks.MILLSTONE_BLOCK.get());
+        }, ModBlocks.millstoneBlock.get());
     }
 }
