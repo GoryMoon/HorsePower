@@ -183,7 +183,7 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(Registration.MANUAL_MILLSTONE_BLOCK.get()), MANUAL_MILLING);
         registration.addRecipeCatalyst(new ItemStack(Registration.PRESS_BLOCK.get()), PRESS_ITEM);
         registration.addRecipeCatalyst(new ItemStack(Registration.PRESS_BLOCK.get()), PRESS_FLUID);
-        registration.addRecipeCatalyst(new ItemStack(Registration.CHOPPING_BLOCK.get()), MANUAL_CHOPPING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.MANUAL_CHOPPER_BLOCK.get()), MANUAL_CHOPPING);
         registration.addRecipeCatalyst(new ItemStack(Registration.CHOPPER_BLOCK.get()), CHOPPING);
         
     }

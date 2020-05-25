@@ -39,7 +39,7 @@ import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
-import se.gory_moon.horsepower.tileentity.TileEntityChopper;
+import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
@@ -50,14 +50,14 @@ import java.util.Arrays;
 import java.util.List;
 
 //@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockChopper extends BlockHPChoppingBase{// implements IProbeInfoAccessor {
+public class ChopperBlock extends HPChopperBaseBlock{// implements IProbeInfoAccessor {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<ChopperModels> PART = EnumProperty.create("part", ChopperModels.class);
 
     private static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 32, 16);
     
-    public BlockChopper(Properties properties) {
+    public ChopperBlock(Properties properties) {
         super(properties.hardnessAndResistance(5F,5F).sound(SoundType.WOOD));
         setHarvestLevel(ToolType.AXE, 0);
     }
@@ -149,7 +149,7 @@ public class BlockChopper extends BlockHPChoppingBase{// implements IProbeInfoAc
     @Nonnull
     @Override
     public Class<?> getTileClass() {
-        return TileEntityChopper.class;
+        return ChopperTileEntity.class;
     }
 
     @Override

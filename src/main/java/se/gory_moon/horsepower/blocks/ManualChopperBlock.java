@@ -27,7 +27,7 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.FakePlayer;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
-import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
+import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
 
@@ -35,11 +35,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 //@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockChoppingBlock extends BlockHPChoppingBase {  //TODO restore TOP implements IProbeInfoAccessor
+public class ManualChopperBlock extends HPChopperBaseBlock {  //TODO restore TOP implements IProbeInfoAccessor
 
     private static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 6, 16);
     
-    public BlockChoppingBlock(Properties properties) {
+    public ManualChopperBlock(Properties properties) {
         super(properties.hardnessAndResistance(2.0F, 5F).sound(SoundType.WOOD));
         setHarvestLevel(ToolType.AXE, 0);
     }
@@ -60,7 +60,7 @@ public class BlockChoppingBlock extends BlockHPChoppingBase {  //TODO restore TO
         if (player instanceof FakePlayer || player == null)
             return;
 
-        TileEntityManualChopper te = getTileEntity(worldIn, pos);
+        ManualChopperTileEntity te = getTileEntity(worldIn, pos);
 
         if (te != null) {
             ItemStack held = player.getHeldItem(Hand.MAIN_HAND);
@@ -89,7 +89,7 @@ public class BlockChoppingBlock extends BlockHPChoppingBase {  //TODO restore TO
     @Override
     @Nonnull
     public Class<?> getTileClass() {
-        return TileEntityManualChopper.class;
+        return ManualChopperTileEntity.class;
     }
 
 //    @Override

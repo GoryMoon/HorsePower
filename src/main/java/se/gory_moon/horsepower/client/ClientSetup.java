@@ -19,8 +19,8 @@ import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
-import se.gory_moon.horsepower.tileentity.TileEntityChopper;
-import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
+import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.color.ColorGetter;
 
@@ -32,8 +32,8 @@ public class ClientSetup {
         ClientRegistry.bindTileEntitySpecialRenderer(MillstoneTileEntity.class, new TileEntityMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(ManualMillstoneTileEntity.class, new TileEntityManualMillstoneRender());
         ClientRegistry.bindTileEntitySpecialRenderer(FillerTileEntity.class, new TileEntityFillerRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChopper.class, new TileEntityChopperRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityManualChopper.class, new TileEntityChoppingBlockRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(ChopperTileEntity.class, new TileEntityChopperRender());
+        ClientRegistry.bindTileEntitySpecialRenderer(ManualChopperTileEntity.class, new TileEntityChoppingBlockRender());
         ClientRegistry.bindTileEntitySpecialRenderer(PressTileEntity.class, new TileEntityPressRender());
 
         //TODO make server command

@@ -12,7 +12,7 @@ import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.Registration;
-import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.blocks.ChopperBlock;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
@@ -22,7 +22,7 @@ import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
 
-public class TileEntityChopper extends HPHorseBaseTileEntity {
+public class ChopperTileEntity extends HPHorseBaseTileEntity {
 
     private int currentWindup;
     private int currentItemChopTime;
@@ -30,7 +30,7 @@ public class TileEntityChopper extends HPHorseBaseTileEntity {
     private float visualWindup = 0;
     private float oldVisualWindup = -1;
 
-    public TileEntityChopper() {
+    public ChopperTileEntity() {
         super(2,Registration.CHOPPER_TILE.get());
     }
 

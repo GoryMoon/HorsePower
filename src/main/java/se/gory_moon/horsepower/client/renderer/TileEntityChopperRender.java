@@ -9,22 +9,22 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import se.gory_moon.horsepower.blocks.BlockChopper;
+import se.gory_moon.horsepower.blocks.ChopperBlock;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
-import se.gory_moon.horsepower.tileentity.TileEntityChopper;
+import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
 import se.gory_moon.horsepower.util.RenderUtils;
 
-public class TileEntityChopperRender extends TileEntityHPBaseRenderer<TileEntityChopper> {
+public class TileEntityChopperRender extends TileEntityHPBaseRenderer<ChopperTileEntity> {
 
     @Override
-    public void render(TileEntityChopper te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(ChopperTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState blockState = te.getWorld().getBlockState( te.getPos() );
         if (!(blockState.getBlock() instanceof HPBaseBlock)) return;
-        BlockState bladeState = blockState.with(BlockChopper.PART, ChopperModels.BLADE);
+        BlockState bladeState = blockState.with(ChopperBlock.PART, ChopperModels.BLADE);
         if (!(bladeState.getBlock() instanceof HPBaseBlock)) return;
         IBakedModel bladeModel = dispatcher.getBlockModelShapes().getModel(bladeState);
 

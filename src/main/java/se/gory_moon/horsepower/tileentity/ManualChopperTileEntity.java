@@ -32,13 +32,13 @@ import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class TileEntityManualChopper extends HPBaseTileEntity {
+public class ManualChopperTileEntity extends HPBaseTileEntity {
 
     private int currentItemChopAmount;
     private int totalItemChopAmount;
 
-    public TileEntityManualChopper() {
-        super(2,Registration.CHOPPING_BLOCK_TILE.get());
+    public ManualChopperTileEntity() {
+        super(2,Registration.MANUAL_CHOPPER_TILE.get());
         handlerSide = new RangedWrapper(new InvWrapper(inventory), 0, 1);
     }
 

@@ -63,7 +63,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
     @Override
     public IDrawable getIcon() {
-        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? Registration.CHOPPING_BLOCK.get(): Registration.CHOPPER_BLOCK.get()));
+        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? Registration.MANUAL_CHOPPER_BLOCK.get(): Registration.CHOPPER_BLOCK.get()));
     }
 
     @Override

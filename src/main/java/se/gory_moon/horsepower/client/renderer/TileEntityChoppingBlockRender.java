@@ -2,12 +2,12 @@ package se.gory_moon.horsepower.client.renderer;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import se.gory_moon.horsepower.tileentity.TileEntityManualChopper;
+import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 
-public class TileEntityChoppingBlockRender extends TileEntityHPBaseRenderer<TileEntityManualChopper> {
+public class TileEntityChoppingBlockRender extends TileEntityHPBaseRenderer<ManualChopperTileEntity> {
 
     @Override
-    public void render(TileEntityManualChopper te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(ManualChopperTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.translated(x, y, z);
         if (!te.getStackInSlot(0).isEmpty())

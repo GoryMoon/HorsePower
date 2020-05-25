@@ -14,7 +14,7 @@ public class ChoppingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(recipeType == Type.MANUAL ? Registration.CHOPPING_BLOCK.get(): Registration.CHOPPER_BLOCK.get());
+        return new ItemStack(recipeType == Type.MANUAL ? Registration.MANUAL_CHOPPER_BLOCK.get(): Registration.CHOPPER_BLOCK.get());
     }
 
     @Override

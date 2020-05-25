@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "horsepower:chopping_block"
+          "name": "horsepower:manual_chopper"
         }
       ],
       "conditions": [
