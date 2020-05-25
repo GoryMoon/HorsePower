@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
@@ -37,7 +37,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     public PressTileEntity() {
-        super(2, ModBlocks.pressTile.get());
+        super(2, Registration.PRESS_TILE.get());
         //        tank.setCanFill(false);
     }
 

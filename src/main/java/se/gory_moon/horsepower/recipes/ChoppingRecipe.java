@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 
 public class ChoppingRecipe extends AbstractHPRecipe {
 
@@ -14,7 +14,7 @@ public class ChoppingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.choppingBlock.get(): ModBlocks.chopperBlock.get());
+        return new ItemStack(recipeType == Type.MANUAL ? Registration.CHOPPING_BLOCK.get(): Registration.CHOPPER_BLOCK.get());
     }
 
     @Override

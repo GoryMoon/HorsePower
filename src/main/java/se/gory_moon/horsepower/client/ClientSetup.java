@@ -8,7 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.client.renderer.TileEntityChopperRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityChoppingBlockRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
@@ -62,6 +62,6 @@ public class ClientSetup {
                 }
             }
             return -1;
-        }, ModBlocks.millstoneBlock.get());
+        }, Registration.MILLSTONE_BLOCK.get());
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 
 public class MillingRecipe extends AbstractHPRecipe {
 
@@ -14,7 +14,7 @@ public class MillingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(recipeType == Type.MANUAL ? ModBlocks.manualMillstoneBlock.get(): ModBlocks.millstoneBlock.get());
+        return new ItemStack(recipeType == Type.MANUAL ? Registration.MANUAL_MILLSTONE_BLOCK.get(): Registration.MILLSTONE_BLOCK.get());
     }
 
     @Override

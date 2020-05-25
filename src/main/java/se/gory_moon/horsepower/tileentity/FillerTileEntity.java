@@ -9,9 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.blocks.FillerBlock;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
-import se.gory_moon.horsepower.blocks.ModBlocks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class FillerTileEntity extends TileEntity implements INameable {
 
     public FillerTileEntity() {
-        super(ModBlocks.fillerTile.get());
+        super(Registration.FILLER_TILE.get());
     }
 
     public HPBaseTileEntity getFilledTileEntity() {

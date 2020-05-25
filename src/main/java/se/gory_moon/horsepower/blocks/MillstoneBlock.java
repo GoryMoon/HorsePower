@@ -3,8 +3,6 @@ package se.gory_moon.horsepower.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.Block.Properties;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.player.PlayerEntity;

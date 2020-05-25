@@ -18,7 +18,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.HorsePower;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.compat.jei.milling.HorsePowerMillingCategory;
 import se.gory_moon.horsepower.compat.jei.press.HorsePowerPressCategory;
@@ -179,12 +179,12 @@ public class HorsePowerPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.millstoneBlock.get()), MILLING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.manualMillstoneBlock.get()), MANUAL_MILLING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.pressBlock.get()), PRESS_ITEM);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.pressBlock.get()), PRESS_FLUID);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.choppingBlock.get()), MANUAL_CHOPPING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.chopperBlock.get()), CHOPPING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.MILLSTONE_BLOCK.get()), MILLING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.MANUAL_MILLSTONE_BLOCK.get()), MANUAL_MILLING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.PRESS_BLOCK.get()), PRESS_ITEM);
+        registration.addRecipeCatalyst(new ItemStack(Registration.PRESS_BLOCK.get()), PRESS_FLUID);
+        registration.addRecipeCatalyst(new ItemStack(Registration.CHOPPING_BLOCK.get()), MANUAL_CHOPPING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.CHOPPER_BLOCK.get()), CHOPPING);
         
     }
 

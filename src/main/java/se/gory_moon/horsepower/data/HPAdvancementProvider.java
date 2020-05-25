@@ -15,10 +15,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.advancements.UseHorseMillstoneTrigger;
 import se.gory_moon.horsepower.advancements.UsePressTrigger;
-import se.gory_moon.horsepower.blocks.ModBlocks;
-import se.gory_moon.horsepower.items.ModItems;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -73,10 +73,10 @@ public class HPAdvancementProvider implements IDataProvider {
     }
 
     private void registerAdvancements(Consumer<Advancement> consumer) {
-        Advancement root = Advancement.Builder.builder().withDisplay(ModBlocks.manualMillstoneBlock.get(), new TranslationTextComponent("advancements.horsepower.root.title"), new TranslationTextComponent("advancements.horsepower.root.description"), new ResourceLocation("textures/gui/advancements/backgrounds/stone.png"), FrameType.TASK, false, false, false).withRequirementsStrategy(IRequirementsStrategy.OR).withCriterion("get_millstone", InventoryChangeTrigger.Instance.forItems(ModBlocks.manualMillstoneBlock.orElse(null))).withCriterion("get_wheat", InventoryChangeTrigger.Instance.forItems(Items.WHEAT)).register(consumer, "horsepower:horsepower/root");
-        Advancement getFlour = Advancement.Builder.builder().withParent(root).withDisplay(ModItems.FLOUR.get(), new TranslationTextComponent("advancements.horsepower.flour.title"), new TranslationTextComponent("advancements.horsepower.flour.description"), null, FrameType.TASK, true, true, false).withCriterion("get_flour", InventoryChangeTrigger.Instance.forItems(ModItems.FLOUR.orElse(null))).register(consumer, "horsepower:horsepower/get_flour");
-        Advancement use_hpgrindstone = Advancement.Builder.builder().withParent(root).withDisplay(ModBlocks.millstoneBlock.get(), new TranslationTextComponent("advancements.horsepower.millstone.title"), new TranslationTextComponent("advancements.horsepower.millstone.description"), null, FrameType.TASK, true, true, false).withCriterion("use_millstone", UseHorseMillstoneTrigger.Instance.userMillstone()).register(consumer, "horsepower:horsepower/use_hpgrindstone");
-        Advancement use_hppress = Advancement.Builder.builder().withParent(root).withDisplay(ModBlocks.pressBlock.get(), new TranslationTextComponent("advancements.horsepower.press.title"), new TranslationTextComponent("advancements.horsepower.press.description"), null, FrameType.TASK, true, true, false).withCriterion("use_press", UsePressTrigger.Instance.userPress()).register(consumer, "horsepower:horsepower/use_hppress");
+        Advancement root = Advancement.Builder.builder().withDisplay(Registration.MANUAL_MILLSTONE_BLOCK.get(), new TranslationTextComponent("advancements.horsepower.root.title"), new TranslationTextComponent("advancements.horsepower.root.description"), new ResourceLocation("textures/gui/advancements/backgrounds/stone.png"), FrameType.TASK, false, false, false).withRequirementsStrategy(IRequirementsStrategy.OR).withCriterion("get_millstone", InventoryChangeTrigger.Instance.forItems(Registration.MANUAL_MILLSTONE_BLOCK.orElse(null))).withCriterion("get_wheat", InventoryChangeTrigger.Instance.forItems(Items.WHEAT)).register(consumer, "horsepower:horsepower/root");
+        Advancement getFlour = Advancement.Builder.builder().withParent(root).withDisplay(Registration.FLOUR.get(), new TranslationTextComponent("advancements.horsepower.flour.title"), new TranslationTextComponent("advancements.horsepower.flour.description"), null, FrameType.TASK, true, true, false).withCriterion("get_flour", InventoryChangeTrigger.Instance.forItems(Registration.FLOUR.orElse(null))).register(consumer, "horsepower:horsepower/get_flour");
+        Advancement use_hpgrindstone = Advancement.Builder.builder().withParent(root).withDisplay(Registration.MILLSTONE_BLOCK.get(), new TranslationTextComponent("advancements.horsepower.millstone.title"), new TranslationTextComponent("advancements.horsepower.millstone.description"), null, FrameType.TASK, true, true, false).withCriterion("use_millstone", UseHorseMillstoneTrigger.Instance.userMillstone()).register(consumer, "horsepower:horsepower/use_hpgrindstone");
+        Advancement use_hppress = Advancement.Builder.builder().withParent(root).withDisplay(Registration.PRESS_BLOCK.get(), new TranslationTextComponent("advancements.horsepower.press.title"), new TranslationTextComponent("advancements.horsepower.press.description"), null, FrameType.TASK, true, true, false).withCriterion("use_press", UsePressTrigger.Instance.userPress()).register(consumer, "horsepower:horsepower/use_hppress");
 
     }
 }

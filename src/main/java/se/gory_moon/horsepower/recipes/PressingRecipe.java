@@ -5,7 +5,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 
 public class PressingRecipe extends AbstractHPRecipe {
 
@@ -15,7 +15,7 @@ public class PressingRecipe extends AbstractHPRecipe {
 
     @Override
     public ItemStack getIcon() {
-        return new ItemStack(ModBlocks.pressBlock.get());
+        return new ItemStack(Registration.PRESS_BLOCK.get());
     }
 
     @Override

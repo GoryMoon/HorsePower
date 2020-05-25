@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
@@ -26,7 +26,7 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
 
 
     public ManualMillstoneTileEntity() {
-        super(3, ModBlocks.manualMillstoneTile.get());
+        super(3, Registration.MANUAL_MILLSTONE_TILE.get());
     }
 
     public static void millItem(IInventoryHP inventory, HPBaseTileEntity te) {

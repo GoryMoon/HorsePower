@@ -12,8 +12,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
-import se.gory_moon.horsepower.blocks.ModBlocks;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
@@ -29,7 +29,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     private int totalItemMillTime;
 
     public MillstoneTileEntity() {
-        super(3, ModBlocks.millstoneTile.get());
+        super(3, Registration.MILLSTONE_TILE.get());
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.MillingRecipe;
@@ -62,7 +62,7 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
 
     @Override
     public IDrawable getIcon() {
-        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.manualMillstoneBlock.get(): ModBlocks.millstoneBlock.get()));
+        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? Registration.MANUAL_MILLSTONE_BLOCK.get(): Registration.MILLSTONE_BLOCK.get()));
     }
 
     @Override

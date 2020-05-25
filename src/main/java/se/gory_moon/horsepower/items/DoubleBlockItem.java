@@ -25,8 +25,8 @@ public class DoubleBlockItem extends BlockItem {
 
     private Block fillerBlock;
 
-    public DoubleBlockItem(Block block, Block filler) {
-        super(block, new Item.Properties().group(HorsePower.itemGroup));
+    public DoubleBlockItem(Block block, Block filler, Properties properties) {
+        super(block, properties);
         fillerBlock = filler;
     }
 

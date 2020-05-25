@@ -22,7 +22,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.HorsePower;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
@@ -38,7 +38,7 @@ public class TileEntityManualChopper extends HPBaseTileEntity {
     private int totalItemChopAmount;
 
     public TileEntityManualChopper() {
-        super(2,ModBlocks.choppingBlockTile.get());
+        super(2,Registration.CHOPPING_BLOCK_TILE.get());
         handlerSide = new RangedWrapper(new InvWrapper(inventory), 0, 1);
     }
 

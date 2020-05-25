@@ -16,7 +16,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
@@ -55,7 +55,7 @@ public class HorsePowerPressCategory extends HorsePowerCategory<PressingRecipe> 
 
 	@Override
 	public IDrawable getIcon() {
-		return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.pressBlock.get()));
+		return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(Registration.PRESS_BLOCK.get()));
 	}
 
 	@Override

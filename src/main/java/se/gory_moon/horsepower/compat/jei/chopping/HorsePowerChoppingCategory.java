@@ -11,7 +11,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import se.gory_moon.horsepower.blocks.ModBlocks;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
@@ -63,7 +63,7 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
     @Override
     public IDrawable getIcon() {
-        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? ModBlocks.choppingBlock.get(): ModBlocks.chopperBlock.get()));
+        return HorsePowerPlugin.guiHelper.createDrawableIngredient(new ItemStack(handHandler ? Registration.CHOPPING_BLOCK.get(): Registration.CHOPPER_BLOCK.get()));
     }
 
     @Override
