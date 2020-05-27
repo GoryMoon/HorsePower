@@ -1,9 +1,0 @@
-{
-  "type": "horsepower:chopping",
-  "ingredient": {
-    "item": "minecraft:oak_log"
-  },
-  "result": {
-    "item": "minecraft:oak_planks"
-  }
-}

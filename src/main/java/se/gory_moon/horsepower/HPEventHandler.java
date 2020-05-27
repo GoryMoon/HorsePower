@@ -17,9 +17,13 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+
+import se.gory_moon.horsepower.data.PlankRecipesDataPackGeneratorListener;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
@@ -128,6 +132,22 @@ public class HPEventHandler {
                     event.getToolTip().add(new StringTextComponent(Colors.LIGHTGRAY + "[Hold shift for more]"));
                 }
             }
+        }
+    }
+    
+    
+    @SubscribeEvent
+    public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        //Add Reload Listener for the Plank Recipe Generator
+        event.getServer().getResourceManager().addReloadListener(new PlankRecipesDataPackGeneratorListener(event));
+    }
+    
+    @SubscribeEvent
+    public static void onServerStarted(FMLServerStartedEvent event){
+        //Reload to make sure Plank Recipes are available
+        HorsePower.LOGGER.info("onServerStarted "+event);
+        if(Boolean.TRUE.equals(Configs.SERVER.plankDataPackGeneration.get())){
+            event.getServer().reload();
         }
     }
 }

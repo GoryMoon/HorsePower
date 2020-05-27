@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower;
 
 import com.tterrag.registrate.Registrate;
+
 import net.minecraft.util.LazyLoadBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -71,5 +72,5 @@ public class HorsePower {
 
     private void onFingerprintViolation(FMLFingerprintViolationEvent event) {
         LOGGER.warn("Invalid fingerprint detected! The file " + event.getSource().getName() + " may have been tampered with. This version will NOT be supported by the author!");
-    }
+    }  
 }

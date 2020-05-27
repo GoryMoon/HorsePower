@@ -65,8 +65,8 @@
   "config.horsepower.server.points_per_rotation": "Points Per Rotation",
   "config.horsepower.server.points_for_press": "Points For Press",
   "config.horsepower.server.press_fluid_tank_size": "Press Tank Size",
-
   "config.horsepower.server.mobs": "Horse Powered Mob List",
+  "config.horsepower.server.plank_data_pack_generation": "Generate plank recipes for the Chopping Block and Chopper on world load.",
 
   "_comment": "Waila",
   "gui.horsepower.waila.millstone.progress": "Milling: [$1]%%",

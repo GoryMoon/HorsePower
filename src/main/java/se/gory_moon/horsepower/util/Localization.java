@@ -188,7 +188,8 @@ public final class Localization {
             POINTS_FOR_WINDUP,
             POINTS_PER_ROTATION,
             POINTS_FOR_PRESS,
-            PRESS_FLUID_TANK_SIZE,
+            PRESS_FLUID_TANK_SIZE, 
+            PLANK_DATA_PACK_GENERATION,
             ;
 
             public String key() {
