@@ -25,6 +25,7 @@ import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nonnull;
@@ -117,7 +118,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && currentPressStatus == 0 && getStackInSlot(1).isEmpty();
+        return index == 0 && currentPressStatus == 0 && getStackInSlot(1).isEmpty() && getRecipe(stack) != null;
     }
 
     @Override
@@ -245,5 +246,10 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
             return null;
         else
             return new TranslationTextComponent(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+    }
+    
+    @Override
+    protected Type getHPRecipeType() {
+        return null;
     }
 }

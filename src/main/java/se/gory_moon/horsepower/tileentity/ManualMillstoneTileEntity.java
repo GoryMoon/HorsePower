@@ -14,6 +14,7 @@ import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 
 public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
@@ -62,8 +63,8 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
     }
 
     @Override
-    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.MANUAL);
+    protected Type getHPRecipeType() {
+        return Type.MANUAL;
     }
 
     @Override
@@ -78,7 +79,7 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.MANUAL);
+        return index == 0 && getRecipe(stack) != null;
     }
 
     @Override

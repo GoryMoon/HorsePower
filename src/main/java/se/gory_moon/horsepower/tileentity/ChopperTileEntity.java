@@ -18,6 +18,7 @@ import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
@@ -79,7 +80,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HORSE) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty() && getRecipe(stack) != null;
     }
 
     @Override
@@ -220,5 +221,10 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     @Override
     public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
         return RecipeSerializers.CHOPPING_TYPE;
+    }
+
+    @Override
+    protected Type getHPRecipeType() {
+        return Type.HORSE;
     }
 }

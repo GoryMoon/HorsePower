@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -26,8 +27,14 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.HPRecipes;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -143,16 +150,26 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
         return getRecipe(recipeWrapperDummy);
     }
 
-    public AbstractHPRecipe getRecipe(IInventory inventory) {
-        return validateRecipe((AbstractHPRecipe) this.world.getRecipeManager().getRecipe(getRecipeType(), inventory, this.world).orElse(null));
+    public AbstractHPRecipe getRecipe(IInventory theInventory) {
+        List<AbstractHPRecipe> recipes = this.world.getRecipeManager().getRecipes(getRecipeType(), theInventory, this.world).stream().map(AbstractHPRecipe.class::cast).filter(this::validateRecipe).collect(Collectors.toList());
+        if(recipes.size() > 1)
+            HorsePower.LOGGER.warn("Multiple recipes for given recipe input. The following recipes are involved: " +
+                    recipes.stream().map(AbstractHPRecipe::getId).map(ResourceLocation::toString).collect(Collectors.joining(", ")));
+        return recipes.isEmpty()? null : recipes.get(0);
     }
 
-    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return recipe;
+    protected boolean validateRecipe(AbstractHPRecipe recipe) {
+        return HPRecipes.checkTypeRecipe(recipe, getHPRecipeType()) != null;
     }
-
+    
     public abstract IRecipeType<? extends IRecipe<IInventory>> getRecipeType();
 
+    /**
+     * get the HorsePower recipe type. Can be null.
+     * @return type
+     */
+    protected abstract AbstractHPRecipe.Type getHPRecipeType();
+    
     public abstract int getInventoryStackLimit();
 
     public abstract boolean isItemValidForSlot(int index, ItemStack stack);

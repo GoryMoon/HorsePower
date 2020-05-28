@@ -24,6 +24,7 @@ import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
@@ -65,7 +66,7 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.MANUAL) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty()  && getRecipe(stack) != null;
     }
 
     public boolean chop(PlayerEntity player, ItemStack held) {
@@ -175,15 +176,15 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     }
 
     @Override
-    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return recipe instanceof ChoppingRecipe ? recipe : null;
-    }
-
-    @Override
     public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
         return RecipeSerializers.CHOPPING_TYPE;
     }
     
     
     private IItemHandler handlerSide = null;
+
+    @Override
+    protected Type getHPRecipeType() {
+        return Type.MANUAL;
+    }
 }

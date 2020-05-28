@@ -17,6 +17,7 @@ import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nullable;
@@ -95,8 +96,8 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public AbstractHPRecipe validateRecipe(AbstractHPRecipe recipe) {
-        return HPRecipes.checkTypeRecipe(recipe, AbstractHPRecipe.Type.HORSE);
+    protected Type getHPRecipeType() {
+        return Type.HORSE;
     }
 
     @Override
@@ -111,7 +112,7 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HORSE);
+        return index == 0 && getRecipe(stack) != null;
     }
 
     @Override
