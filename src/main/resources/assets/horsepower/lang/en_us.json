@@ -66,7 +66,9 @@
   "config.horsepower.server.points_for_press": "Points For Press",
   "config.horsepower.server.press_fluid_tank_size": "Press Tank Size",
   "config.horsepower.server.mobs": "Horse Powered Mob List",
-  "config.horsepower.server.plank_data_pack_generation": "Generate plank recipes for the Chopping Block and Chopper on world load.",
+  "config.horsepower.server.plank_data_pack_generation": "Generate plank recipes for the Chopping Block and Chopper on world load. When true, on every world join or server start the data will be regenerated. All existing files in the horsepower datapack folder will be removed. When false, the files in your data pack will not be removed! So you can generate the recipe ones and turn this option to false.",
+  "config.horsepower.server.plank_data_pack_generation_manual_count": "Defines the recipe output for manual chopping. The data will be written into the generated plank recipes data pack.",
+  "config.horsepower.server.plank_data_pack_generation_horse_count": "Defines the recipe output for horse chopping. The data will be written into the generated plank recipes data pack.",
 
   "_comment": "Waila",
   "gui.horsepower.waila.millstone.progress": "Milling: [$1]%%",

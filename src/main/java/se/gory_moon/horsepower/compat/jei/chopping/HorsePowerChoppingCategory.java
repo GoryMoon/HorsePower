@@ -43,8 +43,6 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
         return localizedName;
     }
 
-
-
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, ChoppingRecipe recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();

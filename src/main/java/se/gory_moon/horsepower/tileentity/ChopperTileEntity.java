@@ -79,7 +79,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), null) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
+        return index != 1 && index == 0 && HPRecipes.hasTypeRecipe(getRecipe(stack), AbstractHPRecipe.Type.HORSE) && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty();
     }
 
     @Override

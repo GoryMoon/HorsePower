@@ -135,10 +135,8 @@ public class Configs {
         public final IntValue pointsPerPress;
         public final IntValue pressTankSize;
         public final BooleanValue plankDataPackGeneration;
-
-        //        @Comment({"If true the chopping blocks will use all logs types in the game when crafted", "If false the chopping blocks will only use the vanilla logs", "If only vanilla logs are used other logs in recipe will yield oak texture"})
-        //        @Name("Use Dynamic Chopping Crafting")
-        public boolean useDynamicCrafting = true;
+        public final IntValue manualChopperPlankCount;
+        public final IntValue horseChopperPlankCount;
 
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("Server only configs")
@@ -214,6 +212,20 @@ public class Configs {
                     .translation(Localization.CONFIG.SERVER.POINTS_FOR_WINDUP.key())
                     .defineInRange("points_for_windup", 8, 1, Integer.MAX_VALUE);
 
+            plankDataPackGeneration = builder.comment( "Generate Json Datapack for plank recipes.").translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION.key()).define("plank_data_pack_generation", true);
+            
+            manualChopperPlankCount = builder
+                    .comment("Used when generating plank recipes. Defines the output count for manual chopping.")
+                    .worldRestart()
+                    .translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION_MANUAL_COUNT.key())
+                    .defineInRange("manual_chopper_plank_count", 2, 1, 64);
+            
+            horseChopperPlankCount = builder
+                    .comment("Used when generating plank recipes. Defines the output count for horse chopping.")
+                    .worldRestart()
+                    .translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION_HORSE_COUNT.key())
+                    .defineInRange("horse_chopper_plank_count", 4, 1, 64);
+            
             builder.pop()
                     .comment("Configs related to the Press")
                     .push("pressing");
@@ -228,8 +240,6 @@ public class Configs {
                     .worldRestart()
                     .translation(Localization.CONFIG.SERVER.PRESS_FLUID_TANK_SIZE.key())
                     .defineInRange("press_tank_size", FluidAttributes.BUCKET_VOLUME * 3, FluidAttributes.BUCKET_VOLUME, FluidAttributes.BUCKET_VOLUME * 100);
-
-            plankDataPackGeneration = builder.comment( "Generate Json Datapack for plank recipes").translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION.key()).define("plankDataPackGeneration", true);
             
             builder.pop(2);
         }

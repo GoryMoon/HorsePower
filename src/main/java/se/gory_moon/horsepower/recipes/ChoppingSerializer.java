@@ -20,6 +20,6 @@ public class ChoppingSerializer extends AbstractRecipeSerializer<ChoppingRecipe>
 
     @Override
     public boolean hasTypes() {
-        return false;
+        return true;
     }
 }

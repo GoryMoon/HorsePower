@@ -189,7 +189,9 @@ public final class Localization {
             POINTS_PER_ROTATION,
             POINTS_FOR_PRESS,
             PRESS_FLUID_TANK_SIZE, 
-            PLANK_DATA_PACK_GENERATION,
+            PLANK_DATA_PACK_GENERATION, 
+            PLANK_DATA_PACK_GENERATION_MANUAL_COUNT,
+            PLANK_DATA_PACK_GENERATION_HORSE_COUNT,
             ;
 
             public String key() {

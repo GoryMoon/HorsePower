@@ -23,6 +23,7 @@ import se.gory_moon.horsepower.compat.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.compat.jei.milling.HorsePowerMillingCategory;
 import se.gory_moon.horsepower.compat.jei.press.HorsePowerPressCategory;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
@@ -50,6 +51,9 @@ public class HorsePowerPlugin implements IModPlugin {
     }
     private static boolean pressingRecipePredicate(IRecipe<IInventory> recipe) {
     	return recipe instanceof PressingRecipe && ((PressingRecipe) recipe).getFluidOutput() != null;
+    }
+    private static boolean choppingRecipePredicate(IRecipe<IInventory> recipe, AbstractHPRecipe.Type type) {
+        return recipe instanceof ChoppingRecipe && ((ChoppingRecipe) recipe).getRecipeType().is(type);
     }
 
 
@@ -171,9 +175,10 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipes(pressingFluidRecipes, PRESS_FLUID);
         
         Collection<IRecipe<IInventory>> choppingTypeRecipes = minecraftRecipeManager.getRecipes(RecipeSerializers.CHOPPING_TYPE).values();
-
-        registration.addRecipes(choppingTypeRecipes, CHOPPING);
-        registration.addRecipes(choppingTypeRecipes, MANUAL_CHOPPING);
+        List<IRecipe<IInventory>> horseChoppingRecipes = choppingTypeRecipes.stream().filter(recipe -> choppingRecipePredicate(recipe, AbstractHPRecipe.Type.HORSE)).collect(Collectors.toList());
+        List<IRecipe<IInventory>> manualChoppingRecipes = choppingTypeRecipes.stream().filter(recipe -> choppingRecipePredicate(recipe, AbstractHPRecipe.Type.MANUAL)).collect(Collectors.toList());
+        registration.addRecipes(horseChoppingRecipes, CHOPPING);
+        registration.addRecipes(manualChoppingRecipes, MANUAL_CHOPPING);
     }
 
 

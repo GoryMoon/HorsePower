@@ -3,20 +3,15 @@ package se.gory_moon.horsepower.data;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -25,10 +20,8 @@ import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.ItemTags;
@@ -39,6 +32,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.resource.IResourceType;
 import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.util.Constants;
 import static se.gory_moon.horsepower.HorsePower.LOGGER;
 
@@ -46,6 +40,7 @@ public class PlankRecipesDataPackGeneratorListener implements ISelectiveResource
 
     private static final String DATA = "/data/";
     private static final String CHOPPING_BLOCK_RECIPE_PATH = DATA + Constants.MOD_ID + "/recipes/chopping_block";
+    private static final String CHOPPER_RECIPE_PATH = DATA + Constants.MOD_ID + "/recipes/chopper";
     private FMLServerAboutToStartEvent event;
 
     public PlankRecipesDataPackGeneratorListener(FMLServerAboutToStartEvent event) {
@@ -54,15 +49,14 @@ public class PlankRecipesDataPackGeneratorListener implements ISelectiveResource
 
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
-        LOGGER.info("onResourceManagerReload " + event);
         if (event != null && event.getServer() != null
                 && Boolean.TRUE.equals(Configs.SERVER.plankDataPackGeneration.get())) {
             
             String dataPackPath = getDataPackPath(event.getServer());
             if(prepareHorsePowerDataPack(dataPackPath)) { //data pack created or was already existing
-                if(clearDirectory(dataPackPath + "/" +Constants.MOD_ID+  "/"+ CHOPPING_BLOCK_RECIPE_PATH)) {
+                if(clearDirectory(dataPackPath + "/" +Constants.MOD_ID+  "/"+ CHOPPING_BLOCK_RECIPE_PATH) && clearDirectory(dataPackPath + "/" +Constants.MOD_ID+  "/"+ CHOPPER_RECIPE_PATH)) {
                     //generate recipe data
-                    generate(dataPackPath + "/" +Constants.MOD_ID+  "/"+ CHOPPING_BLOCK_RECIPE_PATH);
+                    generate(dataPackPath);
                 }
             }
         }
@@ -85,18 +79,22 @@ public class PlankRecipesDataPackGeneratorListener implements ISelectiveResource
             }
         });
         
-        logPlankMap.entrySet().forEach(entry -> LOGGER.info(entry.getKey().getRegistryName() + " -> " +entry.getValue().getRegistryName()));
-        Set<Entry<Item, Item>> entrySet = logPlankMap.entrySet();
-        for (Entry<Item, Item> logPlankEntry : entrySet) {
+        for (Entry<Item, Item> logPlankEntry : logPlankMap.entrySet()) {
             String fileNameWithoutSuffix = logPlankEntry.getKey().getRegistryName().getNamespace() + 
                                 "_" + 
                                 logPlankEntry.getValue().getRegistryName().getPath() + 
                                 "_from_"+ 
                                 logPlankEntry.getKey().getRegistryName().getPath();
-            String recipeId = Constants.MOD_ID+ ":chopping/" + fileNameWithoutSuffix;
-            ChoppingRecipeBuilder.choppingRecipe(logPlankEntry.getValue(), 1, Ingredient.fromItems(logPlankEntry.getKey()))
+            
+            //recipe serialization for manual chopping
+            ChoppingRecipeBuilder.choppingRecipe(AbstractHPRecipe.Type.MANUAL,logPlankEntry.getValue(), Configs.SERVER.manualChopperPlankCount.get().intValue(), Ingredient.fromItems(logPlankEntry.getKey()))
                 .addCriterion("has_oak", hasItem(Items.OAK_LOG))
-                .build(recipe -> serializeAndSave(recipe, choppingDataPackPath, fileNameWithoutSuffix), recipeId);
+                .build(recipe -> serializeAndSave(recipe, choppingDataPackPath  + "/" +Constants.MOD_ID+  "/"+ CHOPPING_BLOCK_RECIPE_PATH, "manual_"+fileNameWithoutSuffix), new ResourceLocation(Constants.MOD_ID, "manual_chopping/" + fileNameWithoutSuffix));
+            
+            //recipe serialization for horse chopping
+            ChoppingRecipeBuilder.choppingRecipe(AbstractHPRecipe.Type.HORSE,logPlankEntry.getValue(), Configs.SERVER.horseChopperPlankCount.get().intValue(), Ingredient.fromItems(logPlankEntry.getKey()))
+            .addCriterion("has_oak", hasItem(Items.OAK_LOG))
+            .build(recipe -> serializeAndSave(recipe, choppingDataPackPath  + "/" +Constants.MOD_ID+  "/"+ CHOPPER_RECIPE_PATH, "horse_"+fileNameWithoutSuffix), new ResourceLocation(Constants.MOD_ID, "horse_chopping/" + fileNameWithoutSuffix));
         }
         
     }
@@ -160,7 +158,8 @@ public class PlankRecipesDataPackGeneratorListener implements ISelectiveResource
                 && createFolder(path +"/data") 
                 && createFolder(path + DATA + Constants.MOD_ID) 
                 && createFolder(path + DATA + Constants.MOD_ID + "/recipes") 
-                && createFolder(path + CHOPPING_BLOCK_RECIPE_PATH))
+                && createFolder(path + CHOPPING_BLOCK_RECIPE_PATH)
+                && createFolder(path + CHOPPER_RECIPE_PATH))
         {
                 LOGGER.debug("DataPack Generator - Folder structure prepared successfully");
                 return true;
