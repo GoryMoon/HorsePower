@@ -44,7 +44,6 @@ public class Configs {
 
     @SubscribeEvent
     public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
-        ((CommentedFileConfig) configEvent.getConfig().getConfigData()).load();
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             HPEventHandler.reloadConfig();
         }

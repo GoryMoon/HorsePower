@@ -36,19 +36,13 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.util.Constants;
 import static se.gory_moon.horsepower.HorsePower.LOGGER;
 
-public class PlankRecipesDataPackGeneratorListener implements ISelectiveResourceReloadListener {
+public class PlankRecipesDataPackGeneratorUtil {
 
     private static final String DATA = "/data/";
     private static final String CHOPPING_BLOCK_RECIPE_PATH = DATA + Constants.MOD_ID + "/recipes/chopping_block";
     private static final String CHOPPER_RECIPE_PATH = DATA + Constants.MOD_ID + "/recipes/chopper";
-    private FMLServerAboutToStartEvent event;
 
-    public PlankRecipesDataPackGeneratorListener(FMLServerAboutToStartEvent event) {
-        this.event = event;
-    }
-
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
+    public static void prepareHorsePowerDataPack(FMLServerAboutToStartEvent event) {
         if (event != null && event.getServer() != null
                 && Boolean.TRUE.equals(Configs.SERVER.plankDataPackGeneration.get())) {
             
@@ -149,7 +143,7 @@ public class PlankRecipesDataPackGeneratorListener implements ISelectiveResource
      * Create a Horse Power Data Pack in your current world folder
      * @return boolean if the data pack folder structure was created with success
      */
-    public static boolean prepareHorsePowerDataPack(String worldFolderPath){
+    private static boolean prepareHorsePowerDataPack(String worldFolderPath){
 
         String path = worldFolderPath+ "/"+ Constants.MOD_ID;
         
@@ -227,4 +221,7 @@ public class PlankRecipesDataPackGeneratorListener implements ISelectiveResource
         return false;
     }
     
+    private PlankRecipesDataPackGeneratorUtil() {
+        //hidden
+    }
 }

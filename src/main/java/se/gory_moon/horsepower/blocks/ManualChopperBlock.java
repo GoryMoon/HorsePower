@@ -66,8 +66,8 @@ public class ManualChopperBlock extends HPChopperBaseBlock {  //TODO restore TOP
             ItemStack held = player.getHeldItem(Hand.MAIN_HAND);
             if (!held.isEmpty() && ((held.getItem().getHarvestLevel(held, ToolType.AXE, player, null) > -1) || isItemWhitelisted(held))) {
                 if (te.chop(player, held)) {
-                    player.addExhaustion((float) 0.1); //FIXME config Configs.general.choppingblockExhaustion
-                    if (Boolean.TRUE) //FIXME config Configs.general.shouldDamageAxe
+                    player.addExhaustion(Configs.SERVER.choppingExhaustion.get().floatValue());
+                    if (Configs.SERVER.shouldDamageAxe.get().booleanValue() && held.isDamageable())
                         held.damageItem(1, player, p -> p.sendBreakAnimation(Hand.MAIN_HAND));
                 }
             }

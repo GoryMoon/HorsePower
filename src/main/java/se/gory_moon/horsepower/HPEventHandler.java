@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -23,7 +24,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import se.gory_moon.horsepower.data.PlankRecipesDataPackGeneratorListener;
+import se.gory_moon.horsepower.data.PlankRecipesDataPackGeneratorUtil;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Utils;
 import se.gory_moon.horsepower.util.color.Colors;
@@ -139,13 +140,16 @@ public class HPEventHandler {
     @SubscribeEvent
     public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         //Add Reload Listener for the Plank Recipe Generator
-        event.getServer().getResourceManager().addReloadListener(new PlankRecipesDataPackGeneratorListener(event));
+        event.getServer().getResourceManager().addReloadListener((IResourceManagerReloadListener) resourceManager -> {
+            PlankRecipesDataPackGeneratorUtil.prepareHorsePowerDataPack(event);
+        });
     }
+    
+    // TODO use this lines for 1.15 as in 1.14 it is not working properly
     
     @SubscribeEvent
     public static void onServerStarted(FMLServerStartedEvent event){
         //Reload to make sure Plank Recipes are available
-        HorsePower.LOGGER.info("onServerStarted "+event);
         if(Boolean.TRUE.equals(Configs.SERVER.plankDataPackGeneration.get())){
             event.getServer().reload();
         }

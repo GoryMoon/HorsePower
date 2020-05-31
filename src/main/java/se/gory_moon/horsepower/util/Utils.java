@@ -26,7 +26,7 @@ public class Utils {
 
     public static ArrayList<Class<? extends CreatureEntity>> getCreatureClasses() {
         ArrayList<Class<? extends CreatureEntity>> clazzes = Lists.newArrayList();
-        if (Configs.SERVER.useHorseInterface.get())
+        if (Configs.SERVER.useHorseInterface.get().booleanValue())
             clazzes.add(AbstractHorseEntity.class);
 
         for (String e : Configs.SERVER.mobList.get()) {
@@ -102,7 +102,8 @@ public class Utils {
         });
     }
 
-    public static Object parseItemStack(String item, boolean acceptAmount) throws Exception {
+    public static Object parseItemStack(String incomingItem, boolean acceptAmount) throws Exception {
+        String item = incomingItem;
         String[] data = item.split("\\$");
         CompoundNBT nbt = data.length == 1 ? null: JsonToNBT.getTagFromJson(data[1]);
         if (data.length == 2)
@@ -147,4 +148,8 @@ public class Utils {
         }
         return stacks;
     }*/
+    
+    private Utils() {
+        // hidden
+    }
 }

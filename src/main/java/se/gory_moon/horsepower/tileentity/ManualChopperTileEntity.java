@@ -7,30 +7,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.apache.commons.lang3.tuple.Pair;
-import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
-import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.Registration;
-import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
-import se.gory_moon.horsepower.recipes.ChoppingRecipe;
-import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class ManualChopperTileEntity extends HPBaseTileEntity {
@@ -132,7 +123,7 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
         }
     }
 
-    private int getBaseAmount(ItemStack held, PlayerEntity player) {
+    private static int getBaseAmount(ItemStack held, PlayerEntity player) {
         int baseAmount = 100;
         int harvestLevel = held.getItem().getHarvestLevel(held, ToolType.AXE, player, null);
         if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
@@ -146,7 +137,7 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
         return baseAmount;
     }
 
-    private int getChance(ItemStack held, PlayerEntity player) {
+    private static int getChance(ItemStack held, PlayerEntity player) {
         int chance = 0;
         int harvestLevel = held.getItem().getHarvestLevel(held, ToolType.AXE, player, null);
         if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
