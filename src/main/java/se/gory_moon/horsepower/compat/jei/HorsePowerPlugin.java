@@ -9,6 +9,7 @@ import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IIngredientManager;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
@@ -17,9 +18,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.Registration;
+import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxesCategory;
 import se.gory_moon.horsepower.compat.jei.chopping.HorsePowerChoppingCategory;
+import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxeConfiguration;
+import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxeWrapper;
 import se.gory_moon.horsepower.compat.jei.milling.HorsePowerMillingCategory;
 import se.gory_moon.horsepower.compat.jei.press.HorsePowerPressCategory;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
@@ -31,7 +36,10 @@ import se.gory_moon.horsepower.util.Constants;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 @JeiPlugin
 public class HorsePowerPlugin implements IModPlugin {
@@ -41,6 +49,7 @@ public class HorsePowerPlugin implements IModPlugin {
     public static final ResourceLocation MANUAL_MILLING = new ResourceLocation(Constants.MOD_ID, "manual_milling");
     public static final ResourceLocation MILLING = new ResourceLocation(Constants.MOD_ID, "milling");
     public static final ResourceLocation MANUAL_CHOPPING = new ResourceLocation(Constants.MOD_ID, "manual_chopping");
+    public static final ResourceLocation MANUAL_CHOPPING_AXES = new ResourceLocation(Constants.MOD_ID, "manual_chopping_axes");
     public static final ResourceLocation CHOPPING = new ResourceLocation(Constants.MOD_ID, "chopping");
     public static final ResourceLocation PRESS_ITEM = new ResourceLocation(Constants.MOD_ID, "pressing");
     public static final ResourceLocation PRESS_FLUID = new ResourceLocation(Constants.MOD_ID, "pressing_fluid");
@@ -60,6 +69,7 @@ public class HorsePowerPlugin implements IModPlugin {
 
     public static IJeiHelpers jeiHelpers;
     public static IGuiHelper guiHelper;
+    public static IIngredientManager ingredientManager;
     private static IJeiRuntime jeiRuntime;
 
     @Override
@@ -67,6 +77,7 @@ public class HorsePowerPlugin implements IModPlugin {
         return UID;
     }
     public static ICraftingGridHelper craftingGridHelper;
+
 
 /*
 
@@ -154,7 +165,8 @@ public class HorsePowerPlugin implements IModPlugin {
                 new HorsePowerPressCategory(guiHelper, false),
                 new HorsePowerPressCategory(guiHelper, true),
                 new HorsePowerChoppingCategory(guiHelper,false),
-                new HorsePowerChoppingCategory(guiHelper,true)
+                new HorsePowerChoppingCategory(guiHelper,true),
+                new ManualChoppingAxesCategory(guiHelper)
         );
     }
 
@@ -179,6 +191,9 @@ public class HorsePowerPlugin implements IModPlugin {
         List<IRecipe<IInventory>> manualChoppingRecipes = choppingTypeRecipes.stream().filter(recipe -> choppingRecipePredicate(recipe, AbstractHPRecipe.Type.MANUAL)).collect(Collectors.toList());
         registration.addRecipes(horseChoppingRecipes, CHOPPING);
         registration.addRecipes(manualChoppingRecipes, MANUAL_CHOPPING);
+        
+        List<ManualChoppingAxeWrapper> axes = HPEventHandler.choppingAxes.entrySet().stream().map(e -> new ManualChoppingAxeWrapper(new ManualChoppingAxeConfiguration(e.getKey(), e.getValue().getLeft(), e.getValue().getRight()))).collect(Collectors.toList());
+        registration.addRecipes(axes, MANUAL_CHOPPING_AXES);
     }
 
 
@@ -189,6 +204,7 @@ public class HorsePowerPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(Registration.PRESS_BLOCK.get()), PRESS_ITEM);
         registration.addRecipeCatalyst(new ItemStack(Registration.PRESS_BLOCK.get()), PRESS_FLUID);
         registration.addRecipeCatalyst(new ItemStack(Registration.MANUAL_CHOPPER_BLOCK.get()), MANUAL_CHOPPING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.MANUAL_CHOPPER_BLOCK.get()), MANUAL_CHOPPING_AXES);
         registration.addRecipeCatalyst(new ItemStack(Registration.CHOPPER_BLOCK.get()), CHOPPING);
         
     }
@@ -197,5 +213,6 @@ public class HorsePowerPlugin implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         HorsePowerPlugin.jeiRuntime = jeiRuntime;
         HorsePowerPlugin.recipeManager = jeiRuntime.getRecipeManager();
+        HorsePowerPlugin.ingredientManager = jeiRuntime.getIngredientManager();
     }
 }
