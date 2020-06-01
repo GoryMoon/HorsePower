@@ -176,12 +176,13 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     public IRecipeType<? extends IRecipe<IInventory>> getRecipeType() {
         return RecipeSerializers.CHOPPING_TYPE;
     }
-    
-    
-
 
     @Override
     protected Type getHPRecipeType() {
         return Type.MANUAL;
+    }
+
+    public long getCurrentProgress() {
+       return  (currentItemChopAmount * 100) / totalItemChopAmount; //we do not need to cast do float or double here, 0.6 does not matter at this point
     }
 }

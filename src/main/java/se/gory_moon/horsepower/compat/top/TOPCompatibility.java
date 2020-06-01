@@ -11,14 +11,18 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.InterModComms;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.FillerBlock;
+import se.gory_moon.horsepower.blocks.ManualChopperBlock;
 import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
+import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
@@ -79,6 +83,12 @@ public class TOPCompatibility {
                             double total = te.getTotalItemMillTime();
                             double current = te.getCurrentItemMillTime();
                             probeInfo.progress((long) ((current / total) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.MILLSTONE_PROGRESS.translate() + " ").suffix("%"));
+                        }
+                        added = true;
+                    } else if (block instanceof ManualChopperBlock) {
+                        TileEntity te =  world.getTileEntity(data.getPos());
+                        if (te instanceof ManualChopperTileEntity) {
+                            probeInfo.progress(((ManualChopperTileEntity) te).getCurrentProgress(), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
                         }
                         added = true;
                     }
