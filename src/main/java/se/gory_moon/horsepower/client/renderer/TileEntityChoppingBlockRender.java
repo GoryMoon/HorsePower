@@ -19,8 +19,5 @@ public class TileEntityChoppingBlockRender extends TileEntityHPBaseRenderer<Manu
         if (!te.getStackInSlot(1).isEmpty())
             renderStillItem(te, te.getStackInSlot(1), 0.5F, 0.63F, 0.5F, 2F);
         GlStateManager.popMatrix();
-
-        super.render(te, x, y + 1, z, partialTicks, destroyStage);
     }
-
 }

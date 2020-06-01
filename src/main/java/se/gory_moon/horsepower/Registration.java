@@ -37,7 +37,7 @@ public class Registration {
      * REGISTER BLOCKS AND ITEM_BLOCKS
      */
 
-    public static final  BlockEntry<FillerBlock> PRESS_FILLER_BLOCK = REGISTRATE.object(Constants.PRESS_FILLER)
+    public static final  BlockEntry<FillerBlock> WOODEN_FILLER_BLOCK = REGISTRATE.object(Constants.WOODEN_FILLER_BLOCK)
             .block(Material.WOOD, woodProperties -> { 
                 FillerBlock block = new FillerBlock(woodProperties.hardnessAndResistance(5F).sound(SoundType.WOOD), true);
                 block.setHarvestLevel(ToolType.AXE, 1);
@@ -48,7 +48,7 @@ public class Registration {
     
     public static final  BlockEntry<PressBlock> PRESS_BLOCK = REGISTRATE.object(Constants.PRESS_BLOCK)
             .block(Material.WOOD, PressBlock::new)
-            .item((block,properties) -> new DoubleBlockItem(block, PRESS_FILLER_BLOCK.get(),properties))
+            .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
             .build()
             .tileEntity(PressTileEntity::new)
             .register();
@@ -78,7 +78,7 @@ public class Registration {
     
     public static final BlockEntry<ChopperBlock> CHOPPER_BLOCK = REGISTRATE.object(Constants.CHOPPER_BLOCK)
             .block(Material.WOOD, ChopperBlock::new)
-            .item()
+            .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
             .build()
             .tileEntity(ChopperTileEntity::new)
             .register();  
@@ -99,7 +99,7 @@ public class Registration {
     public static final RegistryEntry<TileEntityType<ManualChopperTileEntity>> MANUAL_CHOPPER_TILE = MANUAL_CHOPPER_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
     public static final RegistryEntry<TileEntityType<ChopperTileEntity>> CHOPPER_TILE = CHOPPER_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
     public static final RegistryEntry<TileEntityType<PressTileEntity>> PRESS_TILE = PRESS_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
-    public static final RegistryEntry<TileEntityType<FillerTileEntity>> FILLER_TILE = PRESS_FILLER_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
+    public static final RegistryEntry<TileEntityType<FillerTileEntity>> FILLER_TILE = WOODEN_FILLER_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
 
     private Registration() {
         // hidden

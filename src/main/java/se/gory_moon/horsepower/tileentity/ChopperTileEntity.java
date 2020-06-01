@@ -208,7 +208,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     @Override
     public ITextComponent getDisplayName() {
         if (valid)
-            return super.getDisplayName();
+            return null;
         return new TranslationTextComponent(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
     }
 

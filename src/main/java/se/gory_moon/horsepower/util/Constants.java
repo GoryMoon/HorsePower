@@ -19,7 +19,7 @@ public class Constants {
     public static final String CHOPPER_BLOCK = "chopper";
     public static final String PRESS_BLOCK = "press";
     public static final String FILLER_BLOCK = "_" + FILLER;
-    public static final String PRESS_FILLER = PRESS_BLOCK + FILLER_BLOCK;
+    public static final String WOODEN_FILLER_BLOCK = "wooden" + FILLER_BLOCK;
     
     //Items
     public static final String FLOUR_ITEM = "flour";

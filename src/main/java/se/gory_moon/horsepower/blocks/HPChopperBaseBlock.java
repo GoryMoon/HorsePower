@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class HPChopperBaseBlock extends HPBaseBlock { //TODO Rename
+public abstract class HPChopperBaseBlock extends HPBaseBlock {
 
 //    public static final PropertyUnlistedString SIDE_TEXTURE = new PropertyUnlistedString("side_texture");
 //    public static final PropertyUnlistedString TOP_TEXTURE = new PropertyUnlistedString("top_texture");

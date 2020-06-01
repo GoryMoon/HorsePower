@@ -16,6 +16,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.apache.commons.lang3.tuple.Pair;
+
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
@@ -28,10 +30,9 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
 
     private int currentItemChopAmount;
     private int totalItemChopAmount;
-
+    
     public ManualChopperTileEntity() {
         super(2,Registration.MANUAL_CHOPPER_TILE.get());
-        handlerSide = new RangedWrapper(new InvWrapper(inventory), 0, 1);
     }
 
     @Override
@@ -100,14 +101,14 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
                 ItemStack output = getStackInSlot(1); //current output slot
                 ItemStack result =  getRecipe().getCraftingResult(inventory); //crafting recipe output
                                             
-                double baseAmount = ((double) getBaseAmount(held, player)) / 100D;
+                double baseAmount = getBaseAmount(held, player) / 100D;
                 int chance = getChance(held, player);
 
-                result.setCount((int) Math.ceil((double) result.getCount() * baseAmount));
+                result.setCount((int) Math.ceil(result.getCount() * baseAmount));
                 if (chance >= 100 || world.rand.nextInt(100) < chance)
                     result.grow(1);
 
-                if (Boolean.TRUE) { //FIXME Config chopping block drop    -- Configs.general.choppingBlockDrop
+                if (Configs.SERVER.choppingBlockDrop.get().booleanValue()) {
                     InventoryHelper.spawnItemStack(getWorld(), getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), result);
                 } else {
                     if (output.isEmpty()) {
@@ -126,12 +127,12 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     private static int getBaseAmount(ItemStack held, PlayerEntity player) {
         int baseAmount = 100;
         int harvestLevel = held.getItem().getHarvestLevel(held, ToolType.AXE, player, null);
-        if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
-            baseAmount = HPEventHandler.harvestPercentages.get(harvestLevel).getLeft();
+        if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(Integer.valueOf(harvestLevel)) != null) {
+            baseAmount = HPEventHandler.harvestPercentages.get(Integer.valueOf(harvestLevel)).getLeft().intValue();
         }
         for (Map.Entry<ItemStack, Pair<Integer, Integer>> entry: HPEventHandler.choppingAxes.entrySet()) {
             if (entry.getKey().isItemEqual(held)) {
-                return entry.getValue().getLeft();
+                return entry.getValue().getLeft().intValue();
             }
         }
         return baseAmount;
@@ -140,12 +141,12 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     private static int getChance(ItemStack held, PlayerEntity player) {
         int chance = 0;
         int harvestLevel = held.getItem().getHarvestLevel(held, ToolType.AXE, player, null);
-        if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(harvestLevel) != null) {
-            chance = HPEventHandler.harvestPercentages.get(harvestLevel).getRight();
+        if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(Integer.valueOf(harvestLevel)) != null) {
+            chance = HPEventHandler.harvestPercentages.get(Integer.valueOf(harvestLevel)).getRight().intValue();
         }
         for (Map.Entry<ItemStack, Pair<Integer, Integer>> entry: HPEventHandler.choppingAxes.entrySet()) {
             if (entry.getKey().isItemEqual(held)) {
-                return entry.getValue().getRight();
+                return entry.getValue().getRight().intValue();
             }
         }
         return chance;
@@ -160,6 +161,11 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     public ITextComponent getName() {
         return new StringTextComponent("container.manual_chopper");
     }
+    
+    @Override
+    public ITextComponent getDisplayName() {
+        return null;
+    }
 
     @Override
     public int getOutputSlot() {
@@ -172,7 +178,7 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     }
     
     
-    private IItemHandler handlerSide = null;
+
 
     @Override
     protected Type getHPRecipeType() {
