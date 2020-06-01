@@ -1,7 +1,11 @@
 package se.gory_moon.horsepower;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import java.util.ArrayList;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -11,11 +15,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.config.ModConfig;
-import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
-
-import java.util.ArrayList;
 
 public class Configs {
 
@@ -23,7 +24,6 @@ public class Configs {
     public static final Server SERVER;
     static final ForgeConfigSpec clientSpec;
     static final ForgeConfigSpec serverSpec;
-    public static Recipes recipes = new Recipes();
 
     static {
         final Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
@@ -242,42 +242,5 @@ public class Configs {
             
             builder.pop(2);
         }
-    }
-
-    //TODO make recipes
-    public static class Recipes {
-
-        //        @Comment("If the separate list of recipes should be used for the chopping block")
-        //        @Name("Separate Chopping Recipes")
-        //        @Config.RequiresMcRestart
-        public boolean useSeperateChoppingRecipes = false;
-
-        /*        @Comment({"Add recipes to the Chopping Block here, the format of the recipes are: modid:input:tag${nbt}-modid:result@amount${nbt}-time",
-                        "The meta can be a '*' to be a wildcard", "The amount is optional, if not set 1 is default", "${nbt} is optional and follows vanilla tag syntax",
-                        "The input item can be an item from the tag system, add a '#' at the beginning of the input, the other rules don't applies",
-                        "The time is the amount of chops for it to process, the time for one chop is determined by the \"Windup time for chop\" config",
-                        "Must be edited with in-game editor for live changes."})
-                @Config.LangKey("config.horsepower.recipes.chopping")
-                @Name("Chopping Recipes")
-        */        public String[] choppingRecipes = {
-                "#minecraft:oak_logs-minecraft:oak_planks@4-1",
-                "#minecraft:spruce_logs-minecraft:spruce_planks@4-1",
-                "#minecraft:birch_logs-minecraft:birch_planks@4-1",
-                "#minecraft:jungle_logs-minecraft:jungle_planks@4-1",
-                "#minecraft:acacia_logs-minecraft:acacia_planks@4-1",
-                "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-1"
-        };
-
-        //        @Comment({"Uses the same syntax as the regular chopping recipes, the only difference is that the time is the amount of chopps", "These recipes are only used when the config to separate them is enabled"})
-        //        @Config.LangKey("config.horsepower.recipes.manual_chopping")
-        //        @Name("Manual Chopping Block Recipes")
-        public String[] manualChoppingRecipes = {
-                "#minecraft:oak_logs-minecraft:oak_planks@4-4",
-                "#minecraft:spruce_logs-minecraft:spruce_planks@4-4",
-                "#minecraft:birch_logs-minecraft:birch_planks@4-4",
-                "#minecraft:jungle_logs-minecraft:jungle_planks@4-4",
-                "#minecraft:acacia_logs-minecraft:acacia_planks@4-4",
-                "#minecraft:dark_oak_logs-minecraft:dark_oak_planks@4-4"
-        };
     }
 }

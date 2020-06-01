@@ -109,16 +109,15 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     public void tick() {
         super.tick();
 
-//        float windup = Configs.general.pointsForWindup > 0 ? Configs.general.pointsForWindup: 1;
-        float windup = 1; //FIXME config usage
-        visualWindup = -0.74F + (0.74F * (((float)currentWindup) / (windup - 1)));
+        float windup = Configs.SERVER.pointsForWindup.get().intValue() > 0 ? Configs.SERVER.pointsForWindup.get().intValue() : 1;
+        visualWindup = -0.74F + (0.74F * ((currentWindup) / (windup - 1)));
     }
 
     @Override
     public boolean targetReached() {
         currentWindup++;
 
-        float windup = 1; //FIXME Configs.general.pointsForWindup
+        float windup = Configs.SERVER.pointsForWindup.get().intValue() > 0 ? Configs.SERVER.pointsForWindup.get().intValue() : 1;
         if (currentWindup >= windup) {
             currentWindup = 0;
             currentItemChopTime++;

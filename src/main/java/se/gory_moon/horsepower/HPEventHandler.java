@@ -145,8 +145,6 @@ public class HPEventHandler {
         });
     }
     
-    // TODO use this lines for 1.15 as in 1.14 it is not working properly
-    
     @SubscribeEvent
     public static void onServerStarted(FMLServerStartedEvent event){
         //Reload to make sure Plank Recipes are available
