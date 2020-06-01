@@ -134,7 +134,9 @@ public class Configs {
         public final IntValue pointsPerPress;
         public final IntValue pressTankSize;
         public final BooleanValue plankDataPackGeneration;
+        public final IntValue manualChopCount;
         public final IntValue manualChopperPlankCount;
+        public final IntValue horseChopCount;
         public final IntValue horseChopperPlankCount;
 
         Server(ForgeConfigSpec.Builder builder) {
@@ -213,11 +215,23 @@ public class Configs {
 
             plankDataPackGeneration = builder.comment( "Generate Json Datapack for plank recipes.").translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION.key()).define("plank_data_pack_generation", true);
             
+            manualChopCount = builder
+                    .comment("Used when generating plank recipes. Defines the amount of chops needed in the manual chopper to craft a recipe.")
+                    .worldRestart()
+                    .translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION_MANUAL_CHOP_COUNT.key())
+                    .defineInRange("manual_chop_count", 4, 1, 100);
+            
             manualChopperPlankCount = builder
                     .comment("Used when generating plank recipes. Defines the output count for manual chopping.")
                     .worldRestart()
                     .translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION_MANUAL_COUNT.key())
                     .defineInRange("manual_chopper_plank_count", 2, 1, 64);
+            
+            horseChopCount = builder
+                    .comment("Used when generating plank recipes. Defines the amount of chops needed in the horse chopper to craft a recipe.")
+                    .worldRestart()
+                    .translation(Localization.CONFIG.SERVER.PLANK_DATA_PACK_GENERATION_HORSE_CHOP_COUNT.key())
+                    .defineInRange("horse_chop_count", 1, 1, 100);
             
             horseChopperPlankCount = builder
                     .comment("Used when generating plank recipes. Defines the output count for horse chopping.")

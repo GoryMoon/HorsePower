@@ -81,15 +81,15 @@ public class PlankRecipesDataPackGeneratorUtil {
                                 logPlankEntry.getKey().getRegistryName().getPath();
             
             //recipe serialization for manual chopping
-            ChoppingRecipeBuilder.choppingRecipe(AbstractHPRecipe.Type.MANUAL,logPlankEntry.getValue(), Configs.SERVER.manualChopperPlankCount.get().intValue(), Ingredient.fromItems(logPlankEntry.getKey()))
+            ChoppingRecipeBuilder.choppingRecipe(AbstractHPRecipe.Type.MANUAL,logPlankEntry.getValue(), Configs.SERVER.manualChopperPlankCount.get().intValue(), Ingredient.fromItems(logPlankEntry.getKey()), Configs.SERVER.manualChopCount.get().intValue())
                 .addCriterion("has_oak", hasItem(Items.OAK_LOG))
                 .build(recipe -> serializeAndSave(recipe, choppingDataPackPath  + "/" +Constants.MOD_ID+  "/"+ CHOPPING_BLOCK_RECIPE_PATH, "manual_"+fileNameWithoutSuffix), new ResourceLocation(Constants.MOD_ID, "manual_chopping/" + fileNameWithoutSuffix));
             
             //recipe serialization for horse chopping
-            ChoppingRecipeBuilder.choppingRecipe(AbstractHPRecipe.Type.HORSE,logPlankEntry.getValue(), Configs.SERVER.horseChopperPlankCount.get().intValue(), Ingredient.fromItems(logPlankEntry.getKey()))
+            ChoppingRecipeBuilder.choppingRecipe(AbstractHPRecipe.Type.HORSE,logPlankEntry.getValue(), Configs.SERVER.horseChopperPlankCount.get().intValue(), Ingredient.fromItems(logPlankEntry.getKey()), Configs.SERVER.horseChopCount.get().intValue())
             .addCriterion("has_oak", hasItem(Items.OAK_LOG))
             .build(recipe -> serializeAndSave(recipe, choppingDataPackPath  + "/" +Constants.MOD_ID+  "/"+ CHOPPER_RECIPE_PATH, "horse_"+fileNameWithoutSuffix), new ResourceLocation(Constants.MOD_ID, "horse_chopping/" + fileNameWithoutSuffix));
-        }
+        } 
         
     }
     

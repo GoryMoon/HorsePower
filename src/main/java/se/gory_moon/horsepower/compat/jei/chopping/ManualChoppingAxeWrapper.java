@@ -22,6 +22,7 @@ public class ManualChoppingAxeWrapper implements IRecipeCategoryExtension {
 
     @Override
     public void drawInfo(int recipeWidth, int recipeHeight, double mouseX, double mouseY) {
+        //FIXME add localization for the values here
         print(String.valueOf(axeConfiguration.baseChance), 27, 5);
         print(String.valueOf(axeConfiguration.otherChance), 27, 13);
     }

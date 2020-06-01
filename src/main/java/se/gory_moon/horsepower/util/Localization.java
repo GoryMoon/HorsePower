@@ -192,7 +192,9 @@ public final class Localization {
             PRESS_FLUID_TANK_SIZE, 
             PLANK_DATA_PACK_GENERATION, 
             PLANK_DATA_PACK_GENERATION_MANUAL_COUNT,
-            PLANK_DATA_PACK_GENERATION_HORSE_COUNT,
+            PLANK_DATA_PACK_GENERATION_HORSE_COUNT, 
+            PLANK_DATA_PACK_GENERATION_MANUAL_CHOP_COUNT,  //amount of axe chops
+            PLANK_DATA_PACK_GENERATION_HORSE_CHOP_COUNT, //amount of horse chopper chops
             ;
 
             public String key() {

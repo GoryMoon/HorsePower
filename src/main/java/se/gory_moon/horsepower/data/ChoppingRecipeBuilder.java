@@ -9,12 +9,12 @@ import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
 public class ChoppingRecipeBuilder extends AbstractRecipeBuilder {
 
-    private ChoppingRecipeBuilder(AbstractHPRecipe.Type type, IItemProvider result, int count, Ingredient input) {
-        super(type, result, count, input, 0, null, 0, 0, null, 1);
+    private ChoppingRecipeBuilder(AbstractHPRecipe.Type type, IItemProvider result, int count, Ingredient input, int time) {
+        super(type, result, count, input, time, null, 0, 0, null, 1);
     }
 
-    public static ChoppingRecipeBuilder choppingRecipe(AbstractHPRecipe.Type type, IItemProvider result, int count, Ingredient input) {
-        return new ChoppingRecipeBuilder(type, result,count,input);
+    public static ChoppingRecipeBuilder choppingRecipe(AbstractHPRecipe.Type type, IItemProvider result, int count, Ingredient input, int time) {
+        return new ChoppingRecipeBuilder(type, result,count,input, time);
     }
     
     @Override
