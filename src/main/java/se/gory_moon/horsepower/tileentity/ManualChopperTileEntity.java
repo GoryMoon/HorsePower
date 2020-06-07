@@ -183,6 +183,6 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     }
 
     public long getCurrentProgress() {
-       return  (currentItemChopAmount * 100) / totalItemChopAmount; //we do not need to cast do float or double here, 0.6 does not matter at this point
+       return  totalItemChopAmount > 0 ? ((currentItemChopAmount * 100) / totalItemChopAmount)  : 0; //we do not need to cast do float or double here, 0.6 does not matter at this point
     }
 }
