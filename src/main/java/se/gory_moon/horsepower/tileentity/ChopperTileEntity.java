@@ -10,12 +10,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.Registration;
-import se.gory_moon.horsepower.blocks.ChopperBlock;
-import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
-import se.gory_moon.horsepower.recipes.ChoppingRecipe;
-import se.gory_moon.horsepower.recipes.HPRecipeBase;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
@@ -32,7 +27,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     private float oldVisualWindup = -1;
 
     public ChopperTileEntity() {
-        super(2,Registration.CHOPPER_TILE.get());
+        super(2, Registration.CHOPPER_TILE.get());
     }
 
     @Override
@@ -80,7 +75,8 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return index != 1 && index == 0 && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty() && getRecipe(stack) != null;
+        return index != 1 && index == 0 && getStackInSlot(1).isEmpty() && getStackInSlot(0).isEmpty()
+                && getRecipe(stack) != null;
     }
 
     @Override
@@ -98,7 +94,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
             }
         }
 
-        for (BlockPos pos: searchPos) {
+        for (BlockPos pos : searchPos) {
             if (!getWorld().getBlockState(pos).getMaterial().isReplaceable())
                 return false;
         }
@@ -109,7 +105,9 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     public void tick() {
         super.tick();
 
-        float windup = Configs.SERVER.pointsForWindup.get().intValue() > 0 ? Configs.SERVER.pointsForWindup.get().intValue() : 1;
+        float windup = Configs.SERVER.pointsForWindup.get().intValue() > 0
+                ? Configs.SERVER.pointsForWindup.get().intValue()
+                : 1;
         visualWindup = -0.74F + (0.74F * ((currentWindup) / (windup - 1)));
     }
 
@@ -117,7 +115,9 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     public boolean targetReached() {
         currentWindup++;
 
-        float windup = Configs.SERVER.pointsForWindup.get().intValue() > 0 ? Configs.SERVER.pointsForWindup.get().intValue() : 1;
+        float windup = Configs.SERVER.pointsForWindup.get().intValue() > 0
+                ? Configs.SERVER.pointsForWindup.get().intValue()
+                : 1;
         if (currentWindup >= windup) {
             currentWindup = 0;
             currentItemChopTime++;
@@ -125,7 +125,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
             if (currentItemChopTime >= totalItemChopTime) {
                 currentItemChopTime = 0;
 
-                totalItemChopTime = HPRecipes.getTypeTime(getRecipe(), null);;
+                totalItemChopTime = HPRecipes.getTypeTime(getRecipe(), null);
                 chopItem();
                 return true;
             }
@@ -143,7 +143,8 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
             markDirty();
         }
 
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack)
+                && ItemStack.areItemStackTagsEqual(stack, itemstack);
         if (index == 0 && !flag) {
             totalItemChopTime = HPRecipes.getTypeTime(getRecipe(), null);
             currentItemChopTime = 0;
@@ -156,9 +157,9 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
         if (canWork()) {
             ItemStack input = getStackInSlot(0);
             ItemStack output = getStackInSlot(1);
-           
-            ItemStack result =  getRecipe().getCraftingResult(inventory);
-                        
+
+            ItemStack result = getRecipe().getCraftingResult(inventory);
+
             if (output.isEmpty()) {
                 setInventorySlotContents(1, result.copy());
             } else if (output.isItemEqual(result)) {
@@ -208,7 +209,8 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     public ITextComponent getDisplayName() {
         if (valid)
             return null;
-        return new TranslationTextComponent(Localization.INFO.CHOPPING_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+        return new TranslationTextComponent(Localization.INFO.CHOPPING_INVALID.key())
+                .setStyle(new Style().setColor(TextFormatting.RED));
     }
 
     @Nullable
@@ -225,5 +227,17 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     @Override
     protected Type getHPRecipeType() {
         return Type.HORSE;
+    }
+
+    public int getTotalItemChopTime() {
+        return totalItemChopTime;
+    }
+
+    public int getCurrentItemChopTime() {
+        return currentItemChopTime;
+    }
+
+    public int getCurrentWindup() {
+        return currentWindup;
     }
 }

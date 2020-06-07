@@ -16,11 +16,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.InterModComms;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.blocks.ChopperBlock;
 import se.gory_moon.horsepower.blocks.FillerBlock;
 import se.gory_moon.horsepower.blocks.ManualChopperBlock;
 import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
+import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
@@ -74,7 +76,7 @@ public class TOPCompatibility {
                         PressTileEntity te = (PressTileEntity) world.getTileEntity(data.getPos());
                         if (te != null) {
                             double current = te.getCurrentPressStatus();
-                            probeInfo.progress((long) ((current / (float) (Configs.SERVER.pointsPerPress.get() > 0 ? Configs.SERVER.pointsPerPress.get(): 1)) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.PRESS_PROGRESS.translate() + " ").suffix("%"));
+                            probeInfo.progress((long) ((current / (Configs.SERVER.pointsPerPress.get() > 0 ? Configs.SERVER.pointsPerPress.get(): 1)) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.PRESS_PROGRESS.translate() + " ").suffix("%"));
                         }
                         added = true;
                     } else if (block instanceof MillstoneBlock) {
@@ -89,6 +91,16 @@ public class TOPCompatibility {
                         TileEntity te =  world.getTileEntity(data.getPos());
                         if (te instanceof ManualChopperTileEntity) {
                             probeInfo.progress(((ManualChopperTileEntity) te).getCurrentProgress(), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
+                        }
+                        added = true;
+                    } else if (block instanceof ChopperBlock) {
+                        TileEntity te =  world.getTileEntity(data.getPos());
+                        if (te instanceof ChopperTileEntity) {
+                            ChopperTileEntity tileEntity = (ChopperTileEntity)te;
+                            double totalWindup = Configs.SERVER.pointsForWindup.get().intValue() > 0 ? Configs.SERVER.pointsForWindup.get().intValue() : 1;
+                            probeInfo.progress((long) (((tileEntity.getCurrentWindup()) / totalWindup) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.WINDUP_PROGRESS.translate() + " ").suffix("%"));
+                            if (tileEntity.getTotalItemChopTime() > 1)
+                                probeInfo.progress((long) ((((double) tileEntity.getCurrentItemChopTime()) / ((double) tileEntity.getTotalItemChopTime())) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
                         }
                         added = true;
                     }
