@@ -177,7 +177,7 @@ public class FillerBlock extends DirectionalBlock {
 
     @Override
     public boolean causesSuffocation(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return true;
+        return false;
     }
 
     @Override
@@ -198,10 +198,11 @@ public class FillerBlock extends DirectionalBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos pos0, ISelectionContext context) {
-        BlockPos pos = pos0.offset(state.get(FACING));
+        Direction direction = state.get(FACING);
+        BlockPos pos = pos0.offset(direction);
         BlockState state1 = world.getBlockState(pos);
         if (validateFilled(world, state1, pos0))
-            return state1.getBlock().getCollisionShape(state1, world, pos, context);
+            return state1.getBlock().getCollisionShape(state1, world, pos, context).withOffset(direction.getXOffset(), direction.getYOffset(), direction.getZOffset());
         else
             return super.getCollisionShape(state, world, pos0, context);
     }
