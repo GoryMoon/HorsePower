@@ -16,9 +16,11 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -39,8 +41,21 @@ public class ChopperBlock extends HPChopperBaseBlock {
 
     public static final EnumProperty<ChopperModels> PART = EnumProperty.create("part", ChopperModels.class);
 
-    private static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 31, 16);
-
+    private static final VoxelShape PART_BASE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
+    private static final VoxelShape PART_POST_TOP = Block.makeCuboidShape(7.0D, 28.0D, 7.0D, 9.0D, 32.0D, 9.0D);
+    
+    private static final VoxelShape PART_POST_X = Block.makeCuboidShape(6.0D, 6.0D, 0.0D, 10.0D, 28.0D, 2.0D);
+    private static final VoxelShape PART_POST_X2 = Block.makeCuboidShape(6.0D, 6.0D, 14.0D, 10.0D, 28.0D, 16.0D);
+    
+    private static final VoxelShape PART_POST_Z = Block.makeCuboidShape(0.0D, 6.0D, 6.0D, 2.0D, 28.0D, 10.0D);
+    private static final VoxelShape PART_POST_Z2 = Block.makeCuboidShape(14.0D, 6.0D, 6.0D, 16.0D, 28.0D, 10.0D);
+    
+    private static final VoxelShape PART_TOP_BASE_X = Block.makeCuboidShape(6.0D, 26.0D, 0.0D, 10.0D, 28.0D, 16.0D);
+    private static final VoxelShape PART_TOP_BASE_Z = Block.makeCuboidShape(0.0D, 26.0D, 6.0D, 16.0D, 28.0D, 10.0D);
+    
+    private static final VoxelShape SHAPE_X = VoxelShapes.or(PART_BASE, PART_POST_TOP, PART_POST_X, PART_POST_X2, PART_TOP_BASE_X);
+    private static final VoxelShape SHAPE_Z = VoxelShapes.or(PART_BASE, PART_POST_TOP, PART_POST_Z, PART_POST_Z2, PART_TOP_BASE_Z);
+    
     public ChopperBlock(Properties properties) {
         super(properties.hardnessAndResistance(5F, 5F).sound(SoundType.WOOD));
         setHarvestLevel(ToolType.AXE, 0);
@@ -48,13 +63,13 @@ public class ChopperBlock extends HPChopperBaseBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return SHAPE;
+        return state.get(FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
             ISelectionContext context) {
-        return SHAPE;
+        return state.get(FACING).getAxis() == Direction.Axis.X ? SHAPE_X : SHAPE_Z;
     }
 
     @Override
