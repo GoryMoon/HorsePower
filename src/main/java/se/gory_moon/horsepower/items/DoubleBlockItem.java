@@ -35,43 +35,45 @@ public class DoubleBlockItem extends BlockItem {
         return super.onItemUse(context);
     }
 
+    
+    
     @Override
     public ActionResultType tryPlace(BlockItemUseContext context) {
         World world = context.getWorld();
-        BlockPos pos = context.getPos();
+        
         Direction direction = context.getFace();
-        PlayerEntity player = context.getPlayer();
-
-        BlockItemUseContext contextUp = BlockItemUseContext.func_221536_a(context, pos.up(1), Direction.DOWN);
-        if (!context.canPlace()) {
-            pos = pos.offset(direction);
-        }
-
-        if (direction == Direction.DOWN || !contextUp.canPlace())
-            pos = pos.down();
-
+        BlockPos contextPos = context.getPos();
+        
+        BlockPos topPos = Direction.DOWN.equals(direction) ? contextPos : contextPos.up(1);
+        BlockPos bottomPos = Direction.DOWN.equals(direction) ? contextPos.down(1) : contextPos;
+        BlockItemUseContext topContext = BlockItemUseContext.func_221536_a(context, topPos, Direction.DOWN.equals(direction) ? Direction.UP : direction);
+        BlockItemUseContext bottomContext = BlockItemUseContext.func_221536_a(context, bottomPos, Direction.DOWN.equals(direction) ? Direction.UP : direction);
+        
         ItemStack itemstack = context.getItem();
-        BlockState blockState = getStateForPlacement(context);
-        BlockState blockStateUp = getStateForPlacementFiller(contextUp);
+        
+        if(itemstack.isEmpty() || !world.getBlockState(topPos).isReplaceable(topContext) || !world.getBlockState(bottomPos).isReplaceable(bottomContext))
+            return ActionResultType.FAIL;
+        
+        BlockState topBlockState = getStateForPlacementFiller(topContext);
+        BlockState bottomBlockState = getStateForPlacement(bottomContext);
 
-        if (!itemstack.isEmpty() && blockState != null && blockStateUp != null) {
-            blockStateUp = blockStateUp.with(FillerBlock.FACING, Direction.DOWN);
-            if (placeBlock(context, blockState) && placeBlock(contextUp, blockStateUp)) {
-
-                BlockState blockstate1 = world.getBlockState(pos);
+        if (bottomBlockState != null && topBlockState != null) {
+            topBlockState = topBlockState.with(FillerBlock.FACING, Direction.DOWN);
+            if (placeBlock(bottomContext, bottomBlockState) && placeBlock(topContext, topBlockState)) {
+                PlayerEntity player = context.getPlayer();
+                BlockState blockstate1 = world.getBlockState(bottomPos);
                 Block block = blockstate1.getBlock();
-                if (block == blockState.getBlock()) {
-                    this.onBlockPlaced(pos, world, player, itemstack, blockstate1);
-                    block.onBlockPlacedBy(world, pos, blockstate1, player, itemstack);
+                if (block == bottomBlockState.getBlock()) {
+                    this.onBlockPlaced(bottomPos, world, player, itemstack, blockstate1);
+                    block.onBlockPlacedBy(world, bottomPos, blockstate1, player, itemstack);
                     if (player instanceof ServerPlayerEntity) {
-                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, pos, itemstack);
+                        CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, bottomPos, itemstack);
                     }
                 }
-                SoundType soundtype = world.getBlockState(pos).getBlock().getSoundType(world.getBlockState(pos), world, pos, player);
-                world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                SoundType soundtype = world.getBlockState(bottomPos).getBlock().getSoundType(world.getBlockState(bottomPos), world, bottomPos, player);
+                world.playSound(player, bottomPos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 itemstack.shrink(1);
             }
-
             return ActionResultType.SUCCESS;
         } else {
             return ActionResultType.FAIL;
