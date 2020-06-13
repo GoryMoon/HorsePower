@@ -285,7 +285,7 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         }
     }
 
-    private void renderLeach(double x1, double y1, double z1, double ox, double oy, double oz, double x2, double y2, double z2) {
+    protected void renderLeach(double x1, double y1, double z1, double ox, double oy, double oz, double x2, double y2, double z2) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexbuffer = tessellator.getBuffer();
 

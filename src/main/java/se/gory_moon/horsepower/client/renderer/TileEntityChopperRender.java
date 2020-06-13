@@ -59,7 +59,7 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<ChopperTil
         RenderHelper.enableStandardItemLighting();
 
         
-//        renderLeach(x + 0.5, y + 2.9 + te.getVisualWindup(), z + 0.5, x + 0.5, y + 0.2, z + 0.5, x + 0.5, y + 1.7, z + 0.5);
+        renderLeach(x + 0.5, y + 2.9 + te.getVisualWindup(), z + 0.5, x + 0.5, y + 0.2, z + 0.5, x + 0.5, y + 1.7, z + 0.5);
 
         if (te.hasWorker())
             renderLeash(te.getWorker(), x, y, z, 0D, 1.1D, 0D, partialTicks, te.getPos());
