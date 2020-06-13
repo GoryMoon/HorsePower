@@ -6,6 +6,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.extensions.IRecipeCategoryExtension;
 import net.minecraft.client.Minecraft;
+import se.gory_moon.horsepower.util.Localization;
 
 public class ManualChoppingAxeWrapper implements IRecipeCategoryExtension {
 
@@ -22,9 +23,8 @@ public class ManualChoppingAxeWrapper implements IRecipeCategoryExtension {
 
     @Override
     public void drawInfo(int recipeWidth, int recipeHeight, double mouseX, double mouseY) {
-        //FIXME add localization for the values here
-        print(String.valueOf(axeConfiguration.baseChance), 27, 5);
-        print(String.valueOf(axeConfiguration.otherChance), 27, 13);
+        print(Localization.JEI.CATEGORY$MANUAL_CHOPPING_AXES_BASE_CHANCE.translate() + String.valueOf(axeConfiguration.baseAmount) + "%", 27, 3);
+        print(Localization.JEI.CATEGORY$MANUAL_CHOPPING_AXES_OTHER_CHANCE.translate() + String.valueOf(axeConfiguration.additionalChance) + "%", 27, 12);
     }
     
     //FONT Stuff

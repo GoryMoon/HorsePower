@@ -36,7 +36,7 @@ public class ManualChoppingAxesCategory implements IRecipeCategory<ManualChoppin
 
     @Override
     public IDrawable getBackground() {
-        return this.guiHelper.createDrawable(new ResourceLocation("horsepower", "textures/gui/jei_axes.png"), 0, 0, 99, 33);
+        return this.guiHelper.createDrawable(new ResourceLocation("horsepower", "textures/gui/jei_axes.png"), 0, 0, 178, 22);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ManualChoppingAxesCategory implements IRecipeCategory<ManualChoppin
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, ManualChoppingAxeWrapper recipe, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-        guiItemStacks.init(0, true, 3, 7);
+        guiItemStacks.init(0, true, 2, 2);
         guiItemStacks.set(ingredients);
         
     }

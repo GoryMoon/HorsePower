@@ -42,6 +42,8 @@
   "gui.horsepower.jei.category.chopping": "Chopping Block",
   "gui.horsepower.jei.category.manual_chopping": "Manual Chopping Block",
   "gui.horsepower.jei.category.manual_chopping_axes": "Chopping Block Axes",
+  "gui.horsepower.jei.category.manual_chopping_axes_base_chance": "Base Result Amount: ",
+  "gui.horsepower.jei.category.manual_chopping_axes_other_chance": "Additional Result Chance: ",
   "gui.horsepower.jei.category.press_item": "Press (Item)",
   "gui.horsepower.jei.category.press_fluid": "Press (Fluid)",
 

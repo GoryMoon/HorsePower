@@ -4,14 +4,14 @@ import net.minecraft.item.ItemStack;
 
 public class ManualChoppingAxeConfiguration {
 
-    public ItemStack axeItem;
-    public Integer baseChance;
-    public Integer otherChance;
+    ItemStack axeItem;
+    Integer baseAmount;
+    Integer additionalChance;
 
     public ManualChoppingAxeConfiguration(ItemStack stack, Integer base, Integer other) {
         this.axeItem = stack;
-        this.baseChance = base;
-        this.otherChance = other;
+        this.baseAmount = base;
+        this.additionalChance = other;
     }
     
     @Override
