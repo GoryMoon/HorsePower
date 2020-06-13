@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -44,26 +45,31 @@ import java.util.List;
 
 public class PressBlock extends HPBaseBlock {
 
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<PressModels> PART = EnumProperty.create("part", PressModels.class);
 
-    private static final VoxelShape BOUND = Block.makeCuboidShape(0, 0, 0, 16, 16 + 12, 16);
-    private static final VoxelShape COLLISION = Block.makeCuboidShape(0, 0, 0, 16, 16 + 3, 16);
+    private static final VoxelShape BASE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 14.0D, 16.0D);
+    
+    private static final VoxelShape TOP_X = Block.makeCuboidShape(7.0D, 14.0D, 0.0D, 9.0D, 19.0D, 16.0D);
+    private static final VoxelShape TOP_Z = Block.makeCuboidShape(0.0D, 14.0D, 7.0D, 16.0D, 19.0D, 9.0D);
+    private static final VoxelShape TOP_POLE = Block.makeCuboidShape(7.0D, 19.0D, 7.0D, 9.0D, 28.0D, 9.0D);
+
+    
+    private static final VoxelShape BOUND_X =  VoxelShapes.or(BASE,TOP_X,TOP_POLE);
+    private static final VoxelShape BOUND_Z =  VoxelShapes.or(BASE,TOP_Z,TOP_POLE);
 
     public PressBlock(Properties properties) {
         super(properties.hardnessAndResistance(5.0F, 5.0F).sound(SoundType.WOOD));
-
         setHarvestLevel(ToolType.AXE, 1);
     }
-
+    
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return BOUND;
+        return state.get(FACING).getAxis() == Direction.Axis.X ? BOUND_X : BOUND_Z;
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return COLLISION;
+        return state.get(FACING).getAxis() == Direction.Axis.X ? BOUND_X : BOUND_Z;
     }
 
     @Override

@@ -178,6 +178,7 @@ public class FillerBlock extends DirectionalBlock {
     @Override
     public boolean causesSuffocation(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return false;
+        //TODO suffocation should be true but collision and shape for horse chopper does not work properly with true here, no idea why
     }
 
     @Override
