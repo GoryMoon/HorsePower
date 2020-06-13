@@ -45,76 +45,10 @@ public class TOPCompatibility {
         @Nullable
         @Override
         public Void apply(@Nullable ITheOneProbe probe) {
-
-            probe.registerProvider(new IProbeInfoProvider() {
-                @Override
-                public String getID() {
-                    return "horsepower:default";
-                }
-
-                @Override
-                public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
-                    if (!addInfo(mode, probeInfo, player, world, blockState, data) && blockState.getBlock() instanceof FillerBlock) {
-                        BlockPos pos = data.getPos().offset(blockState.get(FillerBlock.FACING));
-                        BlockState state = world.getBlockState(pos);
-                        if (FillerBlock.validateFilled(world, state, data.getPos())) {
-                            addInfo(mode, probeInfo, player, world, state, new ProbeHitData(pos, data.getHitVec(), data.getSideHit(), data.getPickBlock()));
-                        }
-                    }
-                }
-
-                private boolean addInfo(ProbeMode mode, IProbeInfo probeInfo, PlayerEntity player, World world, BlockState blockState, IProbeHitData data) {
-                    boolean added = false;
-                    Block block = blockState.getBlock();
-                    if (block instanceof ManualMillstoneBlock) {
-                        ManualMillstoneTileEntity te = (ManualMillstoneTileEntity) world.getTileEntity(data.getPos());
-                        if (te != null) {
-                            double total = te.getTotalItemMillTime();
-                            double current = te.getCurrentItemMillTime();
-                            probeInfo.progress((long) ((current / total) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.MILLSTONE_PROGRESS.translate() + " ").suffix("%"));
-                        }
-                        added = true;
-                    } else if (block instanceof PressBlock) {
-                        PressTileEntity te = (PressTileEntity) world.getTileEntity(data.getPos());
-                        if (te != null) {
-                            double current = te.getCurrentPressStatus();
-                            probeInfo.progress((long) ((current / (Configs.SERVER.pointsPerPress.get() > 0 ? Configs.SERVER.pointsPerPress.get(): 1)) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.PRESS_PROGRESS.translate() + " ").suffix("%"));
-                        }
-                        added = true;
-                    } else if (block instanceof MillstoneBlock) {
-                        MillstoneTileEntity te = (MillstoneTileEntity) world.getTileEntity(data.getPos());
-                        if (te != null) {
-                            double total = te.getTotalItemMillTime();
-                            double current = te.getCurrentItemMillTime();
-                            probeInfo.progress((long) ((current / total) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.MILLSTONE_PROGRESS.translate() + " ").suffix("%"));
-                        }
-                        added = true;
-                    } else if (block instanceof ManualChopperBlock) {
-                        TileEntity te =  world.getTileEntity(data.getPos());
-                        if (te instanceof ManualChopperTileEntity) {
-                            probeInfo.progress(((ManualChopperTileEntity) te).getCurrentProgress(), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
-                            if(player.isSneaking() && Configs.CLIENT.showManualChoppingAxeInfo.get().booleanValue())
-                            {
-                                ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
-                                probeInfo.text(Localization.INFO.MANUAL_CHOPPING_AXES_BASE_AMOUNT.translate()+ ManualChopperTileEntity.getBaseAmount(heldItem, player) +"%");
-                                probeInfo.text(Localization.INFO.MANUAL_CHOPPING_AXES_ADDITIONAL_CHANCE.translate()+ ManualChopperTileEntity.getChance(heldItem, player) +"%");
-                            }
-                        }
-                        added = true;
-                    } else if (block instanceof ChopperBlock) {
-                        TileEntity te =  world.getTileEntity(data.getPos());
-                        if (te instanceof ChopperTileEntity) {
-                            ChopperTileEntity tileEntity = (ChopperTileEntity)te;
-                            double totalWindup = Configs.SERVER.pointsForWindup.get().intValue() > 0 ? Configs.SERVER.pointsForWindup.get().intValue() : 1;
-                            probeInfo.progress((long) (((tileEntity.getCurrentWindup()) / totalWindup) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.WINDUP_PROGRESS.translate() + " ").suffix("%"));
-                            if (tileEntity.getTotalItemChopTime() > 1)
-                                probeInfo.progress((long) ((((double) tileEntity.getCurrentItemChopTime()) / ((double) tileEntity.getTotalItemChopTime())) * 100L), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
-                        }
-                        added = true;
-                    }
-                    return added;
-                }
-            });
+            if(probe == null)
+                return null;
+            
+            probe.registerProvider(new TOPInfoProvider());
 
             return null;
         }
