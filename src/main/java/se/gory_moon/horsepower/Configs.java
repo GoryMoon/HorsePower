@@ -69,9 +69,6 @@ public class Configs {
         public final BooleanValue showTags;
         public final BooleanValue showHarvestLevel;
         public final ConfigValue<ArrayList<String>> harvestTypes;
-        //        @Comment({"If true it will show all chopping block types in the creative tab and JEI", "If false only the vanilla wood variants will show", "JEI needs a resource reload for this to update"})
-        //        @Name("Use Dynamic Chopping Display")
-        public boolean useDynamicDisplay = true;
 
         Client(ForgeConfigSpec.Builder builder) {
             builder.comment("Client only configs")
@@ -127,7 +124,6 @@ public class Configs {
         public final ConfigValue<ArrayList<String>> harvestablePercentage;
         public final BooleanValue choppingBlockDrop;
         public final DoubleValue choppingExhaustion;
-        public final IntValue choppingMultiplier;
         public final IntValue pointsForWindup;
         public final IntValue pointsPerRotation;
 
@@ -202,11 +198,6 @@ public class Configs {
                     .comment("The exhaustion amount that will be added to the player when using the chopping block", "If set to 0 this is disabled")
                     .translation(Localization.CONFIG.SERVER.CHOPPING_EXHAUSTION.key())
                     .defineInRange("chopping_exhaustion", 0.1D, 0D, Double.MAX_VALUE);
-
-            choppingMultiplier = builder
-                    .comment("The amount of chopps the time value in the horse chopping recipes should be multiplied with if recipes isn't separated", "If the recipes are separate this isn't used, instead the recipe value is used")
-                    .translation(Localization.CONFIG.SERVER.CHOPPING_MULTIPLIER.key())
-                    .defineInRange("chopping_multiplier", 4, 1, Integer.MAX_VALUE);
 
             pointsForWindup = builder
                     .comment("That amount of \"points\" for the chopper to do windup and do a chop", "One lap around the chopping block is 8 \"points\"")
