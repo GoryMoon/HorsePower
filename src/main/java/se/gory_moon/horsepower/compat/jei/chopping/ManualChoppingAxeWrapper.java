@@ -23,8 +23,8 @@ public class ManualChoppingAxeWrapper implements IRecipeCategoryExtension {
 
     @Override
     public void drawInfo(int recipeWidth, int recipeHeight, double mouseX, double mouseY) {
-        print(Localization.JEI.CATEGORY$MANUAL_CHOPPING_AXES_BASE_CHANCE.translate() + String.valueOf(axeConfiguration.baseAmount) + "%", 27, 3);
-        print(Localization.JEI.CATEGORY$MANUAL_CHOPPING_AXES_OTHER_CHANCE.translate() + String.valueOf(axeConfiguration.additionalChance) + "%", 27, 12);
+        print(Localization.INFO.MANUAL_CHOPPING_AXES_BASE_AMOUNT.translate() + String.valueOf(axeConfiguration.baseAmount) + "%", 27, 3);
+        print(Localization.INFO.MANUAL_CHOPPING_AXES_ADDITIONAL_CHANCE.translate() + String.valueOf(axeConfiguration.additionalChance) + "%", 27, 12);
     }
     
     //FONT Stuff

@@ -31,7 +31,9 @@
   "info.horsepower.millstone.info1": "The millstone will mill down items to their base components. When setting up a millstone make sure you have a 7x7 and 2 blocks high area cleared before starting, there needs to be solid ground under the 7x7 area.",
   "info.horsepower.millstone.info2": "In the middle of the 7x7 place a block of your choice and then place the millstone above that. If the area isn't cleared to millstone will say that when looking at it. Next, use a lead to get a Horse/Donkey/Mule/Llama of your choice to be working the miller.",
   "info.horsepower.millstone.info3": "With the animal attached with the lead right click the millstone and the animal should now be connected to that. Now simply right click the millstone with a item that can be milled to start the process or attach any automatic input/output on the top or bottom.",
-
+  "info.horsepower.manual.chopping.axes.base.amount": "Base Result Amount: ",
+  "info.horsepower.manual.chopping.axes.additional.chance": "Additional Result Chance: ",
+  
   "_comment": "Command",
   "commands.horsepower.entity.no": "Not looking at an entity",
   "commands.horsepower.entity.has": "Entity copied to clipboard: %s",
@@ -42,13 +44,12 @@
   "gui.horsepower.jei.category.chopping": "Chopping Block",
   "gui.horsepower.jei.category.manual_chopping": "Manual Chopping Block",
   "gui.horsepower.jei.category.manual_chopping_axes": "Chopping Block Axes",
-  "gui.horsepower.jei.category.manual_chopping_axes_base_chance": "Base Result Amount: ",
-  "gui.horsepower.jei.category.manual_chopping_axes_other_chance": "Additional Result Chance: ",
   "gui.horsepower.jei.category.press_item": "Press (Item)",
   "gui.horsepower.jei.category.press_fluid": "Press (Fluid)",
 
   "_comment": "Config",
   "config.horsepower.client.render_item_amount": "Render Item Amount",
+  "config.horsepower.client.show_manual_chopping_axe_info": "Show additional information in The One Probe when sneaking and using the Manual Chopping Block.",
   "config.horsepower.client.must_look_at_block": "Must Look For Amount",
   "config.horsepower.client.show_obstructed_place": "Show Obstructed Area",
   "config.horsepower.client.misc.tags": "Show Item Tags",

@@ -68,6 +68,7 @@ public class Configs {
         public final BooleanValue showObstructedPlace;
         public final BooleanValue showTags;
         public final BooleanValue showHarvestLevel;
+        public final BooleanValue showManualChoppingAxeInfo;
         public final ConfigValue<ArrayList<String>> harvestTypes;
 
         Client(ForgeConfigSpec.Builder builder) {
@@ -89,6 +90,11 @@ public class Configs {
                     .translation(Localization.CONFIG.CLIENT.SHOW_OBSTRUCTED_PLACE.key())
                     .define("show_obstructed_place", true);
 
+            showManualChoppingAxeInfo = builder
+                    .comment("Show additional information in The One Probe when sneaking and using the Manual Chopping Block.")
+                    .translation(Localization.CONFIG.CLIENT.SHOW_MANUAL_CHOPPING_AXE_INFO.key())
+                    .define("show_manual_chopping_axe_info", true);
+            
             //Misc is only client stuff
             builder.comment("Contains misc configs, mostly for debugging and dev")
                     .push("misc");

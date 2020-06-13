@@ -124,7 +124,7 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
         }
     }
 
-    private static int getBaseAmount(ItemStack held, PlayerEntity player) {
+    public static int getBaseAmount(ItemStack held, PlayerEntity player) {
         int baseAmount = 100;
         int harvestLevel = held.getItem().getHarvestLevel(held, ToolType.AXE, player, null);
         if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(Integer.valueOf(harvestLevel)) != null) {
@@ -138,7 +138,7 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
         return baseAmount;
     }
 
-    private static int getChance(ItemStack held, PlayerEntity player) {
+    public static int getChance(ItemStack held, PlayerEntity player) {
         int chance = 0;
         int harvestLevel = held.getItem().getHarvestLevel(held, ToolType.AXE, player, null);
         if (harvestLevel > -1 && HPEventHandler.harvestPercentages.get(Integer.valueOf(harvestLevel)) != null) {

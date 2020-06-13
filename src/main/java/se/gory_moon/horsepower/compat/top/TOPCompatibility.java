@@ -11,7 +11,9 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.InterModComms;
@@ -91,6 +93,12 @@ public class TOPCompatibility {
                         TileEntity te =  world.getTileEntity(data.getPos());
                         if (te instanceof ManualChopperTileEntity) {
                             probeInfo.progress(((ManualChopperTileEntity) te).getCurrentProgress(), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
+                            if(player.isSneaking() && Configs.CLIENT.showManualChoppingAxeInfo.get().booleanValue())
+                            {
+                                ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
+                                probeInfo.text(Localization.INFO.MANUAL_CHOPPING_AXES_BASE_AMOUNT.translate()+ ManualChopperTileEntity.getBaseAmount(heldItem, player) +"%");
+                                probeInfo.text(Localization.INFO.MANUAL_CHOPPING_AXES_ADDITIONAL_CHANCE.translate()+ ManualChopperTileEntity.getChance(heldItem, player) +"%");
+                            }
                         }
                         added = true;
                     } else if (block instanceof ChopperBlock) {

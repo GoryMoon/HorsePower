@@ -40,7 +40,9 @@ public final class Localization {
         MILLSTONE_INVALID,
         CHOPPING_INVALID,
         PRESS_INVALID,
-        ITEM_REVEAL;
+        ITEM_REVEAL,
+        MANUAL_CHOPPING_AXES_BASE_AMOUNT,
+        MANUAL_CHOPPING_AXES_ADDITIONAL_CHANCE;
 
         public String translate(String... vars) {
             return Localization.translateString(key(), vars);
@@ -57,8 +59,6 @@ public final class Localization {
         CATEGORY$CHOPPING,
         CATEGORY$MANUAL_CHOPPING,
         CATEGORY$MANUAL_CHOPPING_AXES,
-        CATEGORY$MANUAL_CHOPPING_AXES_BASE_CHANCE,
-        CATEGORY$MANUAL_CHOPPING_AXES_OTHER_CHANCE,
         CATEGORY$PRESS_ITEM,
         CATEGORY$PRESS_FLUID;
 
@@ -168,7 +168,8 @@ public final class Localization {
             RENDER_ITEM_AMOUNT,
             MUST_LOOK_AT_BLOCK,
             SHOW_OBSTRUCTED_PLACE,
-
+            SHOW_MANUAL_CHOPPING_AXE_INFO,
+            
             MISC$TAGS,
             MISC$HARVEST_LEVEL,
             MISC$HARVEST_TYPES;
