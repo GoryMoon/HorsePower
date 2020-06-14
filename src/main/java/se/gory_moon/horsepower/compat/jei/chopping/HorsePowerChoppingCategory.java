@@ -1,20 +1,26 @@
 package se.gory_moon.horsepower.compat.jei.chopping;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
+import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
+import se.gory_moon.horsepower.recipes.MillingRecipe;
+import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.util.Localization;
 
 public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipe> {
@@ -25,12 +31,17 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
     private static final int outputSlot = 1;
 
     private final String localizedName;
+    
+    private final IDrawableAnimated arrow;
 
     public HorsePowerChoppingCategory(IGuiHelper guiHelper, boolean hand) {
         super(guiHelper);
         this.handHandler = hand;
 
         localizedName = handHandler ? Localization.JEI.CATEGORY$MANUAL_CHOPPING.translate(): Localization.JEI.CATEGORY$CHOPPING.translate();
+    
+        arrow = guiHelper.drawableBuilder(HorsePowerCategory.COMPONENTS, 60, 0, 24, 17)
+                .buildAnimated(150, IDrawableAnimated.StartDirection.LEFT, false);
     }
 
     @Override
@@ -49,7 +60,6 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
 
         guiItemStacks.init(inputSlot, true, 34, 32);
         guiItemStacks.init(outputSlot, false, 90, 32);
-
         guiItemStacks.set(ingredients);
         super.openRecipe();
     }
@@ -68,5 +78,28 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
     public void setIngredients(ChoppingRecipe recipe, IIngredients ingredients) {
         ingredients.setInputIngredients(recipe.getIngredients());
         ingredients.setOutputs(VanillaTypes.ITEM, Stream.of(recipe.getRecipeOutput()).collect(Collectors.toList()));
+    }
+    
+    @Override
+    public void draw(ChoppingRecipe recipe, double mouseX, double mouseY) {
+        super.draw(recipe, mouseX, mouseY);
+        arrow.draw(57, 32);
+    }
+    
+    @Override
+    public List<String> getTooltipStrings(ChoppingRecipe recipe, double mouseX, double mouseY) {
+        List<String> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
+        if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 45) {
+            tooltip.add(new TranslationTextComponent(handHandler ? "info.horsepower.manual.chopping.time" : "info.horsepower.horse.chopping.time", Double.valueOf(getLaps(recipe))).getFormattedText());
+        }
+        return tooltip;
+    }
+
+    private double getLaps(ChoppingRecipe recipe) {
+        return handHandler ? 
+                recipe.getTime() // means amount of chops for manual chopper
+                : 
+                (Math.round((Configs.SERVER.pointsForWindup.get().doubleValue() / 8D) * 100.0D) / 100.0D) //how many laps for a windup
+                * recipe.getTime(); // means the amount of chops of the cutter to break the item
     }
 }

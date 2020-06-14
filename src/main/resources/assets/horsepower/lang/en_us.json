@@ -33,6 +33,11 @@
   "info.horsepower.millstone.info3": "With the animal attached with the lead right click the millstone and the animal should now be connected to that. Now simply right click the millstone with a item that can be milled to start the process or attach any automatic input/output on the top or bottom.",
   "info.horsepower.manual.chopping.axes.base.amount": "Base Result Amount: ",
   "info.horsepower.manual.chopping.axes.additional.chance": "Additional Result Chance: ",
+  "info.horsepower.manual.milling.grind.time": "Time to grind: {0} rotation(s)",
+  "info.horsepower.horse.milling.grind.time": "Time to grind: {0} lap(s)",
+  "info.horsepower.manual.chopping.time": "Amount of hits: {0} chop(s)",
+  "info.horsepower.horse.chopping.time": "Time to chop: {0} lap(s)",
+  "info.horsepower.horse.pressing.time": "Time to press: {0} lap(s)",
   
   "_comment": "Command",
   "commands.horsepower.entity.no": "Not looking at an entity",
@@ -46,7 +51,7 @@
   "gui.horsepower.jei.category.manual_chopping_axes": "Chopping Block Axes",
   "gui.horsepower.jei.category.press_item": "Press (Item)",
   "gui.horsepower.jei.category.press_fluid": "Press (Fluid)",
-
+ 
   "_comment": "Config",
   "config.horsepower.client.render_item_amount": "Render Item Amount",
   "config.horsepower.client.show_manual_chopping_axe_info": "Show additional information in The One Probe when sneaking and using the Manual Chopping Block.",

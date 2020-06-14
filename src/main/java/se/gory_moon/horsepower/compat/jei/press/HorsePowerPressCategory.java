@@ -9,16 +9,19 @@ import java.util.stream.Stream;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
+import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
@@ -31,11 +34,16 @@ public class HorsePowerPressCategory extends HorsePowerCategory<PressingRecipe> 
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
 	
+    private final IDrawableAnimated arrow;
+    
 	public HorsePowerPressCategory(IGuiHelper guiHelper, boolean isLiquid) {
 		super(guiHelper, false, 146, 74, new ResourceLocation(Constants.MOD_ID, isLiquid? "textures/gui/jei_fluid.png" :  "textures/gui/jei.png"));
 
 		this.isLiquid = isLiquid;
 		localizedName = isLiquid ? Localization.JEI.CATEGORY$PRESS_FLUID.translate(): Localization.JEI.CATEGORY$PRESS_ITEM.translate();
+	
+		arrow = guiHelper.drawableBuilder(HorsePowerCategory.COMPONENTS, 60, 0, 24, 17)
+	                .buildAnimated(150, IDrawableAnimated.StartDirection.LEFT, false);
 	}
 
 	@Override
@@ -82,7 +90,22 @@ public class HorsePowerPressCategory extends HorsePowerCategory<PressingRecipe> 
         if (isLiquid)
             guiFluidStack.set(ingredients);
     	super.openRecipe();
-	}	
-	//TODO: override getTooltipStrings and draw to draw arrows and tooltips
+	}
+	
+	@Override
+	public void draw(PressingRecipe recipe, double mouseX, double mouseY) {
+	    super.draw(recipe, mouseX, mouseY);
+	    arrow.draw(isLiquid ? 61 : 57, 32);
+	}
+	
+    @Override
+    public List<String> getTooltipStrings(PressingRecipe recipe, double mouseX, double mouseY) {
+        List<String> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
+        if (mouseX >= 55 && mouseY >= 25 && mouseX < 86 && mouseY < 50) {
+            double printLaps = Math.round((Configs.SERVER.pointsPerPress.get().intValue() / 8D) * 100.0D) / 100.0D;
+            tooltip.add(new TranslationTextComponent("info.horsepower.horse.pressing.time", Double.valueOf(printLaps)).getFormattedText());
+        }
+        return tooltip;
+    }
 
 }
