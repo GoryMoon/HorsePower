@@ -1,5 +1,8 @@
 package se.gory_moon.horsepower;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.tterrag.registrate.Registrate;
 
 import net.minecraft.util.LazyLoadBase;
@@ -14,8 +17,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.compat.top.TOPCompatibility;
 import se.gory_moon.horsepower.network.PacketHandler;
@@ -26,7 +27,7 @@ import se.gory_moon.horsepower.util.HorsePowerCommand;
 @Mod(Constants.MOD_ID)
 public class HorsePower {
 
-    public static final LazyLoadBase<Registrate> REGISTRATE = new LazyLoadBase<>(() -> Registrate.create(Constants.MOD_ID));
+    private static final LazyLoadBase<Registrate> REGISTRATE = new LazyLoadBase<>(() -> Registrate.create(Constants.MOD_ID).itemGroup(HorsePowerItemGroup::new));
     public static final Logger LOGGER = LogManager.getLogger();
 
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();
@@ -37,7 +38,6 @@ public class HorsePower {
         eventBus.addListener(this::loadComplete);
         eventBus.addListener(this::onFingerprintViolation);
         MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
-        getRegistrate().itemGroup(HorsePowerItemGroup::new);
         Registration.init();
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Configs.clientSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Configs.serverSpec);
