@@ -140,6 +140,7 @@ dependencies {
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+    classifier = 'slim' //without Registrate
     manifest {
         attributes(["Specification-Title":      "HorsePower",
                     "Specification-Vendor":     "Gory_Moon",
@@ -152,6 +153,7 @@ jar {
 }
 
 shadowJar {
+    classifier = ''
     configurations = [project.configurations.shade]
     relocate 'com.tterrag.registrate', 'se.gory_moon.horsepower.repack.registrate'
 }
