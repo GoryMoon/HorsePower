@@ -96,17 +96,6 @@ public abstract class HPBaseBlock extends ContainerBlock {
         return (tileentity != null && getTileClass().isAssignableFrom(tileentity.getClass())) ? (T) tileentity: null;
     }
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
-        try {
-            return (TileEntity) getTileClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = hand == Hand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;

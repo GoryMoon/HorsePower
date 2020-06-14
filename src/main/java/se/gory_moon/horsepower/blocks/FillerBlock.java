@@ -32,6 +32,7 @@ import net.minecraft.world.IWorldWriter;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 
 import javax.annotation.Nullable;
@@ -78,7 +79,7 @@ public class FillerBlock extends DirectionalBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new FillerTileEntity();
+        return new FillerTileEntity(Registration.FILLER_TILE.get());
     }
 
     @Override

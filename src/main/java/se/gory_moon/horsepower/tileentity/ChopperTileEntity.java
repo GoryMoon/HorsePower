@@ -1,12 +1,14 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
+import com.tterrag.registrate.util.nullness.NonnullType;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import se.gory_moon.horsepower.Configs;
@@ -26,8 +28,8 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     private float visualWindup = 0;
     private float oldVisualWindup = -1;
 
-    public ChopperTileEntity() {
-        super(2, Registration.CHOPPER_TILE.get());
+    public ChopperTileEntity(@NonnullType TileEntityType<ChopperTileEntity> tileEntityType) {
+        super(2, tileEntityType);
     }
 
     @Override

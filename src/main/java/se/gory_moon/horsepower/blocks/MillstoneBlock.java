@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -19,6 +20,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
@@ -94,5 +96,10 @@ public class MillstoneBlock extends HPBaseBlock {
     @Override
     public Class<?> getTileClass() {
         return MillstoneTileEntity.class;
+    }
+    
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+        return new MillstoneTileEntity(Registration.MILLSTONE_TILE.get());
     }
 }

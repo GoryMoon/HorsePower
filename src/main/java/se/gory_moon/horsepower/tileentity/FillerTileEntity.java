@@ -3,6 +3,7 @@ package se.gory_moon.horsepower.tileentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
@@ -16,10 +17,12 @@ import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class FillerTileEntity extends TileEntity implements INameable {
+import com.tterrag.registrate.util.nullness.NonnullType;
 
-    public FillerTileEntity() {
-        super(Registration.FILLER_TILE.get());
+public class FillerTileEntity extends TileEntity implements INameable {
+    
+    public FillerTileEntity(@NonnullType TileEntityType<FillerTileEntity> tileEntityType) {
+        super(tileEntityType);
     }
 
     public HPBaseTileEntity getFilledTileEntity() {

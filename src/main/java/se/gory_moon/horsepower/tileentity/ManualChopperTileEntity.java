@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
@@ -16,6 +17,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.tterrag.registrate.util.nullness.NonnullType;
 
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
@@ -31,8 +34,8 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     private int currentItemChopAmount;
     private int totalItemChopAmount;
     
-    public ManualChopperTileEntity() {
-        super(2,Registration.MANUAL_CHOPPER_TILE.get());
+    public ManualChopperTileEntity(@NonnullType TileEntityType<ManualChopperTileEntity> tileEntityType) {
+        super(2,tileEntityType);
     }
 
     @Override

@@ -1,11 +1,14 @@
 package se.gory_moon.horsepower.tileentity;
 
+import com.tterrag.registrate.util.nullness.NonnullType;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -26,8 +29,8 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
     private int rotation = 0;
 
 
-    public ManualMillstoneTileEntity() {
-        super(3, Registration.MANUAL_MILLSTONE_TILE.get());
+    public ManualMillstoneTileEntity(@NonnullType TileEntityType<ManualMillstoneTileEntity> tileEntityType) {
+        super(3, tileEntityType);
     }
 
     public static void millItem(IInventoryHP inventory, HPBaseTileEntity te) {

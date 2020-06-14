@@ -1,11 +1,14 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
+import com.tterrag.registrate.util.nullness.NonnullType;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -29,8 +32,8 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     private int currentItemMillTime;
     private int totalItemMillTime;
 
-    public MillstoneTileEntity() {
-        super(3, Registration.MILLSTONE_TILE.get());
+    public MillstoneTileEntity(@NonnullType TileEntityType<MillstoneTileEntity> tileEntityType) {
+        super(3, tileEntityType);
     }
 
     @Override

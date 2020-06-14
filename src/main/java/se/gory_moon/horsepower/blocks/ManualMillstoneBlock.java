@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -27,8 +28,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.FakePlayer;
 import se.gory_moon.horsepower.Configs;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
+import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
@@ -109,6 +112,13 @@ public class ManualMillstoneBlock extends HPBaseBlock {
     public Class<?> getTileClass() {
         return ManualMillstoneTileEntity.class;
     }
+    
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+        return new ManualMillstoneTileEntity(Registration.MANUAL_MILLSTONE_TILE.get());
+    }
+
 
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {

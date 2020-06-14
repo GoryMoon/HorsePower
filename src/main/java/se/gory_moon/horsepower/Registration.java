@@ -44,43 +44,50 @@ public class Registration {
                 return block;
             })
             .tileEntity(FillerTileEntity::new)
+                .build()
             .register();
     
     public static final  BlockEntry<PressBlock> PRESS_BLOCK = REGISTRATE.object(Constants.PRESS_BLOCK)
             .block(Material.WOOD, PressBlock::new)
             .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
-            .build()
+                .build()
             .tileEntity(PressTileEntity::new)
+                .build()
             .register();
 
     public static final BlockEntry<ManualMillstoneBlock> MANUAL_MILLSTONE_BLOCK = REGISTRATE.object(Constants.MANUAL_MILLSTONE_BLOCK)
             .block(Material.ROCK, ManualMillstoneBlock::new)
             .item()
-            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/manual_millstone_full")))
-            .build()
+                .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/manual_millstone_full")))
+                .build()
             .tileEntity(ManualMillstoneTileEntity::new)
+                .build()
+            
             .register();
     
     public static final BlockEntry<MillstoneBlock> MILLSTONE_BLOCK = REGISTRATE.object(Constants.MILLSTONE_BLOCK)
             .block(Material.ROCK, MillstoneBlock::new)
             .item()
-            .build()
+                .build()
             .tileEntity(MillstoneTileEntity::new)
+                .build()
             .register();
     
     
     public static final BlockEntry<ManualChopperBlock> MANUAL_CHOPPER_BLOCK = REGISTRATE.object(Constants.MANUAL_CHOPPER_BLOCK)
             .block(Material.WOOD, ManualChopperBlock::new)
             .item()
-            .build()
+                .build()
             .tileEntity(ManualChopperTileEntity::new)
+                .build()
             .register();
     
     public static final BlockEntry<ChopperBlock> CHOPPER_BLOCK = REGISTRATE.object(Constants.CHOPPER_BLOCK)
             .block(Material.WOOD, ChopperBlock::new)
             .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
-            .build()
+                .build()
             .tileEntity(ChopperTileEntity::new)
+                .build()
             .register();  
     
     /*

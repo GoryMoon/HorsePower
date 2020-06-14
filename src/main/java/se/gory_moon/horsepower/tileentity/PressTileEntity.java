@@ -1,12 +1,15 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.google.common.collect.Lists;
+import com.tterrag.registrate.util.nullness.NonnullType;
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -37,9 +40,8 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     private int currentPressStatus;
     private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
-    public PressTileEntity() {
-        super(2, Registration.PRESS_TILE.get());
-        //        tank.setCanFill(false);
+    public PressTileEntity(@NonnullType TileEntityType<PressTileEntity> tileEntityType) {
+        super(2, tileEntityType);
     }
 
     @Override

@@ -33,6 +33,7 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
@@ -130,7 +131,7 @@ public class PressBlock extends HPBaseBlock {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
-        return new PressTileEntity();
+        return new PressTileEntity(Registration.PRESS_TILE.get());
     }
 
     @Override

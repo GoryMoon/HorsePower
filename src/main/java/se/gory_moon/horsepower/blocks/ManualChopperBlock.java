@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -16,6 +17,7 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.FakePlayer;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
+import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import javax.annotation.Nonnull;
 
@@ -74,6 +76,11 @@ public class ManualChopperBlock extends HPChopperBaseBlock {
     @Nonnull
     public Class<?> getTileClass() {
         return ManualChopperTileEntity.class;
+    }
+    
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+        return new ManualChopperTileEntity(Registration.MANUAL_CHOPPER_TILE.get());
     }
 
 //    @Override
