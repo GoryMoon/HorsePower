@@ -1,17 +1,25 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+	    jcenter()
         mavenCentral()
+		mavenLocal()
+        maven { 
+			name = "forge"
+			url = 'https://files.minecraftforge.net/maven' 
+		}
+
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0+', changing: true
     }
 }
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
@@ -30,80 +38,52 @@ if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
     mappings channel: mcp_channel, version: mcp_mappings
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    // default run configurations.
-    // these can be tweaked, removed, or duplicated as needed.
+
     runs {
         client {
-            // Run directory
             workingDirectory project.file('run')
-
-            // recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
-            // recommended logging level for the console
-            properties 'forge.logging.console.level': 'debug'
-            // Colored console
-            properties 'forge.logging.noansi': 'false'
-
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
             mods {
                 horsepower {
                     source sourceSets.main
                 }
             }
             // Intellij stuff
-            ideaModule "${project.name}.main"
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
+            //ideaModule "${project.name}.main"
+            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
 
         server {
-            // Run directory
             workingDirectory project.file('run')
-
-            // recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
-            // recommended logging level for the console
-            properties 'forge.logging.console.level': 'debug'
-            // Colored console
-            properties 'forge.logging.noansi': 'false'
-
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
             mods {
                 horsepower {
                     source sourceSets.main
                 }
             }
             // Intellij stuff
-            ideaModule "${project.name}.main"
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
+            //ideaModule "${project.name}.main"
+            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
 
         data {
             workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
-
-            // Recommended logging level for the console
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-
             args '--mod', 'horsepower', '--all', '--output', file('src/generated/resources/'),
                     '--existing', '"' + file('src/main/resources') + '"'
-
             mods {
                 horsepower {
                     source sourceSets.main
                 }
             }
             // Intellij stuff
-            ideaModule "${project.name}.main"
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
+            //ideaModule "${project.name}.main"
+            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
     }
 }
@@ -133,14 +113,16 @@ repositories {
         name = "Tterrag - TOP,Registrate"
         url "https://maven.tterrag.com/"
     }
+	mavenLocal()
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
+    def registrate = "com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}"
+    implementation fg.deobf(registrate)
+    shade registrate
+	
     // compile against the JEI API but do not include it at runtime
     compileOnly fg.deobf("mezz.jei:jei-1.14.4:${jei_version}:api")
     // at runtime, use the full JEI jar
@@ -153,11 +135,6 @@ dependencies {
 
     compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
     runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
-
-
-    def registrate = "com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}"
-    implementation fg.deobf(registrate)
-    shade registrate
 }
 
 
@@ -177,6 +154,10 @@ jar {
 shadowJar {
     configurations = [project.configurations.shade]
     relocate 'com.tterrag.registrate', 'se.gory_moon.horsepower.repack.registrate'
+}
+
+reobf {
+    shadowJar {}
 }
 
 task devJar(type: Jar, dependsOn: 'classes') {
