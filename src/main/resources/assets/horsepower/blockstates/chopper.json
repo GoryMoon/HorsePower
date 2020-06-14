@@ -9,13 +9,10 @@
       "blade": { "model": "horsepower:block/chopper_blade" }
     },
     "facing": {
-      "up":    {},
-      "down": {},
       "north": {},
       "east":  { "y": 90 },
       "south": { "y": 180 },
       "west":  { "y": 270 }
-    },
-    "inventory": { "model": "horsepower:block/chopper" }
+    }
   }
 }
