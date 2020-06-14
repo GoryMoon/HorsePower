@@ -1,6 +1,9 @@
 package se.gory_moon.horsepower.client.renderer;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -14,9 +17,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;

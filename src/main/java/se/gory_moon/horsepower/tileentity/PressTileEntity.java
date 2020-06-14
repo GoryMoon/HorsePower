@@ -1,5 +1,8 @@
 package se.gory_moon.horsepower.tileentity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
@@ -24,15 +27,10 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
-import se.gory_moon.horsepower.recipes.HPRecipes;
-import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
+import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class PressTileEntity extends HPHorseBaseTileEntity {
 

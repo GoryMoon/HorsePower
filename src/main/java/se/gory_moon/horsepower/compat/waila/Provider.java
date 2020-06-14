@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower.compat.waila;
 
+import java.util.List;
+
 import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
 import mcp.mobius.waila.api.IRegistrar;
@@ -20,8 +22,6 @@ import se.gory_moon.horsepower.blocks.PressBlock;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 import se.gory_moon.horsepower.util.Constants;
-
-import java.util.List;
 
 @WailaPlugin
 public class Provider implements IWailaPlugin {

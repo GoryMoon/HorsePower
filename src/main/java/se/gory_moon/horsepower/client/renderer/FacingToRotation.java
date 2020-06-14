@@ -1,13 +1,14 @@
 package se.gory_moon.horsepower.client.renderer;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.model.TRSRTransformation;
-
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
 public enum FacingToRotation {

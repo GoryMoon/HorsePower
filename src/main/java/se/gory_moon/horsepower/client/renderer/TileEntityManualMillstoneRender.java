@@ -1,6 +1,9 @@
 package se.gory_moon.horsepower.client.renderer;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -9,7 +12,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
 import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
 import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;

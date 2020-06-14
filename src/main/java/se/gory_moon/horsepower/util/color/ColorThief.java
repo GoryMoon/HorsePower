@@ -1,5 +1,9 @@
 package se.gory_moon.horsepower.util.color;
 
+import java.util.Arrays;
+
+import javax.annotation.Nullable;
+
 /*
  * Java Color Thief
  * by Sven Woltmann, Fonpit AG
@@ -19,9 +23,6 @@ package se.gory_moon.horsepower.util.color;
  */
 
 import net.minecraft.client.renderer.texture.NativeImage;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
 
 @SuppressWarnings("ALL")
 public class ColorThief {

@@ -1,7 +1,16 @@
 package se.gory_moon.horsepower.blocks;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -31,16 +40,8 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
-import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public class ManualMillstoneBlock extends HPBaseBlock {
     public static final EnumProperty<ManualMillstoneModels> PART = EnumProperty.create("part", ManualMillstoneModels.class);

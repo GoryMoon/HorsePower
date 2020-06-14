@@ -1,5 +1,9 @@
 package se.gory_moon.horsepower.compat.jei;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
@@ -19,12 +23,11 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.HPEventHandler;
-import se.gory_moon.horsepower.HorsePower;
 import se.gory_moon.horsepower.Registration;
-import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxesCategory;
 import se.gory_moon.horsepower.compat.jei.chopping.HorsePowerChoppingCategory;
 import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxeConfiguration;
 import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxeWrapper;
+import se.gory_moon.horsepower.compat.jei.chopping.ManualChoppingAxesCategory;
 import se.gory_moon.horsepower.compat.jei.milling.HorsePowerMillingCategory;
 import se.gory_moon.horsepower.compat.jei.press.HorsePowerPressCategory;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
@@ -33,13 +36,6 @@ import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Constants;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 @JeiPlugin
 public class HorsePowerPlugin implements IModPlugin {

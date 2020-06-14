@@ -19,8 +19,6 @@ import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
-import se.gory_moon.horsepower.recipes.MillingRecipe;
-import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.util.Localization;
 
 public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipe> {

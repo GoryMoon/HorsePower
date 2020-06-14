@@ -13,11 +13,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
-import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 
 public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 

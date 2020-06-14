@@ -1,5 +1,9 @@
 package se.gory_moon.horsepower.compat.jei;
 
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -9,10 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import se.gory_moon.horsepower.util.color.Colors;
-
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 public abstract class HorsePowerCategory<T> implements IRecipeCategory<T> {
 

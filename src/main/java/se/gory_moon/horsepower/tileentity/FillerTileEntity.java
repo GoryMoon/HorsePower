@@ -1,5 +1,10 @@
 package se.gory_moon.horsepower.tileentity;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.tterrag.registrate.util.nullness.NonnullType;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.tileentity.TileEntity;
@@ -10,14 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.blocks.FillerBlock;
 import se.gory_moon.horsepower.blocks.HPBaseBlock;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.tterrag.registrate.util.nullness.NonnullType;
 
 public class FillerTileEntity extends TileEntity implements INameable {
     

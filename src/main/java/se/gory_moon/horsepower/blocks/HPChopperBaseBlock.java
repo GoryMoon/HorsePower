@@ -1,30 +1,5 @@
 package se.gory_moon.horsepower.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
-import se.gory_moon.horsepower.util.RenderUtils;
-import se.gory_moon.horsepower.util.Utils;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class HPChopperBaseBlock extends HPBaseBlock {
 
 //    public static final PropertyUnlistedString SIDE_TEXTURE = new PropertyUnlistedString("side_texture");

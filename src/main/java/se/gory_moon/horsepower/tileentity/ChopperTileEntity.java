@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower.tileentity;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
@@ -10,15 +12,16 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.Registration;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
-import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.util.Localization;
-
-import javax.annotation.Nullable;
 
 public class ChopperTileEntity extends HPHorseBaseTileEntity {
 

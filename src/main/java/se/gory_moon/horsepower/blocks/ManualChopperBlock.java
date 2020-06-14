@@ -1,9 +1,11 @@
 package se.gory_moon.horsepower.blocks;
 
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
+import javax.annotation.Nonnull;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
@@ -19,7 +21,6 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
-import javax.annotation.Nonnull;
 
 public class ManualChopperBlock extends HPChopperBaseBlock {
 

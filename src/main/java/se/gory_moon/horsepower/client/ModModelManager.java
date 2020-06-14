@@ -1,5 +1,8 @@
 package se.gory_moon.horsepower.client;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -11,9 +14,6 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import se.gory_moon.horsepower.util.Constants;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Constants.MOD_ID)
 public class ModModelManager {

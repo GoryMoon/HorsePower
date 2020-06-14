@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower.compat.waila;
 
+import java.util.List;
+
 import mcp.mobius.waila.api.IComponentProvider;
 import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
@@ -14,8 +16,6 @@ import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
-
-import java.util.List;
 
 public final class HUDHandlerFiller implements IComponentProvider, IServerDataProvider<TileEntity> {
 

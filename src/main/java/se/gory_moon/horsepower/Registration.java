@@ -1,9 +1,13 @@
 package se.gory_moon.horsepower;
 
+import static se.gory_moon.horsepower.HorsePower.getRegistrate;
+import static se.gory_moon.horsepower.util.Constants.MOD_ID;
+
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
+
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
@@ -12,28 +16,25 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ForgeRegistries;
 import se.gory_moon.horsepower.blocks.ChopperBlock;
-import se.gory_moon.horsepower.blocks.ManualChopperBlock;
 import se.gory_moon.horsepower.blocks.FillerBlock;
+import se.gory_moon.horsepower.blocks.ManualChopperBlock;
 import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
+import se.gory_moon.horsepower.client.renderer.TileEntityChopperRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityChoppingBlockRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityManualMillstoneRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
 import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityChoppingBlockRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityChopperRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
 import se.gory_moon.horsepower.items.DoubleBlockItem;
+import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
+import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
-import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
-import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 import se.gory_moon.horsepower.util.Constants;
-
-import static se.gory_moon.horsepower.HorsePower.getRegistrate;
-import static se.gory_moon.horsepower.util.Constants.MOD_ID;
 
 public class Registration {
 

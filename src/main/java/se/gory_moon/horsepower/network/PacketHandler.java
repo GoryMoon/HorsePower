@@ -1,11 +1,11 @@
 package se.gory_moon.horsepower.network;
 
+import java.util.Objects;
+
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import se.gory_moon.horsepower.network.messages.EntityMessage;
 import se.gory_moon.horsepower.util.Constants;
-
-import java.util.Objects;
 
 public class PacketHandler {
 

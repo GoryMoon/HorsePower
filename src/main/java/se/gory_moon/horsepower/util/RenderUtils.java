@@ -1,7 +1,15 @@
 package se.gory_moon.horsepower.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.StreamSupport;
+
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockModelShapes;
@@ -19,13 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.model.TRSRTransformation;
-import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.StreamSupport;
 
 public class RenderUtils {
 

@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower.client.renderer;
 
+import java.util.stream.StreamSupport;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -18,8 +20,6 @@ import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.RenderUtils;
-
-import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class ClientHandler {

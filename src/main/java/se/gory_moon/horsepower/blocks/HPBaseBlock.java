@@ -1,5 +1,10 @@
 package se.gory_moon.horsepower.blocks;
 
+import java.util.ArrayList;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -28,10 +33,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
 import se.gory_moon.horsepower.util.Utils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public abstract class HPBaseBlock extends ContainerBlock {
 

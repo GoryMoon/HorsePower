@@ -1,13 +1,14 @@
 package se.gory_moon.horsepower.compat.jei;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HorseDrawable implements IDrawableAnimated {
 

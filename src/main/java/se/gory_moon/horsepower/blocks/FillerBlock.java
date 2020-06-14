@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower.blocks;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -34,8 +36,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
-
-import javax.annotation.Nullable;
 
 public class FillerBlock extends DirectionalBlock {
 

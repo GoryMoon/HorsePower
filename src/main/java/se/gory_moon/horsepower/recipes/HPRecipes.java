@@ -1,11 +1,5 @@
 package se.gory_moon.horsepower.recipes;
 
-import com.google.common.collect.Maps;
-import net.minecraft.item.ItemStack;
-import se.gory_moon.horsepower.Configs;
-
-import java.util.Map;
-
 public class HPRecipes {
 
     private static HPRecipes INSTANCE = new HPRecipes();

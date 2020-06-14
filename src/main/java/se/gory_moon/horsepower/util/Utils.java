@@ -1,6 +1,9 @@
 package se.gory_moon.horsepower.util;
 
+import java.util.ArrayList;
+
 import com.google.common.collect.Lists;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.CreatureEntity;
@@ -17,8 +20,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePower;
-
-import java.util.ArrayList;
 
 public class Utils {
 

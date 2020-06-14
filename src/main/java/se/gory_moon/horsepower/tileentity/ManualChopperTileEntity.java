@@ -1,5 +1,11 @@
 package se.gory_moon.horsepower.tileentity;
 
+import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.tterrag.registrate.util.nullness.NonnullType;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -13,21 +19,11 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.RangedWrapper;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.tterrag.registrate.util.nullness.NonnullType;
-
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
-import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
-
-import java.util.Map;
 
 public class ManualChopperTileEntity extends HPBaseTileEntity {
 

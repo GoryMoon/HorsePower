@@ -1,6 +1,5 @@
 package se.gory_moon.horsepower.compat.jei.press;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +20,6 @@ import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
-import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;

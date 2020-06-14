@@ -1,5 +1,7 @@
 package se.gory_moon.horsepower.tileentity;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
@@ -15,15 +17,12 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
-import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.util.Localization;
-
-import javax.annotation.Nullable;
 
 public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 

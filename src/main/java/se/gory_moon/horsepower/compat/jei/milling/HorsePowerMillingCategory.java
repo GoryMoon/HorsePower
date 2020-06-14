@@ -1,5 +1,9 @@
 package se.gory_moon.horsepower.compat.jei.milling;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -19,10 +23,6 @@ import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe> {
 

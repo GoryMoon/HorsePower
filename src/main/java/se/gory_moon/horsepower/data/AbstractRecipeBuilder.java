@@ -1,6 +1,11 @@
 package se.gory_moon.horsepower.data;
 
+import java.util.function.Consumer;
+
+import javax.annotation.Nullable;
+
 import com.google.gson.JsonObject;
+
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.ICriterionInstance;
@@ -14,9 +19,6 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
-
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
 
 public abstract class AbstractRecipeBuilder {
 

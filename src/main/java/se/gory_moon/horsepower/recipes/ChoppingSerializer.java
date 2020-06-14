@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower.recipes;
 
 import com.google.gson.JsonObject;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 

@@ -3,7 +3,6 @@ package se.gory_moon.horsepower.data;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
-import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 

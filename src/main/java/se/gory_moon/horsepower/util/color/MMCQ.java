@@ -1,5 +1,11 @@
 package se.gory_moon.horsepower.util.color;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /*
  * Java Color Thief
  * by Sven Woltmann, Fonpit AG
@@ -19,11 +25,6 @@ package se.gory_moon.horsepower.util.color;
  */
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 @SuppressWarnings("ALL")
 public class MMCQ {

@@ -1,8 +1,10 @@
 package se.gory_moon.horsepower.data;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.CookingRecipeBuilder;
 import net.minecraft.data.DataGenerator;
@@ -17,12 +19,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.util.color.HPTags;
-
-import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class HPRecipeProvider extends RecipeProvider {
 
