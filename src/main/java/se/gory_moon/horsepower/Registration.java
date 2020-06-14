@@ -17,6 +17,12 @@ import se.gory_moon.horsepower.blocks.FillerBlock;
 import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.blocks.PressBlock;
+import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityManualMillstoneRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityChoppingBlockRender;
+import se.gory_moon.horsepower.client.renderer.TileEntityChopperRender;
 import se.gory_moon.horsepower.items.DoubleBlockItem;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
@@ -44,6 +50,7 @@ public class Registration {
                 return block;
             })
             .tileEntity(FillerTileEntity::new)
+                .renderer(()->TileEntityFillerRender::new)
                 .build()
             .register();
     
@@ -52,6 +59,7 @@ public class Registration {
             .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
                 .build()
             .tileEntity(PressTileEntity::new)
+                .renderer(()->TileEntityPressRender::new)
                 .build()
             .register();
 
@@ -61,8 +69,8 @@ public class Registration {
                 .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/manual_millstone_full")))
                 .build()
             .tileEntity(ManualMillstoneTileEntity::new)
+                .renderer(()->TileEntityManualMillstoneRender::new)
                 .build()
-            
             .register();
     
     public static final BlockEntry<MillstoneBlock> MILLSTONE_BLOCK = REGISTRATE.object(Constants.MILLSTONE_BLOCK)
@@ -70,6 +78,7 @@ public class Registration {
             .item()
                 .build()
             .tileEntity(MillstoneTileEntity::new)
+                .renderer(()->TileEntityMillstoneRender::new)
                 .build()
             .register();
     
@@ -79,6 +88,7 @@ public class Registration {
             .item()
                 .build()
             .tileEntity(ManualChopperTileEntity::new)
+                .renderer(()->TileEntityChoppingBlockRender::new)
                 .build()
             .register();
     
@@ -87,6 +97,7 @@ public class Registration {
             .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
                 .build()
             .tileEntity(ChopperTileEntity::new)
+                .renderer(()->TileEntityChopperRender::new)
                 .build()
             .register();  
     

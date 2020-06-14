@@ -29,12 +29,6 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(MillstoneTileEntity.class, new TileEntityMillstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(ManualMillstoneTileEntity.class, new TileEntityManualMillstoneRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(FillerTileEntity.class, new TileEntityFillerRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(ChopperTileEntity.class, new TileEntityChopperRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(ManualChopperTileEntity.class, new TileEntityChoppingBlockRender());
-        ClientRegistry.bindTileEntitySpecialRenderer(PressTileEntity.class, new TileEntityPressRender());
 
         //TODO make server command
         //ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
