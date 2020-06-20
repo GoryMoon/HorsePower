@@ -8,6 +8,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -37,9 +38,9 @@ public class ManualChopperBlock extends HPChopperBaseBlock {
     }
     
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand,
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand,
             BlockRayTraceResult hit) {
-        return player instanceof FakePlayer || player == null ||  super.onBlockActivated(state, worldIn, pos, player, hand, hit);
+        return (player instanceof FakePlayer || player == null) ? ActionResultType.SUCCESS :  super.onBlockActivated(state, worldIn, pos, player, hand, hit);
     }
     
     @Override

@@ -22,6 +22,7 @@ import net.minecraft.item.LeadItem;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -98,12 +99,12 @@ public abstract class HPBaseBlock extends ContainerBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = hand == Hand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
         HPBaseTileEntity te = (HPBaseTileEntity) worldIn.getTileEntity(pos);
         HPHorseBaseTileEntity teH = null;
         if (te == null)
-            return false;
+            return ActionResultType.FAIL;
         if (te instanceof HPHorseBaseTileEntity)
             teH = (HPHorseBaseTileEntity) te;
 
@@ -128,9 +129,9 @@ public abstract class HPBaseBlock extends ContainerBlock {
                 creature.clearLeashed(true, false);
                 teH.setWorker(creature);
                 onWorkerAttached(player, creature);
-                return true;
+                return ActionResultType.SUCCESS;
             } else {
-                return false;
+                return ActionResultType.FAIL;
             }
         } else 
             if (!stack.isEmpty() && te.isItemValidForSlot(0, stack)) {
@@ -150,7 +151,7 @@ public abstract class HPBaseBlock extends ContainerBlock {
             }
 
             if (flag)
-                return true;
+                return ActionResultType.SUCCESS;
         }
 
         int slot = getSlot(state, worldIn, player, hit);
@@ -171,7 +172,7 @@ public abstract class HPBaseBlock extends ContainerBlock {
 
         if (result.isEmpty()) {
             if (!stack.isEmpty())
-                return false;
+                return ActionResultType.FAIL;
             if (teH != null)
                 teH.setWorkerToPlayer(player);
         }
@@ -180,7 +181,7 @@ public abstract class HPBaseBlock extends ContainerBlock {
             ItemHandlerHelper.giveItemToPlayer(player, result, EquipmentSlotType.MAINHAND.getSlotIndex());
 
         te.markDirty();
-        return true;
+        return ActionResultType.PASS;
     }
 
     @Override

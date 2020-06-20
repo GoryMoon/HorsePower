@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.util.NonNullLazyValue;
 
-import net.minecraft.util.LazyLoadBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -27,7 +27,7 @@ import se.gory_moon.horsepower.util.HorsePowerCommand;
 @Mod(Constants.MOD_ID)
 public class HorsePower {
 
-    private static final LazyLoadBase<Registrate> REGISTRATE = new LazyLoadBase<>(() -> Registrate.create(Constants.MOD_ID).itemGroup(HorsePowerItemGroup::new));
+    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(Constants.MOD_ID).itemGroup(HorsePowerItemGroup::new));
     public static final Logger LOGGER = LogManager.getLogger();
 
     //public static ITweakerPlugin tweakerPlugin = new DummyTweakPluginImpl();

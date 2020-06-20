@@ -13,7 +13,6 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.config.ModConfig;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
@@ -43,23 +42,24 @@ public class Configs {
     }
 
     @SubscribeEvent
-    public static void onFileChange(final ModConfig.ConfigReloading configEvent) {
+    public static void onFileChange(final ModConfig.Reloading configEvent) {
         if (configEvent.getConfig().getType() == ModConfig.Type.SERVER) {
             HPEventHandler.reloadConfig();
         }
     }
 
-    /**
-     * Called from in-game config
-     *
-     * @param event The event
-     */
-    @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(Constants.MOD_ID)) {
-            HPEventHandler.reloadConfig();
-        }
-    }
+    //should not exist anymore
+//    /**
+//     * Called from in-game config
+//     *
+//     * @param event The event
+//     */
+//    @SubscribeEvent
+//    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+//        if (event.getModID().equals(Constants.MOD_ID)) {
+//            HPEventHandler.reloadConfig();
+//        }
+//    }
 
     public static class Client {
 

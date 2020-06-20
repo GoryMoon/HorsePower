@@ -19,7 +19,7 @@ import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -239,13 +239,14 @@ public class FillerBlock extends DirectionalBlock {
         }
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
+    //TODO getRenderLayer
+//    @Override
+//    public BlockRenderLayer getRenderLayer() {
+//        return BlockRenderLayer.CUTOUT;
+//    }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos0, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos0, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         BlockPos pos = pos0.offset(state.get(FACING));
         BlockState state1 = world.getBlockState(pos);
         if (validateFilled(world, state1, pos0))

@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -44,18 +43,19 @@ public class ModModelManager {
         return new ModelResourceLocation(Constants.MOD_ID + ":" + resource, "inventory");
     }
 
-    public static void replaceChoppingModel(ModelResourceLocation modelVariantLocation, ResourceLocation modelLocation, ModelBakeEvent event) {
-        try {
-            IModel model = ModelLoaderRegistry.getModel(modelLocation);
-            IBakedModel standard = event.getModelRegistry().get(modelVariantLocation);
-            if (standard != null) {
-                /*IBakedModel finalModel = new BakedChopperModel(standard, model, DefaultVertexFormats.BLOCK);
-
-                event.getModelRegistry().put(modelVariantLocation, finalModel);*/
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    //TODO reactivate baked models ?
+//    public static void replaceChoppingModel(ModelResourceLocation modelVariantLocation, ResourceLocation modelLocation, ModelBakeEvent event) {
+//        try {
+//            IModel model = ModelLoaderRegistry.getModel(modelLocation);
+//            IBakedModel standard = event.getModelRegistry().get(modelVariantLocation);
+//            if (standard != null) {
+//                /*IBakedModel finalModel = new BakedChopperModel(standard, model, DefaultVertexFormats.BLOCK);
+//
+//                event.getModelRegistry().put(modelVariantLocation, finalModel);*/
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }

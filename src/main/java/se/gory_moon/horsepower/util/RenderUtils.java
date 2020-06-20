@@ -45,16 +45,16 @@ public class RenderUtils {
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
     }
 
-    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getTransforms(IBakedModel model) {
-        ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-        for (ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
-            TRSRTransformation transformation = new TRSRTransformation(model.handlePerspective(type).getRight());
-            if (!transformation.equals(TRSRTransformation.identity())) {
-                builder.put(type, TRSRTransformation.blockCenterToCorner(transformation));
-            }
-        }
-        return builder.build();
-    }
+//    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getTransforms(IBakedModel model) {
+//        ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
+//        for (ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
+//            TRSRTransformation transformation = new TRSRTransformation(model.handlePerspective(type).getRight());
+//            if (!transformation.equals(TRSRTransformation.identity())) {
+//                builder.put(type, TRSRTransformation.blockCenterToCorner(transformation));
+//            }
+//        }
+//        return builder.build();
+//    }
 
     // Code based on code from The Betweenlands
     public static void renderInvalidArea(World world, BlockPos blockPos, int yOffset) {

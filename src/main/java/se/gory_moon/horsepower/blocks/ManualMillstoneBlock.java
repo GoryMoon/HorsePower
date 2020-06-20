@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -122,31 +123,31 @@ public class ManualMillstoneBlock extends HPBaseBlock {
 
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (player instanceof FakePlayer || player == null)
-            return true;
+            return ActionResultType.SUCCESS;
 
         ManualMillstoneTileEntity tile = getTileEntity(worldIn, pos);
         if (tile != null && tile.canWork() && !player.isSneaking()) {
             if (!worldIn.isRemote) {
                 if (tile.turn())
                     player.addExhaustion(Configs.SERVER.millstoneExhaustion.get().floatValue());
-                return true;
+                return ActionResultType.SUCCESS;
             } else
-                return true;
+                return ActionResultType.SUCCESS;
         }
 
         return super.onBlockActivated(state, worldIn, pos, player, hand, hit);
     }
-
-    @Override
-    public boolean hasCustomBreakingProgress(BlockState state) {
-        return true;
-    }
+// TODO  isEmissiveRendering or isViewBlocking ?
+//    @Override
+//    public boolean hasCustomBreakingProgress(BlockState state) {
+//        return true;
+//    }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        if (context.isSneaking()) {
+        if (context.getEntity().isSneaking()) {
             switch (state.get(FACING)) {
                 case SOUTH:
                     return ROT_SOUTH;

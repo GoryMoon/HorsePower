@@ -135,10 +135,11 @@ public class ChopperBlock extends HPChopperBaseBlock {
         return new ChopperTileEntity(Registration.CHOPPER_TILE.get());
     }
     
-    @Override
-    public boolean hasCustomBreakingProgress(BlockState state) {
-        return true;
-    }
+ // TODO  isEmissiveRendering or isViewBlocking ?
+//  @Override
+//  public boolean hasCustomBreakingProgress(BlockState state) {
+//      return true;
+//  }
 
 //  @Override
 //  public EnumBlockRenderType getRenderType(BlockState state) {

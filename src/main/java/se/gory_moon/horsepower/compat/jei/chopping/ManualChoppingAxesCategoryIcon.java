@@ -25,7 +25,7 @@ public class ManualChoppingAxesCategoryIcon implements IDrawable {
     public void draw(int xOffset, int yOffset) {
         GlStateManager.disableDepthTest();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.enableStandardItemLighting();
         itemRenderer.renderItemAndEffectIntoGUI(null, new ItemStack(Registration.MANUAL_CHOPPER_BLOCK.get()), xOffset, yOffset);
         itemRenderer.renderItemAndEffectIntoGUI(null, new ItemStack(Items.IRON_AXE), xOffset, yOffset);
         GlStateManager.disableBlend();
