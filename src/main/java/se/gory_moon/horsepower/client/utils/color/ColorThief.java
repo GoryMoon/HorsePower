@@ -1,28 +1,9 @@
-package se.gory_moon.horsepower.util.color;
-
-import java.util.Arrays;
-
-import javax.annotation.Nullable;
-
-/*
- * Java Color Thief
- * by Sven Woltmann, Fonpit AG
- *
- * http://www.androidpit.com
- * http://www.androidpit.de
- *
- * License
- * -------
- * Creative Commons Attribution 2.5 License:
- * http://creativecommons.org/licenses/by/2.5/
- *
- * Thanks
- * ------
- * Lokesh Dhakar - for the original Color Thief JavaScript version
- * available at http://lokeshdhakar.com/projects/color-thief/
- */
+package se.gory_moon.horsepower.client.utils.color;
 
 import net.minecraft.client.renderer.texture.NativeImage;
+
+import javax.annotation.Nullable;
+import java.util.Arrays;
 
 @SuppressWarnings("ALL")
 public class ColorThief {

@@ -1,11 +1,6 @@
 package se.gory_moon.horsepower;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Lists;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -14,8 +9,10 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fml.config.ModConfig;
-import se.gory_moon.horsepower.util.Constants;
+import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.util.Localization;
+
+import java.util.ArrayList;
 
 public class Configs {
 
@@ -47,19 +44,6 @@ public class Configs {
             HPEventHandler.reloadConfig();
         }
     }
-
-    //should not exist anymore
-//    /**
-//     * Called from in-game config
-//     *
-//     * @param event The event
-//     */
-//    @SubscribeEvent
-//    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-//        if (event.getModID().equals(Constants.MOD_ID)) {
-//            HPEventHandler.reloadConfig();
-//        }
-//    }
 
     public static class Client {
 

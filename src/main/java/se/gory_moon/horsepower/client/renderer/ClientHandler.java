@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.Mod;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.HPBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
+import se.gory_moon.horsepower.client.utils.RenderUtils;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
 import se.gory_moon.horsepower.util.Constants;
-import se.gory_moon.horsepower.util.RenderUtils;
 
 import java.util.stream.StreamSupport;
 

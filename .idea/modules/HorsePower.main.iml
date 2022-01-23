@@ -19,7 +19,7 @@
     <option name="srgType" value="TSRG" />
   </component>
   <component name="NewModuleRootManager">
-    <output url="file://$MODULE_DIR$/../../out/production/classes" />
+    <output url="file://$MODULE_DIR$/../../build/classes/java/main" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../src/generated">
       <sourceFolder url="file://$MODULE_DIR$/../../src/generated/resources" type="java-resource" />

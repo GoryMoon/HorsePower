@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 
-public class TileEntityChoppingBlockRender extends TileEntityHPBaseRenderer<ManualChopperTileEntity> {
+public class ChoppingTileEntityBlockRender extends HPBaseTileEntityRenderer<ManualChopperTileEntity> {
 
-    public TileEntityChoppingBlockRender(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public ChoppingTileEntityBlockRender(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 

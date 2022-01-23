@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.ModList;
-import se.gory_moon.horsepower.util.color.Colors;
+import se.gory_moon.horsepower.client.utils.color.Colors;
 
 import java.util.List;
 import java.util.Random;

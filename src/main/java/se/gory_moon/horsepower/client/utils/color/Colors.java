@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.util.color;
+package se.gory_moon.horsepower.client.utils.color;
 
 
 public enum Colors {
@@ -19,8 +19,8 @@ public enum Colors {
     YELLOW(14),
     WHITE(15);
 
-    private int number;
-    private int rgb;
+    private final int number;
+    private final int rgb;
 
     Colors(int number) {
         this.number = number;

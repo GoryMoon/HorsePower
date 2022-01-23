@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import se.gory_moon.horsepower.util.HPUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,22 +86,13 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
 
     private boolean findWorker() {
         UUID uuid = nbtWorker.getUniqueId("UUID");
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
-
         if (world != null) {
-            ArrayList<Class<? extends CreatureEntity>> clazzes = HPUtils.getCreatureClasses();
-            for (Class<? extends Entity> clazz : clazzes) {
-                for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
-                    if (entity instanceof CreatureEntity) {
-                        CreatureEntity creature = (CreatureEntity) entity;
-                        if (creature.getUniqueID().equals(uuid)) {
-                            setWorker(creature);
-                            return true;
-                        }
-                    }
-                }
+            AxisAlignedBB aabb = new AxisAlignedBB(pos).grow(7.0D);
+            Entity entity = HPUtils.getEntityWithinArea(world, aabb, e -> e.getUniqueID().equals(uuid));
+
+            if (entity != null) {
+                setWorker((CreatureEntity) entity);
+                return true;
             }
         }
         return false;

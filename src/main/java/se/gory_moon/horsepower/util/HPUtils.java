@@ -4,23 +4,27 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePower;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class HPUtils {
 
@@ -34,23 +38,29 @@ public class HPUtils {
         return new ResourceLocation(Constants.MOD_ID, path);
     }
 
-    public static ArrayList<Class<? extends CreatureEntity>> getCreatureClasses() {
-        ArrayList<Class<? extends CreatureEntity>> clazzes = Lists.newArrayList();
-        if (Configs.SERVER.useHorseInterface.get())
-            clazzes.add(AbstractHorseEntity.class);
-
-        for (String e : Configs.SERVER.mobList.get()) {
-            try {
-                Class clazz = Class.forName(e);
-
-                if (CreatureEntity.class.isAssignableFrom(clazz)) {
-                    clazzes.add(clazz);
-                } else {
-                    HorsePower.LOGGER.error("Error in config, the mob (" + e + ") can't be leashed");
-                }
-            } catch (ClassNotFoundException ignored) {}
+    public static Entity getEntityWithinArea(World world, AxisAlignedBB alignedBB, Predicate<CreatureEntity> predicate) {
+        ArrayList<EntityType<?>> creatureTypes = HPUtils.getCreatureTypes();
+        for (EntityType<?> type : creatureTypes) {
+            for (Entity entity : world.getEntitiesWithinAABB(type, alignedBB, e -> e instanceof CreatureEntity && predicate.test((CreatureEntity) e))) {
+                return entity;
+            }
         }
-        return clazzes;
+        return null;
+    }
+
+    public static ArrayList<EntityType<?>> getCreatureTypes() {
+        ArrayList<EntityType<?>> types = Lists.newArrayList();
+        if (Configs.SERVER.useHorseInterface.get()) {
+            types.add(EntityType.HORSE);
+            types.add(EntityType.MULE);
+            types.add(EntityType.DONKEY);
+            types.add(EntityType.LLAMA);
+            types.add(EntityType.TRADER_LLAMA);
+            types.add(EntityType.SKELETON_HORSE);
+            types.add(EntityType.ZOMBIE_HORSE);
+        }
+
+        return types;
     }
 
     public static int getItemStackHashCode(ItemStack stack) {

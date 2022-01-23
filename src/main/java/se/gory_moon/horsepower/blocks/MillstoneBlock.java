@@ -23,9 +23,9 @@ import net.minecraftforge.common.ToolType;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
+import se.gory_moon.horsepower.client.utils.color.Colors;
 import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

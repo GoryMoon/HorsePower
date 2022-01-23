@@ -21,9 +21,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import se.gory_moon.horsepower.client.utils.color.Colors;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.HPUtils;
-import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.ArrayList;
 import java.util.HashMap;

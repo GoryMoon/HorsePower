@@ -6,7 +6,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -32,7 +31,6 @@ import se.gory_moon.horsepower.util.HPUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
 public abstract class HPBlock extends ContainerBlock {
 
@@ -98,9 +96,9 @@ public abstract class HPBlock extends ContainerBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack stack = hand == Hand.MAIN_HAND ? player.getHeldItem(hand): ItemStack.EMPTY;
-        HPBaseTileEntity te = (HPBaseTileEntity) worldIn.getTileEntity(pos);
+        HPBaseTileEntity te = (HPBaseTileEntity) world.getTileEntity(pos);
         HPHorseBaseTileEntity teH = null;
         if (te == null)
             return ActionResultType.FAIL;
@@ -109,18 +107,11 @@ public abstract class HPBlock extends ContainerBlock {
 
         CreatureEntity creature = null;
         if (teH != null) {
-            ArrayList<Class<? extends CreatureEntity>> clazzes = HPUtils.getCreatureClasses();
-            search:
-            for (Class<? extends Entity> clazz : clazzes) {
-                for (Object entity : worldIn.getEntitiesWithinAABB(clazz, new AxisAlignedBB(-7.0D, -7.0D, -7.0D, 7.0D, 7.0D, 7.0D).offset(pos))) {
-                    if (entity instanceof CreatureEntity && !(entity instanceof IMob)) {
-                        CreatureEntity tmp = (CreatureEntity) entity;
-                        if ((tmp.getLeashed() && tmp.getLeashHolder() == player)) {
-                            creature = tmp;
-                            break search;
-                        }
-                    }
-                }
+            AxisAlignedBB aabb = new AxisAlignedBB(pos).grow(7.0D);
+
+            Entity entity = HPUtils.getEntityWithinArea(world, aabb, e -> e.getLeashed() && e.getLeashHolder() == player);
+            if (entity != null) {
+                creature = (CreatureEntity) entity;
             }
         }
         if (teH != null && ((stack.getItem() instanceof LeadItem && creature != null) || creature != null)) {
@@ -152,7 +143,7 @@ public abstract class HPBlock extends ContainerBlock {
                 return ActionResultType.SUCCESS;
         }
 
-        int slot = getSlot(state, worldIn, player, hit);
+        int slot = getSlot(state, world, player, hit);
         ItemStack result = ItemStack.EMPTY;
         if (slot > -1) {
             result = te.removeStackFromSlot(slot);
@@ -165,7 +156,7 @@ public abstract class HPBlock extends ContainerBlock {
                 }
             }
             if (!result.isEmpty())
-                emptiedOutput(worldIn, pos);
+                emptiedOutput(world, pos);
         }
 
         if (result.isEmpty()) {

@@ -9,9 +9,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 
-public class TileEntityFillerRender extends TileEntityRenderer<FillerTileEntity> {
+public class FillerTileEntityRender extends TileEntityRenderer<FillerTileEntity> {
 
-    public TileEntityFillerRender(TileEntityRendererDispatcher tileEntityRendererDispatcher) {
+    public FillerTileEntityRender(TileEntityRendererDispatcher tileEntityRendererDispatcher) {
         super(tileEntityRendererDispatcher);
     }
 

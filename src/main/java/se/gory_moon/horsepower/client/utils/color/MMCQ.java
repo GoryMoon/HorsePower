@@ -1,30 +1,11 @@
-package se.gory_moon.horsepower.util.color;
+package se.gory_moon.horsepower.client.utils.color;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-/*
- * Java Color Thief
- * by Sven Woltmann, Fonpit AG
- * <p>
- * http://www.androidpit.com
- * http://www.androidpit.de
- * <p>
- * License
- * -------
- * Creative Commons Attribution 2.5 License:
- * http://creativecommons.org/licenses/by/2.5/
- * <p>
- * Thanks
- * ------
- * Lokesh Dhakar - for the original Color Thief JavaScript version
- * available at http://lokeshdhakar.com/projects/color-thief/
- */
-
-import javax.annotation.Nullable;
 
 @SuppressWarnings("ALL")
 public class MMCQ {

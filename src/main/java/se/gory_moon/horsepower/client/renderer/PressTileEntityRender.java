@@ -1,31 +1,56 @@
 package se.gory_moon.horsepower.client.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Atlases;
+import net.minecraft.client.renderer.BlockModelRenderer;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockDisplayReader;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.IModelData;
+import se.gory_moon.horsepower.blocks.HorizontalHPBlock;
+import se.gory_moon.horsepower.blocks.PressBlock;
+import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
 
-public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEntity> {
+public class PressTileEntityRender extends HPBaseTileEntityRenderer<PressTileEntity> {
 
+    private final BlockRendererDispatcher blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
 
-    public TileEntityPressRender(TileEntityRendererDispatcher tileEntityRendererDispatcher) {
+    public PressTileEntityRender(TileEntityRendererDispatcher tileEntityRendererDispatcher) {
         super(tileEntityRendererDispatcher);
     }
 
     @Override
-    public void render(PressTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        /*
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockState blockState = te.getWorld().getBlockState(te.getPos());
-        if (!(blockState.getBlock() instanceof HPBaseBlock))
-            return;
-        BlockState topState = blockState.with(PressBlock.PART, PressModels.TOP);
-        if (!(topState.getBlock() instanceof HPBaseBlock))
-            return;
-        IBakedModel pressModel = dispatcher.getBlockModelShapes().getModel(topState);
+    public void render(PressTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer renderer, int combinedLightIn, int combinedOverlayIn) {
 
+        BlockPos pos = te.getPos();
+        IBlockDisplayReader world = MinecraftForgeClient.getRegionRenderCacheOptional(te.getWorld(), pos).map(IBlockDisplayReader.class::cast).orElseGet(() -> te.getWorld());
+        BlockState state = world.getBlockState(pos);
+        if (state.isAir() || !(state.getBlock() instanceof HorizontalHPBlock))
+            return;
+
+        BlockState topState = state.with(PressBlock.PART, PressModels.TOP);
+
+        BlockModelRenderer.enableCache();
+        matrix.push();
+
+        IBakedModel pressModel = blockRenderer.getBlockModelShapes().getModel(topState);
+        IModelData data = pressModel.getModelData(world, pos, state, ModelDataManager.getModelData(te.getWorld(), pos));
+
+        IVertexBuilder buffer = renderer.getBuffer(Atlases.getCutoutBlockType());
+        blockRenderer.getBlockModelRenderer().renderModel(world, pressModel, state, pos, matrix, buffer, false, te.getWorld().rand, topState.getPositionRandom(pos), combinedLightIn, data);
+
+        matrix.pop();
+        BlockModelRenderer.disableCache();
+        /*
         preDestroyRender(destroyStage);
         setRenderSettings();
 
@@ -38,7 +63,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
             buffer.noColor();
             renderBlockDamage(topState, te.getPos(), destroyStage, te.getWorld());
         } else
-            dispatcher.getBlockModelRenderer().renderModel(te.getWorld(), pressModel, blockState, te.getPos(), buffer, false, getWorld().rand, blockState.getPositionRandom(te.getPos()));
+            dispatcher.getBlockModelRenderer().renderModel(te.getWorld(), pressModel, state, te.getPos(), buffer, false, getWorld().rand, state.getPositionRandom(te.getPos()));
 
         buffer.setTranslation(0, 0, 0);
 
@@ -55,7 +80,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         postDestroyRender(destroyStage);
         RenderHelper.enableStandardItemLighting();
 
-        if (!(blockState.getBlock() instanceof HPBaseBlock))
+        if (!(state.getBlock() instanceof HPBaseBlock))
             return;
 
         if (te.hasWorker())

@@ -16,12 +16,12 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
+import se.gory_moon.horsepower.client.utils.color.Colors;
 import se.gory_moon.horsepower.compat.jei.HorsePowerCategory;
 import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.util.color.Colors;
 
 import java.util.List;
 import java.util.stream.Collectors;

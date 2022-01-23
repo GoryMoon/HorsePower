@@ -31,9 +31,9 @@ import net.minecraftforge.common.util.FakePlayer;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
+import se.gory_moon.horsepower.client.utils.color.Colors;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -121,13 +121,13 @@ public class ManualMillstoneBlock extends HorizontalHPBlock {
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (player instanceof FakePlayer || player == null)
             return ActionResultType.SUCCESS;
 
-        ManualMillstoneTileEntity tile = getTileEntity(worldIn, pos);
+        ManualMillstoneTileEntity tile = getTileEntity(world, pos);
         if (tile != null && tile.canWork() && !player.isSneaking()) {
-            if (!worldIn.isRemote) {
+            if (!world.isRemote) {
                 if (tile.turn())
                     player.addExhaustion(Configs.SERVER.millstoneExhaustion.get().floatValue());
                 return ActionResultType.SUCCESS;
@@ -135,7 +135,7 @@ public class ManualMillstoneBlock extends HorizontalHPBlock {
                 return ActionResultType.SUCCESS;
         }
 
-        return super.onBlockActivated(state, worldIn, pos, player, hand, hit);
+        return super.onBlockActivated(state, world, pos, player, hand, hit);
     }
 // TODO  isEmissiveRendering or isViewBlocking ?
 //    @Override

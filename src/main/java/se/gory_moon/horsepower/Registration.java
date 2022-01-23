@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.registries.ForgeRegistries;
 import se.gory_moon.horsepower.blocks.ChopperBlock;
@@ -22,12 +23,12 @@ import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
 import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
 import se.gory_moon.horsepower.client.model.modelvariants.MillstoneModels;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
-import se.gory_moon.horsepower.client.renderer.TileEntityChopperRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityChoppingBlockRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityFillerRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityManualMillstoneRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityMillstoneRender;
-import se.gory_moon.horsepower.client.renderer.TileEntityPressRender;
+import se.gory_moon.horsepower.client.renderer.ChopperRenderTileEntity;
+import se.gory_moon.horsepower.client.renderer.ChoppingTileEntityBlockRender;
+import se.gory_moon.horsepower.client.renderer.FillerTileEntityRender;
+import se.gory_moon.horsepower.client.renderer.ManualMillstoneTileEntityRender;
+import se.gory_moon.horsepower.client.renderer.MillstoneTileEntityRender;
+import se.gory_moon.horsepower.client.renderer.PressTileEntityRender;
 import se.gory_moon.horsepower.items.DoubleBlockItem;
 import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
@@ -55,9 +56,9 @@ public class Registration {
                 block.setHarvestLevel(ToolType.AXE, 1);
                 return block;
             })
-            .blockstate((ctx, provider) -> provider.simpleBlock(ctx.get(), provider.models().nested()))
+            .blockstate((ctx, provider) -> provider.simpleBlock(ctx.get(), new ModelFile.UncheckedModelFile("block/generated")))
             .tileEntity(FillerTileEntity::new)
-                .renderer(()->TileEntityFillerRender::new)
+            .renderer(() -> FillerTileEntityRender::new)
                 .build()
             .register();
     
@@ -71,10 +72,10 @@ public class Registration {
                         return provider.models().getExistingFile(HPUtils.rl("press_top"));
                 });
             })
-            .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
-                .build()
+            .item((block, properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(), properties))
+            .build()
             .tileEntity(PressTileEntity::new)
-                .renderer(()->TileEntityPressRender::new)
+            .renderer(() -> PressTileEntityRender::new)
                 .build()
             .register();
 
@@ -89,10 +90,10 @@ public class Registration {
                 });
             })
             .item()
-                .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/manual_millstone_full")))
-                .build()
+            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/manual_millstone_full")))
+            .build()
             .tileEntity(ManualMillstoneTileEntity::new)
-                .renderer(()->TileEntityManualMillstoneRender::new)
+            .renderer(() -> ManualMillstoneTileEntityRender::new)
                 .build()
             .register();
     
@@ -106,9 +107,9 @@ public class Registration {
                         .modelForState().modelFile(provider.models().getExistingFile(HPUtils.rl("millstone_filled"))).addModel();
             })
             .item()
-                .build()
+            .build()
             .tileEntity(MillstoneTileEntity::new)
-                .renderer(()->TileEntityMillstoneRender::new)
+            .renderer(() -> MillstoneTileEntityRender::new)
                 .build()
             .register();
     
@@ -120,9 +121,9 @@ public class Registration {
                     .partialState()
                     .setModels(new ConfiguredModel(provider.models().getExistingFile(HPUtils.rl("manual_chopper")))))
             .item()
-                .build()
+            .build()
             .tileEntity(ManualChopperTileEntity::new)
-                .renderer(()->TileEntityChoppingBlockRender::new)
+            .renderer(() -> ChoppingTileEntityBlockRender::new)
                 .build()
             .register();
     
@@ -136,10 +137,10 @@ public class Registration {
                         return provider.models().getExistingFile(HPUtils.rl("chopper_blade"));
                 });
             })
-            .item((block,properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(),properties))
-                .build()
+            .item((block, properties) -> new DoubleBlockItem(block, WOODEN_FILLER_BLOCK.get(), properties))
+            .build()
             .tileEntity(ChopperTileEntity::new)
-                .renderer(()->TileEntityChopperRender::new)
+            .renderer(() -> ChopperRenderTileEntity::new)
                 .build()
             .register();  
     

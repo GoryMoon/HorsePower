@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.util.color;
+package se.gory_moon.horsepower.client.utils.color;
 
 /**
  * Copied from JEI (Just Enough Items)
@@ -37,8 +37,8 @@ public final class ColorUtil {
     public static double slowPerceptualColorDistanceSquared(int[] color1, int[] color2) {
         final double colorDistance = fastPerceptualColorDistanceSquared(color1, color2);
 
-        final double grey1 = (color1[0] + color1[1] + color1[2]) / 3;
-        final double grey2 = (color2[0] + color2[1] + color2[2]) / 3;
+        final double grey1 = (color1[0] + color1[1] + color1[2]) / 3F;
+        final double grey2 = (color2[0] + color2[1] + color2[2]) / 3F;
         final double greyDistance1 = Math.abs(grey1 - color1[0]) + Math.abs(grey1 - color1[1]) + Math.abs(grey1 - color1[2]);
         final double greyDistance2 = Math.abs(grey2 - color2[0]) + Math.abs(grey2 - color2[1]) + Math.abs(grey2 - color2[2]);
         final double greyDistance = greyDistance1 - greyDistance2;

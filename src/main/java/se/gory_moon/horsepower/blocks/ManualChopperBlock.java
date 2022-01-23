@@ -38,9 +38,9 @@ public class ManualChopperBlock extends HPChopperBlock {
     }
     
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand,
-            BlockRayTraceResult hit) {
-        return (player instanceof FakePlayer || player == null) ? ActionResultType.SUCCESS :  super.onBlockActivated(state, worldIn, pos, player, hand, hit);
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+                                             BlockRayTraceResult hit) {
+        return (player instanceof FakePlayer || player == null) ? ActionResultType.SUCCESS: super.onBlockActivated(state, world, pos, player, hand, hit);
     }
     
     @Override

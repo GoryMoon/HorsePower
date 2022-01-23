@@ -17,7 +17,7 @@ import net.minecraft.util.IItemProvider;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.Registration;
-import se.gory_moon.horsepower.util.color.HPTags;
+import se.gory_moon.horsepower.util.HPTags;
 
 import java.util.Arrays;
 import java.util.function.Consumer;

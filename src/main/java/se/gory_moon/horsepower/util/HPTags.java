@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.util.color;
+package se.gory_moon.horsepower.util;
 
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag;

@@ -34,9 +34,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.advancements.AdvancementManager;
 import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
+import se.gory_moon.horsepower.client.utils.color.Colors;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Localization;
-import se.gory_moon.horsepower.util.color.Colors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -133,11 +133,11 @@ public class PressBlock extends HorizontalHPBlock {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-        if (worldIn.isRemote)
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (world.isRemote)
             return ActionResultType.SUCCESS;
 
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = world.getTileEntity(pos);
         if (tileentity != null) {
             final IFluidHandler fluidHandler = tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).orElse(null);
             if (fluidHandler != null && FluidUtil.interactWithFluidHandler(player, hand, fluidHandler)) {
@@ -145,6 +145,6 @@ public class PressBlock extends HorizontalHPBlock {
                 return ActionResultType.SUCCESS;
             }
         }
-        return super.onBlockActivated(state, worldIn, pos, player, hand, hit);
+        return super.onBlockActivated(state, world, pos, player, hand, hit);
     }
 }

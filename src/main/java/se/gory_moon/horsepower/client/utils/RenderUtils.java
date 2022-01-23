@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.util;
+package se.gory_moon.horsepower.client.utils;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
