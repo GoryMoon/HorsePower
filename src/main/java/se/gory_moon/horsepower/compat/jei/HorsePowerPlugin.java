@@ -1,9 +1,5 @@
 package se.gory_moon.horsepower.compat.jei;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
@@ -35,28 +31,34 @@ import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
-import se.gory_moon.horsepower.util.Constants;
+import se.gory_moon.horsepower.util.HPUtils;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @JeiPlugin
 public class HorsePowerPlugin implements IModPlugin {
 
-    public static final ResourceLocation UID = new ResourceLocation(Constants.MOD_ID, "jei");
+    public static final ResourceLocation UID = HPUtils.rl("jei");
 
-    public static final ResourceLocation MANUAL_MILLING = new ResourceLocation(Constants.MOD_ID, "manual_milling");
-    public static final ResourceLocation MILLING = new ResourceLocation(Constants.MOD_ID, "milling");
-    public static final ResourceLocation MANUAL_CHOPPING = new ResourceLocation(Constants.MOD_ID, "manual_chopping");
-    public static final ResourceLocation MANUAL_CHOPPING_AXES = new ResourceLocation(Constants.MOD_ID, "manual_chopping_axes");
-    public static final ResourceLocation CHOPPING = new ResourceLocation(Constants.MOD_ID, "chopping");
-    public static final ResourceLocation PRESS_ITEM = new ResourceLocation(Constants.MOD_ID, "pressing");
-    public static final ResourceLocation PRESS_FLUID = new ResourceLocation(Constants.MOD_ID, "pressing_fluid");
+    public static final ResourceLocation MANUAL_MILLING = HPUtils.rl("manual_milling");
+    public static final ResourceLocation MILLING = HPUtils.rl("milling");
+    public static final ResourceLocation MANUAL_CHOPPING = HPUtils.rl("manual_chopping");
+    public static final ResourceLocation MANUAL_CHOPPING_AXES = HPUtils.rl("manual_chopping_axes");
+    public static final ResourceLocation CHOPPING = HPUtils.rl("chopping");
+    public static final ResourceLocation PRESS_ITEM = HPUtils.rl("pressing");
+    public static final ResourceLocation PRESS_FLUID = HPUtils.rl("pressing_fluid");
     public static IRecipeManager recipeManager;
 
     private static boolean millingRecipePredicate(IRecipe<IInventory> recipe, AbstractHPRecipe.Type type) {
         return recipe instanceof MillingRecipe && ((MillingRecipe) recipe).getRecipeType().is(type);
     }
+
     private static boolean pressingRecipePredicate(IRecipe<IInventory> recipe) {
-    	return recipe instanceof PressingRecipe && ((PressingRecipe) recipe).getFluidOutput() != null;
+        return recipe instanceof PressingRecipe && ((PressingRecipe) recipe).getFluidOutput() != null;
     }
+
     private static boolean choppingRecipePredicate(IRecipe<IInventory> recipe, AbstractHPRecipe.Type type) {
         return recipe instanceof ChoppingRecipe && ((ChoppingRecipe) recipe).getRecipeType().is(type);
     }

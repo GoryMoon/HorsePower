@@ -1,28 +1,19 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import se.gory_moon.horsepower.blocks.ChopperBlock;
-import se.gory_moon.horsepower.blocks.HPBaseBlock;
-import se.gory_moon.horsepower.client.model.modelvariants.ChopperModels;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
-import se.gory_moon.horsepower.util.RenderUtils;
 
 public class TileEntityChopperRender extends TileEntityHPBaseRenderer<ChopperTileEntity> {
 
+    public TileEntityChopperRender(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
+    }
+
     @Override
-    public void render(ChopperTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
-        Tessellator tessellator = Tessellator.getInstance();
+    public void render(ChopperTileEntity tileEntityIn, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+        /*Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
         BlockState blockState = te.getWorld().getBlockState( te.getPos() );
@@ -85,7 +76,6 @@ public class TileEntityChopperRender extends TileEntityHPBaseRenderer<ChopperTil
 
         if (te.isInvalid())
             RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), 0);
-        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();*/
     }
-
 }

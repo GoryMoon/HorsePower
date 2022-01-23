@@ -1,219 +1,228 @@
+
 buildscript {
     repositories {
-	    jcenter()
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
-		mavenLocal()
-        maven { 
-			name = "forge"
-			url = 'https://files.minecraftforge.net/maven' 
-		}
-
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-configurations {
-    shade
-}
-
 version = mod_version
-group = "se.gory_moon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "se.gory_moon"
 archivesBaseName = "HorsePower-$mc_version"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8) // Mojang ships Java 8 to end users, so your mod should target Java 8.
 
 if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of the version string if on a build server
     version += ".${System.getenv().BUILD_NUMBER}"
 }
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-    mappings channel: mcp_channel, version: mcp_mappings
+    mappings channel: mappings_channel, version: mappings_version
+
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
+
+            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Make mixins work on dependencies
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 horsepower {
                     source sourceSets.main
                 }
             }
-            // Intellij stuff
-            //ideaModule "${project.name}.main"
-            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
 
         server {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
+
+            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
+
+            // Make mixins work on dependencies
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 horsepower {
                     source sourceSets.main
                 }
             }
-            // Intellij stuff
-            //ideaModule "${project.name}.main"
-            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
 
         data {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'CORE,LOADING,REGISTRIES'
+
+            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'horsepower', '--all', '--output', file('src/generated/resources/'),
-                    '--existing', '"' + file('src/main/resources') + '"'
+
+            // Make mixins work on dependencies
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
+            args '--mod', 'horsepower', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
             mods {
                 horsepower {
                     source sourceSets.main
                 }
             }
-            // Intellij stuff
-            //ideaModule "${project.name}.main"
-            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath}${File.pathSeparatorChar}${project.file("out/production/classes").canonicalPath}"
         }
     }
 }
 
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+configurations {
+    shade
+}
+
+shadowJar {
+    configurations = [project.configurations.shade]
+    relocate 'com.tterrag.registrate', 'se.gory_moon.horsepower.repack.registrate'
+
+    archiveClassifier = ''
+}
+
+jar.finalizedBy('signJar', 'shadowJar')
+shadowJar.finalizedBy('reobfJar')
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    description = 'Creates a JAR containing the source code.'
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.minecraftforge.gradle.common.tasks.SignJar
+
+task deobfJar(type: ShadowJar) {
+    description = 'Creates a JAR containing the non-obfuscated compiled code.'
+    from sourceSets.main.output
+
+    configurations = [project.configurations.shade]
+    relocate 'com.tterrag.registrate', 'se.gory_moon.chargers.repack.registrate'
+    archiveClassifier = 'deobf'
+}
+
+task forgelibJar(type: Jar) {
+    description = 'Creates a compiled JAR which also contains raw sources.'
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+
+    archiveClassifier = 'forgelib'
+}
+
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+    archives forgelibJar
+}
+
 repositories {
     maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
+        name = "Progwml6 JEI"
         url = "https://dvs1.progwml6.com/files/maven"
     }
+
     maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
+        name = "ModMaven JEI"
         url = "https://modmaven.k-4u.nl"
     }
-/*
-    maven {
-        url "http://maven.blamejared.com"
-    }*/
 
-   /* maven {
+    maven {
         name = "Tehnut - Hwyla"
-        url "http://tehnut.info/maven"
-    }*/
+        url "https://maven.tehnut.info"
+    }
 
     maven {
-        name = "Tterrag - TOP,Registrate"
+        name = "TTerrag - TOP,Registrate"
         url "https://maven.tterrag.com/"
     }
-	mavenLocal()
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
-    def registrate = "com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}"
+    def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
-	
+
     // compile against the JEI API but do not include it at runtime
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
     //compile fg.deobf("CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.9.486")
-    compile fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
+    implementation fg.deobf(project.dependencies.create("mcjty.theoneprobe:TheOneProbe-${top_version}") {
         transitive = false
     })
 
-    //compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
+    // Compile against the Hwyla API, but do not include it at runtime
+    //compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
+    // At runtime, use the full Hwyla jar
     //runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 }
 
-
-// Example for how to get properties into the manifest for reading by the runtime..
 jar {
-    classifier = 'slim' //without Registrate
     manifest {
-        attributes(["Specification-Title":      "HorsePower",
-                    "Specification-Vendor":     "Gory_Moon",
-                    "Specification-Version":    "1", // We are version 1 of ourselves
-                    "Implementation-Title":     project.name,
-                    "Implementation-Version":   "${project.version}",
-                    "Implementation-Vendor":    "Gory_Moon",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+        attributes([
+                "Specification-Title"     : "HorsePower",
+                "Specification-Vendor"    : "Gory_Moon",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "Gory_Moon",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
 
-shadowJar {
-    classifier = ''
-    configurations = [project.configurations.shade]
-    relocate 'com.tterrag.registrate', 'se.gory_moon.horsepower.repack.registrate'
-}
+// Jar Signing
 
-reobf {
-    shadowJar {}
-}
+task signJar(type: SignJar, dependsOn: shadowJar) {
 
-task devJar(type: Jar, dependsOn: 'classes') {
-    from(sourceSets.main.output) {
-        include '**'
-    }
-
-    archiveClassifier.set('dev')
-}
-
-task sourceJar(type: Jar) {
-    from(sourceSets.main.allSource) {
-        include '**'
-    }
-
-    archiveClassifier.set('sources')
-}
-
-artifacts {
-    archives devJar
-    archives sourceJar
-}
-
-/*task signJar(type: SignJar, dependsOn: ["jar", "devJar"]) {
     onlyIf {
         project.hasProperty('keyStore')
     }
 
-    // findProperty allows us to reference the property without it existing.
-    // Using project.propName would cause the script to fail validation if
-    // the property did not exist.
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStorePass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}*/
+    if (project.hasProperty('keyStore')) {
+        project.logger.info('Signing jar ' + jar.archivePath.getName())
 
-// Runs this task automatically when build is ran.
-//build.dependsOn signJar
-
-task("uploadJars", dependsOn: "build") {
-    description = "uploads JARs"
-    if (project.hasProperty("local_maven")) {
-        apply plugin: 'maven'
-        uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: "file://${local_maven}")
-                    pom.artifactId = "HorsePower"
-                    pom.version = mc_version + "-" + project.version
-                }
-            }
-        }
+        keyStore = project.findProperty('keyStore')
+        alias = project.findProperty('keyStoreAlias')
+        storePass = project.findProperty('keyStorePass')
+        keyPass = project.findProperty('keyStorePass')
+        inputFile = jar.archiveFile
+        outputFile = jar.archiveFile
+    } else {
+        project.logger.warn('Could not sign ' + jar.archivePath.getName() + '. No keyStore property could be found')
     }
 }

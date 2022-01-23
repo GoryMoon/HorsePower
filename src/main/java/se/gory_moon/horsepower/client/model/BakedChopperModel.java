@@ -182,8 +182,8 @@ public class BakedChopperModel implements IBakedModel {
                     // get model from data
                     Block block = Block.getBlockFromItem(blockStack.getItem());
                     IBlockState state = block.getDefaultState();
-                    String side_texture = RenderUtils.getTextureFromBlockstate(state).getName().toString();
-                    String top_texture = RenderUtils.getTopTextureFromBlockstate(state).getName().toString();
+                    String side_texture = RenderUtils.getTextureFromBlockstate(state).getString().toString();
+                    String top_texture = RenderUtils.getTopTextureFromBlockstate(state).getString().toString();
                     return ((BakedChopperModel) originalModel).getActualModel(side_texture, top_texture, null);
                 }
             }

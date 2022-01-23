@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,part=base": {
+      "model": "horsepower:block/press_top"
+    },
+    "facing=south,part=base": {
+      "model": "horsepower:block/press_top",
+      "y": 180
+    },
+    "facing=west,part=base": {
+      "model": "horsepower:block/press_top",
+      "y": 270
+    },
+    "facing=east,part=base": {
+      "model": "horsepower:block/press_top",
+      "y": 90
+    },
+    "facing=north,part=top": {
+      "model": "horsepower:block/press"
+    },
+    "facing=south,part=top": {
+      "model": "horsepower:block/press",
+      "y": 180
+    },
+    "facing=west,part=top": {
+      "model": "horsepower:block/press",
+      "y": 270
+    },
+    "facing=east,part=top": {
+      "model": "horsepower:block/press",
+      "y": 90
+    }
+  }
+}

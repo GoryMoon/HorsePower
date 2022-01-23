@@ -1,26 +1,19 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import se.gory_moon.horsepower.blocks.HPBaseBlock;
-import se.gory_moon.horsepower.blocks.ManualMillstoneBlock;
-import se.gory_moon.horsepower.client.model.modelvariants.ManualMillstoneModels;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 
 public class TileEntityManualMillstoneRender extends TileEntityHPBaseRenderer<ManualMillstoneTileEntity> {
 
+    public TileEntityManualMillstoneRender(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
+    }
+
     @Override
-    public void render(ManualMillstoneTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(ManualMillstoneTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+        /*
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
@@ -32,7 +25,7 @@ public class TileEntityManualMillstoneRender extends TileEntityHPBaseRenderer<Ma
             return;
         IBakedModel centerModel = dispatcher.getBlockModelShapes().getModel(centerState);
 
-        preDestroyRender(destroyStage);
+        //preDestroyRender(destroyStage);
         setRenderSettings();
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
@@ -67,6 +60,6 @@ public class TileEntityManualMillstoneRender extends TileEntityHPBaseRenderer<Ma
         renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(0), x, y, z, 0.8F, 0.7F, 0.5F, 0.7F);
         renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(1), x, y, z, 0.2F, 0.7F, 0.5F, 0.7F);
         renderItemWithFacing(te.getWorld(), te, te.getStackInSlot(2), x, y, z, 0.5F, 0.7F, 0.2F, 0.7F);
+        */
     }
-
 }

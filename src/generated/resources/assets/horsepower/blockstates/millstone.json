@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "part=base": {
+      "model": "horsepower:block/millstone"
+    },
+    "part=filled": {
+      "model": "horsepower:block/millstone_filled"
+    }
+  }
+}

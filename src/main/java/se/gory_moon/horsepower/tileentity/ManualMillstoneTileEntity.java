@@ -1,7 +1,7 @@
 package se.gory_moon.horsepower.tileentity;
 
 import com.tterrag.registrate.util.nullness.NonnullType;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -103,8 +103,8 @@ public class ManualMillstoneTileEntity extends HPBaseTileEntity implements ITick
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         if (getStackInSlot(0).getCount() > 0) {
             currentItemMillTime = compound.getInt("millTime");

@@ -1,33 +1,20 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.HPBaseBlock;
-import se.gory_moon.horsepower.blocks.PressBlock;
-import se.gory_moon.horsepower.client.model.modelvariants.PressModels;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import se.gory_moon.horsepower.tileentity.PressTileEntity;
-import se.gory_moon.horsepower.util.RenderUtils;
 
 public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEntity> {
 
+
+    public TileEntityPressRender(TileEntityRendererDispatcher tileEntityRendererDispatcher) {
+        super(tileEntityRendererDispatcher);
+    }
+
     @Override
-    public void render(PressTileEntity te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(PressTileEntity te, float partialTicks, MatrixStack matrix, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+        /*
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
@@ -135,5 +122,7 @@ public class TileEntityPressRender extends TileEntityHPBaseRenderer<PressTileEnt
         if (te.isInvalid())
             RenderUtils.renderInvalidArea(te.getWorld(), te.getPos(), 0);
         GlStateManager.popMatrix();
+
+         */
     }
 }

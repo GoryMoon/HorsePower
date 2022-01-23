@@ -1,7 +1,5 @@
 package se.gory_moon.horsepower.blocks;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -13,7 +11,7 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
@@ -37,10 +35,12 @@ import net.minecraftforge.common.ToolType;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.tileentity.FillerTileEntity;
 
+import javax.annotation.Nullable;
+
 public class FillerBlock extends DirectionalBlock {
 
-    private boolean useTileEntity;
-    private boolean providePower;
+    private final boolean useTileEntity;
+    private final boolean providePower;
     private ToolType type;
     private int level;
 
@@ -55,7 +55,7 @@ public class FillerBlock extends DirectionalBlock {
     }
 
     public static boolean validateFilled(IBlockReader world, BlockState state, BlockPos pos) {
-        if (state.getBlock() instanceof HPBaseBlock) {
+        if (state.getBlock() instanceof HPBlock) {
             return true;
         } else {
             if (world instanceof IWorldWriter) {
@@ -83,7 +83,7 @@ public class FillerBlock extends DirectionalBlock {
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos0, PlayerEntity player, boolean willHarvest, IFluidState fluid) {
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos0, PlayerEntity player, boolean willHarvest, FluidState fluid) {
         BlockPos pos = pos0.offset(state.get(FACING));
         BlockState state1 = world.getBlockState(pos);
         if (validateFilled(world, state1, pos0))
@@ -174,12 +174,6 @@ public class FillerBlock extends DirectionalBlock {
             return state1.getBlock().getSoundType(state1, world, pos, entity);
         else
             return super.getSoundType(state, world, pos, entity);
-    }
-
-    @Override
-    public boolean causesSuffocation(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return false;
-        //TODO suffocation should be true but collision and shape for horse chopper does not work properly with true here, no idea why
     }
 
     @Override

@@ -1,9 +1,6 @@
 package se.gory_moon.horsepower.compat.jei.milling;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,6 +11,8 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
@@ -24,9 +23,13 @@ import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe> {
 
-    private boolean handHandler;
+    private final boolean handHandler;
 
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
@@ -81,7 +84,7 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
         guiItemStacks.init(secondarySlot, false, 90, 50);
         guiItemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
             if (slotIndex == secondarySlot && !ingredient.isEmpty()) {
-                tooltip.add(tooltip.size() - 1, "Chance: " + recipe.getSecondaryChance() + "%");
+                tooltip.add(tooltip.size() - 1, new StringTextComponent("Chance: " + recipe.getSecondaryChance() + "%"));
             }
         });
 
@@ -90,20 +93,20 @@ public class HorsePowerMillingCategory extends HorsePowerCategory<MillingRecipe>
     }
 
     @Override
-    public void draw(MillingRecipe recipe, double mouseX, double mouseY) {
-        super.draw(recipe, mouseX, mouseY);
+    public void draw(MillingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+        super.draw(recipe, matrixStack, mouseX, mouseY);
 
-        arrow.draw(57, 27);
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow("x" + getLaps(recipe), 33, 48, Colors.WHITE.getRGB());
+        arrow.draw(matrixStack, 57, 27);
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "x" + getLaps(recipe), 33, 48, Colors.WHITE.getRGB());
         if (recipe.getSecondaryChance() > 0)
-            Minecraft.getInstance().fontRenderer.drawString(recipe.getSecondaryChance() + "%", 65, 58, 0x808080);
+            Minecraft.getInstance().fontRenderer.drawString(matrixStack, recipe.getSecondaryChance() + "%", 65, 58, 0x808080);
     }
 
     @Override
-    public List<String> getTooltipStrings(MillingRecipe recipe, double mouseX, double mouseY) {
-        List<String> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
+    public List<ITextComponent> getTooltipStrings(MillingRecipe recipe, double mouseX, double mouseY) {
+        List<ITextComponent> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
         if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 45) {
-            tooltip.add(new TranslationTextComponent(handHandler ? "info.horsepower.manual.milling.grind.time" : "info.horsepower.horse.milling.grind.time", Double.valueOf(getLaps(recipe))).getFormattedText());
+            tooltip.add(new TranslationTextComponent(handHandler ? "info.horsepower.manual.milling.grind.time": "info.horsepower.horse.milling.grind.time", getLaps(recipe)));
         }
         return tooltip;
     }

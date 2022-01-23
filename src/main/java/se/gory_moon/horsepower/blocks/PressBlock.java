@@ -1,10 +1,5 @@
 package se.gory_moon.horsepower.blocks;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -43,57 +38,61 @@ import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
-public class PressBlock extends HPBaseBlock {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class PressBlock extends HorizontalHPBlock {
 
     public static final EnumProperty<PressModels> PART = EnumProperty.create("part", PressModels.class);
 
     private static final VoxelShape BASE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 14.0D, 16.0D);
-    
+
     private static final VoxelShape TOP_X = Block.makeCuboidShape(7.0D, 14.0D, 0.0D, 9.0D, 19.0D, 16.0D);
     private static final VoxelShape TOP_Z = Block.makeCuboidShape(0.0D, 14.0D, 7.0D, 16.0D, 19.0D, 9.0D);
     private static final VoxelShape TOP_POLE = Block.makeCuboidShape(7.0D, 19.0D, 7.0D, 9.0D, 28.0D, 9.0D);
 
-    
-    private static final VoxelShape BOUND_X =  VoxelShapes.or(BASE,TOP_X,TOP_POLE);
-    private static final VoxelShape BOUND_Z =  VoxelShapes.or(BASE,TOP_Z,TOP_POLE);
+
+    private static final VoxelShape BOUND_X = VoxelShapes.or(BASE, TOP_X, TOP_POLE);
+    private static final VoxelShape BOUND_Z = VoxelShapes.or(BASE, TOP_Z, TOP_POLE);
 
     public PressBlock(Properties properties) {
         super(properties.hardnessAndResistance(5.0F, 5.0F).sound(SoundType.WOOD));
         setHarvestLevel(ToolType.AXE, 1);
     }
-    
-    @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return state.get(FACING).getAxis() == Direction.Axis.X ? BOUND_X : BOUND_Z;
-    }
-
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return state.get(FACING).getAxis() == Direction.Axis.X ? BOUND_X : BOUND_Z;
-    }
 
     @Override
     public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (!worldIn.isRemote) {
-            Direction filled = state.get(FACING);
-            worldIn.setBlockState(pos, state.with(FACING, filled).with(PART, PressModels.BASE), 2);
+            Direction filled = state.get(HORIZONTAL_FACING);
+            worldIn.setBlockState(pos, state.with(HORIZONTAL_FACING, filled).with(PART, PressModels.BASE), 2);
         }
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return state.get(HORIZONTAL_FACING).getAxis() == Direction.Axis.X ? BOUND_X: BOUND_Z;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return state.get(HORIZONTAL_FACING).getAxis() == Direction.Axis.X ? BOUND_X: BOUND_Z;
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(PART, PressModels.BASE);
+        return getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()).with(PART, PressModels.BASE);
     }
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+        worldIn.setBlockState(pos, state.with(HORIZONTAL_FACING, placer.getHorizontalFacing().getOpposite()), 2);
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
+        builder.add(HORIZONTAL_FACING, PART);
     }
 
     @Override

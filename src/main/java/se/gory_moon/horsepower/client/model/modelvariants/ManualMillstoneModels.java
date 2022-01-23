@@ -7,7 +7,7 @@ public enum ManualMillstoneModels implements IStringSerializable {
     CENTER;
 
     @Override
-    public String getName() {
+    public String getString() {
         return name().toLowerCase();
     }
 }

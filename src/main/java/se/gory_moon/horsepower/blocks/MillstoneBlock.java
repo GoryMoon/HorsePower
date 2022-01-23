@@ -1,10 +1,5 @@
 package se.gory_moon.horsepower.blocks;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -32,7 +27,11 @@ import se.gory_moon.horsepower.tileentity.MillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
-public class MillstoneBlock extends HPBaseBlock {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class MillstoneBlock extends HPBlock {
 
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
     public static final EnumProperty<MillstoneModels> PART = EnumProperty.create("part", MillstoneModels.class);

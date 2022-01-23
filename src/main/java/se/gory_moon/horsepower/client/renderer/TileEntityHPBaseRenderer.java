@@ -1,59 +1,30 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.FillerBlock;
 import se.gory_moon.horsepower.tileentity.HPBaseTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 
 public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> extends TileEntityRenderer<T> {
 
-    public static ITextComponent LEAD_LOOKUP = new TranslationTextComponent(Localization.INFO.ITEM_REVEAL.key()).setStyle(new Style().setColor(TextFormatting.RED));
+    public static ITextComponent LEAD_LOOKUP = new TranslationTextComponent(Localization.INFO.ITEM_REVEAL.key()).setStyle(Style.EMPTY.setFormatting(TextFormatting.RED));
 
-    public static void drawCustomNameplate(TileEntityRendererDispatcher rendererDispatcher, FontRenderer fontRenderer, TileEntity te, String str, double x, double y, double z, int maxDistance, float offset) {
-        ActiveRenderInfo renderInfo = rendererDispatcher.renderInfo;
-        Vec3d view = renderInfo.getProjectedView();
-        double d0 = te.getDistanceSq(view.x, view.y, view.z);
+    public TileEntityHPBaseRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
+    }
+/*
+    public static void drawCustomNameplate(TileEntityRendererDispatcher renderDispatcher, MatrixStack matrix, FontRenderer fontRenderer, ITextComponent str, IRenderTypeBuffer buffer, int packedLight, double y, int maxDistance, double offset) {
+        ActiveRenderInfo renderInfo = renderDispatcher.renderInfo;
+        Vector3d view = renderInfo.getProjectedView();
+        double d0 = renderInfo.getProjectedView().squareDistanceTo(view.x, view.y, view.z);
 
         if (d0 <= (double) (maxDistance * maxDistance)) {
-            float yaw = renderInfo.getYaw();
-            float pitch = renderInfo.getPitch();
-            GameRenderer.drawNameplate(fontRenderer, str, (float) x + 0.5F, (float) y + 1.5F + offset, (float) z + 0.5F, 0, yaw, pitch, false);
+            RenderUtils.renderNameplate(matrix, fontRenderer, str, buffer, packedLight, y + offset, renderInfo.getRotation());
+            //RenderUtils.renderNameplate(matrix, fontRenderer, str, (float) x + 0.5F, (float) y + 1.5F + offset, (float) z + 0.5F, 0, yaw, pitch, false);
         }
     }
 
@@ -93,12 +64,12 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
         if (!canShowAmount(te))
             return;
         setLightmapDisabled(true);
-        Entity entity = this.rendererDispatcher.renderInfo.getRenderViewEntity();
+        Entity entity = this.renderDispatcher.renderInfo.getRenderViewEntity();
         double d0 = te.getDistanceSq(entity.posX, entity.posY, entity.posZ);
 
         if (d0 <= (double) (14 * 14)) {
-            float f = this.rendererDispatcher.renderInfo.getYaw();
-            float f1 = this.rendererDispatcher.renderInfo.getPitch();
+            float f = this.renderDispatcher.renderInfo.getYaw();
+            float f1 = this.renderDispatcher.renderInfo.getPitch();
             FontRenderer fontRenderer = getFontRenderer();
             GlStateManager.pushMatrix();
 
@@ -129,11 +100,10 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
     }
 
     public boolean canShowAmount(HPBaseTileEntity te) {
-        RayTraceResult traceResult = this.rendererDispatcher.cameraHitResult;
+        RayTraceResult traceResult = this.renderDispatcher.cameraHitResult;
         return Configs.CLIENT.renderItemAmount.get() &&
                 (!Configs.CLIENT.mustLookAtBlock.get() ||
-                        traceResult != null &&
-                                traceResult.getType() == RayTraceResult.Type.BLOCK &&
+                        traceResult != null && traceResult.getType() == RayTraceResult.Type.BLOCK &&
                                 (te.getPos().equals(((BlockRayTraceResult) traceResult).getPos()) ||
                                         (te.getWorld().getBlockState(te.getPos().up()).getBlock() instanceof FillerBlock && te.getPos().up().equals(((BlockRayTraceResult) traceResult).getPos()))
                                 )
@@ -352,12 +322,12 @@ public abstract class TileEntityHPBaseRenderer<T extends HPBaseTileEntity> exten
     public void drawDisplayText(HPBaseTileEntity te, double x, double y, double z) {
         ITextComponent itextcomponent = te.getDisplayName();
 
-        RayTraceResult raytraceresult = this.rendererDispatcher.cameraHitResult;
+        RayTraceResult raytraceresult = this.renderDispatcher.cameraHitResult;
         if (itextcomponent != null && raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.BLOCK && te.getPos().equals(((BlockRayTraceResult) raytraceresult).getPos())) {
             this.setLightmapDisabled(true);
-            drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
-            drawCustomNameplate(rendererDispatcher, getFontRenderer(), te, LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);
+            drawCustomNameplate(renderDispatcher, getFontRenderer(), te, itextcomponent.getFormattedText(), x, y, z, 12, 0);
+            drawCustomNameplate(renderDispatcher, getFontRenderer(), te, LEAD_LOOKUP.getFormattedText(), x, y, z, 12, -0.25F);
             this.setLightmapDisabled(false);
         }
-    }
+    }*/
 }

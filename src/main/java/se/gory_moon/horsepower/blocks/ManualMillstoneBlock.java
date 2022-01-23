@@ -1,16 +1,7 @@
 package se.gory_moon.horsepower.blocks;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -27,10 +18,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -44,7 +35,14 @@ import se.gory_moon.horsepower.tileentity.ManualMillstoneTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
-public class ManualMillstoneBlock extends HPBaseBlock {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+public class ManualMillstoneBlock extends HorizontalHPBlock {
     public static final EnumProperty<ManualMillstoneModels> PART = EnumProperty.create("part", ManualMillstoneModels.class);
 
     private static final VoxelShape COLLISION = Block.makeCuboidShape(1, 0, 1, 15, 10, 15);
@@ -74,7 +72,7 @@ public class ManualMillstoneBlock extends HPBaseBlock {
         super(properties.hardnessAndResistance(1.5F, 10F).sound(SoundType.STONE));
 
         setHarvestLevel(ToolType.PICKAXE, 1);
-        setDefaultState(getStateContainer().getBaseState().with(FACING, Direction.NORTH).with(PART, ManualMillstoneModels.BASE));
+        setDefaultState(getStateContainer().getBaseState().with(HORIZONTAL_FACING, Direction.NORTH).with(PART, ManualMillstoneModels.BASE));
     }
 
     @Override
@@ -84,10 +82,10 @@ public class ManualMillstoneBlock extends HPBaseBlock {
 
     @Override
     public int getSlot(BlockState state, World worldIn, PlayerEntity player, BlockRayTraceResult hit) {
-        Direction dir = state.get(FACING);
-        Vec3d traceStart = player.getEyePosition(0);
-        Vec3d lookVector = player.getLook(0);
-        Vec3d traceEnd = traceStart.add(lookVector.x * 5, lookVector.y * 5, lookVector.z * 5);
+        Direction dir = state.get(HORIZONTAL_FACING);
+        Vector3d traceStart = player.getEyePosition(0);
+        Vector3d lookVector = player.getLook(0);
+        Vector3d traceEnd = traceStart.add(lookVector.x * 5, lookVector.y * 5, lookVector.z * 5);
 
         Stream<Slot> slots;
         if (dir == Direction.NORTH) {
@@ -103,8 +101,8 @@ public class ManualMillstoneBlock extends HPBaseBlock {
         }
 
         Optional<Integer> closest = slots
-                .map(slot -> Pair.of(slot, slot.getAABB().offset(hit.getPos()).rayTrace(traceStart, traceEnd).orElse(Vec3d.ZERO)))
-                .filter(pair -> pair.getSecond() != Vec3d.ZERO)
+                .map(slot -> Pair.of(slot, slot.getAABB().offset(hit.getPos()).rayTrace(traceStart, traceEnd).orElse(Vector3d.ZERO)))
+                .filter(pair -> pair.getSecond() != Vector3d.ZERO)
                 .min(Comparator.comparingDouble(o -> o.getSecond().lengthSquared())).map(pair -> pair.getFirst().getId());
         return closest.orElse(-2);
     }
@@ -147,8 +145,8 @@ public class ManualMillstoneBlock extends HPBaseBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-        if (context.getEntity().isSneaking()) {
-            switch (state.get(FACING)) {
+        if (context.getEntity() != null && context.getEntity().isSneaking()) {
+            switch (state.get(HORIZONTAL_FACING)) {
                 case SOUTH:
                     return ROT_SOUTH;
                 case WEST:
@@ -164,22 +162,22 @@ public class ManualMillstoneBlock extends HPBaseBlock {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        worldIn.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()).with(PART, ManualMillstoneModels.BASE), 2);
+        worldIn.setBlockState(pos, state.with(HORIZONTAL_FACING, placer.getHorizontalFacing().getOpposite()).with(PART, ManualMillstoneModels.BASE), 2);
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
+        builder.add(HORIZONTAL_FACING, PART);
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(Localization.ITEM.MANUAL_MILLSTONE.INFO.translate("\n" + Colors.LIGHTGRAY.toString())));
+        tooltip.add(new StringTextComponent(Localization.ITEM.MANUAL_MILLSTONE.INFO.translate("\n" + Colors.LIGHTGRAY)));
     }
 
     private static class Slot {
-        private AxisAlignedBB aabb;
-        private int id;
+        private final AxisAlignedBB aabb;
+        private final int id;
 
         public Slot(int id, AxisAlignedBB aabb) {
             this.id = id;

@@ -1,14 +1,10 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.model.TRSRTransformation;
 
 @OnlyIn(Dist.CLIENT)
 public enum FacingToRotation {
@@ -20,14 +16,9 @@ public enum FacingToRotation {
     EAST(new Vector3f(0, -90, 0));
 
     private final Vector3f rot;
-    private final Matrix4f mat;
 
     FacingToRotation(Vector3f rot) {
         this.rot = rot;
-        this.mat = new Matrix4f();
-        this.mat.rotX((float) Math.toRadians(rot.x));
-        this.mat.rotY((float) Math.toRadians(rot.y));
-        this.mat.rotZ((float) Math.toRadians(rot.z));
     }
 
     public static FacingToRotation get(Direction forward) {
@@ -38,27 +29,11 @@ public enum FacingToRotation {
         return rot;
     }
 
-    public Matrix4f getMat() {
-        return new Matrix4f(this.mat);
-    }
-
     public void glRotateCurrentMat() {
-        GlStateManager.rotatef(rot.x, 1, 0, 0);
-        GlStateManager.rotatef(rot.y, 0, 1, 0);
-        GlStateManager.rotatef(rot.z, 0, 0, 1);
+        GlStateManager.rotatef(rot.getX(), 1, 0, 0);
+        GlStateManager.rotatef(rot.getY(), 0, 1, 0);
+        GlStateManager.rotatef(rot.getZ(), 0, 0, 1);
     }
 
-    public Direction rotate(Direction facing) {
-        return TRSRTransformation.rotate(mat, facing);
-    }
-
-    public Direction resultingRotate(Direction facing) {
-        for (Direction face : Direction.values()) {
-            if (rotate(face) == facing) {
-                return face;
-            }
-        }
-        return null;
-    }
 
 }

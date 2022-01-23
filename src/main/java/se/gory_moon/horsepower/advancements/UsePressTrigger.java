@@ -1,18 +1,18 @@
 package se.gory_moon.horsepower.advancements;
 
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.criterion.CriterionInstance;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.Map;
+import java.util.Set;
 
 public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instance> {
 
@@ -49,7 +49,7 @@ public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instan
     }
 
     @Override
-    public Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
+    public Instance deserialize(JsonObject json, ConditionArrayParser condition) {
         return new Instance();
     }
 
@@ -64,7 +64,7 @@ public class UsePressTrigger implements ICriterionTrigger<UsePressTrigger.Instan
     public static class Instance extends CriterionInstance {
 
         public Instance() {
-            super(ID);
+            super(ID, EntityPredicate.AndPredicate.ANY_AND);
         }
 
         public static Instance userPress() {

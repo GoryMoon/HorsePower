@@ -1,11 +1,7 @@
 package se.gory_moon.horsepower.tileentity;
 
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.tterrag.registrate.util.nullness.NonnullType;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -19,19 +15,22 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.ToolType;
+import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 
+import java.util.Map;
+
 public class ManualChopperTileEntity extends HPBaseTileEntity {
 
     private int currentItemChopAmount;
     private int totalItemChopAmount;
-    
+
     public ManualChopperTileEntity(@NonnullType TileEntityType<ManualChopperTileEntity> tileEntityType) {
-        super(2,tileEntityType);
+        super(2, tileEntityType);
     }
 
     @Override
@@ -43,8 +42,8 @@ public class ManualChopperTileEntity extends HPBaseTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         if (getStackInSlot(0).getCount() > 0) {
             currentItemChopAmount = compound.getInt("chopTime");

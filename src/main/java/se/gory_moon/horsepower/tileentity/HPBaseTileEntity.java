@@ -1,11 +1,5 @@
 package se.gory_moon.horsepower.tileentity;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -34,18 +28,23 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.RangedWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import se.gory_moon.horsepower.HorsePower;
-import se.gory_moon.horsepower.blocks.HPBaseBlock;
+import se.gory_moon.horsepower.blocks.HPBlock;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.HPRecipes;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class HPBaseTileEntity extends TileEntity implements INameable {
 
     protected NonNullList<ItemStack> itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
     protected IInventoryHP inventory;
-    private RecipeWrapper recipeWrapperDummy = new RecipeWrapper(new ItemStackHandler());
-    private LazyOptional<IItemHandler> handlerNull;
-    private LazyOptional<IItemHandler> handlerBottom;
-    private LazyOptional<IItemHandler> handlerIn;
+    private final RecipeWrapper recipeWrapperDummy = new RecipeWrapper(new ItemStackHandler());
+    private final LazyOptional<IItemHandler> handlerNull;
+    private final LazyOptional<IItemHandler> handlerBottom;
+    private final LazyOptional<IItemHandler> handlerIn;
 
     public HPBaseTileEntity(int inventorySize, TileEntityType type) {
         super(type);
@@ -196,8 +195,8 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         itemStacks = NonNullList.withSize(inventory.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, itemStacks);
@@ -262,18 +261,18 @@ public abstract class HPBaseTileEntity extends TileEntity implements INameable {
     }
 
     public Direction getForward() {
-        return canBeRotated() ? getWorld().getBlockState(getPos()).getBlockState().get(HPBaseBlock.FACING): Direction.NORTH;
+        return canBeRotated() ? getWorld().getBlockState(getPos()).getBlockState().get(HPBlock.FACING): Direction.NORTH;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        handleUpdateTag(pkt.getNbtCompound());
+        handleUpdateTag(getBlockState(), pkt.getNbtCompound());
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT tag) {
-        read(tag);
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        read(state, tag);
         markDirty();
     }
 

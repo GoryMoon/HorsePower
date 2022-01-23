@@ -82,7 +82,6 @@ out/
 hs_err_pid*
 
 ### Custom
-/src/generated/
 /run/
 .idea/**/run*.xml
 

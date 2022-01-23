@@ -1,61 +1,50 @@
-# This is an example mods.toml file. It contains the data relating to the loading mods.
-# There are several mandatory fields (#mandatory), and many more that are optional (#optional).
-# The overall format is standard TOML format, v0.5.0.
-# Note that there are a couple of TOML lists in this file.
-# Find more information on toml format here:  https://github.com/toml-lang/toml
-# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
-modLoader="javafml" #mandatory
-# A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[28,)" #mandatory
-# A URL to refer people to when problems occur with this mod
-issueTrackerURL="https://github.com/GoryMoon/HorsePower/issues"
-# A list of mods - how many allowed here is determined by the individual mod loader
-[[mods]] #mandatory
-    # The modid of the mod
-    modId="horsepower" #mandatory
-    # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
-    version="${file.jarVersion}" #mandatory
-    displayURL="https://github.com/GoryMoon/HorsePower"
-     # A display name for the mod
-    displayName="Horse Power" #mandatory
-    credits="Darkosto for coming up with the idea" #optional
-    authors="Gory_Moon" #optional
-    # The description text for the mod (multi line!) (#mandatory)
-    description='''
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "LGPLv3"
+issueTrackerURL = "https://github.com/GoryMoon/HorsePower/issues"
+
+[[mods]]
+modId = "horsepower"
+version = "${file.jarVersion}"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/horse-power"
+displayName = "Horse Power"
+credits = "Darkosto for coming up with the idea"
+authors = "Gory_Moon, Terpo"
+description = '''
 A mods that adds horse powered blocks.
 '''
 
 [[dependencies.horsepower]]
-    modId="forge"
-    mandatory=true
-    versionRange="[28,)"
-    ordering="NONE"
-    side="BOTH"
+modId = "forge"
+mandatory = true
+versionRange = "[36,)"
+ordering = "NONE"
+side = "BOTH"
 
 [[dependencies.horsepower]]
     modId="minecraft"
-    mandatory=true
-    versionRange="[1.14.4]"
-    ordering="NONE"
+mandatory = true
+versionRange = "[1.16.5,1.17)"
+ordering = "NONE"
     side="BOTH"
 
 [[dependencies.horsepower]]
     modId="jei"
-    mandatory=false
-    versionRange="[6.0.0,)"
-    ordering="AFTER"
+mandatory = false
+versionRange = "[7.7.1,)"
+ordering = "AFTER"
     side="BOTH"
 
 [[dependencies.horsepower]]
     modId="waila"
-    mandatory=false
-    versionRange="[1.10.4,)"
-    ordering="AFTER"
+mandatory = false
+versionRange = "[1.10.11,)"
+ordering = "AFTER"
     side="BOTH"
 
 [[dependencies.horsepower]]
     modId="theoneprobe"
-    mandatory=false
-    versionRange="[1.4.37,)"
-    ordering="AFTER"
+mandatory = false
+versionRange = "[1.16-3.1.4,)"
+ordering = "AFTER"
     side="BOTH"

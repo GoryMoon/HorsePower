@@ -1,9 +1,6 @@
 package se.gory_moon.horsepower.tileentity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
@@ -18,8 +15,12 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import se.gory_moon.horsepower.util.Utils;
+import net.minecraft.util.math.vector.Vector3d;
+import se.gory_moon.horsepower.util.HPUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements ITickableTileEntity {
 
@@ -51,8 +52,8 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
     public abstract int getPositionOffset();
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         target = compound.getInt("target");
         origin = compound.getInt("origin");
@@ -91,7 +92,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         int z = pos.getZ();
 
         if (world != null) {
-            ArrayList<Class<? extends CreatureEntity>> clazzes = Utils.getCreatureClasses();
+            ArrayList<Class<? extends CreatureEntity>> clazzes = HPUtils.getCreatureClasses();
             for (Class<? extends Entity> clazz : clazzes) {
                 for (Object entity : world.getEntitiesWithinAABB(clazz, new AxisAlignedBB((double) x - 7.0D, (double) y - 7.0D, (double) z - 7.0D, (double) x + 7.0D, (double) y + 7.0D, (double) z + 7.0D))) {
                     if (entity instanceof CreatureEntity) {
@@ -154,11 +155,11 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
         return !valid;
     }
 
-    private Vec3d getPathPosition(int i, boolean nav) {
+    private Vector3d getPathPosition(int i, boolean nav) {
         double x = pos.getX() + (nav ? walkPath: searchPath)[i][0] * (nav ? 3: 2.5);
         double y = pos.getY() + getPositionOffset();
         double z = pos.getZ() + (nav ? walkPath: searchPath)[i][1] * (nav ? 3: 2.5);
-        return new Vec3d(x, y, z);
+        return new Vector3d(x, y, z);
     }
 
     protected int getClosestTarget() {
@@ -167,9 +168,9 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
             int closest = 0;
 
             for (int i = 0; i < walkPath.length; i++) {
-                Vec3d pos = getPathPosition(i, false);
+                Vector3d pos = getPathPosition(i, false);
 
-                double tmp = pos.distanceTo(worker.getPositionVector());
+                double tmp = pos.distanceTo(worker.getPositionVec());
                 if (tmp < dist) {
                     dist = tmp;
                     closest = i;
@@ -215,7 +216,7 @@ public abstract class HPHorseBaseTileEntity extends HPBaseTileEntity implements 
             if (hasWorker()) {
                 if (running) {
 
-                    Vec3d pos = getPathPosition(target, false);
+                    Vector3d pos = getPathPosition(target, false);
                     double x = pos.x;
                     double y = pos.y;
                     double z = pos.z;

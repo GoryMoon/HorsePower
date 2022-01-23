@@ -1,11 +1,8 @@
 package se.gory_moon.horsepower.tileentity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.tterrag.registrate.util.nullness.NonnullType;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -32,11 +29,14 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class PressTileEntity extends HPHorseBaseTileEntity {
 
-    private FluidTank tank = new FluidTank(Configs.SERVER.pressTankSize.get());
+    private final FluidTank tank = new FluidTank(Configs.SERVER.pressTankSize.get());
     private int currentPressStatus;
-    private LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
+    private final LazyOptional<IFluidHandler> tankCap = LazyOptional.of(() -> tank);
 
     public PressTileEntity(@NonnullType TileEntityType<PressTileEntity> tileEntityType) {
         super(2, tileEntityType);
@@ -85,8 +85,8 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         tank.readFromNBT(compound.getCompound("fluid"));
 
         if (getStackInSlot(0).getCount() > 0) {
@@ -245,7 +245,7 @@ public class PressTileEntity extends HPHorseBaseTileEntity {
         if (valid)
             return null;
         else
-            return new TranslationTextComponent(Localization.INFO.PRESS_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+            return new TranslationTextComponent(Localization.INFO.PRESS_INVALID.key()).setStyle(Style.EMPTY.applyFormatting(TextFormatting.RED));
     }
     
     @Override

@@ -1,7 +1,5 @@
 package se.gory_moon.horsepower.client.renderer;
 
-import java.util.stream.StreamSupport;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -15,11 +13,13 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import se.gory_moon.horsepower.Configs;
-import se.gory_moon.horsepower.blocks.HPBaseBlock;
+import se.gory_moon.horsepower.blocks.HPBlock;
 import se.gory_moon.horsepower.blocks.MillstoneBlock;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.RenderUtils;
+
+import java.util.stream.StreamSupport;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class ClientHandler {
@@ -50,8 +50,8 @@ public class ClientHandler {
     }
 
     private static boolean isHPBlock(Item item) {
-        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof HPBaseBlock) {
-            return HPHorseBaseTileEntity.class.isAssignableFrom(((HPBaseBlock) ((BlockItem) item).getBlock()).getTileClass());
+        if (item instanceof BlockItem && ((BlockItem) item).getBlock() instanceof HPBlock) {
+            return HPHorseBaseTileEntity.class.isAssignableFrom(((HPBlock) ((BlockItem) item).getBlock()).getTileClass());
         }
         return false;
     }

@@ -7,7 +7,7 @@ public enum MillstoneModels implements IStringSerializable {
     FILLED;
 
     @Override
-    public String getName() {
+    public String getString() {
         return name().toLowerCase();
     }
 }

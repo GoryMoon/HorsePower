@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "horsepower:pressing/water_from_leaves"
+    ]
+  },
+  "criteria": {
+    "has_leave": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:oak_leaves"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "horsepower:pressing/water_from_leaves"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_leave",
+      "has_the_recipe"
+    ]
+  ]
+}

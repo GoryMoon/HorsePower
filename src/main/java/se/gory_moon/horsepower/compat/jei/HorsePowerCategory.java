@@ -1,9 +1,6 @@
 package se.gory_moon.horsepower.compat.jei;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -11,8 +8,13 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.ModList;
 import se.gory_moon.horsepower.util.color.Colors;
+
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public abstract class HorsePowerCategory<T> implements IRecipeCategory<T> {
 
@@ -50,13 +52,14 @@ public abstract class HorsePowerCategory<T> implements IRecipeCategory<T> {
         return background;
     }
 
+
     @Override
-    public void draw(T recipe, double mouseX, double mouseY) {
-        currentDrawable.draw(2, 0);
+    public void draw(T recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+        currentDrawable.draw(matrixStack, 2, 0);
     }
 
     @Override
-    public List<String> getTooltipStrings(T recipe, double mouseX, double mouseY) {
+    public List<ITextComponent> getTooltipStrings(T recipe, double mouseX, double mouseY) {
         return currentDrawable.getTooltipStrings(mouseX, mouseY);
     }
 

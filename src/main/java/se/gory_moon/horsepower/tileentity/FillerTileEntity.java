@@ -1,10 +1,6 @@
 package se.gory_moon.horsepower.tileentity;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.tterrag.registrate.util.nullness.NonnullType;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +12,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import se.gory_moon.horsepower.blocks.FillerBlock;
-import se.gory_moon.horsepower.blocks.HPBaseBlock;
+import se.gory_moon.horsepower.blocks.HPBlock;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class FillerTileEntity extends TileEntity implements INameable {
     
@@ -39,7 +38,7 @@ public class FillerTileEntity extends TileEntity implements INameable {
             return getPos();
         Direction facing = state.get(DirectionalBlock.FACING);
         BlockState state1 = getWorld().getBlockState(pos.offset(facing));
-        if (!(state1.getBlock() instanceof HPBaseBlock))
+        if (!(state1.getBlock() instanceof HPBlock))
             return getPos();
         return pos.offset(facing);
     }

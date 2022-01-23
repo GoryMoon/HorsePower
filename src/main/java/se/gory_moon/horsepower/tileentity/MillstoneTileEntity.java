@@ -1,10 +1,8 @@
 package se.gory_moon.horsepower.tileentity;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.tterrag.registrate.util.nullness.NonnullType;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -23,6 +21,8 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
 import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
+
+import javax.annotation.Nullable;
 
 public class MillstoneTileEntity extends HPHorseBaseTileEntity {
 
@@ -77,8 +77,8 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         if (getStackInSlot(0).getCount() > 0) {
             currentItemMillTime = compound.getInt("millTime");
@@ -175,6 +175,6 @@ public class MillstoneTileEntity extends HPHorseBaseTileEntity {
         if (valid)
             return null;
         else
-            return new TranslationTextComponent(Localization.INFO.MILLSTONE_INVALID.key()).setStyle(new Style().setColor(TextFormatting.RED));
+            return new TranslationTextComponent(Localization.INFO.MILLSTONE_INVALID.key()).setStyle(Style.EMPTY.applyFormatting(TextFormatting.RED));
     }
 }

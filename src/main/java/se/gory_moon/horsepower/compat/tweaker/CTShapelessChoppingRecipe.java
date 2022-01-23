@@ -33,7 +33,7 @@ public class CTShapelessChoppingRecipe {
         return ore;
     }
 
-    public String getName() {
+    public String getString() {
         return this.name;
     }
 

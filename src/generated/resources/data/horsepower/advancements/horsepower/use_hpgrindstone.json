@@ -1,0 +1,29 @@
+{
+  "parent": "horsepower:horsepower/root",
+  "display": {
+    "icon": {
+      "item": "horsepower:millstone"
+    },
+    "title": {
+      "translate": "advancements.horsepower.millstone.title"
+    },
+    "description": {
+      "translate": "advancements.horsepower.millstone.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "use_millstone": {
+      "trigger": "horsepower:use_horse_millstone",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "use_millstone"
+    ]
+  ]
+}

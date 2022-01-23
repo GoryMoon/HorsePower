@@ -91,7 +91,7 @@ public class CTShapedChoppingRecipe {
         return ore;
     }
 
-    public String getName() {
+    public String getString() {
         return this.name;
     }
 

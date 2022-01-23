@@ -1,14 +1,17 @@
 package se.gory_moon.horsepower.compat.jei;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class HorseDrawable implements IDrawableAnimated {
 
@@ -25,7 +28,7 @@ public class HorseDrawable implements IDrawableAnimated {
     private int location;
     private int x;
     private int y;
-    private String hovering;
+    private final String hovering;
 
     public HorseDrawable(IDrawableStatic horse1, IDrawableStatic horse2, IDrawableStatic horse3, IDrawableStatic horse4, ITickTimer animTimer, ITickTimer pathTimer, boolean grinding, String hovering) {
         this.horse1 = horse1;
@@ -48,14 +51,8 @@ public class HorseDrawable implements IDrawableAnimated {
         return 20;
     }
 
-
     @Override
-    public void draw() {
-        draw(0, 0);
-    }
-
-    @Override
-    public void draw(int xOffset, int yOffset) {
+    public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
         reverse = false;
         location = pathTimer.getValue();
         setXYPos();
@@ -67,7 +64,7 @@ public class HorseDrawable implements IDrawableAnimated {
             draw = reverse ? horse4: horse2;
         }
 
-        draw.draw(xOffset + x, yOffset + y, 0, 0, 0, 0);
+        draw.draw(matrixStack, xOffset + x, yOffset + y, 0, 0, 0, 0);
     }
 
     private void setXYPos() {
@@ -112,8 +109,8 @@ public class HorseDrawable implements IDrawableAnimated {
         return mx >= x && mx <= x + horse1.getWidth() && my >= y && my <= y + horse1.getHeight();
     }
 
-    public List<String> getTooltipStrings(double mouseX, double mouseY) {
+    public List<ITextComponent> getTooltipStrings(double mouseX, double mouseY) {
         setXYPos();
-        return isHovering(mouseX, mouseY) && hovering != null ? Lists.newArrayList(Splitter.on('\n').split(hovering)): new ArrayList<>();
+        return isHovering(mouseX, mouseY) && hovering != null ? Lists.newArrayList(Splitter.on('\n').split(hovering)).stream().map(StringTextComponent::new).collect(Collectors.toList()): new ArrayList<>();
     }
 }

@@ -1,8 +1,5 @@
 package se.gory_moon.horsepower.data;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
-
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.block.Blocks;
@@ -22,6 +19,9 @@ import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.util.color.HPTags;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
 public class HPRecipeProvider extends RecipeProvider {
 
     public HPRecipeProvider(DataGenerator generator) {
@@ -34,18 +34,18 @@ public class HPRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder.shapedRecipe(Registration.MILLSTONE_BLOCK.orElse(null)).key('#', Tags.Items.STONE).key('L', Items.LEAD).key('S', Tags.Items.RODS_WOODEN).patternLine("SLS").patternLine("###").patternLine("###").addCriterion("has_lead", hasItem(Items.LEAD)).build(consumer);
         ShapedRecipeBuilder.shapedRecipe(Registration.MANUAL_MILLSTONE_BLOCK.orElse(null)).key('#', Tags.Items.STONE).key('S', Tags.Items.RODS_WOODEN).patternLine("  S").patternLine("###").patternLine("###").addCriterion("has_stone", hasItem(Tags.Items.STONE)).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(Registration.CHOPPER_BLOCK.orElse(null)).patternLine("   ").patternLine("   ").patternLine("WWW").key('W', Items.BIRCH_LOG).addCriterion("has_wood", hasItem(Items.BIRCH_LOG)).build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(Registration.MANUAL_CHOPPER_BLOCK.orElse(null)).patternLine("   ").patternLine("   ").patternLine("WWW").key('W', Items.OAK_LOG).addCriterion("has_wood", hasItem(Items.OAK_LOG)).build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(Registration.CHOPPER_BLOCK.orElse(null)).patternLine("WWW").key('W', Items.BIRCH_LOG).addCriterion("has_wood", hasItem(Items.BIRCH_LOG)).build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(Registration.MANUAL_CHOPPER_BLOCK.orElse(null)).patternLine("WWW").key('W', Items.OAK_LOG).addCriterion("has_wood", hasItem(Items.OAK_LOG)).build(consumer);
         ShapedRecipeBuilder.shapedRecipe(Registration.PRESS_BLOCK.orElse(null)).key('#', ItemTags.PLANKS).key('L', Items.LEAD).key('S', Tags.Items.RODS_WOODEN).key('P', ItemTags.WOODEN_PRESSURE_PLATES).patternLine("LSL").patternLine("#P#").patternLine("###").addCriterion("has_lead", hasItem(Items.LEAD)).build(consumer);
 
         CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(Registration.DOUGH.orElse(null)), Items.BREAD, 0.1F, 200).addCriterion("has_dough", hasItem(HPTags.Items.DOUGH)).build(consumer, "horsepower:bread");
 
 
         //Milling recipes
-        MillingRecipeBuilder.millingRecipe(Registration.FLOUR.get(), 1, Ingredient.fromItems(Items.WHEAT), 12,1).addCriterion("has_wheat", hasItem(Items.WHEAT)).build(consumer, "horsepower:milling/flour");
-        MillingRecipeBuilder.millingRecipe(Items.SUGAR, 1, Ingredient.fromItems(Items.SUGAR_CANE), 12,1).addCriterion("has_sugar_cane", hasItem(Items.SUGAR_CANE)).build(consumer, "horsepower:milling/sugar");
-        MillingRecipeBuilder.millingRecipe(Items.BONE_MEAL, 3, Ingredient.fromItems(Items.BONE), 12,1).addCriterion("has_bone", hasItem(Items.BONE)).build(consumer, "horsepower:milling/bone_meal");
-        MillingRecipeBuilder.millingRecipe(Items.BONE_MEAL, 9, Ingredient.fromItems(Blocks.BONE_BLOCK), 12,1).addCriterion("has_bone_block", hasItem(Blocks.BONE_BLOCK)).build(consumer, "horsepower:milling/bone_meal_2");
+        MillingRecipeBuilder.millingRecipe(Registration.FLOUR.get(), 1, Ingredient.fromItems(Items.WHEAT), 12, 1).addCriterion("has_wheat", hasItem(Items.WHEAT)).build(consumer, "horsepower:milling/flour");
+        MillingRecipeBuilder.millingRecipe(Items.SUGAR, 1, Ingredient.fromItems(Items.SUGAR_CANE), 12, 1).addCriterion("has_sugar_cane", hasItem(Items.SUGAR_CANE)).build(consumer, "horsepower:milling/sugar");
+        MillingRecipeBuilder.millingRecipe(Items.BONE_MEAL, 3, Ingredient.fromItems(Items.BONE), 12, 1).addCriterion("has_bone", hasItem(Items.BONE)).build(consumer, "horsepower:milling/bone_meal");
+        MillingRecipeBuilder.millingRecipe(Items.BONE_MEAL, 9, Ingredient.fromItems(Blocks.BONE_BLOCK), 12, 1).addCriterion("has_bone_block", hasItem(Blocks.BONE_BLOCK)).build(consumer, "horsepower:milling/bone_meal_2");
 
         MillingRecipeBuilder.millingRecipe(Items.RED_DYE, 1, Ingredient.fromItems(Items.POPPY, Items.RED_TULIP, Items.BEETROOT), 12,1).addCriterion("has_red_plant", hasItem(Items.POPPY, Items.RED_TULIP, Items.BEETROOT)).build(consumer, "horsepower:milling/red_dye");
         MillingRecipeBuilder.millingRecipe(Items.RED_DYE, 2, Ingredient.fromItems(Items.POPPY, Items.RED_TULIP, Items.BEETROOT), 12,1).addCriterion("has_red_plant", hasItem(Items.ROSE_BUSH)).build(consumer, "horsepower:milling/red_dye_2");

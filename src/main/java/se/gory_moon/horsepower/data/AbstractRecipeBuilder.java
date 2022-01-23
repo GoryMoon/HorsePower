@@ -1,15 +1,11 @@
 package se.gory_moon.horsepower.data;
 
-import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
-
 import com.google.gson.JsonObject;
-
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.IRequirementsStrategy;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.Item;
@@ -19,6 +15,9 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
+
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public abstract class AbstractRecipeBuilder {
 
@@ -80,12 +79,11 @@ public abstract class AbstractRecipeBuilder {
      */
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
-        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-        if(result != null) {
-            consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid,this.inputCount, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
-        }
-        else { //fluid output
-        	consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid,this.inputCount, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.outputFluid.getFluid().getRegistryName().getPath() + "/" + id.getPath())));
+        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
+        if (result != null) {
+            consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.inputCount, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
+        } else { //fluid output
+            consumerIn.accept(new Result(getSerializer(), id, type, ingredient, this.result, this.count, this.time, this.secondary, this.secondaryCount, this.secondaryChance, this.outputFluid, this.inputCount, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.outputFluid.getFluid().getRegistryName().getPath() + "/" + id.getPath())));
         }	
     }
 
@@ -109,9 +107,9 @@ public abstract class AbstractRecipeBuilder {
         private final int secondaryChance;
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
-        private IRecipeSerializer<?> serializer;
-        private FluidStack outputFluid;
-        private int inputCount;
+        private final IRecipeSerializer<?> serializer;
+        private final FluidStack outputFluid;
+        private final int inputCount;
 
         public Result(IRecipeSerializer<?> serializer, ResourceLocation id, AbstractHPRecipe.Type type, Ingredient input, Item result, int count, int time, Item secondary, int secondaryCount, int secondaryChance, FluidStack outputFluid, int inputCount, Advancement.Builder advancementBuilder, ResourceLocation advancementId) {
             this.serializer = serializer;

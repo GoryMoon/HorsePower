@@ -1,39 +1,35 @@
 package se.gory_moon.horsepower;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import se.gory_moon.horsepower.data.PlankRecipesDataPackGeneratorUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import se.gory_moon.horsepower.util.Constants;
-import se.gory_moon.horsepower.util.Utils;
+import se.gory_moon.horsepower.util.HPUtils;
 import se.gory_moon.horsepower.util.color.Colors;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Mod.EventBusSubscriber(modid = Constants.MOD_ID)
 public class HPEventHandler {
@@ -45,20 +41,20 @@ public class HPEventHandler {
         choppingAxes.clear();
         Configs.SERVER.choppingBlockAxes.get().forEach(s -> {
             String[] data = s.split("=");
-            int base = Utils.getBaseAmount(data[1]);
-            int chance = Utils.getChance(data[1]);
+            int base = HPUtils.getBaseAmount(data[1]);
+            int chance = HPUtils.getChance(data[1]);
             ItemStack stack = ItemStack.EMPTY;
 
             try {
-                stack = (ItemStack) Utils.parseItemStack(data[0], false);
+                stack = (ItemStack) HPUtils.parseItemStack(data[0], false);
             } catch (Exception e) {
-                Utils.errorMessage("Parse error with item for custom axes for the chopping block", false);
+                HPUtils.errorMessage("Parse error with item for custom axes for the chopping block", false);
             }
 
             if (!stack.isEmpty())
                 choppingAxes.put(stack, Pair.of(base, chance));
             else
-                Utils.errorMessage("Parse error with item for custom axes for the chopping block", false);
+                HPUtils.errorMessage("Parse error with item for custom axes for the chopping block", false);
         });
 
         harvestPercentages.clear();
@@ -66,22 +62,22 @@ public class HPEventHandler {
             String[] data = s.split("=");
             try {
                 int harvestLevel = Integer.parseInt(data[0]);
-                int base = Utils.getBaseAmount(data[1]);
-                int chance = Utils.getChance(data[1]);
+                int base = HPUtils.getBaseAmount(data[1]);
+                int chance = HPUtils.getChance(data[1]);
 
                 harvestPercentages.put(harvestLevel, Pair.of(base, chance));
             } catch (NumberFormatException e) {
-                Utils.errorMessage("HarvestLevel config is malformed, make sure only numbers are used as values, (" + s + ")", false);
+                HPUtils.errorMessage("HarvestLevel config is malformed, make sure only numbers are used as values, (" + s + ")", false);
             }
         });
-        Utils.sendSavedErrors();
+        HPUtils.sendSavedErrors();
     }
 
     @SubscribeEvent
     public static void onWorldJoin(EntityJoinWorldEvent event) {
         if (FMLEnvironment.dist.isClient()) {
             if (event.getEntity() instanceof ClientPlayerEntity && event.getWorld() instanceof ClientWorld && Minecraft.getInstance().player != null) {
-                Utils.sendSavedErrors();
+                HPUtils.sendSavedErrors();
             }
         }
     }
@@ -135,21 +131,11 @@ public class HPEventHandler {
             }
         }
     }
-    
-    
+
+
     @SubscribeEvent
-    public static void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+    public static void onServerAboutToStart(AddReloadListenerEvent event) {
         //Add Reload Listener for the Plank Recipe Generator
-        event.getServer().getResourceManager().addReloadListener((IResourceManagerReloadListener) resourceManager -> {
-            PlankRecipesDataPackGeneratorUtil.prepareHorsePowerDataPack(event);
-        });
-    }
-    
-    @SubscribeEvent
-    public static void onServerStarted(FMLServerStartedEvent event){
-        //Reload to make sure Plank Recipes are available
-        if(Boolean.TRUE.equals(Configs.SERVER.plankDataPackGeneration.get())){
-            event.getServer().reload();
-        }
+        //event.addListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> PlankRecipesDataPackGeneratorUtil.prepareHorsePowerDataPack(event));
     }
 }

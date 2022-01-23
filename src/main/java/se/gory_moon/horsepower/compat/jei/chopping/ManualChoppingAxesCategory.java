@@ -1,6 +1,7 @@
 package se.gory_moon.horsepower.compat.jei.chopping;
 
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -13,7 +14,7 @@ import se.gory_moon.horsepower.util.Localization;
 
 public class ManualChoppingAxesCategory implements IRecipeCategory<ManualChoppingAxeWrapper> {
 
-    private IGuiHelper guiHelper;
+    private final IGuiHelper guiHelper;
     
     public ManualChoppingAxesCategory(IGuiHelper guiHelper) {
         this.guiHelper = guiHelper;
@@ -58,8 +59,8 @@ public class ManualChoppingAxesCategory implements IRecipeCategory<ManualChoppin
     }
 
     @Override
-    public void draw(ManualChoppingAxeWrapper recipe, double mouseX, double mouseY) {
-        recipe.drawInfo(getBackground().getWidth(), getBackground().getHeight(), mouseX, mouseY);
+    public void draw(ManualChoppingAxeWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+        recipe.drawInfo(getBackground().getWidth(), getBackground().getHeight(), matrixStack, mouseX, mouseY);
     }
 
 }

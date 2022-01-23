@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,part=base": {
+      "model": "horsepower:block/manual_millstone"
+    },
+    "facing=south,part=base": {
+      "model": "horsepower:block/manual_millstone",
+      "y": 180
+    },
+    "facing=west,part=base": {
+      "model": "horsepower:block/manual_millstone",
+      "y": 270
+    },
+    "facing=east,part=base": {
+      "model": "horsepower:block/manual_millstone",
+      "y": 90
+    },
+    "facing=north,part=center": {
+      "model": "horsepower:block/manual_millstone_center"
+    },
+    "facing=south,part=center": {
+      "model": "horsepower:block/manual_millstone_center",
+      "y": 180
+    },
+    "facing=west,part=center": {
+      "model": "horsepower:block/manual_millstone_center",
+      "y": 270
+    },
+    "facing=east,part=center": {
+      "model": "horsepower:block/manual_millstone_center",
+      "y": 90
+    }
+  }
+}

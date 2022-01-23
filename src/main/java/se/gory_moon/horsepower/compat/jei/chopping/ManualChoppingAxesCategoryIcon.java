@@ -1,7 +1,7 @@
 package se.gory_moon.horsepower.compat.jei.chopping;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -20,9 +20,10 @@ public class ManualChoppingAxesCategoryIcon implements IDrawable {
     public int getHeight() {
         return 16;
     }
-    
+
+
     @Override
-    public void draw(int xOffset, int yOffset) {
+    public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
         GlStateManager.disableDepthTest();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         RenderHelper.enableStandardItemLighting();

@@ -1,10 +1,8 @@
 package se.gory_moon.horsepower.tileentity;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.tterrag.registrate.util.nullness.NonnullType;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -23,13 +21,15 @@ import se.gory_moon.horsepower.recipes.HPRecipes;
 import se.gory_moon.horsepower.recipes.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
 
+import javax.annotation.Nullable;
+
 public class ChopperTileEntity extends HPHorseBaseTileEntity {
 
     private int currentWindup;
     private int currentItemChopTime;
     private int totalItemChopTime;
     private float visualWindup = 0;
-    private float oldVisualWindup = -1;
+    private final float oldVisualWindup = -1;
 
     public ChopperTileEntity(@NonnullType TileEntityType<ChopperTileEntity> tileEntityType) {
         super(2, tileEntityType);
@@ -45,8 +45,8 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
         currentWindup = compound.getInt("currentWindup");
 
         if (getStackInSlot(0).getCount() > 0) {
@@ -215,7 +215,7 @@ public class ChopperTileEntity extends HPHorseBaseTileEntity {
         if (valid)
             return null;
         return new TranslationTextComponent(Localization.INFO.CHOPPING_INVALID.key())
-                .setStyle(new Style().setColor(TextFormatting.RED));
+                .setStyle(Style.EMPTY.applyFormatting(TextFormatting.RED));
     }
 
     @Nullable

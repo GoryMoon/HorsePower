@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,part=base": {
+      "model": "horsepower:block/chopper"
+    },
+    "facing=south,part=base": {
+      "model": "horsepower:block/chopper",
+      "y": 180
+    },
+    "facing=west,part=base": {
+      "model": "horsepower:block/chopper",
+      "y": 270
+    },
+    "facing=east,part=base": {
+      "model": "horsepower:block/chopper",
+      "y": 90
+    },
+    "facing=north,part=blade": {
+      "model": "horsepower:block/chopper_blade"
+    },
+    "facing=south,part=blade": {
+      "model": "horsepower:block/chopper_blade",
+      "y": 180
+    },
+    "facing=west,part=blade": {
+      "model": "horsepower:block/chopper_blade",
+      "y": 270
+    },
+    "facing=east,part=blade": {
+      "model": "horsepower:block/chopper_blade",
+      "y": 90
+    }
+  }
+}

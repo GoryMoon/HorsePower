@@ -1,11 +1,11 @@
 package se.gory_moon.horsepower.recipes;
 
 import net.minecraft.item.ItemStack;
-import se.gory_moon.horsepower.util.Utils;
+import se.gory_moon.horsepower.util.HPUtils;
 
 public class ComparableItemStack {
 
-    private ItemStack stack;
+    private final ItemStack stack;
 
     public ComparableItemStack(ItemStack stack) {
         this.stack = stack;
@@ -13,7 +13,7 @@ public class ComparableItemStack {
 
     @Override
     public int hashCode() {
-        return Utils.getItemStackHashCode(stack);
+        return HPUtils.getItemStackHashCode(stack);
     }
 
     @Override

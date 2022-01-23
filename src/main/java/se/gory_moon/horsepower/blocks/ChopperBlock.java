@@ -1,10 +1,5 @@
 package se.gory_moon.horsepower.blocks;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -37,16 +32,20 @@ import se.gory_moon.horsepower.tileentity.ChopperTileEntity;
 import se.gory_moon.horsepower.util.Localization;
 import se.gory_moon.horsepower.util.color.Colors;
 
-public class ChopperBlock extends HPChopperBaseBlock {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class ChopperBlock extends HPChopperBlock {
 
     public static final EnumProperty<ChopperModels> PART = EnumProperty.create("part", ChopperModels.class);
 
     private static final VoxelShape PART_BASE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
     private static final VoxelShape PART_POST_TOP = Block.makeCuboidShape(7.0D, 28.0D, 7.0D, 9.0D, 32.0D, 9.0D);
-    
+
     private static final VoxelShape PART_POST_X = Block.makeCuboidShape(6.0D, 6.0D, 0.0D, 10.0D, 28.0D, 2.0D);
     private static final VoxelShape PART_POST_X2 = Block.makeCuboidShape(6.0D, 6.0D, 14.0D, 10.0D, 28.0D, 16.0D);
-    
+
     private static final VoxelShape PART_POST_Z = Block.makeCuboidShape(0.0D, 6.0D, 6.0D, 2.0D, 28.0D, 10.0D);
     private static final VoxelShape PART_POST_Z2 = Block.makeCuboidShape(14.0D, 6.0D, 6.0D, 16.0D, 28.0D, 10.0D);
     

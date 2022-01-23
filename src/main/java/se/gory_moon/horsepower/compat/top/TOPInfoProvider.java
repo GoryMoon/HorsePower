@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.blocks.ChopperBlock;
@@ -80,11 +81,10 @@ public class TOPInfoProvider implements IProbeInfoProvider {
     private static void addBlockInfo(IProbeInfo probeInfo, PlayerEntity player, ManualChopperTileEntity te) {
         if (te != null) {
             probeInfo.progress(te.getCurrentProgress(), 100L, new ProgressStyle().prefix(Localization.TOP.CHOPPING_PROGRESS.translate() + " ").suffix("%"));
-            if(player.isSneaking() && Configs.CLIENT.showManualChoppingAxeInfo.get().booleanValue())
-            {
+            if(player.isSneaking() && Configs.CLIENT.showManualChoppingAxeInfo.get().booleanValue()) {
                 ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
-                probeInfo.text(Localization.INFO.MANUAL_CHOPPING_AXES_BASE_AMOUNT.translate()+ ManualChopperTileEntity.getBaseAmount(heldItem, player) +"%");
-                probeInfo.text(Localization.INFO.MANUAL_CHOPPING_AXES_ADDITIONAL_CHANCE.translate()+ ManualChopperTileEntity.getChance(heldItem, player) +"%");
+                probeInfo.text(ITextComponent.getTextComponentOrEmpty(Localization.INFO.MANUAL_CHOPPING_AXES_BASE_AMOUNT.translate() + ManualChopperTileEntity.getBaseAmount(heldItem, player) + "%"));
+                probeInfo.text(ITextComponent.getTextComponentOrEmpty(Localization.INFO.MANUAL_CHOPPING_AXES_ADDITIONAL_CHANCE.translate() + ManualChopperTileEntity.getChance(heldItem, player) + "%"));
             }
         }
     }

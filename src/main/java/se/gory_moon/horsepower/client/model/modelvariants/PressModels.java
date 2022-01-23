@@ -7,7 +7,7 @@ public enum PressModels implements IStringSerializable {
     TOP;
 
     @Override
-    public String getName() {
+    public String getString() {
         return name().toLowerCase();
     }
 }

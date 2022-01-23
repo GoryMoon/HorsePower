@@ -3,15 +3,15 @@ package se.gory_moon.horsepower.recipes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.FluidStack;
-import se.gory_moon.horsepower.util.Utils;
+import se.gory_moon.horsepower.util.HPUtils;
 
 public abstract class HPRecipeBase {
 
-    private ItemStack input;
-    private ItemStack output;
+    private final ItemStack input;
+    private final ItemStack output;
     private FluidStack outputFluid;
-    private ItemStack secondary;
-    private int time;
+    private final ItemStack secondary;
+    private final int time;
     private int secondaryChance;
 
     public HPRecipeBase(ItemStack input, ItemStack output, ItemStack secondary, int secondaryChance, int time) {
@@ -61,9 +61,9 @@ public abstract class HPRecipeBase {
 
     @Override
     public int hashCode() {
-        int result = Utils.getItemStackHashCode(input);
-        result = 31 * result + Utils.getItemStackHashCode(output);
-        result = 31 * result + Utils.getItemStackHashCode(secondary);
+        int result = HPUtils.getItemStackHashCode(input);
+        result = 31 * result + HPUtils.getItemStackHashCode(output);
+        result = 31 * result + HPUtils.getItemStackHashCode(secondary);
         result = 31 * result + secondaryChance;
         result = 31 * result + time;
         return result;

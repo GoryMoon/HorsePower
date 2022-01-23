@@ -26,5 +26,5 @@ public class Constants {
     public static final String DOUGH_ITEM = "dough";
 
     //Network
-    public static final ResourceLocation NET_ID = new ResourceLocation(MOD_ID, "net");
+    public static final ResourceLocation NET_ID = HPUtils.rl("net");
 }

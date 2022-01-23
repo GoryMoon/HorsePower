@@ -1,7 +1,5 @@
 package se.gory_moon.horsepower.blocks;
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -23,10 +21,12 @@ import se.gory_moon.horsepower.HPEventHandler;
 import se.gory_moon.horsepower.Registration;
 import se.gory_moon.horsepower.tileentity.ManualChopperTileEntity;
 
-public class ManualChopperBlock extends HPChopperBaseBlock {
+import javax.annotation.Nonnull;
+
+public class ManualChopperBlock extends HPChopperBlock {
 
     private static final VoxelShape SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 6, 16);
-    
+
     public ManualChopperBlock(Properties properties) {
         super(properties.hardnessAndResistance(2.0F, 5F).sound(SoundType.WOOD));
         setHarvestLevel(ToolType.AXE, 0);
@@ -84,15 +84,4 @@ public class ManualChopperBlock extends HPChopperBaseBlock {
     public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
         return new ManualChopperTileEntity(Registration.MANUAL_CHOPPER_TILE.get());
     }
-
-//    @Override
-//    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
-//        if (Configs.general.enableHandChoppingBlock)
-//            super.getSubBlocks(tab, list);
-//    }
-
-//    @Override
-//    protected BlockStateContainer createBlockState() {
-//        return new ExtendedBlockState(this, new IProperty[] {}, new IUnlistedProperty[]{SIDE_TEXTURE, TOP_TEXTURE});
-//    }
 }

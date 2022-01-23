@@ -1,33 +1,35 @@
 package se.gory_moon.horsepower.util;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.StreamSupport;
-
-import org.lwjgl.opengl.GL11;
-
-import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
-
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.model.TRSRTransformation;
+import org.lwjgl.opengl.GL11;
 import se.gory_moon.horsepower.tileentity.HPHorseBaseTileEntity;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.StreamSupport;
 
 public class RenderUtils {
 
@@ -45,15 +47,31 @@ public class RenderUtils {
         return Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state);
     }
 
-//    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getTransforms(IBakedModel model) {
-//        ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-//        for (ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
-//            TRSRTransformation transformation = new TRSRTransformation(model.handlePerspective(type).getRight());
-//            if (!transformation.equals(TRSRTransformation.identity())) {
-//                builder.put(type, TRSRTransformation.blockCenterToCorner(transformation));
-//            }
-//        }
-//        return builder.build();
+    public static void renderNameplate(MatrixStack matrix, FontRenderer fontRenderer, ITextComponent name, IRenderTypeBuffer bufferIn, int packedLightIn, double y, Quaternion rotation) {
+        double f = y + 0.5D;
+        int i = 0;
+        matrix.push();
+        matrix.translate(0.0D, f, 0.0D);
+        matrix.rotate(rotation);
+        matrix.scale(-0.025F, -0.025F, 0.025F);
+        Matrix4f matrix4f = matrix.getLast().getMatrix();
+        float f1 = Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25F);
+        int j = (int) (f1 * 255.0F) << 24;
+        float f2 = (float) (-fontRenderer.getStringPropertyWidth(name) / 2);
+        fontRenderer.func_243247_a(name, f2, (float) i, 553648127, false, matrix4f, bufferIn, true, j, packedLightIn);
+        fontRenderer.func_243247_a(name, f2, (float) i, -1, false, matrix4f, bufferIn, false, 0, packedLightIn);
+        matrix.pop();
+    }
+
+    //    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getTransforms(IBakedModel model) {
+    //        ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
+    //        for (ItemCameraTransforms.TransformType type : ItemCameraTransforms.TransformType.values()) {
+    //            TRSRTransformation transformation = new TRSRTransformation(model.handlePerspective(type).getRight());
+    //            if (!transformation.equals(TRSRTransformation.identity())) {
+    //                builder.put(type, TRSRTransformation.blockCenterToCorner(transformation));
+    //            }
+    //        }
+    //        return builder.build();
 //    }
 
     // Code based on code from The Betweenlands
@@ -64,51 +82,57 @@ public class RenderUtils {
     }
 
     private static void preBoundingBox() {
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
 
-        GlStateManager.disableLighting();
-        GlStateManager.disableTexture();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0f);
-        GlStateManager.color4f(1, 1, 1, 1);
+        RenderSystem.disableLighting();
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.0f);
+        RenderSystem.color4f(1, 1, 1, 1);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
-        GlStateManager.enableDepthTest();
-        GlStateManager.lineWidth(2F);
+        RenderSystem.enableDepthTest();
+        RenderSystem.lineWidth(2F);
 
         //render
-        GlStateManager.polygonOffset(-0.1F, -10.0F);
-        GlStateManager.enablePolygonOffset();
+        RenderSystem.polygonOffset(-0.1F, -10.0F);
+        RenderSystem.enablePolygonOffset();
     }
 
     private static void postBoundingBox() {
-        GlStateManager.disablePolygonOffset();
+        RenderSystem.disablePolygonOffset();
         //render end
 
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
-        GlStateManager.color4f(1, 1, 1, 1);
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1f);
-        GlStateManager.depthMask(true);
-        GlStateManager.enableTexture();
-        GlStateManager.enableDepthTest();
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
-        GlStateManager.popMatrix();
+        RenderSystem.color4f(1, 1, 1, 1);
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1f);
+        RenderSystem.depthMask(true);
+        RenderSystem.enableTexture();
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
+        RenderSystem.enableLighting();
+        RenderSystem.popMatrix();
     }
 
     public static void renderSearchAreas(HPHorseBaseTileEntity te) {
         preBoundingBox();
         GlStateManager.color4f(1, 1, 1, 1);
-        double playerX = -TileEntityRendererDispatcher.staticPlayerX;
-        double playerY = -TileEntityRendererDispatcher.staticPlayerY;
-        double playerZ = -TileEntityRendererDispatcher.staticPlayerZ;
+        Vector3d vector3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+        double playerX = -vector3d.getX();
+        double playerY = -vector3d.getY();
+        double playerZ = -vector3d.getZ();
         Arrays.stream(te.searchAreas).filter(Objects::nonNull).map(aabb -> aabb.offset(playerX, playerY, playerZ)).forEach(RenderUtils::drawBoundingBox);
         postBoundingBox();
     }
 
     public static void renderUsedArea(World world, BlockPos blockPos, int yOffset, float invalidAplha, float validAplha) {
         preBoundingBox();
+        Vector3d vector3d = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+        double playerX = -vector3d.getX();
+        double playerY = -vector3d.getY();
+        double playerZ = -vector3d.getZ();
+
         for (int xo = -3; xo <= 3; xo++) {
             for (int yo = yOffset; yo <= 1 + yOffset; yo++) {
                 for (int zo = -3; zo <= 3; zo++) {
@@ -117,9 +141,6 @@ public class RenderUtils {
                         continue;
                     if (pos.getY() >= 0) {
                         BlockState state = world.getBlockState(pos);
-                        double playerX = -TileEntityRendererDispatcher.staticPlayerX;
-                        double playerY = -TileEntityRendererDispatcher.staticPlayerY;
-                        double playerZ = -TileEntityRendererDispatcher.staticPlayerZ;
                         if (!state.getMaterial().isReplaceable()) {
                             GlStateManager.color4f(1, 0, 0, invalidAplha);
                             drawBoundingBoxOutline(new AxisAlignedBB(pos).offset(playerX, playerY, playerZ));

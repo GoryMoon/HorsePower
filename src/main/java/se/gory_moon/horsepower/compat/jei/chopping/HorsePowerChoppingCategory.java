@@ -1,9 +1,6 @@
 package se.gory_moon.horsepower.compat.jei.chopping;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -13,6 +10,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.Registration;
@@ -21,9 +19,13 @@ import se.gory_moon.horsepower.compat.jei.HorsePowerPlugin;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.util.Localization;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecipe> {
 
-    private boolean handHandler;
+    private final boolean handHandler;
 
     private static final int inputSlot = 0;
     private static final int outputSlot = 1;
@@ -77,18 +79,18 @@ public class HorsePowerChoppingCategory extends HorsePowerCategory<ChoppingRecip
         ingredients.setInputIngredients(recipe.getIngredients());
         ingredients.setOutputs(VanillaTypes.ITEM, Stream.of(recipe.getRecipeOutput()).collect(Collectors.toList()));
     }
-    
+
     @Override
-    public void draw(ChoppingRecipe recipe, double mouseX, double mouseY) {
-        super.draw(recipe, mouseX, mouseY);
-        arrow.draw(57, 32);
+    public void draw(ChoppingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+        super.draw(recipe, matrixStack, mouseX, mouseY);
+        arrow.draw(matrixStack, 57, 32);
     }
-    
+
     @Override
-    public List<String> getTooltipStrings(ChoppingRecipe recipe, double mouseX, double mouseY) {
-        List<String> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
+    public List<ITextComponent> getTooltipStrings(ChoppingRecipe recipe, double mouseX, double mouseY) {
+        List<ITextComponent> tooltip = super.getTooltipStrings(recipe, mouseX, mouseY);
         if (mouseX >= 55 && mouseY >= 21 && mouseX < 80 && mouseY < 45) {
-            tooltip.add(new TranslationTextComponent(handHandler ? "info.horsepower.manual.chopping.time" : "info.horsepower.horse.chopping.time", Double.valueOf(getLaps(recipe))).getFormattedText());
+            tooltip.add(new TranslationTextComponent(handHandler ? "info.horsepower.manual.chopping.time": "info.horsepower.horse.chopping.time", getLaps(recipe)));
         }
         return tooltip;
     }
