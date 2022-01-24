@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.recipes;
+package se.gory_moon.horsepower.recipes.serializers;
 
 import com.google.gson.JsonObject;
 import net.minecraft.fluid.Fluid;
@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 
 public abstract class AbstractRecipeSerializer<T extends AbstractHPRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<T> {
 

@@ -30,7 +30,7 @@ import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 import se.gory_moon.horsepower.recipes.MillingRecipe;
 import se.gory_moon.horsepower.recipes.PressingRecipe;
-import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.serializers.RecipeSerializers;
 import se.gory_moon.horsepower.util.HPUtils;
 
 import java.util.Collection;

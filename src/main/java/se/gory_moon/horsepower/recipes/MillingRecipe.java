@@ -5,6 +5,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import se.gory_moon.horsepower.Registration;
+import se.gory_moon.horsepower.recipes.serializers.RecipeSerializers;
 
 public class MillingRecipe extends AbstractHPRecipe {
 

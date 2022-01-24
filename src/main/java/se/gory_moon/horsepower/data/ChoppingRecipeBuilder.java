@@ -4,7 +4,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
-import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.serializers.RecipeSerializers;
 
 public class ChoppingRecipeBuilder extends AbstractRecipeBuilder {
 

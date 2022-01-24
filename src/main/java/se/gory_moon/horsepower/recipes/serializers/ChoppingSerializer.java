@@ -1,9 +1,9 @@
-package se.gory_moon.horsepower.recipes;
+package se.gory_moon.horsepower.recipes.serializers;
 
 import com.google.gson.JsonObject;
-
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
+import se.gory_moon.horsepower.recipes.ChoppingRecipe;
 
 public class ChoppingSerializer extends AbstractRecipeSerializer<ChoppingRecipe> {
 

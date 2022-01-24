@@ -51,7 +51,6 @@ public class Configs {
         public final BooleanValue mustLookAtBlock;
         public final BooleanValue showObstructedPlace;
         public final BooleanValue showTags;
-        public final BooleanValue showHarvestLevel;
         public final BooleanValue showManualChoppingAxeInfo;
         public final ConfigValue<ArrayList<String>> harvestTypes;
 
@@ -88,25 +87,16 @@ public class Configs {
                     .translation(Localization.CONFIG.CLIENT.MISC$TAGS.key())
                     .define("show_tags", false);
 
-            showHarvestLevel = builder
-                    .comment("Will show the harvest level of items in the tooltip")
-                    .translation(Localization.CONFIG.CLIENT.MISC$HARVEST_LEVEL.key())
-                    .define("show_hartvest_level", false);
-
             harvestTypes = builder
-                    .comment("What harvest types to show the harvest level for")
+                    .comment("What harvest types to show the harvest level for, only shows if not empty")
                     .translation(Localization.CONFIG.CLIENT.MISC$HARVEST_TYPES.key())
-                    .define("harvest_types", () -> Lists.newArrayList("axe"), o -> o instanceof ArrayList);
+                    .define("harvest_types", ArrayList::new, o -> o instanceof ArrayList);
 
             builder.pop(2);
         }
     }
 
     public static class Server {
-
-        public final ConfigValue<ArrayList<String>> mobList;
-        public final BooleanValue useHorseInterface;
-
         public final DoubleValue millstoneExhaustion;
 
         public final BooleanValue shouldDamageAxe;
@@ -128,24 +118,6 @@ public class Configs {
         Server(ForgeConfigSpec.Builder builder) {
             builder.comment("Server only configs")
                     .push("server");
-
-            useHorseInterface = builder
-                    .comment("Use the base definition of a horse, in vanilla it includes Horse, Donkey & Mule", "If false only entries in the list are valid")
-                    .translation(Localization.CONFIG.SERVER.USE_HORSE_INTERFACE.key())
-                    .define("use_horse_interface", true);
-
-            mobList = builder
-                    .comment("Add mobs that can use the horse powered blocks", "Only mobs that can be leashed are valid", "Add the full path to the mob class, can be found with /horsepower entity")
-                    .translation(Localization.CONFIG.SERVER.MOB_LIST.key())
-                    .define("mob_list", ArrayList::new, o -> o != null && ArrayList.class.isAssignableFrom(o.getClass()) && ((ArrayList<String>) o).stream().allMatch(s -> {
-                        try {
-                            Class.forName(s);
-                            return true;
-                        } catch (ClassNotFoundException e) {
-                            HorsePower.LOGGER.error("Error in config, could not find (" + s + ") mob class, mod for entity might not be installed");
-                            return false;
-                        }
-                    }));
 
             builder.comment("Configs related to the Millstone")
                     .push("milling");

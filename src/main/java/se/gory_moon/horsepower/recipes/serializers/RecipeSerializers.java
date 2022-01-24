@@ -1,4 +1,4 @@
-package se.gory_moon.horsepower.recipes;
+package se.gory_moon.horsepower.recipes.serializers;
 
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -9,6 +9,9 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
+import se.gory_moon.horsepower.recipes.ChoppingRecipe;
+import se.gory_moon.horsepower.recipes.MillingRecipe;
+import se.gory_moon.horsepower.recipes.PressingRecipe;
 import se.gory_moon.horsepower.util.Constants;
 
 public class RecipeSerializers {
@@ -42,7 +45,7 @@ public class RecipeSerializers {
     }
 
     private static class HPRecipeType<T extends IRecipe<?>> implements IRecipeType<T> {
-        private String key;
+        private final String key;
 
         private HPRecipeType(String key) {
             this.key = key;

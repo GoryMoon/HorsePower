@@ -15,7 +15,6 @@ public class PacketHandler {
             .networkProtocolVersion(() -> "1")
             .simpleChannel();
 
-    //No packets needed for now
     public static void init() {
         INSTANCE.messageBuilder(EntityMessage.class, 0)
                 .encoder(EntityMessage::encode)

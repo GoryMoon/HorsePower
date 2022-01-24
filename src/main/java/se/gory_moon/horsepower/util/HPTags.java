@@ -1,6 +1,8 @@
 package se.gory_moon.horsepower.util;
 
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 
@@ -20,4 +22,12 @@ public class HPTags {
         }
     }
 
+    public static class Entities {
+
+        public static final ITag.INamedTag<EntityType<?>> WORKER_ENTITIES = tag("workers");
+
+        private static ITag.INamedTag<EntityType<?>> tag(String name) {
+            return EntityTypeTags.getTagById("horsepower:" + name);
+        }
+    }
 }

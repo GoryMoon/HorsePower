@@ -1,84 +1,37 @@
 package se.gory_moon.horsepower.util;
 
-import com.google.common.collect.Lists;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.HorsePower;
+import se.gory_moon.horsepower.client.utils.HPClientUtils;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-public class HPUtils {
+public final class HPUtils {
 
-    public static ArrayList<String> ERRORS = Lists.newArrayList();
-
-    private HPUtils() {
-        // hidden
-    }
+    private HPUtils() {}
 
     public static ResourceLocation rl(String path) {
         return new ResourceLocation(Constants.MOD_ID, path);
     }
 
     public static Entity getEntityWithinArea(World world, AxisAlignedBB alignedBB, Predicate<CreatureEntity> predicate) {
-        ArrayList<EntityType<?>> creatureTypes = HPUtils.getCreatureTypes();
-        for (EntityType<?> type : creatureTypes) {
-            for (Entity entity : world.getEntitiesWithinAABB(type, alignedBB, e -> e instanceof CreatureEntity && predicate.test((CreatureEntity) e))) {
-                return entity;
-            }
+        List<CreatureEntity> entities = world.getEntitiesWithinAABB(CreatureEntity.class, alignedBB,
+                e -> HPTags.Entities.WORKER_ENTITIES.contains(e.getType()) && predicate.test(e));
+        if (entities.size() > 0) {
+            return entities.get(0);
         }
         return null;
-    }
-
-    public static ArrayList<EntityType<?>> getCreatureTypes() {
-        ArrayList<EntityType<?>> types = Lists.newArrayList();
-        if (Configs.SERVER.useHorseInterface.get()) {
-            types.add(EntityType.HORSE);
-            types.add(EntityType.MULE);
-            types.add(EntityType.DONKEY);
-            types.add(EntityType.LLAMA);
-            types.add(EntityType.TRADER_LLAMA);
-            types.add(EntityType.SKELETON_HORSE);
-            types.add(EntityType.ZOMBIE_HORSE);
-        }
-
-        return types;
-    }
-
-    public static int getItemStackHashCode(ItemStack stack) {
-        if (stack.isEmpty())
-            return 0;
-
-        CompoundNBT tag = stack.write(new CompoundNBT());
-        tag.remove("Count");
-        return tag.hashCode();
-    }
-
-    public static int getItemStackCountHashCode(ItemStack stack) {
-        if (stack.isEmpty())
-            return 0;
-
-        CompoundNBT tag = stack.write(new CompoundNBT());
-        return tag.hashCode();
-
     }
 
     public static int getBaseAmount(String in) {
@@ -100,26 +53,15 @@ public class HPUtils {
     }
 
     public static void errorMessage(String message, boolean showDirectly) {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            if (Minecraft.getInstance().player != null && showDirectly)
-                Minecraft.getInstance().player.sendMessage(new StringTextComponent(TextFormatting.RED + message).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Change in in-game config or click to open the config file to fix this")))), Util.DUMMY_UUID);
-            else
-                ERRORS.add(message);
-        });
+        BiConsumer<String, Boolean> handler = DistExecutor.safeCallWhenOn(Dist.CLIENT, () -> HPClientUtils::errorMessageConsumer);
+        if (handler != null)
+            handler.accept(message, showDirectly);
+
         HorsePower.LOGGER.warn(message);
     }
 
     public static void sendSavedErrors() {
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            if (Minecraft.getInstance().player != null && ERRORS.size() > 0) {
-                ClientPlayerEntity player = Minecraft.getInstance().player;
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "HorsePower config errors"), Util.DUMMY_UUID);
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"), Util.DUMMY_UUID);
-                ERRORS.forEach(s -> player.sendMessage(new StringTextComponent(TextFormatting.RED + s).setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, Minecraft.getInstance().gameDir + "/config/horsepower.cfg")).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent("Changed in in-game config or click to open the config file to fix this")))), Util.DUMMY_UUID));
-                player.sendMessage(new StringTextComponent(TextFormatting.RED + "" + TextFormatting.BOLD + "-----------------------------------------"), Util.DUMMY_UUID);
-                ERRORS.clear();
-            }
-        });
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> HPClientUtils::sendSavedErrors);
     }
 /*
     public static List<ItemStack> getCraftingItems(BlockHPChoppingBase block) {

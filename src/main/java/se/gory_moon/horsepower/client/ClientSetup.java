@@ -17,10 +17,6 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-
-        //TODO make server command
-        //ClientCommandHandler.instance.registerCommand(new HorsePowerCommand());
-
         Minecraft.getInstance().getBlockColors().register((state, worldIn, pos, tintIndex) -> {
             if (worldIn != null && pos != null) {
                 TileEntity tileEntity = worldIn.getTileEntity(pos);
@@ -28,8 +24,12 @@ public class ClientSetup {
                     MillstoneTileEntity te = (MillstoneTileEntity) tileEntity;
                     ItemStack outputStack = te.getStackInSlot(1);
                     ItemStack secondaryStack = te.getStackInSlot(2);
+
+                    // Use the stack with the largest amount
                     if (outputStack.getCount() < secondaryStack.getCount())
                         outputStack = secondaryStack;
+
+                    // If the current item doesn't equal the largest amount update the color
                     if (!ItemStack.areItemsEqual(te.renderStack, outputStack)) {
                         te.renderStack = outputStack;
                         if (!outputStack.isEmpty())

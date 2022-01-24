@@ -3,7 +3,7 @@ ab3cfae85924aa4b548bd10a32724430ef0f222a assets/horsepower/blockstates/manual_ch
 f92f1f50818a288d50147e4a9300fe766028d4c4 assets/horsepower/blockstates/manual_millstone.json
 6a65e19d2b34f598cfe819fee707e34c7ee13bda assets/horsepower/blockstates/millstone.json
 19b11ebaebaf9141894a7fc0d5ef8bff80176dfe assets/horsepower/blockstates/press.json
-b3c493f0fe09c98bd1bd487e5be05280fef5d06c assets/horsepower/blockstates/wooden_filler.json
+8bf4b4b484ab3dff6c4195e1c4bc184a3c90634c assets/horsepower/blockstates/wooden_filler.json
 2fd69477fea2da6be1a15f4e6949338c50c9b2a5 assets/horsepower/lang/en_ud.json
 ee5c8929b554a11a59bae28cfd66b8c0415c7a88 assets/horsepower/lang/en_us.json
 c38ce02d29112e4cc81cabc2fcbd235fb80f2074 assets/horsepower/models/item/chopper.json
@@ -69,3 +69,4 @@ ee9c48c2d40fcbcbac0a3f45d3771216b822da02 data/horsepower/recipes/milling/yellow_
 0e8511e80d42594d8dd06c249a4e9024f6a89e80 data/horsepower/recipes/press.json
 5fa633f0c2e2ef9f1f05541104a4d7c3621d08f5 data/horsepower/recipes/pressing/dirt.json
 4058f20b9649a68fc5d831f12289ed35d00d0074 data/horsepower/recipes/pressing/water_from_leaves.json
+443266546c64a79060604b8e237dbf5f9e6825c3 data/horsepower/tags/entity_types/workers.json

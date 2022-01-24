@@ -12,7 +12,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -88,6 +87,7 @@ public class HPEventHandler {
         if (!event.getItemStack().isEmpty()) {
             List<ITextComponent> tooltipsToAdd = new ArrayList<>();
             StringBuilder part = new StringBuilder();
+
             if (Configs.CLIENT.showTags.get()) {
                 Item item = event.getItemStack().getItem();
                 Set<ResourceLocation> tags = item.getTags();
@@ -107,7 +107,7 @@ public class HPEventHandler {
                 }
             }
 
-            if (Configs.CLIENT.showHarvestLevel.get()) {
+            if (!Configs.CLIENT.harvestTypes.get().isEmpty()) {
                 boolean added = false;
                 for (String harv : Configs.CLIENT.harvestTypes.get()) {
                     int harvestLevel = event.getItemStack().getItem().getHarvestLevel(event.getItemStack(), ToolType.get(harv), null, null);
@@ -130,12 +130,5 @@ public class HPEventHandler {
                 }
             }
         }
-    }
-
-
-    @SubscribeEvent
-    public static void onServerAboutToStart(AddReloadListenerEvent event) {
-        //Add Reload Listener for the Plank Recipe Generator
-        //event.addListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> PlankRecipesDataPackGeneratorUtil.prepareHorsePowerDataPack(event));
     }
 }

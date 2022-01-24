@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "dummy:dummy"
+      "model": "minecraft:block/generated"
     }
   }
 }

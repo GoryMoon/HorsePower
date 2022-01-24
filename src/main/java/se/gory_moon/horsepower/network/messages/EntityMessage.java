@@ -26,7 +26,7 @@ public class EntityMessage {
 
             if (result != null && result.getType() == RayTraceResult.Type.ENTITY) {
                 Entity entity = ((EntityRayTraceResult) result).getEntity();
-                String name = entity.getClass().getName();
+                String name = entity.getType().getRegistryName().toString();
                 mc.player.sendMessage(new TranslationTextComponent("commands.horsepower.entity.has", name), Util.DUMMY_UUID);
                 mc.keyboardListener.setClipboardString(name);
             } else

@@ -2,15 +2,6 @@ package se.gory_moon.horsepower.recipes;
 
 public class HPRecipes {
 
-    private static HPRecipes INSTANCE = new HPRecipes();
-
-//    private final Map<ComparableItemStack, ChoppingBlockRecipe> choppingBlockRecipes = Maps.newHashMap();
-//    private final Map<ComparableItemStack, ChoppingBlockRecipe> manualChoppingBlockRecipes = Maps.newHashMap();
-
-    public static HPRecipes instance() {
-        return INSTANCE;
-    }
-
     public static AbstractHPRecipe checkTypeRecipe(AbstractHPRecipe recipe, AbstractHPRecipe.Type type) {
         return !hasTypeRecipe(recipe, type) ? null: recipe;
     }

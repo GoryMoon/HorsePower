@@ -26,7 +26,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import se.gory_moon.horsepower.Configs;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe;
 import se.gory_moon.horsepower.recipes.AbstractHPRecipe.Type;
-import se.gory_moon.horsepower.recipes.RecipeSerializers;
+import se.gory_moon.horsepower.recipes.serializers.RecipeSerializers;
 import se.gory_moon.horsepower.util.Localization;
 
 import javax.annotation.Nonnull;

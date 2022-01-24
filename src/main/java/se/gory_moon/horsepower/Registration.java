@@ -8,7 +8,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.ToolType;
@@ -39,18 +38,15 @@ import se.gory_moon.horsepower.tileentity.PressTileEntity;
 import se.gory_moon.horsepower.util.Constants;
 import se.gory_moon.horsepower.util.HPUtils;
 
-import static se.gory_moon.horsepower.HorsePower.getRegistrate;
-import static se.gory_moon.horsepower.util.Constants.MOD_ID;
+public final class Registration {
 
-public class Registration {
+    private static final Registrate REGISTRATE = HorsePower.getRegistrate();
 
-    private static final Registrate REGISTRATE = getRegistrate();
-    
     /*
      * REGISTER BLOCKS AND ITEM_BLOCKS
      */
 
-    public static final  BlockEntry<FillerBlock> WOODEN_FILLER_BLOCK = REGISTRATE.object(Constants.WOODEN_FILLER_BLOCK)
+    public static final BlockEntry<FillerBlock> WOODEN_FILLER_BLOCK = REGISTRATE.object(Constants.WOODEN_FILLER_BLOCK)
             .block(Material.WOOD, woodProperties -> {
                 FillerBlock block = new FillerBlock(woodProperties.hardnessAndResistance(5F).sound(SoundType.WOOD), true);
                 block.setHarvestLevel(ToolType.AXE, 1);
@@ -90,7 +86,7 @@ public class Registration {
                 });
             })
             .item()
-            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), new ResourceLocation(MOD_ID, "block/manual_millstone_full")))
+            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), HPUtils.rl("block/manual_millstone_full")))
             .build()
             .tileEntity(ManualMillstoneTileEntity::new)
             .renderer(() -> ManualMillstoneTileEntityRender::new)
@@ -162,9 +158,7 @@ public class Registration {
     public static final RegistryEntry<TileEntityType<PressTileEntity>> PRESS_TILE = PRESS_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
     public static final RegistryEntry<TileEntityType<FillerTileEntity>> FILLER_TILE = WOODEN_FILLER_BLOCK.getSibling(ForgeRegistries.TILE_ENTITIES);
 
-    private Registration() {
-        // hidden
-    }
+    private Registration() {}
     
     public static void init() {
         //
